@@ -4,6 +4,18 @@
 </div>
 
 ---
+<details open="open">
+<summary>Contents</summary>  
+
+- [About the project](#about-the-project)
+- [Built With](#built-with)
+- [Setup and Run Instructions](#setup-and-run-instructions)
+
+</details>
+
+---
+
+## About the Project
 
 ## Level 1 – System Context
 
@@ -31,3 +43,17 @@ Registers for competitions and views results only.
 ### Core idea
 The system separates runtime competition execution (offline) from global data storage (online).
 
+---
+
+### Built With
+
+
+---
+
+### Setup and Run Instructions  
+
+#### How to run the project:  
+
+➡ [backend_setup](docs/setup/backend_setup.md)
+
+---
