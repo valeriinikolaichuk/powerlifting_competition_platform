@@ -34,8 +34,8 @@ docker/volumes/
 **/.angular/cache/
 
 # NestJS
-backend/dist/
-backend/node_modules/
+backend/api/dist/
+backend/api/node_modules/
 
 # Prisma
 backend/prisma/migrations/dev.db
