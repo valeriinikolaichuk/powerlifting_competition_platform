@@ -92,8 +92,8 @@ After initializing Prisma, you must configure the connection string in your `.en
    ```
 
 2. **Crucial Note**: 
-- We use 'postgres' (the service name from 'docker-compose.yml') instead of 'localhost' for internal 'Docker' communication.
-- To run migrations from your host machine, use the 'docker exec' command to stay within the Docker network:  
-  ```
-  docker exec -it pcp_backend npx prisma migrate dev --name init
-  ```
+- Use `localhost` when running `Prisma` commands from your host machine (Windows/Mac/Linux).
+- Use postgres only for internal `Docker` communication (inside containers).
+```
+npx prisma migrate dev --name init
+```
