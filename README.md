@@ -56,5 +56,6 @@ The system separates runtime competition execution (offline) from global data st
 #### How to run the project:  
 
 ➡ [backend_setup](docs/setup/backend_setup.md)
+➡ [frontend_setup](docs/setup/frontend_setup.md)
 
 ---
