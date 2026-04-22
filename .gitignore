@@ -32,10 +32,10 @@ docker/volumes/
 
 # Angular / frontend
 **/.angular/cache/
+frontend/dist/
 
 # NestJS
 backend/api/dist/
 backend/api/node_modules/
 
 # Prisma
-backend/prisma/migrations/dev.db
