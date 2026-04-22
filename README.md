@@ -46,8 +46,13 @@ The system separates runtime competition execution (offline) from global data st
 ---
 
 ### Built With
-#### [Node.js](https://nodejs.org/en)
+
 - NestJS
+- Docker
+- PostgreSQL
+- Prisma
+- Angular
+- Tailwind
 
 ---
 
