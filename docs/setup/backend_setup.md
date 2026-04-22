@@ -88,7 +88,7 @@ After initializing Prisma, you must configure the connection string in your `.en
 
 1. **Open the `.env` file** and update the `DATABASE_URL` variable:
    ```
-   DATABASE_URL="postgresql://admin:admin@postgres:5432/powerlifting"
+   DATABASE_URL="postgresql://admin:admin@localhost:5432/powerlifting"
    ```
 
 2. **Crucial Note**: 
