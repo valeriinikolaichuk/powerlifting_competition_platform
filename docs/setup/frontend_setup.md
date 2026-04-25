@@ -41,6 +41,17 @@ npm install @tailwindcss/postcss`
 npm install zone.js
 ```
 
+### Tech stack
+- Test runner: `Vitest`
+- DOM environment: `jsdom`
+- Assertion library: built-in (expect)
+- UI (optional): `@vitest/ui`
+
+#### Installation
+```
+npm install -D vitest jsdom @vitest/ui
+```
+
 ### Run the project
 ```
 npx ng serve
