@@ -39,3 +39,5 @@ backend/api/dist/
 backend/api/node_modules/
 
 # Prisma
+
+scheme.txt
