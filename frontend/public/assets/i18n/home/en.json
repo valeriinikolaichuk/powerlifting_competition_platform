@@ -1,0 +1,13 @@
+{
+  "ABOUT": "ABOUT",
+  "CLIENTS": "CLIENTS",
+  "SETUP": "SETUP",
+  "DATA": "DATA",
+  "RUN": "RUN",
+  "EXTRAS": "EXTRAS",
+
+  "head": "Online Platform for Managing Powerlifting Competitions",
+  "lineOne": "This project is built to manage powerlifting competitions. It enables full control over athlete attempts,",
+  "lineTwo": "weight selection, and real-time result display. The interface is optimized for use on the competition platform.",
+  "access": "🔒 Access is restricted to authorized users only. 📩 Please contact us to request access or technical support: 📧 powerlift.rv@gmail.com"
+}

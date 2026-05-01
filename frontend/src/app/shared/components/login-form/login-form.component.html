@@ -1,6 +1,5 @@
-<div class="w-[22%] h-[300px] relative z-[2] text-center flex flex-col">
+<div class="w-[22%] h-[300px] mt-[30px] relative z-[2] text-center flex flex-col">
     <form (ngSubmit)="onSubmit()" #form="ngForm">
-        <br/>
         <h5 class="text-center w-[182px]" data-en="LOGIN" data-uk="ЛОГІН" data-pl="LOGIN">LOGIN</h5>
         <input 
             id="login" 
@@ -9,7 +8,7 @@
             name="login" 
             [(ngModel)]="login" 
             required>
-        <br/><br/><br/>
+        <br/><br/><br/><br/>
         <h5 class="text-center w-[182px]" data-en="PASSWORD" data-uk="ПАРОЛЬ" data-pl="HASŁO">PASSWORD</h5>
         <input 
             id="password" 
@@ -18,7 +17,7 @@
             name="password" 
             [(ngModel)]="password" 
             required>
-        <br/><br/><br/>
+        <br/><br/><br/><br/>
         <input 
             id="language" 
             type="hidden" 

@@ -1,0 +1,13 @@
+{
+  "ABOUT": "INFO",
+  "CLIENTS": "CLIENCI",
+  "SETUP": "KONFIG",
+  "DATA": "DANE",
+  "RUN": "BIEG",
+  "EXTRAS": "EXTRAS",
+
+  "head": "System online do przeprowadzania zawodów w trójboju siłowym",
+  "lineOne": "Projekt przeznaczony do organizacji zawodów w trójboju siłowym. Umożliwia zarządzanie występami zawodników,",
+  "lineTwo": "wyborem ciężaru i prezentacją wyników na żywo. Interfejs jest zoptymalizowany do pracy na pomoście sędziowskim.",
+  "access": "🔒 Dostęp tylko dla autoryzowanych użytkowników. 📩 Skontaktuj się z nami, aby uzyskać dostęp lub pomoc techniczną: 📧 powerlift.rv@gmail.com"
+}

@@ -7,44 +7,71 @@
 
     <div class="w-full h-[85vh] flex justify-center items-center relative overflow-hidden z-[1]">
         <div class="w-[240px] h-[50px] absolute top-0 right-0 z-[3]">
-            <button id="en" class="w-[50px] mt-[15px] ml-[20px] font-bold" style="background-color: rgb(252, 78, 78);" type="button">EN</button>
-            <button id="uk" class="w-[50px] mt-[15px] ml-[20px] font-bold" style="background-color: white;" type="button">UK</button>
-            <button id="pl" class="w-[50px] mt-[15px] ml-[20px] font-bold" style="background-color: white;" type="button">PL</button>
+            <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
+                [ngStyle]="{'background-color': tService.lang() === 'en' ? 'rgb(252, 78, 78)' : 'white'}"
+                type="button" 
+                (click)="setLang('en')"
+            >EN</button>
+            <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
+                [ngStyle]="{'background-color': tService.lang() === 'uk' ? 'rgb(252, 78, 78)' : 'white'}"
+                type="button" 
+                (click)="setLang('uk')"
+            >UK</button>
+            <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
+                [ngStyle]="{'background-color': tService.lang() === 'pl' ? 'rgb(252, 78, 78)' : 'white'}"
+                type="button" 
+                (click)="setLang('pl')"
+            >PL</button>
         </div>
 
-        <div class="w-[44%] h-[460px] relative z-[2] flex flex-col justify-between items-center pt-[100px] pb-[50px]">
-            <button class="w-[80%] h-[60px] border border-black text-black text-lg font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
+        <div class="w-[44%] h-[460px] relative z-[2] flex flex-col justify-between 
+                items-center pt-[100px] pb-[50px]">
+            <button class="w-[80%] h-[60px] border border-black text-black text-lg 
+                    font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
-                (click)="openInfoPopup()">
-                ABOUT</button>
-            <button class="w-[80%] h-[60px] border border-black text-black text-lg font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
+                (click)="openInfoPopup()"
+            >{{ 'ABOUT' | t:'home' }}</button>
+            <button class="w-[80%] h-[60px] border border-black text-black text-lg 
+                    font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
-                (click)="openInfoPopup()">
-                CLIENTS</button>
-            <button class="w-[80%] h-[60px] border border-black text-black text-lg font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
+                (click)="openInfoPopup()"
+            >{{ 'CLIENTS' | t:'home' }}</button>
+            <button class="w-[80%] h-[60px] border border-black text-black text-lg 
+                    font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
-                (click)="openInfoPopup()">
-                SETUP</button>
+                (click)="openInfoPopup()"
+            >{{ 'SETUP' | t:'home' }}</button>
         </div>
 
         <div class="relative z-10">
             <app-login-form></app-login-form>
         </div>
 
-        <div class="w-[44%] h-[460px] relative z-[2] flex flex-col justify-between items-center pt-[100px] pb-[50px]">
-            <button class="w-[80%] h-[60px] border border-black text-black text-lg font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
+        <div class="w-[44%] h-[460px] relative z-[2] flex flex-col justify-between 
+                items-center pt-[100px] pb-[50px]">
+            <button class="w-[80%] h-[60px] border border-black text-black text-lg 
+                    font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
-                (click)="openInfoPopup()">
-                DATA</button>
-            <button class="w-[80%] h-[60px] border border-black text-black text-lg font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
+                (click)="openInfoPopup()"
+            >{{ 'DATA' | t:'home' }}</button>
+            <button class="w-[80%] h-[60px] border border-black text-black text-lg 
+                    font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
-                (click)="openInfoPopup()">
-                RUN</button>
-            <button class="w-[80%] h-[60px] border border-black text-black text-lg font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
+                (click)="openInfoPopup()"
+            >{{ 'RUN' | t:'home' }}</button>
+            <button class="w-[80%] h-[60px] border border-black text-black text-lg 
+                    font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
-                (click)="openInfoPopup()">
-                EXTRAS</button>
+                (click)="openInfoPopup()"
+            >{{ 'EXTRAS' | t:'home' }}</button>
         </div>
+    </div>
+
+    <div class="text-center">
+        <p><b>{{ 'head' | t:'home' }}</b></p>
+        <p>{{ 'lineOne' | t:'home' }}</p>
+        <p>{{ 'lineTwo' | t:'home' }}</p>
+        <p>{{ 'access' | t:'home' }}</p>
     </div>
 
     <app-popup></app-popup>
