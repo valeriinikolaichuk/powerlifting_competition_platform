@@ -49,8 +49,8 @@ The system separates runtime competition execution (offline) from global data st
 ## Project Structure
 
 For a detailed explanation of the system architecture see:    
-➡ [frontend documentation](docs/frontend_architecture.md)  
-➡ [backend documentation](docs//backend_architecture.md)
+➡ [frontend documentation](docs/architecture/frontend_architecture.md)  
+➡ [backend documentation](docs/architecture/backend_architecture.md)
 
 ---
 
