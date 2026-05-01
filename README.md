@@ -8,6 +8,7 @@
 <summary>Contents</summary>  
 
 - [About the project](#about-the-project)
+- [Project Structure](#project-structure)
 - [Built With](#built-with)
 - [Setup and Run Instructions](#setup-and-run-instructions)
 
@@ -45,6 +46,14 @@ The system separates runtime competition execution (offline) from global data st
 
 ---
 
+## Project Structure
+
+For a detailed explanation of the system architecture see:    
+➡ [frontend documentation](docs/frontend_architecture.md)  
+➡ [backend documentation](docs//backend_architecture.md)
+
+---
+
 ### Built With
 
 - NestJS
@@ -60,7 +69,9 @@ The system separates runtime competition execution (offline) from global data st
 
 #### How to run the project:  
 
+➡ [frontend_setup](docs/setup/frontend_setup.md)  
 ➡ [backend_setup](docs/setup/backend_setup.md)  
-➡ [frontend_setup](docs/setup/frontend_setup.md)
 
 ---
+
+
