@@ -1,0 +1,40 @@
+{
+  "intro": [
+    "Program jest przeznaczony do zarządzania procesem przeprowadzania zawodów w trójboju siłowym w trybie online,",
+    "imitując działanie lokalnej sieci, która umożliwia jednoczesną pracę z kilkoma urządzeniami wyświetlającymi bieżące wyniki."
+  ],
+  "scenariosTitle": "W systemie przewidziano następujące scenariusze działania:",
+  "admin": {
+    "title": "Admin.",
+    "text": "Główne urządzenie, które umożliwia pracę z danymi i zarządzanie działaniem klientów (rejestracja uczestników, tworzenie grup startowych, wprowadzanie i wyświetlanie bieżących zmian, dokumentacja przed- i pozawodowa)"
+  },
+  "clientsTitle": "Klienci.",
+  "clientsIntro": "System przewiduje dowolną liczbę urządzeń - klientów, które mogą działać według następujących scenariuszy:",
+  "clients": [
+    {
+        "title": "Protokół zawodów.",
+        "text": "Wyświetla aktualne protokoły zawodów: wyniki oraz prognozę wyników bieżącej sesji, kategorii wagowej itp."
+    },
+    {
+        "title": "Kolejność podejść.",
+        "text": "Wyświetla kolejność wyjścia zawodników w zależności od zgłoszonego ciężaru, wyników losowania itp."
+    },
+    {
+        "title": "Kolejność talerzy.",
+        "text": "Wyświetla kolejność zakładania talerzy dla zawodnika na pomoście oraz dla kolejnego zawodnika."
+      },
+      {
+        "title": "Informacja.",
+        "text": "Tablica informacyjna zawodów, która wyświetla dane o zawodniku znajdującym się na pomoście dla widzów."
+      },
+      {
+        "title": "Timer.",
+        "text": "Kontrola czasu podejścia, czasu do rozpoczęcia zawodów itp."
+      },
+      {
+        "title": "Ważenie.",
+        "text": "Oddzielny klient dla sędziów przeprowadzających ważenie uczestników."
+      }
+  ],
+  "footer": "Dane trafiają bezpośrednio do systemu bez konieczności wprowadzania bieżących wyników ważenia uczestników przez główne urządzenie w systemie (Admin)."
+}

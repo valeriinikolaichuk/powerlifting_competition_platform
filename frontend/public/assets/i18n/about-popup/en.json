@@ -1,0 +1,43 @@
+{
+  "intro": [
+    "The system is designed to manage the process of powerlifting competitions in online mode, simulating the operation of a local network.",
+    "It allows multiple devices to work simultaneously and display live competition results in real time."
+  ],
+  "scenariosTitle": "The system supports the following usage scenarios:",
+  "admin": {
+    "title": "Admin",
+    "text": [
+      "The main device used to manage data and control the operation of all clients.",
+      "It allows athlete registration, session and flight management, entering and displaying live changes, as well as pre- and post-competition documentation."
+    ]
+  },
+  "clientsTitle": "Clients",
+  "clientsIntro": "The system supports an arbitrary number of client devices, which can operate according to the following scenarios:",
+  "clients": [
+    {
+      "title": "Competition Protocol",
+      "text": "Displays current competition protocols, results, and result predictions for the current session or weight category."
+    },
+    {
+      "title": "Attempt Order",
+      "text": "Displays the order of athlete attempts based on declared weight, draw results, and other rules."
+    },
+    {
+      "title": "Plate Loading Order",
+      "text": "Shows the plate loading sequence for the athlete on the platform and the next athlete."
+    },
+    {
+      "title": "Information Board",
+      "text": "An information display for spectators showing details about the athlete currently on the platform."
+    },
+    {
+      "title": "Timer",
+      "text": "Controls attempt time, countdowns, and time until the start of competition."
+    },
+    {
+      "title": "Weigh-in",
+      "text": "A separate client for judges responsible for athlete weigh-ins."
+    }
+  ],
+  "footer": "All weigh-in data is transferred directly into the system without the need to enter it manually through the main Admin device."
+}

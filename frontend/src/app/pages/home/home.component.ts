@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LoginFormComponent } from '../../shared/components/login-form/login-form.component';
 import { PopupComponent } from "../../popup/popup.component";
 import { InfoPopupComponent } from '../../shared/components/popups/info-popup/info-popup.component';
+import { AboutContentComponent } from '../../shared/components/popups/info-popup/about-content/about-content.component';
 
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { PopupService } from '../../services/popup.service';
@@ -12,7 +13,8 @@ import { TranslationService } from '../../services/translation.service';
 @Component({
   selector: 'app-home',
   standalone: true, 
-  imports: [LoginFormComponent, 
+  imports: [
+    LoginFormComponent, 
     PopupComponent, 
     TranslatePipe, 
     CommonModule
@@ -20,6 +22,7 @@ import { TranslationService } from '../../services/translation.service';
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
+  AboutContentComponent: Type<any> = AboutContentComponent;
 
   constructor(
     public popup: PopupService, 
@@ -34,7 +37,9 @@ export class HomeComponent implements OnInit {
     this.tService.setLang(lang);
   }
 
-  openInfoPopup() {
-    this.popup.open(InfoPopupComponent);
+  openInfoPopup(content: Type<any>) {
+    this.popup.open(InfoPopupComponent, {
+      content
+    });
   }
 }

@@ -1,0 +1,27 @@
+@if (!data()) {
+  <p>Loading...</p>
+} @else {
+  @for (p of data().intro; track $index) {
+    <p class="m-0 p-[5px] text-left">{{ p }}</p>
+  }
+
+  <p class="m-0 p-[5px] text-left"><b>{{ data().scenariosTitle }}</b></p>
+
+  <p class="m-0 p-[5px] text-left">
+    💻 <b>{{ data().admin.title }}</b>
+    {{ data().admin.text }}
+  </p>
+
+  <p class="m-0 p-[5px] text-left"><b>{{ data().clientsTitle }}</b></p>
+  <p class="m-0 p-[5px] text-left">{{ data().clientsIntro }}</p>
+
+  <ul>
+    @for (c of data().clients; track $index) {
+      <li class="p-[5px]">
+        💻 <b>{{ c.title }}</b> {{ c.text }}
+      </li>
+    }
+  </ul>
+
+  <p class="m-0 p-[5px] text-left">{{ data().footer }}</p>
+}

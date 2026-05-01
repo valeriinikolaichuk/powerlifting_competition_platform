@@ -18,9 +18,10 @@
           &times;
         </button>
 
-        <div class="m-[70px] text-xl text-left overflow-y-auto max-h-full">
-          <h2 class="font-bold mb-4">INFO</h2>
-          <p>{{ data?.message }}</p>
+        <div class="m-[70px] text-[20px] text-left overflow-y-auto max-h-full">
+          <ng-container
+            *ngComponentOutlet="data.content">
+          </ng-container>
         </div>
 
         <button class="w-full h-[35px]
