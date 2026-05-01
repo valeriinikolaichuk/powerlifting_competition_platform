@@ -14,7 +14,17 @@ cd backend
 ```
 npx @nestjs/cli new api
   ```
-select `npm`
+select `npm`  
+
+### Testing
+
+This project uses `Jest` as the default testing framework (provided by NestJS).  
+```
+cd backend/api
+```
+```
+npm install --save-dev jest @types/jest
+```
 
 ---
 
