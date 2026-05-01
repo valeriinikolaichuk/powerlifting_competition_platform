@@ -1,36 +1,31 @@
 <div class="w-[22%] h-[300px] mt-[30px] relative z-[2] text-center flex flex-col">
     <form (ngSubmit)="onSubmit()" #form="ngForm">
-        <h5 class="text-center w-[182px]" data-en="LOGIN" data-uk="ЛОГІН" data-pl="LOGIN">LOGIN</h5>
-        <input 
-            id="login" 
+        <h5 class="text-center w-[182px]">LOGIN</h5>
+        <input  
             class="border-2 border-black" 
             type="text" 
             name="login" 
             [(ngModel)]="login" 
             required>
         <br/><br/><br/><br/>
-        <h5 class="text-center w-[182px]" data-en="PASSWORD" data-uk="ПАРОЛЬ" data-pl="HASŁO">PASSWORD</h5>
+        <h5 class="text-center w-[182px]">PASSWORD</h5>
         <input 
-            id="password" 
             class="border-2 border-black" 
             type="password" 
             name="password" 
             [(ngModel)]="password" 
             required>
         <br/><br/><br/><br/>
-        <input 
-            id="language" 
+        <input  
             type="hidden" 
             name="language" 
-            value="en" 
+value="en" 
             [(ngModel)]="language">
         <br/>
         <button 
             type="submit" 
-            class="border-2 border-black p-0 w-[182px] bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 text-black" 
-            data-en="SING IN" 
-            data-uk="РЕЄСТРАЦІЯ" 
-            data-pl="ZAŁOGUJ SIĘ"
+            class="border-2 border-black p-0 w-[182px] bg-[rgba(0,0,135,0.2)] 
+                hover:bg-blue-600 text-black" 
         >SING IN</button>
     </form>
     <br/>
