@@ -16,19 +16,31 @@ npx @nestjs/cli new api
 ```
 select `npm` 
 
-#### Installing TypeScript type definitions
 ```
 cd backend/api  
 ```
+#### Installing TypeScript type definitions
 ```
 npm install --save-dev @types/node
 ```
+#### Install bcrypt for password hashing  
+```
+npm install bcrypt
+```
+#### Install types as a development dependency  
+```
+npm install --save-dev @types/bcrypt
+```
+- command to populate your database with initial data
+```
+npx prisma db seed
+```
 
-### Run the server  
+#### Run the server  
 ```
 npm run start
 ```
-server URL  
+#### server URL  
 `http://localhost:3000/`
 
 ### Testing
