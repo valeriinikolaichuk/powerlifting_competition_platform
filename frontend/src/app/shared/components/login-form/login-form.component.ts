@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment'; 
 
 @Component({
   selector: 'app-login-form',
@@ -22,14 +23,14 @@ export class LoginFormComponent {
       language: this.language,
     };
 
-    this.http.post('/api/login', loginData, {
+    this.http.post(`${environment.apiUrl}/api/auth/login`, loginData, {
       withCredentials: true,
     }).subscribe({
       next: (res: any) => {
         this.checkAndRoute(res);
       },
       error: () => {
-        console.error('error by path: /api/login');
+        console.error('error by path: /api/auth/login');
       },
     });
   }
