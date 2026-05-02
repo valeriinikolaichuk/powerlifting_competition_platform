@@ -13,8 +13,35 @@ cd backend
 ```
 ```
 npx @nestjs/cli new api
-  ```
-select `npm`  
+```
+select `npm` 
+
+```
+cd backend/api  
+```
+#### Installing TypeScript type definitions
+```
+npm install --save-dev @types/node
+```
+#### Install bcrypt for password hashing  
+```
+npm install bcrypt
+```
+#### Install types as a development dependency  
+```
+npm install --save-dev @types/bcrypt
+```
+- command to populate your database with initial data
+```
+npx prisma db seed
+```
+
+#### Run the server  
+```
+npm run start
+```
+#### server URL  
+`http://localhost:3000/`
 
 ### Testing
 
@@ -23,7 +50,11 @@ This project uses `Jest` as the default testing framework (provided by NestJS).
 cd backend/api
 ```
 ```
-npm install --save-dev jest @types/jest
+npm install --save-dev jest @types/jest  
+```
+#### Run tests  
+```
+npm run test
 ```
 
 ---

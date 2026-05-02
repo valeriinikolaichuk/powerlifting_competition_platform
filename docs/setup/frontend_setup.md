@@ -16,6 +16,8 @@ Make sure you have installed:
 Check versions:
 ```
 node -v
+```
+```
 npm -v
 ```
 
@@ -39,6 +41,9 @@ npm install @tailwindcss/postcss`
 ```
 ```
 npm install zone.js
+```
+```
+npx ng serve --proxy-config proxy.conf.json
 ```
 
 ### Tech stack
