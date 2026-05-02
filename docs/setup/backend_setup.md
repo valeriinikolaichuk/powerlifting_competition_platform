@@ -13,8 +13,23 @@ cd backend
 ```
 ```
 npx @nestjs/cli new api
-  ```
-select `npm`  
+```
+select `npm` 
+
+#### Installing TypeScript type definitions
+```
+cd backend/api  
+```
+```
+npm install --save-dev @types/node
+```
+
+### Run the server  
+```
+npm run start
+```
+server URL  
+`http://localhost:3000/`
 
 ### Testing
 
@@ -23,7 +38,11 @@ This project uses `Jest` as the default testing framework (provided by NestJS).
 cd backend/api
 ```
 ```
-npm install --save-dev jest @types/jest
+npm install --save-dev jest @types/jest  
+```
+#### Run tests  
+```
+npm run test
 ```
 
 ---
