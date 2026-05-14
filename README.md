@@ -1,6 +1,6 @@
 <div align="center">
   <h2>Powerlifting Competition Platform</h2>
-  <h4>An offline-first and cloud-synced platform for managing powerlifting competitions.</h4>
+  <h4>An offline-first platform for managing powerlifting competitions.</h4>
 </div>
 
 ---
