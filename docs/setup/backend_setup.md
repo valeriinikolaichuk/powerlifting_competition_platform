@@ -41,7 +41,9 @@ npx prisma db seed
 npm run start
 ```
 #### server URL  
-`http://localhost:3000/`
+```
+http://localhost:3000/
+```  
 The project is deployed and available for real-time testing:
 ```
 https://powerlifting-competition-platform-5.onrender.com
