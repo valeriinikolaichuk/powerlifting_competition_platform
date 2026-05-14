@@ -42,6 +42,11 @@ npm run start
 ```
 #### server URL  
 `http://localhost:3000/`
+The project is deployed and available for real-time testing:
+```
+https://powerlifting-competition-platform-5.onrender.com
+```
+The application is hosted on the `Render Free Tier`. If the service is inactive for 15 minutes, it automatically goes into a "sleep" mode. As a result, the **first request may take 30-50 seconds to respond** (Cold Start). Please give it a moment to spin up the container.
 
 ### Testing
 
