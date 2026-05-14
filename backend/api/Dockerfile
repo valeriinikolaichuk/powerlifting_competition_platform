@@ -11,8 +11,6 @@ RUN npx prisma generate
 
 RUN npm run build
 
-RUN ls -R dist
-
 EXPOSE 3000
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]
