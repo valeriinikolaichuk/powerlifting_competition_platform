@@ -4,6 +4,16 @@
 </div>
 
 ---
+
+### Live Deployment
+
+This project is fully deployed to the cloud using Render.
+
+- Frontend: https://powerlifting-competition-platform-6.onrender.com
+- Backend API: https://powerlifting-competition-platform-5.onrender.com
+- Database: Hosted on Render PostgreSQL
+
+---
 <details open="open">
 <summary>Contents</summary>  
 
@@ -67,7 +77,7 @@ For a detailed explanation of the system architecture see:
 
 ### Setup and Run Instructions  
 
-#### How to run the project:  
+#### How to run locally:  
 
 ➡ [frontend_setup](docs/setup/frontend_setup.md)  
 ➡ [backend_setup](docs/setup/backend_setup.md)  
