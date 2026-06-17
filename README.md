@@ -1,5 +1,5 @@
 <div align="center">
-  <h2>Powerlifting Competition Platform</h2>
+  <h2>Powerlifting Competition Platform (in progress)</h2>
   <h4>An offline-first platform for managing powerlifting competitions.</h4>
 </div>
 
@@ -72,6 +72,8 @@ For a detailed explanation of the system architecture see:
 - Prisma
 - Angular
 - Tailwind
+
+Planned / upcoming features: Integration with **Google Gemini AI** for intelligent user assistance
 
 ---
 
