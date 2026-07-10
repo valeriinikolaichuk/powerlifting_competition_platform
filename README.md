@@ -18,6 +18,7 @@ This project is fully deployed to the cloud using Render.
 <summary>Contents</summary>  
 
 - [About the project](#about-the-project)
+- [Database](#database)
 - [Project Structure](#project-structure)
 - [Built With](#built-with)
 - [Setup and Run Instructions](#setup-and-run-instructions)
@@ -55,6 +56,11 @@ Registers for competitions and views results only.
 The system separates runtime competition execution (offline) from global data storage (online).
 
 ---
+
+## Database
+➡ [database documentation](docs/database.md)
+
+--
 
 ## Project Structure
 
