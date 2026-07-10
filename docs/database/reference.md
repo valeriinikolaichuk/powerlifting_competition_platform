@@ -3,6 +3,7 @@
 ---
 
 ### Static Reference Tables 
+Populated and modified by `ADMIN` user only
 
 ---
 
@@ -47,7 +48,7 @@ The `sex` field supports:
 - `MEN`
 - `WOMEN`
 
-#### Examples:
+#### Example
 | name | sex |
 |------|------|
 | open | MEN |
@@ -74,7 +75,7 @@ Weight classes are grouped by `weight_class_group`.
 
 The combination of `weight_class_group` and `weight_class` must be **unique**.
 
-#### Examples:
+#### Example
 | weight_class | weight_class_group |
 |------|------|
 | 56 | 2 |
