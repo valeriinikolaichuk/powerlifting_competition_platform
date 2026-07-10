@@ -111,3 +111,73 @@ Separates:
 | updated_at | DateTime | Automatically updated timestamp |
 
 ---
+
+### User Reference Tables 
+
+---
+
+### countries
+Stores the list of countries available in the system.  
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
+
+#### Relations
+- related with ➡ [**user**](business.md) by `created_by_user_id`
+
+Soft deletion is supported through the `is_deleted` flag.
+
+---
+
+### regions
+Stores administrative regions belonging to a country.  
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
+
+#### Relations
+- related with [**countries**](#countries)
+- related with ➡ [**user**](business.md) by `created_by_user_id`
+
+Soft deletion is supported through the `is_deleted` flag.
+
+---
+
+### cities
+Stores cities belonging to a region.  
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
+
+#### Relations
+- related with [**regions**](#regions)
+- related with ➡ [**user**](business.md) by `created_by_user_id`
+
+Soft deletion is supported through the `is_deleted` flag.
+
+---
+
+### organizations
+Stores organizations that may be associated with athletes, competitions, or other entities within the system.
+
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
+Defines supported organization types using the `OrganizationType` enum:
+- `SPORT_SCHOOL`
+- `CLUB`
+- `UNIVERSITY`
+- `SPORT_SOCIETY`
+
+#### Relations
+- related with ➡ [**user**](business.md) by `created_by_user_id`
+
+Soft deletion is supported through the `is_deleted` flag.
+
+---
+
+#### DataScope Enum
+The table supports two types of records:
+
+- **`GLOBAL`** – system reference data maintained by administrators.
+- **`USER`** – user-defined records created when the required country does not exist in the global list.
+
+#### Business Rules
+
+- `GLOBAL` records are system reference data and must have `created_by_user_id = NULL`.
+- `USER` records are user-defined and must reference the user who created them through `created_by_user_id`.
+- `GLOBAL` records may only be managed by `ADMIN` users.
+
+---
