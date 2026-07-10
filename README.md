@@ -1,7 +1,17 @@
 <div align="center">
-  <h2>Powerlifting Competition Platform</h2>
+  <h2>Powerlifting Competition Platform (in progress)</h2>
   <h4>An offline-first platform for managing powerlifting competitions.</h4>
 </div>
+
+---
+
+### Live Deployment
+
+This project is fully deployed to the cloud using Render.
+
+- Frontend: https://powerlifting-competition-platform-6.onrender.com
+- Backend API: https://powerlifting-competition-platform-5.onrender.com
+- Database: Hosted on Render PostgreSQL
 
 ---
 <details open="open">
@@ -63,11 +73,13 @@ For a detailed explanation of the system architecture see:
 - Angular
 - Tailwind
 
+Planned / upcoming features: Integration with **Google Gemini AI** for intelligent user assistance
+
 ---
 
 ### Setup and Run Instructions  
 
-#### How to run the project:  
+#### How to run locally:  
 
 ➡ [frontend_setup](docs/setup/frontend_setup.md)  
 ➡ [backend_setup](docs/setup/backend_setup.md)  
