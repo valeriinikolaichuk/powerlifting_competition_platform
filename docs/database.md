@@ -1,3 +1,9 @@
+## Database Schema
+
+The project uses PostgreSQL with Prisma ORM.
+
+Database migrations are managed by Prisma Migrate.
+
 ➡ [Reference Tables](database/reference.md)  
 ➡ [Configuration Tables](database/configuration.md)  
 ➡ [Business Data Tables](database/business.md)  
