@@ -168,6 +168,44 @@ Soft deletion is supported through the `is_deleted` flag.
 
 ---
 
+### athletes
+Stores athlete records used for competition registration and athlete identification.
+
+Each athlete belongs to a specific federation through `federation_id`.
+
+The federation defines the visibility scope of athlete records.
+
+| Field | Description |
+|---|---|
+| id | Unique athlete identifier |
+| full_name | Athlete full name |
+| date_of_birth | Athlete date of birth |
+| sex | Athlete sex (`AthleteSex` enum) |
+| federation_id | Federation visibility scope |
+| created_by_user_id | User who created the record |
+| scope | Record ownership scope ([**DataScope**](#datascope-enum) enum) |
+| created_at | Record creation timestamp |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+#### AthleteSex enum
+- MAN
+- WOMAN
+
+#### Relations
+- related with [Federations](#federations) by `federation_id`
+- related with ➡ [**user**](business.md) by `created_by_user_id`
+
+#### Business Rules
+- `federation_id` defines the visibility area of the athlete.
+- The same athlete can exist in different federation visibility areas.
+- `GLOBAL` athletes are visible to all users within the federation.
+- For online registration, `created_by_user_id` is assigned to the registered `PARTICIPANT` user.
+- `USER` and their associated `PARTICIPANT` can edit their own athlete records.
+- `ADMIN` user can edit any athlete record.
+
+---
+
 #### DataScope Enum
 The table supports two types of records:
 
