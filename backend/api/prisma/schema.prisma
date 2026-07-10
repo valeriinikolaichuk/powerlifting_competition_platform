@@ -7,15 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String   @id @default(uuid())
-  username      String?  @unique @db.VarChar(50)
-  password      String?  @db.VarChar(255)
-  status        String?  @db.VarChar(12)
-  nominationsId Int?
+enum UserRole {
+  ADMIN
+  USER
+  PARTICIPANT
+}
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+
+  username String @unique
+  password String
+
+  role   UserRole   @default(PARTICIPANT)
+  status UserStatus @default(ACTIVE)
+
+  blockedById  String? @db.Uuid
+  blockedBy    User?   @relation("UserBlockedBy", fields: [blockedById], references: [id])
+  blockedUsers User[]  @relation("UserBlockedBy")
+
+  blockedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lastLogin DateTime?
 
   @@map("users")
 }
