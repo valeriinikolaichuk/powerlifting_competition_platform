@@ -1,9 +1,11 @@
-## Database Schema
+### Database Schema
+The project uses `PostgreSQL` with `Prisma` ORM.  
+Database migrations are managed by `Prisma` Migrate.
 
-The project uses PostgreSQL with Prisma ORM.
+#### ER Diagram
+![ER Diagram](database/powerlifting.erd)
 
-Database migrations are managed by Prisma Migrate.
-
+#### Database Structure
 ➡ [Reference Tables](database/reference.md)  
 ➡ [Configuration Tables](database/configuration.md)  
 ➡ [Business Data Tables (User Data)](database/user.md)  
