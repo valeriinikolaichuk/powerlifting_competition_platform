@@ -153,6 +153,8 @@ model Countries {
 
   regions Regions[]
 
+  participants Participants[]
+
   @@unique([name])
 
   @@map("countries")
@@ -181,6 +183,8 @@ model Regions {
 
   cities Cities[]
 
+  participants Participants[]
+
   @@unique([country_id, name])
 
   @@index([country_id])
@@ -207,6 +211,8 @@ model Cities {
   region Regions @relation(fields: [region_id], references: [id])
 
   created_by_user User? @relation(fields: [created_by_user_id], references: [id])
+
+  participants Participants[]
 
   @@unique([region_id, name])
 
@@ -375,7 +381,47 @@ model User {
   createdAthletes Athletes[] @relation("AthleteCreatedBy")
   createdSportOfficials SportOfficials[] @relation("SportOfficialCreatedBy")
 
-  userFederations UserFederations[]
+  userFederations       UserFederations[]
+
+  participant Participants? @relation("ParticipantUser")
+  participantCreatedBy Participants[] @relation("ParticipantCreatedBy")
 
   @@map("users")
+}
+
+enum RegistrationScope {
+  UNRESTRICTED
+  COUNTRY
+  REGION
+  CITY
+}
+
+model Participants {
+  id                  String @id @default(uuid()) @db.Uuid
+
+  user_id             String @unique @db.Uuid
+  created_by_user_id  String @db.Uuid
+
+  country_id          String? @db.Uuid
+  region_id           String? @db.Uuid
+  city_id             String? @db.Uuid
+
+  registration_scope  RegistrationScope
+
+  email               String
+
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  user User @relation("ParticipantUser", fields: [user_id], references: [id])
+
+  created_by_user User @relation("ParticipantCreatedBy", fields: [created_by_user_id], references: [id])
+
+  country Countries? @relation(fields: [country_id], references: [id])
+
+  region Regions? @relation(fields: [region_id], references: [id])
+
+  city Cities? @relation(fields: [city_id], references: [id])
+
+  @@map("participants")
 }
