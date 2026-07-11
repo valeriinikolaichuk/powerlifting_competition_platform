@@ -104,8 +104,9 @@ The combination of `weight_class_group` and `weight_class` must be **unique**.
 
 ### federation_categories
 Cross-Reference Table.  
-Defines competition categories available for each federation.  
-It connects federations data with age groups and defines which weight class group should be used.  
+- Defines competition categories available for each federation.  
+- Connects federations data with age groups and defines which weight class group should be used. 
+- Stores the `default_team_scoring` configuration used when creating competitions.
 
 Separates:
 - `federations` (FK)
@@ -119,8 +120,14 @@ Separates:
 | age_group_id | UUID | Reference to `age_groups` |
 | weight_class_group | Integer | `weight_classes` group **identifier** |
 | sort_order | Integer | Display order |
+| default_team_scoring | Integer | Default team scoring configuration |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
+
+### Relations
+- related with - [federations](#federations) by `federation_id`
+- related with - [age_groups](#age_groups) by `age_group_id`
+- related with ➡ [**competition_age_groups**](configuration.md)
 
 ---
 
@@ -158,7 +165,7 @@ Stores the list of countries available in the system.
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
 
 #### Relations
-- related with ➡ [**user**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -170,7 +177,7 @@ Defines the ownership scope of reference data using the [**DataScope**](#datasco
 
 #### Relations
 - related with [**countries**](#countries)
-- related with ➡ [**user**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -182,7 +189,7 @@ Defines the ownership scope of reference data using the [**DataScope**](#datasco
 
 #### Relations
 - related with [**regions**](#regions)
-- related with ➡ [**user**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -199,7 +206,7 @@ Defines supported organization types using the `OrganizationType` enum:
 - `SPORT_SOCIETY`
 
 #### Relations
-- related with ➡ [**user**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -229,7 +236,7 @@ The federation defines the visibility scope of athlete records.
 
 #### Relations
 - related with [**federations**](#federations) by `federation_id`
-- related with ➡ [**user**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 
 #### Business Rules
 - `federation_id` defines the visibility area of the athlete.
@@ -253,7 +260,7 @@ The federation defines the visibility scope of sport official records.
 
 #### Relations
 - related with [**federations**](#federations) by `federation_id`
-- related with ➡ [**user**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 
 #### Business Rules
 - A sport official may be a trainer, a referee, or both.

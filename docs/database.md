@@ -3,7 +3,7 @@ The project uses `PostgreSQL` with `Prisma` ORM.
 Database migrations are managed by `Prisma` Migrate.
 
 #### ER Diagram
-![ER Diagram](database/powerlifting.erd)
+![ER Diagram](database/powerlifting._db.png)
 
 #### Database Structure
 ➡ [Reference Tables](database/reference.md)  
