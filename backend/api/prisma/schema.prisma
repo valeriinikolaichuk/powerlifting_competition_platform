@@ -83,12 +83,16 @@ model FederationCategories {
 
   sort_order                  Int
 
+  default_team_scoring_limit  Int
+
   created_at                  DateTime @default(now())
   updated_at                  DateTime @updatedAt
 
   federation Federations @relation(fields: [federation_id], references: [id])
 
   age_group AgeGroups @relation(fields: [age_group_id], references: [id])
+
+  competitionAgeGroups CompetitionAgeGroups[]
 
   @@unique([federation_id, age_group_id])
 
@@ -212,7 +216,8 @@ model Cities {
 
   created_by_user User? @relation(fields: [created_by_user_id], references: [id])
 
-  participants Participants[]
+  participants        Participants[]
+  competitions        Competitions[]
 
   @@unique([region_id, name])
 
@@ -332,7 +337,37 @@ model UserFederations {
   @@map("user_federations")
 }
 
+enum TeamScoringMethod {
+  BEST_POINTS
+  ALL_POINTS
+}
 
+model CompetitionAgeGroups {
+  id                     String @id @default(uuid()) @db.Uuid
+
+  competition_id         String @db.Uuid
+
+  federation_category_id String @db.Uuid
+
+  sort_order             Int
+
+  team_scoring_limit     Int?
+
+  team_scoring_method    TeamScoringMethod @default(BEST_POINTS)
+
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  is_deleted             Boolean @default(false)
+
+  competition Competitions @relation(fields: [competition_id], references: [id])
+
+  federationCategory FederationCategories @relation(fields: [federation_category_id], references: [id])
+
+  @@unique([competition_id, federation_category_id])
+
+  @@map("competition_age_groups")
+}
 
 
 
@@ -386,6 +421,8 @@ model User {
   participant Participants? @relation("ParticipantUser")
   participantCreatedBy Participants[] @relation("ParticipantCreatedBy")
 
+  competitions          Competitions[]
+
   @@map("users")
 }
 
@@ -424,4 +461,67 @@ model Participants {
   city Cities? @relation(fields: [city_id], references: [id])
 
   @@map("participants")
+}
+
+
+// *** competition data ***
+
+enum CompetitionLevel {
+  INTERNATIONAL
+  NATIONAL
+  REGIONAL_OPEN
+  REGIONAL_ONLY
+  LOCAL_OPEN
+  LOCAL_ONLY
+}
+
+enum CompetitionType {
+  POWERLIFT
+  BENCH_PRESS
+}
+
+enum CompetitionDivision {
+  CLASSIC
+  EQUIPPED
+}
+
+enum CompetitionStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+model Competitions {
+  id                String @id @default(uuid()) @db.Uuid
+
+  user_id           String @db.Uuid
+
+  name              String
+
+  city_id           String @db.Uuid
+
+  start_date        DateTime
+  end_date          DateTime
+
+  competition_level CompetitionLevel
+  type              CompetitionType
+  division          CompetitionDivision
+  status            CompetitionStatus @default(ACTIVE)
+
+  archived_at DateTime?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  is_deleted Boolean @default(false)
+
+  user User @relation(fields: [user_id], references: [id])
+
+  city Cities @relation(fields: [city_id], references: [id])
+  
+  competitionAgeGroups CompetitionAgeGroups[]
+
+  @@index([user_id])
+  @@index([start_date])
+
+  @@map("competitions")
 }
