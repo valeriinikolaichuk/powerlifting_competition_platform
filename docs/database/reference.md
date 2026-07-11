@@ -104,8 +104,9 @@ The combination of `weight_class_group` and `weight_class` must be **unique**.
 
 ### federation_categories
 Cross-Reference Table.  
-Defines competition categories available for each federation.  
-It connects federations data with age groups and defines which weight class group should be used.  
+- Defines competition categories available for each federation.  
+- Connects federations data with age groups and defines which weight class group should be used. 
+- Stores the `default_team_scoring` configuration used when creating competitions.
 
 Separates:
 - `federations` (FK)
@@ -119,8 +120,14 @@ Separates:
 | age_group_id | UUID | Reference to `age_groups` |
 | weight_class_group | Integer | `weight_classes` group **identifier** |
 | sort_order | Integer | Display order |
+| default_team_scoring | Integer | Default team scoring configuration |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
+
+### Relations
+- related with - [federations](#federations) by `federation_id`
+- related with - [age_groups](#age_groups) by `age_group_id`
+- related with ➡ [**competition_age_groups**](configuration.md)
 
 ---
 
