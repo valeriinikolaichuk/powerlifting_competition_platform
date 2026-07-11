@@ -30,6 +30,8 @@ model Federations {
   athletes             Athletes[]
   sportOfficials       SportOfficials[]
 
+  userFederations      UserFederations[]
+
   @@map("federations")
 }
 
@@ -304,9 +306,33 @@ model SportOfficials {
 }
 
 
+// ** configuration **
+
+model UserFederations {
+  id            String @id @default(uuid()) @db.Uuid
+
+  user_id       String @db.Uuid
+  federation_id String @db.Uuid
+
+  updated_at    DateTime @updatedAt
+  created_at    DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  federation Federations @relation(fields: [federation_id], references: [id])
+
+  @@unique([user_id, federation_id])
+
+  @@map("user_federations")
+}
+
+
+
+
 
 
 // ** business data **
+// *** user data ***
 
 enum UserRole {
   ADMIN
@@ -348,6 +374,8 @@ model User {
   createdOrganizations Organizations[] @relation("OrganizationCreatedBy")
   createdAthletes Athletes[] @relation("AthleteCreatedBy")
   createdSportOfficials SportOfficials[] @relation("SportOfficialCreatedBy")
+
+  userFederations UserFederations[]
 
   @@map("users")
 }

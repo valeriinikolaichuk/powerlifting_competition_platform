@@ -158,7 +158,7 @@ Stores the list of countries available in the system.
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
 
 #### Relations
-- related with ➡ [**user**](business.md) by `created_by_user_id`
+- related with ➡ [**user**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -170,7 +170,7 @@ Defines the ownership scope of reference data using the [**DataScope**](#datasco
 
 #### Relations
 - related with [**countries**](#countries)
-- related with ➡ [**user**](business.md) by `created_by_user_id`
+- related with ➡ [**user**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -182,7 +182,7 @@ Defines the ownership scope of reference data using the [**DataScope**](#datasco
 
 #### Relations
 - related with [**regions**](#regions)
-- related with ➡ [**user**](business.md) by `created_by_user_id`
+- related with ➡ [**user**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -199,7 +199,7 @@ Defines supported organization types using the `OrganizationType` enum:
 - `SPORT_SOCIETY`
 
 #### Relations
-- related with ➡ [**user**](business.md) by `created_by_user_id`
+- related with ➡ [**user**](user.md) by `created_by_user_id`
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -229,7 +229,7 @@ The federation defines the visibility scope of athlete records.
 
 #### Relations
 - related with [**federations**](#federations) by `federation_id`
-- related with ➡ [**user**](business.md) by `created_by_user_id`
+- related with ➡ [**user**](user.md) by `created_by_user_id`
 
 #### Business Rules
 - `federation_id` defines the visibility area of the athlete.
@@ -253,7 +253,7 @@ The federation defines the visibility scope of sport official records.
 
 #### Relations
 - related with [**federations**](#federations) by `federation_id`
-- related with ➡ [**user**](business.md) by `created_by_user_id`
+- related with ➡ [**user**](user.md) by `created_by_user_id`
 
 #### Business Rules
 - A sport official may be a trainer, a referee, or both.
