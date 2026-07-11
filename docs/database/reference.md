@@ -3,6 +3,18 @@
 ---
 
 ### Static Reference Tables 
+<details open="open">
+<summary>Contents</summary>  
+
+- [federations](#federations)
+- [age_groups](#age_groups)
+- [weight_classes](#weight_classes)
+- [federation_categories](#federation_categories)
+- [referee_categories](#referee_categories)
+- [referee_roles](#referee_roles)
+
+</details>  
+
 Populated and modified by `ADMIN` user only
 
 ---
@@ -112,7 +124,32 @@ Separates:
 
 ---
 
-### User Reference Tables 
+### referee_categories
+Stores the list of referee qualification categories.  
+This is a reference table used by referee-related entities.  
+
+---
+
+### referee_roles
+Stores the list of referee roles used during competitions.  
+The `sort_order` field defines the display order.  
+This is a reference table used by referee-related entities.
+
+---
+
+### User Reference Tables
+<details open="open">
+<summary>Contents</summary>  
+
+- [countries](#countries)
+- [regions](#regions)
+- [cities](#cities)
+- [organizations](#organizations)
+- [athletes](#athletes)
+- [sport_officials](#sport_officials)
+  - [DataScope enum](#datascope-enum)
+
+</details>  
 
 ---
 
@@ -169,11 +206,9 @@ Soft deletion is supported through the `is_deleted` flag.
 ---
 
 ### athletes
-Stores athlete records used for competition registration and athlete identification.
-
-Each athlete belongs to a specific federation through `federation_id`.
-
-The federation defines the visibility scope of athlete records.
+Stores athlete records used for competition registration and athlete identification.  
+Each athlete belongs to a specific federation through `federation_id`.  
+The federation defines the visibility scope of athlete records.  
 
 | Field | Description |
 |---|---|
@@ -193,7 +228,7 @@ The federation defines the visibility scope of athlete records.
 - WOMAN
 
 #### Relations
-- related with [Federations](#federations) by `federation_id`
+- related with [**federations**](#federations) by `federation_id`
 - related with ➡ [**user**](business.md) by `created_by_user_id`
 
 #### Business Rules
@@ -203,6 +238,31 @@ The federation defines the visibility scope of athlete records.
 - For online registration, `created_by_user_id` is assigned to the registered `PARTICIPANT` user.
 - `USER` and their associated `PARTICIPANT` can edit their own athlete records.
 - `ADMIN` user can edit any athlete record.
+
+---
+
+### sport_officials
+Stores sport officials participating in competitions.  
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum. 
+
+A sport official may have one or both roles:
+- Trainer (`trainer_role` Boolean)
+- Referee (`referee_role` Boolean)
+
+The federation defines the visibility scope of sport official records.  
+
+#### Relations
+- related with [**federations**](#federations) by `federation_id`
+- related with ➡ [**user**](business.md) by `created_by_user_id`
+
+#### Business Rules
+- A sport official may be a trainer, a referee, or both.
+- `federation_id` defines the visibility area of the record.
+- The same sport official may exist in multiple federation visibility areas.
+- `GLOBAL` records are visible to all users within the federation.
+- For online registration, `created_by_user_id` is assigned to the registered `PARTICIPANT` user.
+- `USER` and their associated `PARTICIPANT` may edit their own records.
+- `ADMIN` users may edit any record.
 
 ---
 
