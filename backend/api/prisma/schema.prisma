@@ -7,6 +7,307 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ** reference **
+// *** static reference ***
+
+enum DefaultCoefficient {
+  WILKS
+  IPF_GL
+}
+
+model Federations {
+  id                   String              @id @default(uuid()) @db.Uuid
+  name                 String
+  federation_code      String              @unique
+  default_coefficient  DefaultCoefficient
+
+  updated_at           DateTime            @updatedAt
+
+  created_at           DateTime            @default(now())
+
+  categories           FederationCategories[]
+
+  athletes             Athletes[]
+  sportOfficials       SportOfficials[]
+
+  @@map("federations")
+}
+
+enum Sex {
+  MEN
+  WOMEN
+}
+
+model AgeGroups {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  name        String
+  sex         Sex
+
+  age_from    Int
+  age_to      Int
+
+  updated_at  DateTime @updatedAt
+  created_at  DateTime @default(now())
+
+  categories FederationCategories[]
+
+  @@map("age_groups")
+}
+
+model WeightClasses {
+  id                    String @id @default(uuid()) @db.Uuid
+
+  weight_class          Int
+  name String
+
+  weight_class_group    Int
+
+  updated_at            DateTime @updatedAt
+  created_at            DateTime @default(now())
+
+  @@unique([weight_class_group, weight_class])
+
+  @@map("weight_classes")
+}
+
+model FederationCategories {
+  id                          String @id @default(uuid()) @db.Uuid
+
+  federation_id               String @db.Uuid
+  age_group_id                String @db.Uuid
+
+  weight_class_group          Int
+
+  sort_order                  Int
+
+  created_at                  DateTime @default(now())
+  updated_at                  DateTime @updatedAt
+
+  federation Federations @relation(fields: [federation_id], references: [id])
+
+  age_group AgeGroups @relation(fields: [age_group_id], references: [id])
+
+  @@unique([federation_id, age_group_id])
+
+  @@map("federation_categories")
+}
+
+model RefereeCategories {
+  id            String @id @default(uuid()) @db.Uuid
+
+  category_name String
+  category_code String
+
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  @@unique([category_code])
+
+  @@map("referee_categories")
+}
+
+model RefereeRoles {
+  id         String @id @default(uuid()) @db.Uuid
+
+  role_name  String
+  role_short String
+
+  sort_order Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@unique([role_name])
+  @@unique([role_short])
+
+  @@map("referee_roles")
+}
+
+
+// *** user reference ***
+
+enum DataScope {
+  GLOBAL
+  USER
+}
+
+model Countries {
+  id                 String @id @default(uuid()) @db.Uuid
+
+  name               String
+  country_code       String?
+
+  scope              DataScope
+
+  created_by_user_id String? @db.Uuid
+
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  is_deleted         Boolean @default(false)
+
+  created_by_user User? @relation(fields: [created_by_user_id], references: [id])
+
+  regions Regions[]
+
+  @@unique([name])
+
+  @@map("countries")
+}
+
+model Regions {
+  id String @id @default(uuid()) @db.Uuid
+
+  country_id         String @db.Uuid
+
+  name               String
+  region_code        String?
+
+  scope              DataScope
+
+  created_by_user_id String? @db.Uuid
+
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  is_deleted         Boolean @default(false)
+
+  country Countries @relation(fields: [country_id], references: [id])
+
+  created_by_user User? @relation(fields: [created_by_user_id], references: [id])
+
+  cities Cities[]
+
+  @@unique([country_id, name])
+
+  @@index([country_id])
+
+  @@map("regions")
+}
+
+model Cities {
+  id String @id @default(uuid()) @db.Uuid
+
+  region_id          String @db.Uuid
+
+  name               String
+
+  scope              DataScope
+
+  created_by_user_id String? @db.Uuid
+
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  is_deleted         Boolean @default(false)
+
+  region Regions @relation(fields: [region_id], references: [id])
+
+  created_by_user User? @relation(fields: [created_by_user_id], references: [id])
+
+  @@unique([region_id, name])
+
+  @@index([region_id])
+
+  @@map("cities")
+}
+
+enum OrganizationType {
+  SPORT_SCHOOL
+  CLUB
+  UNIVERSITY
+  SPORT_SOCIETY
+}
+
+model Organizations {
+  id                 String @id @default(uuid()) @db.Uuid
+
+  organization_code  String @unique
+  name               String?
+
+  type               OrganizationType
+
+  scope              DataScope
+
+  created_by_user_id String? @db.Uuid
+
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  is_deleted         Boolean @default(false)
+
+  created_by_user User? @relation("OrganizationCreatedBy", fields: [created_by_user_id], references: [id])
+
+  @@map("organizations")
+}
+
+enum AthleteSex {
+  MAN
+  WOMAN
+}
+
+model Athletes {
+  id                 String @id @default(uuid()) @db.Uuid
+
+  full_name          String
+  date_of_birth      DateTime
+
+  sex                AthleteSex
+
+  federation_id      String @db.Uuid
+  created_by_user_id String? @db.Uuid
+
+  scope              DataScope
+
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  is_deleted         Boolean @default(false)
+
+  federation Federations @relation(fields: [federation_id], references: [id])
+
+  created_by_user User? @relation("AthleteCreatedBy", fields: [created_by_user_id], references: [id])
+
+  @@index([federation_id, full_name])
+
+  @@map("athletes")
+}
+
+model SportOfficials {
+  id                  String      @id @default(uuid()) @db.Uuid
+
+  full_name           String
+
+  trainer_role        Boolean     @default(true)
+  referee_role        Boolean     @default(false)
+
+  federation_id       String      @db.Uuid
+  created_by_user_id  String?     @db.Uuid
+
+  scope               DataScope
+
+  created_at          DateTime    @default(now())
+  updated_at          DateTime    @updatedAt
+
+  is_deleted          Boolean     @default(false)
+
+  federation Federations @relation(fields: [federation_id], references: [id])
+
+  created_by_user User? @relation("SportOfficialCreatedBy", fields: [created_by_user_id], references: [id])
+
+  @@index([federation_id])
+
+  @@index([full_name])
+
+  @@map("sport_officials")
+}
+
+
+
+
+// ** business data **
+
 enum UserRole {
   ADMIN
   USER
@@ -19,24 +320,34 @@ enum UserStatus {
 }
 
 model User {
-  id String @id @default(uuid()) @db.Uuid
+  id          String        @id @default(uuid()) @db.Uuid
 
-  username String @unique
-  password String
+  username    String        @unique
+  password    String
 
-  role   UserRole   @default(PARTICIPANT)
-  status UserStatus @default(ACTIVE)
+  role        UserRole
 
-  blockedById  String? @db.Uuid
-  blockedBy    User?   @relation("UserBlockedBy", fields: [blockedById], references: [id])
-  blockedUsers User[]  @relation("UserBlockedBy")
+  status      UserStatus    @default(ACTIVE)
 
-  blockedAt DateTime?
+  blocked_by  String?       @db.Uuid
+  blocked_at  DateTime?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
 
-  lastLogin DateTime?
+  last_login  DateTime?
+
+  // Self relation
+  blockedByUser User?      @relation("UserBlockedBy", fields: [blocked_by], references: [id])
+
+  blockedUsers User[]      @relation("UserBlockedBy")
+
+  createdCountries         Countries[]
+  createdRegions           Regions[]
+  createdCities            Cities[]
+  createdOrganizations Organizations[] @relation("OrganizationCreatedBy")
+  createdAthletes Athletes[] @relation("AthleteCreatedBy")
+  createdSportOfficials SportOfficials[] @relation("SportOfficialCreatedBy")
 
   @@map("users")
 }
