@@ -61,15 +61,20 @@ Defines the current competition status.
 | ACTIVE | Competition is active and available for management. |
 | ARCHIVED | Competition has been archived and is no longer active. |
 
-### Relations
+#### Relations
 - related with ➡ [**users**](user.md) by `user_id`
 - related with **cities** by `city_id`
-- 
-- related with - [CompetitionAgeGroups](#competitionagegroups) by `competition_age_group_id`
+- related with  ➡ [сompetition_age_groups](configuration.md) (not directly)
 
-### Business Rules
-- Each competition is created and managed by a single user.
-- The competition location is defined by the selected city.
-- Available competition categories are determined by the selected competition age group.
-- Archived competitions have `status = ARCHIVED` and `archived_at` set.
+#### Business Rules
+- Each competition is created and managed by a single `USER`.
+- The competition location is defined by the selected **city (region, country)**
+- A competition may contain one or more age groups.
 - Soft deletion is supported through the `is_deleted` flag.
+
+#### Competition Creation Workflow
+- The `USER` selects one federation.
+- The `USER` selects one or more federation age groups. These are required fields.
+- The application looks up the corresponding record in `federation_categories` table
+- When a competition is created, the system creates a record in `сompetitions` and one or more corresponding records in `сompetition_age_groups`.
+- Each `сompetition_age_groups` record defines a competition category and stores its team scoring settings (`team_scoring_limit` and `team_scoring_method`).
