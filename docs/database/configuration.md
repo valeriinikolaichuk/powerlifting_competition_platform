@@ -65,3 +65,42 @@ This table maps users to the federations they are allowed to work with.
 - The combination of `user_id` and `federation_id` must be `unique`.
 
 ---
+
+### referee_competition
+Stores the referees assigned to a competition.  
+Each record links a sport official to a competition, specifies the referee category, and stores the verification status.
+
+| Field | Description |
+|------|-------------|
+| id | Unique record identifier |
+| competition_id | Competition |
+| referee_id | Assigned sport official |
+| referee_category_id | Referee qualification category |
+| country_id | Country represented by the referee (optional) |
+| region_id | Region represented by the referee (optional) |
+| city_id | City represented by the referee (optional) |
+| verification_status | Referee verification status (`VerificationStatus` enum) |
+| created_at | Record creation timestamp |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+### Relations
+
+- related with ➡ [**competitions**](competition.md) by `competition_id`
+- related with **sport_officials** by `referee_id`
+- related with - [RefereeCategories](#refereecategories) by `referee_category_id`
+- related with **countries** by `country_id`
+- related with **egions** by `region_id`
+- related with **cities** by `city_id`
+- related with - [RefereeCompetitionRoles](#refereecompetitionroles)
+
+### Business Rules
+
+- A referee may be assigned to multiple competitions.
+- A competition may have multiple referees.
+- A referee can only be assigned once to the same competition.
+- The referee category is selected from `RefereeCategories`.
+- Country, region, and city may be specified when applicable.
+- New assignments are created with the `PENDING` verification status by default.
+
+---
