@@ -27,7 +27,7 @@ Each record references a federation category and contains competition-specific t
 
 ### Relations
 
-- related with ➡ [competitions](competitions.md) by `competition_id`
+- related with ➡ [competitions](competition.md) by `competition_id`
 - related with **federation_categories** by `federation_category_id`
 
 #### TeamScoringMethod enum
