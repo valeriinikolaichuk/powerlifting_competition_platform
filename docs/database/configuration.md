@@ -90,7 +90,7 @@ Each record links a sport official to a competition, specifies the referee categ
 - related with **sport_officials** by `referee_id`
 - related with - [RefereeCategories](#refereecategories) by `referee_category_id`
 - related with **countries** by `country_id`
-- related with **кegions** by `region_id`
+- related with **regions** by `region_id`
 - related with **cities** by `city_id`
 - related with - [RefereeCompetitionRoles](#refereecompetitionroles)
 
