@@ -79,6 +79,7 @@ Each record links a sport official to a competition, specifies the referee categ
 | country_id | Country represented by the referee (optional) |
 | region_id | Region represented by the referee (optional) |
 | city_id | City represented by the referee (optional) |
+| verification_status | Referee verification status (`VerificationStatus` enum) |
 | created_at | Record creation timestamp |
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
@@ -93,11 +94,21 @@ Each record links a sport official to a competition, specifies the referee categ
 - related with **cities** by `city_id`
 - related with **referee_competition_roles**
 
-### Business Rules
+#### VerificationStatus
+Defines the verification status of a referee assignment.
+
+| Value | Description |
+|--------|-------------|
+| PENDING | Verification has not yet been completed. |
+| APPROVED | The referee assignment has been verified and approved. |
+| REJECTED | The referee assignment has been rejected. |
+
+#### Business Rules
 - A referee may be assigned to multiple competitions.
 - A competition may have multiple referees.
 - A referee can only be assigned once to the same competition.
 - The referee category is selected from `referee_categories`.
 - Country, region, and city may be specified when applicable.
+- New assignments are created with the `PENDING` verification status by default.
 
 ---
