@@ -4,6 +4,7 @@
 
 - [competition_age_groups](#competition_age_groups)
 - [user_federations](#user_federations)
+- [nomination_status](#nomination_status)
 - [referee_competition](#referee_competition)
 
 </details>
@@ -64,6 +65,35 @@ This table maps users to the federations they are allowed to work with.
 - Access to federations is assigned by `ADMIN` users.
 - Users can work only with federations assigned to them.
 - The combination of `user_id` and `federation_id` must be `unique`.
+
+---
+
+### nomination_status
+Stores the current nomination stage of a competition.  
+Each competition has a single nomination status record that is updated as the nomination process progresses.
+
+| Field | Description |
+|------|-------------|
+| id | Unique record identifier |
+| competition_id | Competition |
+| preliminary_date | Preliminary nomination date |
+| final_date | Final nomination date |
+| status | Nomination stage (`NominationStatusType` enum) |
+| created_at | Record creation timestamp |
+| updated_at | Record update timestamp |
+
+#### Relations
+
+- related with ➡ [**competitions**](competition.md) by `competition_id`
+
+#### Business Rules
+- Each competition has exactly one nomination status record.
+- The nomination process progresses through the following stages:
+  - `PRELIMINARY`
+  - `FINAL`
+  - `CLOSED`
+- The current stage is stored in `status`.
+- `competition_id` must be unique.
 
 ---
 
