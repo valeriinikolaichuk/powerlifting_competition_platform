@@ -6,6 +6,7 @@
 
 - [competitions](#competitions)
 - [athlete_registrations](#athlete_registrations)
+- [competition_organizations](#competition_organizations)
 
 </details>
 
@@ -175,5 +176,51 @@ Defines the verification status of a referee assignment.
 - Registrations created directly by a USER are automatically assigned the `APPROVED` status.
 - Athletes with the `REJECTED` verification status are automatically removed after the nomination period closes.
 - If both the `AthleteRegistrations` and `Athletes` records were created at the same time during online registration, both records are removed automatically.
+
+---
+
+### competition_organizations
+Stores the organizations represented in a competition.  
+This table is generated automatically from `AthleteRegistrations` and contains unique combinations of organization and its territorial affiliation within a competition.
+
+| Column | Description |
+|--------|-------------|
+| id | Unique record identifier |
+| competition_id | Competition |
+| country_id | Country (optional) |
+| region_id | Region (optional) |
+| city_id | City (optional) |
+| organization_id | Organization (optional) |
+| type | Record type (`CompetitionOrganizationType` enum) |
+| created_at | Record creation timestamp |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+
+#### CompetitionOrganizationType (enum)
+Defines the type of competition organization record.
+
+| Value | Populated field |
+|--------|-----------------|
+| COUNTRY | `country_id` |
+| REGION | `country_id`, `region_id` |
+| CITY | `country_id`, `region_id`, `city_id` |
+| SPORT_SCHOOL | `organization_id` (Sport School) |
+| CLUB | `organization_id` (Club) |
+| UNIVERSITY | `organization_id` (University) |
+| SPORT_SOCIETY | `organization_id` (Sport Society) |
+
+#### Business Rules
+- Generated automatically from `AthleteRegistrations`.
+- Stores unique organizations represented in a competition.
+- Each record represents exactly one territorial or organizational entity.
+- The populated reference fields depend on the value of `type`:
+  - `COUNTRY` → only `country_id` is populated.
+  - `REGION` → `country_id` and `region_id` are populated.
+  - `CITY` → `country_id`, `region_id`, and `city_id` are populated.
+  - `SPORT_SCHOOL`, `CLUB`, `UNIVERSITY`, `SPORT_SOCIETY` → only `organization_id` is populated.
+- All unused reference fields must be `NULL`.
+- The table stores only unique records within a competition.
+- The table is rebuilt using the `DELETE + INSERT INTO` strategy.
 
 ---
