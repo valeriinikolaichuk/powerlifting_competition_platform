@@ -146,6 +146,24 @@ Defines the verification status of a referee assignment.
 | APPROVED | The referee assignment has been verified and approved. |
 | REJECTED | The referee assignment has been rejected. |
 
+#### Relations
+- related with **athletes** by `athlete_id`
+- related with [competitions](#competitions) by `competition_id`
+- related with **countries** by `country_id`
+- related with **regions**) by `region_id`
+- related with **cities** by `city_id`
+- related with **organizations** by `sport_society_id`
+- related with **organizations** by `club_id`
+- related with **organizations** by `sport_school_id`
+- related with **organizations** by `university_id`
+- related with ➡ [competition_age_groups](configuration.md) by `competition_age_group_id`
+- related with **sport_officials** by `trainer_1_id`
+- related with **sport_officials** by `trainer_2_id`
+- related with **sport_officials** by `trainer_3_id`
+- related with **sport_officials** by `trainer_4_id`
+- related with **weight_classes** by `weight_class_id`
+- related with **groups_in_session** by `group_in_session_id`
+
 #### Business Rules
 - An athlete may be registered for the same competition only once within the same competition age group.
 - Registration may include the athlete's represented country, region, city, and organizations.
