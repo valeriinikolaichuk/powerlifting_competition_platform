@@ -7,6 +7,7 @@
 - [nomination_status](#nomination_status)
 - [competition_sessions](#competition_sessions)
 - [groups_in_session](#groups_in_session)
+- [weight_classes_in_group](#weight_classes_in_group)
 - [referee_competition](#referee_competition)
 
 </details>
@@ -150,6 +151,30 @@ Each group belongs to a single competition session and defines the order in whic
 - Group names must be unique within a session.
 - Group order must be unique within a session.
 - The group name typically contains the weight classes and the group identifier (for example: `56 | 60 | 67,5 | 1grp`).
+
+---
+
+### weight_classes_in_group
+Stores the weight classes assigned to a group within a competition session.  
+This table links `GroupsInSession` with `WeightClasses`.  
+
+| Field | Description |
+|------|-------------|
+| id | Unique record identifier |
+| groups_in_session_id | Group within a competition session |
+| weight_class_id | Weight class |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+#### Relations
+- related with [groups_in_session](#groups_in_session) by `groups_in_session_id`
+- related with **weight_classes** by `weight_class_id`
+
+#### Business Rules
+- Stores the list of weight classes assigned to a group.
+- A weight class can be assigned only once to the same group.
+- If a competition uses parallel platforms or parallel groups, identical weight classes may be assigned to multiple groups by creating separate records.
+- The user interface displays a merged list of unique weight classes, while the system maintains separate group assignments internally.
 
 ---
 
