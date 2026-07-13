@@ -6,6 +6,7 @@
 - [user_federations](#user_federations)
 - [nomination_status](#nomination_status)
 - [competition_sessions](#competition_sessions)
+- [groups_in_session](#groups_in_session)
 - [referee_competition](#referee_competition)
 
 </details>
@@ -124,6 +125,31 @@ Each session belongs to a competition and represents a group of weight classes p
 - `end_of_weighing_in` marks the end of the weigh-in period.
 - Once `end_of_weighing_in` is set, users with the `WEIGHING_IN` role can no longer modify weigh-in data for the session.
 - Setting the session status to `READY` also blocks users with the `WEIGHING_IN` role, even if `end_of_weighing_in` has not been set.
+
+---
+
+### groups_in_session
+Stores the groups within a competition session.  
+Each group belongs to a single competition session and defines the order in which athletes compete.
+
+| Field | Description |
+|------|-------------|
+| id | Unique group identifier |
+| competition_session_id | Competition session |
+| name | Group name |
+| order | Display and processing order within the session |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+#### Relations
+
+- related with - [competition_sessions](#competition_sessions) by `competition_session_id`
+
+#### Business Rules
+- Stores the list of groups within a competition session.
+- Group names must be unique within a session.
+- Group order must be unique within a session.
+- The group name typically contains the weight classes and the group identifier (for example: `56 | 60 | 67,5 | 1grp`).
 
 ---
 
