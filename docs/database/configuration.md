@@ -4,6 +4,7 @@
 
 - [competition_age_groups](#competition_age_groups)
 - [user_federations](#user_federations)
+- [referee_competition](#referee_competition)
 
 </details>
 
@@ -25,7 +26,7 @@ Each record references a federation category and contains competition-specific t
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
 
-### Relations
+#### Relations
 
 - related with ➡ [competitions](competition.md) by `competition_id`
 - related with **federation_categories** by `federation_category_id`
