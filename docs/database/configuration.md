@@ -9,6 +9,7 @@
 - [groups_in_session](#groups_in_session)
 - [weight_classes_in_group](#weight_classes_in_group)
 - [referee_competition](#referee_competition)
+- [referee_competition_roles](#referee_competition_roles)
 
 </details>
 
@@ -222,5 +223,31 @@ Defines the verification status of a referee assignment.
 - The referee category is selected from `referee_categories`.
 - Country, region, and city may be specified when applicable.
 - New assignments are created with the `PENDING` verification status by default.
+
+---
+
+### referee_competition_roles
+Stores referee role assignments for individual competition sessions.  
+Each record assigns a role to a referee participating in a specific competition session.  
+
+| Field | Description |
+|------|-------------|
+| id | Unique record identifier |
+| competition_session_id | Competition session |
+| referee_competition_id | Competition referee assignment |
+| referee_role_id | Assigned referee role |
+| created_at | Record creation timestamp |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+#### Relations
+- related with [competition_sessions](#competition_sessions) by `competition_session_id`
+- related with [referee_competition](#referee_competition) by `referee_competition_id`
+- related with **referee_roles** by `referee_role_id`
+
+#### Business Rules
+- A referee may perform different roles in different competition sessions.
+- Each role assignment belongs to a single competition session.
+- Referee roles are selected from `RefereeRoles`.
 
 ---
