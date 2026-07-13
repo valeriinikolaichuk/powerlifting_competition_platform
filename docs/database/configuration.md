@@ -5,6 +5,7 @@
 - [competition_age_groups](#competition_age_groups)
 - [user_federations](#user_federations)
 - [nomination_status](#nomination_status)
+- [competition_sessions](#competition_sessions)
 - [referee_competition](#referee_competition)
 
 </details>
@@ -94,6 +95,35 @@ Each competition has a single nomination status record that is updated as the no
   - `CLOSED`
 - The current stage is stored in `status`.
 - `competition_id` must be unique.
+
+---
+
+### competition_sessions
+Stores the competition sessions.  
+Each session belongs to a competition and represents a group of weight classes processed together.
+
+| Field | Description |
+|------|-------------|
+| id | Unique session identifier |
+| competition_id | Competition |
+| name | Session name |
+| start_date | Session start date and time |
+| end_of_weighing_in | End of the weigh-in period |
+| status | Session status (`CompetitionSessionStatus` enum) |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+#### Relations
+- related with ➡ [**competitions**](competition.md) by `competition_id`
+- related with [referee_competition_roles](#referee_competition_roles)
+
+#### Business Rules
+- Stores the list of competition sessions.
+- Session names must be unique within a competition.
+- The session name typically contains the weight classes included in the session (for example: `56 | 60 | 67,5 | 75 | 82,5`).
+- `end_of_weighing_in` marks the end of the weigh-in period.
+- Once `end_of_weighing_in` is set, users with the `WEIGHING_IN` role can no longer modify weigh-in data for the session.
+- Setting the session status to `READY` also blocks users with the `WEIGHING_IN` role, even if `end_of_weighing_in` has not been set.
 
 ---
 
