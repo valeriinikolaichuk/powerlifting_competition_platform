@@ -3,6 +3,7 @@
 <summary>Contents</summary>
 
 - [athlete_lifts](#athlete_lifts)
+- [competition_results](#competition_results)
 
 </details>
 
@@ -78,4 +79,38 @@ Defines the status of a competition attempt.
 - Final values are calculated from completed attempts.
 - This table stores dynamic competition data, while `athlete_registrations` stores the static registration data.
 
+---
 
+### competition_results
+Stores the aggregated competition results for an athlete registration.  
+This table extends `athlete_registrations` by storing the final and predicted overall competition results calculated from the corresponding `athlete_lifts` records.
+
+| Column | Description |
+|--------|-------------|
+| id | Unique record identifier |
+| athlete_registration_id | Athlete registration |
+| total | Final total |
+| total_predicted | Predicted total |
+| total_coefficient | Final competition coefficient |
+| total_coefficient_predicted | Predicted competition coefficient |
+| overall_place | Final overall placing |
+| overall_place_predicted | Predicted overall placing |
+| overall_points | Final overall points |
+| overall_points_predicted | Predicted overall points |
+| best_lifter_place | Final Best Lifter placing |
+| best_lifter_place_predicted | Predicted Best Lifter placing |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+#### Relations
+
+- related with **athlete_registrations** by `athlete_registration_id`
+
+#### Business Rules
+- One record exists for each athlete registration.
+- Stores the aggregated competition results calculated from `athlete_lifts`.
+- Predicted values are calculated while the competition is in progress.
+- Final values are calculated after all competition lifts have been completed.
+- This table stores dynamic competition data, while `athlete_registrations` stores the static registration data.
+
+---
