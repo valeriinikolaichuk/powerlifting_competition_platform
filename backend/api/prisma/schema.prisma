@@ -397,6 +397,7 @@ model CompetitionAgeGroups {
   federationCategory FederationCategories @relation(fields: [federation_category_id], references: [id])
 
   athleteRegistrations AthleteRegistrations[]
+  organizationResults OrganizationResults[]
 
   @@unique([competition_id, federation_category_id])
 
@@ -453,6 +454,8 @@ model CompetitionSessions {
   groupsInSession GroupsInSession[]
   refereeCompetitionRoles RefereeCompetitionRoles[]
 
+  globalStates       GlobalState[]
+
   @@unique([competition_id, name])
 
   @@map("competition_sessions")
@@ -474,6 +477,8 @@ model GroupsInSession {
 
   weightClasses          WeightClassesInGroup[]
   athleteRegistrations   AthleteRegistrations[]
+
+  globalStates           GlobalState[]
 
   @@unique([competition_session_id, order])
   @@unique([competition_session_id, name])
@@ -625,6 +630,8 @@ model User {
 
   competitions          Competitions[]
 
+  deviceStatuses        DeviceStatus[]
+
   @@map("users")
 }
 
@@ -727,6 +734,8 @@ model Competitions {
   athleteRegistrations   AthleteRegistrations[]
   competitionOrganizations CompetitionOrganizations[]
 
+  globalStates           GlobalState[]
+
   @@index([user_id])
   @@index([start_date])
 
@@ -816,6 +825,7 @@ model AthleteRegistrations {
   groupInSession GroupsInSession? @relation(fields: [group_in_session_id], references: [id])
 
   athleteLifts AthleteLifts[]
+  competitionResult CompetitionResults?
 
   @@unique([competition_id, athlete_id, competition_age_group_id])
 
@@ -868,6 +878,8 @@ model CompetitionOrganizations {
   city Cities? @relation(fields: [city_id], references: [id])
 
   organization Organizations @relation(fields: [organization_id], references: [id])
+
+  organizationResults OrganizationResults[]
 
   @@unique([competition_id, country_id, region_id, city_id, organization_id, type])
 
@@ -942,4 +954,132 @@ model AthleteLifts {
   @@index([athlete_registration_id])
 
   @@map("athlete_lifts")
+}
+
+model CompetitionResults {
+  id                       String @id @default(uuid()) @db.Uuid
+
+  athlete_registration_id  String @unique @db.Uuid
+
+  total                    Decimal? @db.Decimal(5,1)
+  total_predicted          Decimal? @db.Decimal(5,1)
+
+  total_coefficient        Decimal? @db.Decimal(5,2)
+  total_coefficient_predicted Decimal? @db.Decimal(5,2)
+
+  overall_place            Int?
+  overall_place_predicted  Int?
+
+  overall_points           Int?
+  overall_points_predicted Int?
+
+  best_lifter_place        Int?
+  best_lifter_place_predicted Int?
+
+  updated_at DateTime @updatedAt
+
+  is_deleted Boolean @default(false)
+
+  athleteRegistration AthleteRegistrations @relation(fields: [athlete_registration_id], references: [id])
+
+  @@map("competition_results")
+}
+
+
+// ** сalculated
+
+model OrganizationResults {
+  id                          String @id @default(uuid()) @db.Uuid
+
+  competition_organization_id String @db.Uuid
+  competition_age_group_id    String @db.Uuid
+
+  total_points                Int
+  weight_points               Decimal @db.Decimal(6,1)
+  place                       Int
+
+  updated_at                  DateTime @updatedAt
+
+  is_deleted                  Boolean @default(false)
+
+  competitionOrganization CompetitionOrganizations @relation(fields: [competition_organization_id], references: [id])
+
+  competitionAgeGroup CompetitionAgeGroups @relation(fields: [competition_age_group_id], references: [id])
+
+  @@unique([competition_organization_id, competition_age_group_id])
+
+  @@index([competition_age_group_id])
+
+  @@map("organization_results")
+}
+
+
+// ** system runtime
+
+enum Language {
+  EN
+  UK
+  PL
+}
+
+enum DeviceRole {
+  ADMIN
+  SCOREBOARD
+  LIFTING_ORDER
+  DISCS_SEQUENCE
+  INFORMATION
+  TIMER
+  WEIGHING_IN
+}
+
+model DeviceStatus {
+  id          String @id @default(uuid()) @db.Uuid
+
+  user_id     String @db.Uuid
+
+  language    Language
+  device_role DeviceRole
+
+  ip_address  String?
+  user_agent  String?
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  is_deleted  Boolean @default(false)
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+
+  @@map("device_status")
+}
+
+model GlobalState {
+  id                     String @id @default(uuid()) @db.Uuid
+
+  competition_id         String? @db.Uuid
+  competition_session_id String? @db.Uuid
+  groups_in_session_id   String? @db.Uuid
+
+  current_discipline     LiftType?
+
+  current_attempt        Int?
+
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  is_deleted             Boolean @default(false)
+
+  competition Competitions? @relation(fields: [competition_id], references: [id])
+
+  competitionSession CompetitionSessions? @relation(fields: [competition_session_id], references: [id])
+
+  groupsInSession GroupsInSession? @relation(fields: [groups_in_session_id], references: [id])
+
+  @@index([competition_id])
+  @@index([competition_session_id])
+  @@index([groups_in_session_id])
+
+  @@map("global_state")
 }
