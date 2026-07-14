@@ -75,6 +75,7 @@ For a detailed explanation of the system architecture see:
 - NestJS
 - Docker
 - PostgreSQL
+- PGlite
 - Prisma
 - Angular
 - Tailwind
