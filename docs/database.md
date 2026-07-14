@@ -48,5 +48,8 @@ Database migrations are managed by `Prisma` Migrate.
 ➡ [Calculated Tables](database/calculated.md)  
 - organization_results
 
-➡ [System Runtime Tables](database/system_runtime.md)  
+➡ [System Runtime Tables](database/system_runtime.md) 
+- device_status
+- global_state
+
 ➡ [Frontend Tables](database/frontend.md)
