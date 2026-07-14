@@ -46,5 +46,7 @@ Database migrations are managed by `Prisma` Migrate.
 - competition_results
 
 ➡ [Calculated Tables](database/calculated.md)  
+- organization_results
+
 ➡ [System Runtime Tables](database/system_runtime.md)  
 ➡ [Frontend Tables](database/frontend.md)
