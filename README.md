@@ -75,9 +75,9 @@ For a detailed explanation of the system architecture see:
 - NestJS
 - Docker
 - PostgreSQL
-- PGlite
 - Prisma
 - Angular
+- PGlite
 - Tailwind
 
 Planned / upcoming features: Integration with **Google Gemini AI** for intelligent user assistance
