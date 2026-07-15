@@ -31,10 +31,10 @@ Popup system
 ├── PopupComponent
 │   └── Global dialog host
 │
-├── InfoPopupComponent
+├── InfoPopupComponent (shared/components/popups)
 │   └── Reusable information popup layout
 │
-└── Content components
+└── Content components (shared/components/popups/info-popup)
     ├── AboutContentComponent
     ├── ClientsContentComponent
     ├── SetupContentComponent
