@@ -1,4 +1,4 @@
-## PopupComponent
+### PopupComponent
 Acts as the global host for the application's popup system. It dynamically renders popup components requested through the `PopupService` and manages the native HTML dialog lifecycle.
 
 #### Responsibilities
