@@ -4,7 +4,7 @@ The frontend is built with **Angular** using the **standalone** component archit
 ### Application Structure
 - `App` is the root component of the application.
 - The root template contains only a `router-outlet`, which serves as the entry point for all routed pages.
-- Application routes are defined in [app.routes.ts](frontend/src/app/app.routes.ts).
+- Application routes are defined in [app.routes.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/frontend/src/app/app.routes.ts).
 - The default route (`/`) renders the [HomeComponent](frontend/pages.md).
 - Additional routes can be added in app.routes.ts. 
 
