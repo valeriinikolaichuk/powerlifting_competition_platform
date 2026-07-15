@@ -24,8 +24,7 @@ The project uses Angular's standalone component API instead of NgModules. Each c
 
 ### Components
 
-#### [HomeComponent](frontend/pages/home_component.md) (`app/pages/home`)
-The main application page responsible for composing the user interface and coordinating the primary application features.
+
 
 
 
