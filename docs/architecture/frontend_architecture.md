@@ -24,19 +24,12 @@ The project uses Angular's standalone component API instead of NgModules. Each c
 
 ### Components
 
-#### HomeComponent (`pages/home`)
-Main application page. Responsible for layout and composing the UI.
+#### [HomeComponent](frontend/pages/home_component.md) (`app/pages/home`)
+The main application page responsible for composing the user interface and coordinating the primary application features.
 
-- **LoginFormComponent** (`shared/components/login-form`)  
-Reusable login form component. Handles user credentials input and authentication trigger.
 
-- **InfoPopupComponent** (`shared/components/popups/info-popup`)  
-Displays informational content and handles its own close action via the `PopupService`.
 
-- **AboutContentComponent** (`shared/components/popups/info-popup/about-content`)  
-Dynamic content component rendered inside the `InfoPopupComponent`. Displays localized structured content loaded from feature-based JSON files. Fully presentation-only, with no business logic; relies on TranslationService for data and adapts content based on the current language.
 
----
 
 ### Systems
 
