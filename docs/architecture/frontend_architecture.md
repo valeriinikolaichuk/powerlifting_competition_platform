@@ -4,18 +4,17 @@ The frontend is built with **Angular** using the **standalone** component archit
 ### Application Structure
 - `App` is the root component of the application.
 - The root template contains only a `router-outlet`, which serves as the entry point for all routed pages.
-- Application routes are defined in `app.routes.ts`.
-- The default route (`/`) renders the `HomeComponent`.
+- Application routes are defined in [app.routes.ts](frontend/src/app/app.routes.ts).
+- The default route (`/`) renders the [HomeComponent](frontend/pages.md).
+- Additional routes can be added in app.routes.ts. 
 
-### Routing
-The application uses the Angular Router. Current routing configuration:  
-- `/` → `HomeComponent`
-
-Additional routes can be added in app.routes.ts as the application grows. 
+---
 
 ### Server-Side Rendering (SSR)  
 `SSR` configuration is defined in `app.routes.server.ts`.  
 Currently, all routes are configured with **Prerender** mode, meaning pages are generated at build time instead of being rendered dynamically on each request.
+
+---
 
 ### Standalone Components
 The project uses Angular's standalone component API instead of NgModules. Each component explicitly declares its own dependencies through the `imports` property, resulting in a simpler and more modular project structure.
@@ -23,22 +22,20 @@ The project uses Angular's standalone component API instead of NgModules. Each c
 ---
 
 ### Components
-#### [pages/](frontend/pages.md)
+### [pages/](frontend/pages.md)   
 Contains `route-level components` representing the main views of the application.
-#### shared/
+### [popup/](popup/pages.md)
+Global container that renders dynamic popup components and injects data into them.  
+### shared/
 Reusable UI components, pipes, directives, and other common functionality shared across multiple features.
-- [components/](frontend/shared/components.md)
-- [pipes/](frontend/shared/pipes.md)
+- ### [components/](frontend/shared/components.md)
+- ### [pipes/](frontend/shared/pipes.md)
 
-
-
+---
 
 ### Systems
 
-#### PopupComponent (`popup`)
-Global container that renders dynamic popup components and injects data into them.  
-Contains no business logic. Has no knowledge of specific popups.  
-Listens to `PopupService`. Uses `POPUP_DATA (popup-data.token)`.
+
 
 #### i18n Translation Module  
 translation system based on Angular signals and lazy-loaded JSON files, supporting multi-language switching
