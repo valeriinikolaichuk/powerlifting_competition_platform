@@ -23,10 +23,12 @@ The project uses Angular's standalone component API instead of NgModules. Each c
 ---
 
 ### Components
-#### [app/pages](frontend/pages.md)
+#### [pages/](frontend/pages.md)
 Contains `route-level components` representing the main views of the application.
-#### [app/shared
+#### shared/
 Reusable UI components, pipes, directives, and other common functionality shared across multiple features.
+- [components/](frontend/shared/components.md)
+- [pipes/](frontend/shared/pipes.md)
 
 
 
