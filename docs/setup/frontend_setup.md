@@ -7,13 +7,16 @@
 - npm: 10.x
 - Build system: Vite (Angular default)
 - Rendering: SPA (NO SSR)
+- Tailwind CSS
+- PGlite
+- Vitest
 
 ### Prerequisites
 Make sure you have installed:
 - Node.js v20 LTS
 - npm v10+
 
-Check versions:
+Verify the installation:
 ```
 node -v
 ```
@@ -32,16 +35,13 @@ npm install -g @angular/cli@20.3.24
 ```
 #### Install dependencies
 ```
+cd frontend
+```
+```
 npm install
 ```
-  - select `tailwindcss`  
-#### Install required packages
-```
-npm install @tailwindcss/postcss`
-```
-```
-npm install zone.js
-```
+
+#### Run
 ```
 npx ng serve --proxy-config proxy.conf.json
 ```
@@ -51,11 +51,6 @@ npx ng serve --proxy-config proxy.conf.json
 - DOM environment: `jsdom`
 - Assertion library: built-in (expect)
 - UI (optional): `@vitest/ui`
-
-#### Installation
-```
-npm install -D vitest jsdom @vitest/ui
-```
 
 ### Run the project
 ```

@@ -1,4 +1,26 @@
-## Frontend Architecture (Angular)
+## Frontend Architecture
+The frontend is built with **Angular** using the **standalone** component architecture.
+
+### Application Structure
+- `App` is the root component of the application.
+- The root template contains only a `router-outlet`, which serves as the entry point for all routed pages.
+- Application routes are defined in `app.routes.ts`.
+- The default route (`/`) renders the `HomeComponent`.
+
+### Routing
+The application uses the Angular Router. Current routing configuration:  
+- `/` → `HomeComponent`
+
+Additional routes can be added in app.routes.ts as the application grows. 
+
+### Server-Side Rendering (SSR)  
+`SSR` configuration is defined in `app.routes.server.ts`.  
+Currently, all routes are configured with **Prerender** mode, meaning pages are generated at build time instead of being rendered dynamically on each request.
+
+### Standalone Components
+The project uses Angular's standalone component API instead of NgModules. Each component explicitly declares its own dependencies through the `imports` property, resulting in a simpler and more modular project structure.
+
+---
 
 ### Components
 
