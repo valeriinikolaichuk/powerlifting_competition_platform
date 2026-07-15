@@ -17,13 +17,28 @@ Acts as the global host for the application's popup system. It dynamically rende
 6. Popup data is provided through Angular's dependency injection using the `POPUP_DATA` token.
 7. When the popup is closed, the component is removed and the dialog is closed automatically.
 
-## Dependencies
+#### Dependencies
 
 * `PopupService`
 * `NgComponentOutlet`
 * `POPUP_DATA`
 * Native HTML `<dialog>` element
 
-## Notes
-
-The popup host is mounted once at the application level (inside [HomeComponent](pages.md)) and is reused for every modal displayed throughout the application. This architecture avoids duplicating modal containers and keeps popup management centralized.
+#### Popup system
+```
+Popup system
+│
+├── PopupComponent
+│   └── Global dialog host
+│
+├── InfoPopupComponent
+│   └── Reusable information popup layout
+│
+└── Content components
+    ├── AboutContentComponent
+    ├── ClientsContentComponent
+    ├── SetupContentComponent
+    ├── DataContentComponent
+    ├── RunContentComponent
+    └── ExtrasContentComponent
+```
