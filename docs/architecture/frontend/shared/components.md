@@ -3,14 +3,14 @@
 <details open="open">
 <summary>Contents</summary>  
 
-- [login-form](#login-form)
-- [info-popup](#info-popup)
+- [login-form/](#login-form)
+- [info-popup/](#info-popup)
 
 </details>
 
 ---
 
-## login-form
+## login-form/
 
 #### LoginFormComponent
 
@@ -18,23 +18,39 @@
 
 ## popups
 
-### info-popup
-The popup content components are presentation-focused components rendered dynamically inside the `InfoPopupComponent`.  
-Each component represents a separate informational section of the application and is responsible only for displaying localized content.  
-Popup content components do not manage popup lifecycle or business logic; they rely on the shared popup infrastructure and translation system.  
+### info-popup/
+
+### InfoPopupComponent
+Reusable informational popup component responsible for displaying dynamic content inside a consistent modal layout.  
+The component acts as a presentation layer between the global popup system and individual content components.
 The selected content component is dynamically rendered by the popup system through the `PopupService`.
 
-<details open="open">
-<summary>Contents</summary>  
+**Responsibilities**
+- Receives the content component type through POPUP_DATA.
+- Dynamically renders the provided content component using NgComponentOutlet.
+- Provides a common popup layout and styling.
+- Handles popup closing through the PopupService.
+- Provides reusable controls such as close and return actions.
 
+**Data Flow**
+- HomeComponent or another application component requests an informational popup.
+- PopupService opens InfoPopupComponent and passes the required content component.
+- InfoPopupComponent receives the content through the POPUP_DATA injection token.
+- The selected content component is dynamically rendered inside the popup.
+- The user can close the popup through the provided actions.
+
+**Dependencies**  
+`PopupService`  
+`POPUP_DATA`  
+`NgComponentOutlet`  
+
+The same popup container can display different content components:
 - [AboutContentComponent](#aboutcontentcomponent)
 - [ClientsContentComponent](#clientscontentcomponent)
 - [SetupContentComponent](#setupcontentcomponent)
 - [DataContentComponent](#datacontentcomponent)
 - [RunContentComponent](#runcontentcomponent)
 - [ExtrasContentComponent](#extrascontentcomponent)
-
-</details>
 
 ---
 
