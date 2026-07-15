@@ -24,7 +24,7 @@ The project uses Angular's standalone component API instead of NgModules. Each c
 ### Components
 ### [pages/](frontend/pages.md)   
 Contains `route-level components` representing the main views of the application.
-### [popup/](popup.md)
+### [popup/](frontend/popup.md)
 Global container that renders dynamic popup components and injects data into them.  
 ### shared/
 Reusable UI components, pipes, directives, and other common functionality shared across multiple features.
