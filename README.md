@@ -24,6 +24,11 @@
 
 ---
 
+## Deployment Architecture
+➡ [deployment architecture & container system](docs/deployment_model.md)
+
+---
+
 ## Live Deployment
 
 This project is fully deployed to the cloud using `Render`.
