@@ -9,9 +9,10 @@
 <summary>Contents</summary>  
 
 - [About the project](#about-the-project)
-- [Live Deployment](#live-deployment)
+- [Deployment Architecture](#deployment-architecture)
 - [Database](#database)
 - [Project Structure](#project-structure)
+- [Live Deployment](#live-deployment)
 - [Built With](#built-with)
 - [Setup and Run Instructions](#setup-and-run-instructions)
 
@@ -29,22 +30,10 @@
 
 ---
 
-## Live Deployment
-
-This project is fully deployed to the cloud using `Render`.
-- Frontend: https://powerlifting-competition-platform-6.onrender.com
-- Backend API: https://powerlifting-competition-platform-5.onrender.com
-- Database: Hosted on Render PostgreSQL
-
-
-<h4>beta version: <a href="https://bombingout.com">BOMBINGOUT.COM</a></h4>
-
----
-
 ## Database
 ➡ [database documentation](docs/database.md)
 
---
+---
 
 ## Project Structure   
 ➡ [frontend documentation](docs/architecture/frontend_architecture.md)  
@@ -52,7 +41,18 @@ This project is fully deployed to the cloud using `Render`.
 
 ---
 
-### Built With
+## Live Deployment
+
+This project is fully deployed to the cloud using `Render`.
+- Frontend: https://powerlifting-competition-platform-6.onrender.com
+- Backend API: https://powerlifting-competition-platform-5.onrender.com
+- Database: Hosted on Render PostgreSQL
+
+<h4>beta version: <a href="https://bombingout.com">BOMBINGOUT.COM</a></h4>
+
+---
+
+## Built With
 
 - NestJS
 - Docker
@@ -66,9 +66,8 @@ Planned / upcoming features: Integration with **Google Gemini AI** for intellige
 
 ---
 
-### Setup and Run Instructions  
-
-#### How to run locally:  
+## Setup and Run Instructions  
+### How to run locally:  
 
 ➡ [frontend_setup](docs/setup/frontend_setup.md)  
 ➡ [backend_setup](docs/setup/backend_setup.md)  
