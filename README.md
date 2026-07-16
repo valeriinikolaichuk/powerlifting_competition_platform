@@ -5,19 +5,11 @@
 
 ---
 
-### Live Deployment
-
-This project is fully deployed to the cloud using Render.
-
-- Frontend: https://powerlifting-competition-platform-6.onrender.com
-- Backend API: https://powerlifting-competition-platform-5.onrender.com
-- Database: Hosted on Render PostgreSQL
-
----
 <details open="open">
 <summary>Contents</summary>  
 
 - [About the project](#about-the-project)
+- [Live Deployment](#live-deployment)
 - [Database](#database)
 - [Project Structure](#project-structure)
 - [Built With](#built-with)
@@ -28,32 +20,19 @@ This project is fully deployed to the cloud using Render.
 ---
 
 ## About the Project
+➡ [core concept and architecture overview](docs/about_the_project.md)
 
-## Level 1 – System Context
+---
 
-### Core concept
-The system allows organizers to run competitions either fully offline (LAN/local setup) or online via a central server, 
-with later synchronization of all competition data.
+## Live Deployment
 
-### Actors
+This project is fully deployed to the cloud using `Render`.
+- Frontend: https://powerlifting-competition-platform-6.onrender.com
+- Backend API: https://powerlifting-competition-platform-5.onrender.com
+- Database: Hosted on Render PostgreSQL
 
-#### Admin
-Manages users, platform access, and global configuration.
 
-#### User
-Creates and runs competitions. Can operate offline or online.
-
-#### Participant
-Registers for competitions and views results only.
-
-### System behavior
-- Supports offline competition execution
-- Synchronizes data with central backend when online
-- Provides global athlete registry
-- Allows multi-device competition setup
-
-### Core idea
-The system separates runtime competition execution (offline) from global data storage (online).
+<h4>beta version: <a href="https://bombingout.com">BOMBINGOUT.COM</a></h4>
 
 ---
 
@@ -62,9 +41,7 @@ The system separates runtime competition execution (offline) from global data st
 
 --
 
-## Project Structure
-
-For a detailed explanation of the system architecture see:    
+## Project Structure   
 ➡ [frontend documentation](docs/architecture/frontend_architecture.md)  
 ➡ [backend documentation](docs/architecture/backend_architecture.md)
 
