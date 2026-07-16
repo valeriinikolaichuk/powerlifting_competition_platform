@@ -63,3 +63,12 @@ Each connected device can operate in one of several predefined scenarios.
 |Information |Display	Presents athlete information for spectators and officials.|
 |Timer Display	|Controls countdown timers for attempts and competition sessions.|
 |Weigh-In Device	|Handles athlete weigh-in and submits measurements directly to the competition system.|
+
+### Key Characteristics
+- `Offline-first` architecture.
+- `Local database` on every device.
+- Shared business logic and `SQL` execution across all devices.
+- Lightweight `raw-message` communication to `minimize` network traffic.
+- `Docker-based` deployment for easy installation.
+- `Browser-based` user interface with no client installation required.
+- Optional `synchronization` with a central server when Internet connectivity is available.
