@@ -30,6 +30,10 @@ Global container that renders dynamic popup components and injects data into the
 Reusable UI components, pipes, directives, and other common functionality shared across multiple features.
 - ### [components/](frontend/shared/components.md)
 - ### [pipes/](frontend/shared/pipes.md)
+- ### [tokens/](frontend/shared/tokens.md)
+
+### [services/](frontend/services.md)
+Contains reusable application services that encapsulate business logic, data access, state management, and cross-cutting functionality.
 
 ---
 
