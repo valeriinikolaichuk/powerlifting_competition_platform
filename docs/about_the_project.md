@@ -39,3 +39,27 @@ SCOREBOARD            LIFTING               DISCS         INFORMATION         TI
  predict              athlete             plates for                      session start)      weighing in
  results)            attempts)           current/next                                         procedure)
 </pre>
+
+### Actors:
+#### ADMIN (Administrator)
+Responsible for configuring and managing competitions, user registration, maintaining competition flow.
+
+#### USER
+Operates the competition by managing attempts, updating competition data, and monitoring live sessions.
+
+#### PARTICIPANT
+Registers for competitions and accesses published competition results.
+
+---
+
+### Client Roles
+Each connected device can operate in one of several predefined scenarios.
+|Role	|Responsibility|
+|-----|--------------|
+|Admin Device	|Competition administration, registrations, start groups, documentation, and live updates.|
+|Scoreboard |Display	Displays current standings, rankings, and projected results.|
+|Lifting Order |Display	Shows the current and upcoming lifting order.|
+|Discs Sequence |Display	Displays the required plate configuration for current and upcoming attempts.|
+|Information |Display	Presents athlete information for spectators and officials.|
+|Timer Display	|Controls countdown timers for attempts and competition sessions.|
+|Weigh-In Device	|Handles athlete weigh-in and submits measurements directly to the competition system.|
