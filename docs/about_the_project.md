@@ -1,4 +1,4 @@
-## Architecture Overview
+## System Overview
 ### Core Concept
 
 The **Powerlifting Competition System** is designed to support reliable competition management in environments with `limited` or `unreliable` internet connectivity.  
