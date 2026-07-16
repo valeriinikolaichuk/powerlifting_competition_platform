@@ -19,7 +19,7 @@ The main application page responsible for composing the user interface and coord
 - Provides language selection (`English`, `Ukrainian`, `Polish`).
 - Loads page-specific translations during initialization.
 - Opens informational popup dialogs through the `PopupService`.
-- Hosts the global `PopupComponent` used to render modal windows.
+- Hosts the global [PopupComponent](popup.md) used to render modal windows.
 
 #### Features
 - Displays a fullscreen background video.
@@ -39,13 +39,13 @@ Translations are managed by the `TranslationService`.
 - Text is rendered using a custom `TranslatePipe`.
 
 #### Popup System
-The application uses a centralized PopupService to display modal windows.  
+The application uses a centralized `PopupService` to display modal windows.  
 Instead of embedding modal content directly into the page, the service dynamically renders the requested popup component. This allows different informational dialogs to reuse the same popup infrastructure.
 
 #### Component Composition
 The `HomeComponent` integrates the following `UI` components:
 - `LoginFormComponent` – user authentication form.
-- `PopupComponent` – global popup host.
+- [PopupComponent](popup.md) – global popup host.
 - `InfoPopupComponent` – reusable informational modal.
 - `AboutContentComponent` – example popup content rendered inside the modal.
 
@@ -68,13 +68,4 @@ HomeComponent
 
 ---
 
-- **LoginFormComponent** (`shared/components/login-form`)  
-Reusable login form component. Handles user credentials input and authentication trigger.
 
-- **InfoPopupComponent** (`shared/components/popups/info-popup`)  
-Displays informational content and handles its own close action via the `PopupService`.
-
-- **AboutContentComponent** (`shared/components/popups/info-popup/about-content`)  
-Dynamic content component rendered inside the `InfoPopupComponent`.
-Displays localized structured content loaded from feature-based JSON files.
-Fully presentation-only, with no business logic; relies on TranslationService for data and adapts content based on the current language. 
