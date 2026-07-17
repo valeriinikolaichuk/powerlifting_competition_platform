@@ -5,21 +5,14 @@
 
 ---
 
-### Live Deployment
-
-This project is fully deployed to the cloud using Render.
-
-- Frontend: https://powerlifting-competition-platform-6.onrender.com
-- Backend API: https://powerlifting-competition-platform-5.onrender.com
-- Database: Hosted on Render PostgreSQL
-
----
 <details open="open">
 <summary>Contents</summary>  
 
 - [About the project](#about-the-project)
+- [Deployment Architecture](#deployment-architecture)
 - [Database](#database)
 - [Project Structure](#project-structure)
+- [Live Deployment](#live-deployment)
 - [Built With](#built-with)
 - [Setup and Run Instructions](#setup-and-run-instructions)
 
@@ -28,49 +21,38 @@ This project is fully deployed to the cloud using Render.
 ---
 
 ## About the Project
+➡ [core concept and architecture overview](docs/about_the_project.md)
 
-## Level 1 – System Context
+---
 
-### Core concept
-The system allows organizers to run competitions either fully offline (LAN/local setup) or online via a central server, 
-with later synchronization of all competition data.
-
-### Actors
-
-#### Admin
-Manages users, platform access, and global configuration.
-
-#### User
-Creates and runs competitions. Can operate offline or online.
-
-#### Participant
-Registers for competitions and views results only.
-
-### System behavior
-- Supports offline competition execution
-- Synchronizes data with central backend when online
-- Provides global athlete registry
-- Allows multi-device competition setup
-
-### Core idea
-The system separates runtime competition execution (offline) from global data storage (online).
+## Deployment Architecture
+➡ [deployment architecture & container system](docs/deployment_model.md)
 
 ---
 
 ## Database
 ➡ [database documentation](docs/database.md)
 
---
+---
 
-## Project Structure
-
-For a detailed explanation of the system architecture see:    
+## Project Structure   
 ➡ [frontend documentation](docs/architecture/frontend_architecture.md)  
 ➡ [backend documentation](docs/architecture/backend_architecture.md)
 
 ---
 
-### Built With
+## Live Deployment
+
+This project is fully deployed to the cloud using `Render`.
+- Frontend: https://powerlifting-competition-platform-6.onrender.com
+- Backend API: https://powerlifting-competition-platform-5.onrender.com
+- Database: Hosted on Render PostgreSQL
+
+<h4>beta version: <a href="https://bombingout.com">BOMBINGOUT.COM</a></h4>
+
+---
+
+## Built With
 
 - NestJS
 - Docker
@@ -84,9 +66,8 @@ Planned / upcoming features: Integration with **Google Gemini AI** for intellige
 
 ---
 
-### Setup and Run Instructions  
-
-#### How to run locally:  
+## Setup and Run Instructions  
+### How to run locally:  
 
 ➡ [frontend_setup](docs/setup/frontend_setup.md)  
 ➡ [backend_setup](docs/setup/backend_setup.md)  
