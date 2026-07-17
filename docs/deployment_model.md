@@ -9,12 +9,12 @@ The difference between environments is defined by:
 The application logic remains identical.
 
 #### Local Deployment Flow
-- User authenticates through Portal.
-- User downloads Runtime package.
-- `Runtime` environment is deployed locally.
+- User authenticates through `Frontend Application`.
+- User downloads `project package`.
+- Environment is deployed locally.
 - Database schema is initialized.
 - Required user data is synchronized.
-- `Runtime` operates independently inside the local network.
+- The project operates independently inside the `local network`.
 
 ---
 
@@ -23,10 +23,10 @@ The application logic remains identical.
 <details open="open">
 <summary>Contents</summary>  
 
-- [Portal Mode](#portal-mode)
-- [Runtime Mode](#runtime-mode)
+- [Frontend Application](#frontend-application)
+- [Competition Runtime Application](#competition-runtime-application)
 - [PGlite Database](#pglite-database)
-- [NestJS Backend](#nestjs-backend)
+- [Backend API](#backend-api)
 - [PostgreSQL Database](#postgresql-database)
 - [Architecture](#architecture)
 
@@ -34,34 +34,40 @@ The application logic remains identical.
 
 ---
 
-### Portal Mode
-Portal mode represents the public-facing system environment.  
+### Frontend Application
+#### ( frontend/ )
+Represents the public-facing system environment.  
 
 **Responsibilities:**
 - authentication entry point;
 - system information;
+- information about platform capabilities;
 - `AI` assistant integration;
 - runtime package distribution;
 - global system management.
 
 ---
 
-### Runtime Mode
+### Competition Runtime Application
+#### ( runtime/ )
 **Responsibilities:**  
-- Main competition operation interface.
-- Provides user interaction with competition workflows, device roles, and real-time competition displays.  
-- Runtime can operate in two deployment scenarios:
-  - Online mode — connected to the central backend.
-  - Local LAN mode — connected to a local backend instance.
+- competition workflow execution;
+- device role operation;
+- real-time competition interfaces;
+- local-first data processing;
+- synchronization with backend services;
+- local database management using `PGlite`.
+
+Runtime is a browser-based `Angular` application served as `static content` by `NestJS`.
 
 ---
 
 ### PGlite Database
-Client-side PostgreSQL-compatible database used by the `Runtime` application.
+Client-side PostgreSQL-compatible database used by the `Competition Runtime Application`.
 
-`PGlite` implements the `offline-first` layer of the system. Instead of communicating directly with the backend for every operation, the `Runtime` application stores and updates working data locally, allowing uninterrupted operation regardless of network availability.
+`PGlite` implements the `offline-first` layer of the system. Instead of communicating directly with the backend for every operation, the `Competition Runtime Application` stores and updates working data `locally`, allowing uninterrupted operation regardless of network availability.
 
-The database is synchronized with the server through the Angular synchronization layer.
+The database is synchronized with the server through the `Angular` synchronization layer.
 
 **Responsibilities**
 - stores the user's active working dataset;
@@ -72,17 +78,20 @@ The database is synchronized with the server through the Angular synchronization
 
 ---
 
-### NestJS Backend
-**Responsibility:**  
-Central application logic layer shared by both `Portal` and `Runtime` environments.  
+### Backend API
+The backend provides centralized business logic and communication between clients and databases.
 
-Provides:
-- authentication and authorization;
-- user and device management;
+**Responsibility:**  
+- authentication;
+- user management;
 - competition management;
-- validation and calculations;
+- `API` endpoints;
 - synchronization services;
-- `API` communication between frontend and database.
+- `PostgreSQL` communication.
+
+**Technology:**
+- NestJS
+- Prisma ORM
 
 The same backend codebase is used in both 'central' and 'local' deployments. The difference is the database instance and available dataset.
 
@@ -116,26 +125,44 @@ Includes:
 
 ### Architecture
 <pre>
+powerlifting_competition_platform/
+		|
+		├── frontend/
+		|
+		├── backend/api/
+		|	|
+		|	└── prisma/
+		|		|
+		|		└── migrations/   <- PostgreSQL migrations
+		|
+		├── shared-sql/   <- SQL requests
+		|
+		├── runtime/
+		|	|
+		|	└── src/app/
+		|		|
+		|		└── services/
+		|			|
+		|			└── database.service.ts   <- PGlite migrations
+		|
+
+DOCKER CONTAINERS:
+
 ONLINE
-
- Angular Portal
-       |
-Angular Runtime
-       |
-     PGlite
-       |
-NestJS Backend
-       |
-Central PostgreSQL
-
+pcp-frontend
+      Angular Frontend
+pcp-backend 
+      Backend API
+	    shared SQL
+	    Angular Runtime
+pcp-postgres
+      Central PostgreSQL
 
 LOCAL
-
-Angular Runtime
-       |
-     PGlite
-       |
-NestJS Backend
-       |
-Local PostgreSQL
+pcp-backend 
+      Backend API
+	    shared SQL
+	    Angular Runtime
+pcp-postgres
+      Local PostgreSQL
 </pre>
