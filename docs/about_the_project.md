@@ -12,7 +12,7 @@ This `minimizes network traffic` and allows the system to remain responsive even
 The entire application is distributed as `Docker containers`, allowing organizers to `deploy` the system on a `local network` without installing additional software. 
 Users access the application through a standard `web browser`, enabling rapid deployment across multiple devices. The system allows organizers to run competitions fully offline (`LAN/local setup`) or `online` via a central server, with later `synchronization` of all competition data.
 
-The system can operate `completely offline` during a competition and `synchronize` data with a central server whenever an Internet connection becomes available.
+The system can operate `completely offline` during a competition and `synchronize` data with a central server whenever a network connection becomes available.
 
 ---
 
