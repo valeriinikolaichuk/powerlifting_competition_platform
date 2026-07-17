@@ -34,6 +34,10 @@ docker/volumes/
 **/.angular/cache/
 frontend/dist/
 
+# Angular / runtime
+**/.angular/cache/
+runtime/dist/
+
 # NestJS
 backend/api/dist/
 backend/api/node_modules/
