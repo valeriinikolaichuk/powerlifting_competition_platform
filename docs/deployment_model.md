@@ -93,13 +93,13 @@ The backend provides centralized business logic and communication between client
 - NestJS
 - Prisma ORM
 
-The same backend codebase is used in both 'central' and 'local' deployments. The difference is the database instance and available dataset.
+The same backend codebase is used in both `central` and `local` deployments. The difference is the database instance and available dataset.
 
 ---
 
 ### PostgreSQL Database
 **Responsibility:**  
-Primary 'server-side' data storage used by the 'NestJS' backend.  
+Primary `server-side` data storage used by the `NestJS` backend.  
 The system supports two deployment modes:  
 
 #### Central Database
@@ -111,10 +111,11 @@ The central database stores the complete platform dataset, including:
 - system configuration.
 
 #### Local Competition Database
-The local database allows the 'Runtime' backend to execute the same SQL queries, calculations, and business logic as the central system while remaining fully operational inside a 'local network'.
+The local database allows the `Competition Runtime Application` backend to execute the same `SQL` queries, calculations, and business logic as the central system while remaining fully operational inside a `local network`.
 
-It uses the same schema and business logic as the central database but stores only the subset of data available to the `authenticated user`.  
-Includes:
+It uses the same schema and business logic as the central database but stores only the subset of data available to the `authenticated user`. 
+
+**Includes:**  
 - competitions owned by or assigned to the user;
 - related athletes;
 - competition results;
