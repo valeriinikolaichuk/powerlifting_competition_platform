@@ -1,9 +1,11 @@
 ### IndexedDB
 - Client-side storage reserved exclusively for the `Frontend Application ( frontend/ )`.
 - Managed via `Dexie.js` to simplify native browser database interactions.
+- The frontend application stores a minimal local session state inside `IndexedDB`.
+- The local session is completely independent of backend authentication and server sessions.
 
-Database: `BombingOutFrontend`  
-Table: `frontend_session`
+**Database:** `BombingOutFrontend`  
+**Table:** `frontend_session`
 
 |Column	|Description|
 |-------|-----------|
