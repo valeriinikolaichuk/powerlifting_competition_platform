@@ -52,4 +52,3 @@ Database migrations are managed by `Prisma` Migrate.
 - device_status
 - global_state
 
-➡ [Frontend Tables](database/frontend.md)
