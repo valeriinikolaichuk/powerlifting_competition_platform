@@ -1,5 +1,31 @@
 ### Services
 
+<details open="open">
+<summary>Contents</summary>  
+
+- [FrontendSessionService](#frontendsessionservice)
+- [PopupService](#popupservice)
+- [TranslationService](#translationservice)
+
+</details>
+
+---
+
+#### FrontendSessionService
+Controls the lifecycle stored in the local [frontend_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md) table.
+
+**Responsibilities:**
+- Checks the current frontend state when the application starts;
+- Detects expired `heartbeat` after abnormal application termination;
+- Resets `login_at` and updates `heartbeat` during recovery;
+- Maintains the `heartbeat` while the application is running;
+- Detects device `wake-up` after sleep mode and updates the `heartbeat`.
+
+**Methods:**  
+- `initialize()` Checks the existence and validity of the local frontend state.
+
+---
+
 #### PopupService
 Global state service responsible for managing the application's popup system. Maintains the currently active popup component and its associated data, providing a centralized `API` for opening and closing modal dialogs.
 
