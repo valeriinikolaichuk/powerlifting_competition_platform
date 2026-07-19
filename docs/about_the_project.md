@@ -16,6 +16,18 @@ The system can operate `completely offline` during a competition and `synchroniz
 
 ---
 
+### Actors:
+#### ADMIN (Administrator)
+Responsible for configuring and managing competitions, user registration, maintaining competition flow.
+
+#### USER
+Operates the competition by managing attempts, updating competition data, and monitoring live sessions.
+
+#### PARTICIPANT
+Registers for competitions and accesses published competition results.
+
+---
+
 ### System Context (Level 1)
 
 The system allows organizers to configure multiple computers, each performing a dedicated role during a powerlifting competition. Every device connects to the same application and selects a predefined operating scenario according to its purpose.
@@ -39,16 +51,6 @@ SCOREBOARD            LIFTING               DISCS         INFORMATION         TI
  predict              athlete             plates for                      session start)      weighing in
  results)            attempts)           current/next                                         procedure)
 </pre>
-
-### Actors:
-#### ADMIN (Administrator)
-Responsible for configuring and managing competitions, user registration, maintaining competition flow.
-
-#### USER
-Operates the competition by managing attempts, updating competition data, and monitoring live sessions.
-
-#### PARTICIPANT
-Registers for competitions and accesses published competition results.
 
 ---
 
