@@ -59,6 +59,7 @@ This project is fully deployed to the cloud using `Render`.
 - PostgreSQL
 - Prisma
 - Angular
+- Dexie (IndexedDB)
 - PGlite
 - Tailwind
 
