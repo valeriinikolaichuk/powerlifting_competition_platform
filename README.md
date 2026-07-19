@@ -31,7 +31,9 @@
 ---
 
 ## Database
-➡ [database documentation](docs/database.md)
+➡ [PostgreSQL documentation](docs/database.md)  
+➡ [PGlite documentation](docs/pglite.md)  
+➡ [IndexedDB documentation](docs/indexed.md)
 
 ---
 
