@@ -65,8 +65,6 @@ This project is fully deployed to the cloud using `Render`.
 - PGlite
 - Tailwind
 
-Planned / upcoming features: Integration with **Google Gemini AI** for intelligent user assistance
-
 ---
 
 ## Setup and Run Instructions  
