@@ -19,3 +19,10 @@ This approach allows the Competition `Runtime` Application to execute the same b
                          │
                  Runtime Application
 </pre>
+
+---
+
+### Systems
+
+### [authentication](backend/systems/authentication.md)
+The authentication system is designed around the **`Pipeline`** and **`Factory`** patterns.
