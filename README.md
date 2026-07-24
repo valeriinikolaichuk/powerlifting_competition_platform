@@ -31,12 +31,15 @@
 ---
 
 ## Database
-➡ [database documentation](docs/database.md)
+➡ [PostgreSQL documentation](docs/database.md)  
+➡ [PGlite documentation](docs/pglite.md)  
+➡ [IndexedDB documentation](docs/indexed.md)
 
 ---
 
 ## Project Structure   
 ➡ [frontend documentation](docs/architecture/frontend_architecture.md)  
+➡ [runtime documentation](docs/architecture/runtime_architecture.md)  
 ➡ [backend documentation](docs/architecture/backend_architecture.md)
 
 ---
@@ -62,8 +65,6 @@ This project is fully deployed to the cloud using `Render`.
 - Dexie (IndexedDB)
 - PGlite
 - Tailwind
-
-Planned / upcoming features: Integration with **Google Gemini AI** for intelligent user assistance
 
 ---
 
