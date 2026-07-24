@@ -23,14 +23,14 @@ export class LoginFormComponent {
       language: this.language,
     };
 
-    this.http.post(`${environment.apiUrl}/api/auth/login`, loginData, {
+    this.http.post(`${environment.apiUrl}/api/login`, loginData, {
       withCredentials: true,
     }).subscribe({
       next: (res: any) => {
         this.checkAndRoute(res);
       },
       error: () => {
-        console.error('error by path: /api/auth/login');
+        console.error('error by path: /api/login');
       },
     });
   }
@@ -40,7 +40,7 @@ export class LoginFormComponent {
 
     if (json.success) {
       alert('LOGIN SUCCESS');
-      // тут потім буде router.navigate або popup.close()
+      // тут потім буде router.navigate
     } else {
       alert('LOGIN FAILED');
     }
