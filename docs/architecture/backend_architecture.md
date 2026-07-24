@@ -8,9 +8,8 @@ The backend in this platform is shared between two independent clients:
 Both clients communicate with the same REST API.
 
 This approach allows the Competition `Runtime` Application to execute the same backend logic and SQL queries both in the central platform and in isolated local deployments.
-```
+<pre>
                  Frontend Application
-                         │
                          │
                          ▼
                   ┌──────────────┐
@@ -18,6 +17,5 @@ This approach allows the Competition `Runtime` Application to execute the same b
                   └──────────────┘
                          ▲
                          │
-                         │
                  Runtime Application
-```
+</pre>
