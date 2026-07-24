@@ -39,6 +39,7 @@
 
 ## Project Structure   
 ➡ [frontend documentation](docs/architecture/frontend_architecture.md)  
+➡ [runtime documentation](docs/runtime_architecture.md)  
 ➡ [backend documentation](docs/architecture/backend_architecture.md)
 
 ---
