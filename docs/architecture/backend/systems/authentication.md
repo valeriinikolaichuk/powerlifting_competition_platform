@@ -5,6 +5,21 @@ The login process consists of two independent stages:
 - Determine the authentication method.
 - Execute the corresponding authenticator.
 
+<details open="open">
+<summary>Contents</summary>  
+
+- [Login Flow](#login-flow)
+- [LoginContext](#logincontext)
+- [MethodPipelineService](#methodpipelineservice)
+- [AuthFactoryService](#authfactoryservice)
+      - [Authenticator Architecture](authenticator-architecture)
+- [SessionPolicyFactoryService](#sessionpolicyfactoryservice)
+- [JWT Authentication](#jwt-authentication)
+- [Cookie Management](#cookie-management)
+- [Design Principles](#design-principles)
+
+</details>
+
 ---
 
 ### Login Flow
@@ -182,37 +197,23 @@ The payload intentionally contains only the information required for authorizati
 
 ### Cookie Management
 
-Authentication cookies are managed by a dedicated Cookie Service.
+Authentication cookies are managed by a dedicated [AuthenticationCookieService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/backend/api/src/modules/auth/cookies/authentication-cookie.service.ts).
 
 Responsibilities:
-
-create authentication cookies;
-remove cookies during logout;
-configure cookie lifetime;
-apply common cookie security options.
+- create authentication cookies;
+- remove cookies during logout;
+- configure cookie lifetime;
+- apply common cookie security options.
 
 Controllers never manipulate cookies directly.
 
-Dependency Injection
+---
 
-Authentication components are discovered through NestJS Dependency Injection using Injection Tokens.
-
-Current extension points include:
-
-authentication methods;
-authenticators;
-session policies.
-
-This architecture follows the Open/Closed Principle, allowing new implementations to be added without modifying the existing factories.
-
-Design Principles
-
+### Design Principles
 The module is built around the following architectural principles:
-
-Single Responsibility Principle
-Dependency Injection
-Factory Pattern
-Pipeline Pattern
-Strategy Pattern
-Context-based processing
-Open/Closed Principle
+- Single Responsibility Principle
+- Dependency Injection
+- Factory Pattern
+- Pipeline Pattern
+- Context-based processing
+- Open/Closed Principle
