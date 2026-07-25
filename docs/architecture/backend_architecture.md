@@ -25,4 +25,4 @@ This approach allows the Competition `Runtime` Application to execute the same b
 ### Systems
 
 ### [authentication](backend/systems/authentication.md)
-The authentication system is designed around the **`Pipeline`** and **`Factory`** patterns.
+Processes dynamic login strategies, initializes secure `cookie-based` user sessions, and validates environment configurations asynchronously.
