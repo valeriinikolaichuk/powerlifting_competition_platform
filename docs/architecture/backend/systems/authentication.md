@@ -18,27 +18,34 @@ The login process consists of two independent stages:
         LoginDto
             ↓
     .----------------.
-    | AuthController |<---------------------------------.
-    '----------------'                                  |
-            |   ├──> ? token ---> httpOnly              |
-            |   └──> HTTP Response                      |
-            ↓                                           |
-        AuthService                                     |
-            ↓                                           |
-       LoginContext                                     |
-            ↓                                           |
-    MethodPipelineService                               |
-      (LOGIN_METHODS)                                   |
-  MethodPipelineInterface                               |
-            |                                           |
-            ├── LoginMethodDefault                      |
-            |                                           |
-            |                                           |
-            ↓                                           |
-    AuthFactoryService                                  |
-    (LOGIN_STRATEGIES)                                  |
-   AuthenticatorAbstract ----.                          |
-    ________|________        ├── authenticate()         |
-            ↓                ├── generateToken() ?      |
-        AuthDefault          └── LoginResultDto --------'
+    | AuthController | <────────────────────────────────────────────────────────.
+    '----------------'                                                          |
+            |   |                                                               |
+            |   ├───────────> ? AuthenticationCookieService <───────────────────|
+            |   |                         ↓        ↑                            |
+            |   └──> HTTP Response     httpOnly    |                            |
+            ↓                                      |                            |
+        AuthService                                |                            |
+            ↓                               SessionPolicyFactory ───────.       |
+       LoginContext                        (TOKEN_COOKIE_POLICY)        |       |
+            ↓                              SessionPolicyInterface       |       |
+    MethodPipelineService                  ________|________            |       |
+      (LOGIN_METHODS)                      ↓               ↓            |       |
+  MethodPipelineInterface     OfflineSessionPolicy  OnlineSessionPolicy |       |
+            |                                                           |       |
+            ├── LoginMethodDefault                                      |       |
+            |                                                           |       |
+            |                                                           |       |
+            ↓                                                           |       |
+    AuthFactoryService                                                  |       |
+    (LOGIN_STRATEGIES)                                                  |       |
+   AuthenticatorAbstract -------.                                       |       |
+    ________|________           |                                       |       |
+            ↓                Response,                                  |       |
+        AuthDefault        LoginContext                                 |       |
+                                |                                       |       |
+                                ├── authenticate()                      |       |
+                                ├── generateToken() ? <─────────────────|       |
+                                ├── generateToken() ? <─────────────────'       |
+                                └── LoginResultDto ─────────────────────────────'
 </pre>
