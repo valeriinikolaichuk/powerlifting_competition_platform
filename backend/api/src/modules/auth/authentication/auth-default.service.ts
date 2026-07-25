@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { UserStatus } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
+import { PrismaService } from '../../../prisma/prisma.service';
 
 import { AuthenticatorAbstract } from './authenticator.abstract';
 import { LoginContext } from '../login-context';
-import { PrismaService } from '../../../prisma/prisma.service';
+import { SessionPolicyFactoryService } from '../policy/session-policy-factory.service';
+
 
 @Injectable()
 export class AuthDefaultService extends AuthenticatorAbstract {
@@ -13,8 +15,9 @@ export class AuthDefaultService extends AuthenticatorAbstract {
     constructor(
         private readonly prisma: PrismaService,
         jwtService: JwtService,
+        sessionPolicyFactory: SessionPolicyFactoryService,
     ) {
-        super(jwtService);
+        super(jwtService, sessionPolicyFactory);
     }
 
     supports(context: LoginContext): boolean 

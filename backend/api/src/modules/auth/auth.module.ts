@@ -6,13 +6,17 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 
-import { LOGIN_METHODS, LOGIN_STRATEGIES } from './auth.tokens';
+import { LOGIN_METHODS, LOGIN_STRATEGIES, TOKEN_COOKIE_POLICY } from './auth.tokens';
 
 import { MethodPipelineService } from './method-pipeline/method-pipeline.service';
 import { LoginMethodDefault } from './method-pipeline/login-method-default';
 
 import { AuthFactoryService } from './authentication/auth-factory.service';
 import { AuthDefaultService } from './authentication/auth-default.service';
+
+import { SessionPolicyFactoryService } from './policy/session-policy-factory.service';
+import { OfflineSessionPolicy } from './policy/offline-session-policy';
+import { OnlineSessionPolicy } from './policy/online-session-policy';
 
 @Module({
   imports: [
@@ -30,10 +34,10 @@ import { AuthDefaultService } from './authentication/auth-default.service';
   controllers: [AuthController],
 
   providers: [
-    MethodPipelineService,
+
+  // iterable<MethodPipelineInterface>
     LoginMethodDefault,
 
-    // iterable<MethodPipelineInterface>
     {
       provide: LOGIN_METHODS,
       useFactory: (
@@ -46,10 +50,11 @@ import { AuthDefaultService } from './authentication/auth-default.service';
       ],
     },
 
-    AuthFactoryService,
+    MethodPipelineService,
+    
+// iterable<AuthenticatorAbstract>
     AuthDefaultService,
 
-    // iterable<AuthenticatorAbstract>
     {
       provide: LOGIN_STRATEGIES,
       useFactory: (
@@ -61,6 +66,29 @@ import { AuthDefaultService } from './authentication/auth-default.service';
         AuthDefaultService,
       ],
     },
+
+    AuthFactoryService,
+
+// iterable<SessionPolicyInterface>
+    OfflineSessionPolicy,
+    OnlineSessionPolicy,
+
+    {
+        provide: TOKEN_COOKIE_POLICY,
+        useFactory: (
+            offline: OfflineSessionPolicy,
+            online: OnlineSessionPolicy,
+        ) => [
+            offline,
+            online,
+        ],
+        inject: [
+            OfflineSessionPolicy,
+            OnlineSessionPolicy,
+        ],
+    },
+
+    SessionPolicyFactoryService,
 
     AuthService,
     JwtStrategy,

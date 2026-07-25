@@ -1,3 +1,5 @@
 export const LOGIN_METHODS = Symbol('LOGIN_METHODS');
 
 export const LOGIN_STRATEGIES = Symbol('LOGIN_STRATEGIES');
+
+export const TOKEN_COOKIE_POLICY = Symbol('TOKEN_COOKIE_POLICY');

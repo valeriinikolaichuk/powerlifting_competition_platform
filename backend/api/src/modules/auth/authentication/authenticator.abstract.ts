@@ -1,11 +1,14 @@
 import { JwtService } from '@nestjs/jwt';
+import { SessionPolicyFactoryService } from '../policy/session-policy-factory.service';
 import { LoginContext } from "../login-context";
 import { LoginResultDto } from "../dto/login-result.dto";
+import { SessionPolicyInterface } from '../policy/session-policy.interface';
 
 export abstract class AuthenticatorAbstract {
 
     constructor(
         protected readonly jwtService: JwtService,
+        protected readonly sessionPolicyFactory: SessionPolicyFactoryService,
     ) {}
 
     abstract supports(context: LoginContext): boolean;
@@ -20,20 +23,51 @@ export abstract class AuthenticatorAbstract {
             return context.result;
         }
 
-        context.result.token = await this.generateToken(context);
+        const policy = this.sessionPolicyFactory.get(context.user.role);
+
+        context.result.accessToken = await this.generateAccessToken(
+            context,
+            policy
+        );
+
+        if (policy.issueRefreshToken) {
+            context.result.refreshToken = await this.generateRefreshToken(
+                context, 
+                policy
+            );
+        }
 
         return context.result;
     }
 
-    protected async generateToken(context: LoginContext): Promise<string>
-    {
+    protected async generateAccessToken(
+        context: LoginContext, 
+        policy: SessionPolicyInterface
+    ): Promise<string>{
+
         return this.jwtService.signAsync(
             {
                 sub: context.user.id,
                 role: context.user.role,
             },
             {
-                expiresIn: '7d',
+                expiresIn: policy.accessTokenExpiresIn,
+            },
+        );
+    }
+
+    protected async generateRefreshToken(
+        context: LoginContext,
+        policy: SessionPolicyInterface,
+    ): Promise<string> {
+
+        return this.jwtService.signAsync(
+            {
+                sub: context.user.id,
+                role: context.user.role,
+            },
+            {
+                expiresIn: policy.refreshTokenExpiresIn,
             },
         );
     }

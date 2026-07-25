@@ -13,12 +13,14 @@ export class AuthService {
         private readonly authFactory: AuthFactoryService
     ) {}
 
-    async login(dto: LoginDto) {
+    async login(dto: LoginDto): Promise<LoginContext> {
 
         const context = new LoginContext(dto);
 
         await this.pipeline.execute(context);
 
-        return this.authFactory.authenticate(context);
+        await this.authFactory.authenticate(context);
+
+        return context;
     }
 }

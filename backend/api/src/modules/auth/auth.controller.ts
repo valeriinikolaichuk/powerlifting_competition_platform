@@ -3,6 +3,7 @@ import type { Response } from 'express';
 import { CurrentUser } from './guards/current-user.decorator';
 
 import { AuthService } from './auth.service';
+import { AuthenticationCookieService } from './cookies/authentication-cookie.service';
 import { LoginDto } from './dto/login.dto';
 
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -11,7 +12,8 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 export class AuthController {
 
     constructor(
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        private readonly cookieService: AuthenticationCookieService,
     ) {}
 
     @Post('login')
@@ -19,20 +21,18 @@ export class AuthController {
         @Body() dto: LoginDto,
         @Res({ passthrough: true }) response: Response,
     ) {
-        const result = await this.authService.login(dto);
+        const context = await this.authService.login(dto);
 
-        if (result.token) {
-            response.cookie('access_token', result.token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: 'strict',
-                maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
-            });
+        if (context.result.accessToken) {
+            this.cookieService.setLoginCookies(
+                response,
+                context,
+            );
         }
 
         return {
-            success: result.success,
-            message: result.message,
+            success: context.result.success,
+            message: context.result.message,
         };
     }
 
@@ -47,16 +47,9 @@ export class AuthController {
 
     @Post('logout')
     async clearCookie(@Res({ passthrough: true }) response: Response) {
-        response.cookie('access_token', '', {
-            httpOnly: true,
-            secure: true,
-            sameSite: 'strict',
-            maxAge: 0, 
-        });
+        
+        this.cookieService.clearCookies(response);
 
-        return {
-            success: true,
-            message: 'Logged out successfully',
-        };
+        return {success: true};
     }
 }
