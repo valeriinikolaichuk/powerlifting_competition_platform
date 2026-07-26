@@ -137,7 +137,11 @@ Responsibilities of `AuthenticatorAbstract`
 - generating `JWT access tokens`;
 - generating `JWT refresh tokens` when required by the selected session policy;
 - selecting the appropriate session policy;
-- populating the authentication result.
+- populating `LoginResultDto`, including:
+  - authentication status;
+  - response message;
+  - authenticated user `role`;
+  - generated authentication `tokens`.
 
 Concrete authenticators implement only the authentication logic specific to their authentication method.
 
@@ -145,7 +149,7 @@ Typical responsibilities include:
 - locating the user;
 - validating credentials;
 - checking account status;
-- assigning the authenticated user to the LoginContext.
+- assigning the authenticated user to the `LoginContext`.
 
 They do not generate tokens or manage session behavior.
 
@@ -186,8 +190,7 @@ After successful authentication, the authenticator generates `JWT tokens` accord
 Typical JWT payload:
 <pre>
 {
-  "sub": 15,
-  "role": "USER"
+  "sub": 15
 }
 </pre>
 
