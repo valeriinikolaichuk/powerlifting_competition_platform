@@ -33,8 +33,9 @@ Check frontend_session table
         │   Create record
         │   login_at = NULL
         │   heartbeat = NOW()
-        │
-        └── Record exists
+        |        |
+        │        ▼
+        └── Record exists ? login -> login_at = NOW()
                 |
                 ▼
         Check heartbeat
