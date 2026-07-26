@@ -131,6 +131,12 @@ execute()
     ├── generateRefreshToken()
     │
     └── populate LoginResultDto
+                      │
+                      ├── success
+                      ├── message
+                      ├── role
+                      ├── accessToken
+                      └── refreshToken
 </pre>
 Responsibilities of `AuthenticatorAbstract`
 - executing the authentication workflow;
