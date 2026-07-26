@@ -56,6 +56,7 @@ export class AuthDefaultService extends AuthenticatorAbstract {
         }
 
         context.user = user;
+        context.result.role = context.user.role;
         context.result.success = true;
 
         return true;

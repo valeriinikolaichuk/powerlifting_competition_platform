@@ -48,7 +48,6 @@ export abstract class AuthenticatorAbstract {
         return this.jwtService.signAsync(
             {
                 sub: context.user.id,
-                role: context.user.role,
             },
             {
                 expiresIn: policy.accessTokenExpiresIn,
@@ -64,7 +63,6 @@ export abstract class AuthenticatorAbstract {
         return this.jwtService.signAsync(
             {
                 sub: context.user.id,
-                role: context.user.role,
             },
             {
                 expiresIn: policy.refreshTokenExpiresIn,

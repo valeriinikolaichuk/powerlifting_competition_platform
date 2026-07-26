@@ -33,6 +33,7 @@ export class AuthController {
         return {
             success: context.result.success,
             message: context.result.message,
+            role: context.result.role,
         };
     }
 
@@ -41,13 +42,13 @@ export class AuthController {
     getProfile(@CurrentUser() user: any) { 
         return {
             success: true,
-            data: user, // return { id: '...', role: '...' }
+            data: user,
         };
     }
 
     @Post('logout')
     async clearCookie(@Res({ passthrough: true }) response: Response) {
-        
+
         this.cookieService.clearCookies(response);
 
         return {success: true};

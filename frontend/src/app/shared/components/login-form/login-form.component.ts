@@ -12,7 +12,6 @@ import { environment } from '../../../../environments/environment';
 export class LoginFormComponent {
   login = '';
   password = '';
-  language = 'en';
 
   constructor(private http: HttpClient) {}
 
@@ -20,7 +19,6 @@ export class LoginFormComponent {
     const loginData = {
       login: this.login,
       password: this.password,
-      language: this.language,
     };
 
     this.http.post(`${environment.apiUrl}/api/login`, loginData, {
