@@ -56,7 +56,7 @@ The login process consists of two independent stages:
             ↓                                                           |       |
     AuthFactoryService                                                  |       |
     (LOGIN_STRATEGIES)                                                  |       |
-   AuthenticatorAbstract -------.                                       |       |
+   AuthenticatorAbstract ───────.                                       |       |
     ________|________           |                                       |       |
             ↓                Response,                                  |       |
         AuthDefault        LoginContext                                 |       |
