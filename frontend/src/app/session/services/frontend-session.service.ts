@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 
-import { PopupService } from './popup.service';
-import { SecondTabPopupComponent } from '../second-tab-popup/second-tab-popup.component';
-import { db } from '../database/database';
+import { PopupService } from '../../popup/services/popup.service';
+import { SecondTabPopupComponent } from '../components/second-tab-popup/second-tab-popup.component';
+import { db } from '../../database/database';
 
 @Injectable({
   providedIn: 'root',

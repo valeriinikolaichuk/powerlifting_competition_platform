@@ -1,4 +1,4 @@
-import { UserRole } from "../../shared/components/login-form/user-role";
+import { UserRole } from "../enums/user-role";
 
 export interface LoginResponse {
     success: boolean;

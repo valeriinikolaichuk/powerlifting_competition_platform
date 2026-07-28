@@ -1,5 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { TranslationService } from '../../../../../services/translation.service';
+import { TranslationService } from '../../../../i18n/services/translation.service';
 
 @Component({
   selector: 'app-about-content',

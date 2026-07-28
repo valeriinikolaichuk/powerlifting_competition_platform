@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserRole } from '../../shared/components/login-form/user-role';
+import { UserRole } from '../enums/user-role';
 
 @Injectable({
   providedIn: 'root',

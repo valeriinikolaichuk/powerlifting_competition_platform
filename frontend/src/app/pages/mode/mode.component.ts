@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
-import { FrontendSessionService } from '../../services/frontend-session.service';
+import { FrontendSessionService } from '../../session/services/frontend-session.service';
 
 @Component({
   selector: 'app-mode',

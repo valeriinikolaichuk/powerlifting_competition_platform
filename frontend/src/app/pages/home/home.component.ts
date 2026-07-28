@@ -1,14 +1,14 @@
 import { Component, OnInit, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { LoginFormComponent } from '../../shared/components/login-form/login-form.component';
-import { PopupComponent } from "../../popup/popup.component";
-import { InfoPopupComponent } from '../../shared/components/popups/info-popup/info-popup.component';
-import { AboutContentComponent } from '../../shared/components/popups/info-popup/about-content/about-content.component';
+import { LoginFormComponent } from '../../auth/components/login-form/login-form.component';
+import { PopupComponent } from "../../popup/components/popup.component";
+import { InfoPopupComponent } from '../../popup/components/info-popups/info-popup.component';
+import { AboutContentComponent } from '../../popup/components/info-popups/about-content/about-content.component';
 
-import { TranslatePipe } from '../../shared/pipes/translate.pipe';
-import { PopupService } from '../../services/popup.service';
-import { TranslationService } from '../../services/translation.service';
+import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
+import { PopupService } from '../../popup/services/popup.service';
+import { TranslationService } from '../../i18n/services/translation.service';
 
 @Component({
   selector: 'app-home',

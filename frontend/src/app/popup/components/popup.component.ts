@@ -1,7 +1,7 @@
 import { Component, inject, ViewChild, ElementRef, effect, Injector, } from '@angular/core';
 import { NgComponentOutlet } from '@angular/common';
 import { PopupService } from '../services/popup.service';
-import { POPUP_DATA } from '../shared/tokens/popup-data.token';
+import { POPUP_DATA } from '../tokens/popup-data.token';
 
 @Component({
   selector: 'app-popup',

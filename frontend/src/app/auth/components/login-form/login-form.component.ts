@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
-import { AuthService } from '../../../auth/services/auth.service';
-import { RoleRouterServiceService } from '../../../auth/services/role-router-service.service'; 
-import { FrontendSessionService } from '../../../services/frontend-session.service';
+import { AuthService } from '../../services/auth.service';
+import { RoleRouterServiceService } from '../../services/role-router-service.service'; 
+import { FrontendSessionService } from '../../../session/services/frontend-session.service';
 
 @Component({
   selector: 'app-login-form',

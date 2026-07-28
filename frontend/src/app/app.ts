@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { FrontendSessionService } from './services/frontend-session.service';
+import { FrontendSessionService } from './session/services/frontend-session.service';
 
 @Component({
   selector: 'app-root',
