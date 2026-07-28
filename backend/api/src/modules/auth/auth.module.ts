@@ -5,6 +5,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { AuthenticationCookieService } from './cookies/authentication-cookie.service';
 
 import { LOGIN_METHODS, LOGIN_STRATEGIES, TOKEN_COOKIE_POLICY } from './auth.tokens';
 
@@ -92,6 +93,7 @@ import { OnlineSessionPolicy } from './policy/online-session-policy';
 
     AuthService,
     JwtStrategy,
+    AuthenticationCookieService,
   ],
 })
 export class AuthModule {}

@@ -1,11 +1,19 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { db } from '../database/database';
 import { interval, Subscription } from 'rxjs';
+
+import { PopupService } from '@shared-frontend';
+import { SecondTabPopupComponent } from '../second-tab-popup/second-tab-popup.component';
+import { db } from '../database/database';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FrontendSessionService implements OnDestroy {
+
+  constructor(
+      private readonly popupService: PopupService,
+  ) {}
+
   private readonly SESSION_ID = 1;
 
   private readonly HEARTBEAT_INTERVAL = 30000;
@@ -97,6 +105,32 @@ export class FrontendSessionService implements OnDestroy {
     await db.table('frontend_session').update(this.SESSION_ID, {
       heartbeat: Date.now()
     });
+  }
+
+  async clearLogin(): Promise<void> {
+    await db.table('frontend_session').update(this.SESSION_ID, {
+      login_at: null,
+      heartbeat: Date.now(),
+    });
+  }
+
+  async lockLogin(): Promise<boolean> {
+
+    const session = await db.table('frontend_session').get(this.SESSION_ID);
+
+    if (session?.login_at != null) {
+
+      this.popupService.open(SecondTabPopupComponent);
+
+      return false;
+    }
+
+    await db.table('frontend_session').update(this.SESSION_ID, {
+      login_at: Date.now(),
+      heartbeat: Date.now(),
+    });
+
+    return true;
   }
 
   ngOnDestroy(): void {

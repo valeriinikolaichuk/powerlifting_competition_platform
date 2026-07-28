@@ -3,11 +3,33 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/app",
-    "rootDir": "src",
+    "rootDirs": [
+      "src"
+    ],
     "types": [
       "node"
-    ]
+    ],
+    // Використовуємо сучасний режим пошуку модулів без baseUrl
+    "moduleResolution": "bundler",
+    "paths": {
+      // Точний аліас на спільну точку входу
+      "@shared-frontend": [
+        "../shared/frontend/index.ts"
+      ],
+      // Ізолюємо основні пакети: примусово мапимо їх на локальну папку node_modules
+      "@angular/*": [
+        "./node_modules/@angular/*"
+      ],
+      "rxjs": [
+        "./node_modules/rxjs"
+      ],
+      "rxjs/*": [
+        "./node_modules/rxjs/*"
+      ],
+      "tslib": [
+        "./node_modules/tslib"
+      ]
+    }
   },
   "include": [
     "src/**/*.ts"

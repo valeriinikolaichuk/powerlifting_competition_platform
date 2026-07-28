@@ -1,46 +1,60 @@
-import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../../environments/environment'; 
+import { Component, inject } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+
+import { AuthService } from '../../../auth/services/auth.service';
+import { RoleRouterServiceService } from '../../../auth/services/role-router-service.service'; 
+import { FrontendSessionService } from '../../../services/frontend-session.service';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [FormsModule],
+  imports: [ReactiveFormsModule],
   templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent {
-  login = '';
-  password = '';
 
-  constructor(private http: HttpClient) {}
+  private readonly fb = inject(FormBuilder);
 
-  onSubmit() {
-    const loginData = {
-      login: this.login,
-      password: this.password,
-    };
+  form = this.fb.group({
+    login: ['', Validators.required],
+    password: ['', Validators.required],
+  });
 
-    this.http.post(`${environment.apiUrl}/api/login`, loginData, {
-      withCredentials: true,
-    }).subscribe({
-      next: (res: any) => {
-        this.checkAndRoute(res);
+  constructor(
+    private readonly authService: AuthService,
+    private readonly roleRouter: RoleRouterServiceService,
+    private readonly frontendSessionService: FrontendSessionService,
+  ) {}
+
+  async onSubmit() {
+
+    if (this.form.invalid) {return;}
+
+    if (!(await this.frontendSessionService.lockLogin())) {return;}
+
+    const dto = this.form.value;
+
+    this.authService.login(dto).subscribe({
+      next: async(response) => {
+        console.log(response);
+
+        if (!response.success || !response.role) 
+        {
+          alert(response.message);
+
+          await this.frontendSessionService.clearLogin();
+
+          return;
+        }
+
+        await this.roleRouter.navigate(response.role);
       },
-      error: () => {
+      error: async() => {
+        
+        await this.frontendSessionService.clearLogin();
+
         console.error('error by path: /api/login');
       },
     });
-  }
-
-  checkAndRoute(json: any) {
-    console.log('SERVER RESPONSE:', json);
-
-    if (json.success) {
-      alert('LOGIN SUCCESS');
-      // тут потім буде router.navigate
-    } else {
-      alert('LOGIN FAILED');
-    }
-  }
+  };
 }

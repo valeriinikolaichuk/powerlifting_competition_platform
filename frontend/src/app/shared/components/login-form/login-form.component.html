@@ -1,20 +1,18 @@
 <div class="w-[22%] h-[300px] mt-[30px] relative z-[2] text-center flex flex-col">
-    <form (ngSubmit)="onSubmit()" #form="ngForm">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <h5 class="text-center w-[182px]">LOGIN</h5>
         <input  
             class="border-2 border-black" 
             type="text" 
-            name="login" 
-            [(ngModel)]="login" 
-            required>
+            formControlName="login"
+        >
         <br/><br/><br/><br/>
         <h5 class="text-center w-[182px]">PASSWORD</h5>
         <input 
             class="border-2 border-black" 
             type="password" 
-            name="password" 
-            [(ngModel)]="password" 
-            required>
+            formControlName="password"
+        >
         <br/><br/><br/><br/><br/>
         <button 
             type="submit" 

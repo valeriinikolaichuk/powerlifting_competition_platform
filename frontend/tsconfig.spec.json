@@ -3,11 +3,30 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "./out-tsc/spec",
-    "rootDir": "src",
+    "rootDirs": [
+      "src"
+    ],
     "types": [
       "vitest/globals"
-    ]
+    ],
+    "moduleResolution": "bundler",
+    "paths": {
+      "@shared-frontend": [
+        "../shared/frontend/index.ts"
+      ],
+      "@angular/*": [
+        "./node_modules/@angular/*"
+      ],
+      "rxjs": [
+        "./node_modules/rxjs"
+      ],
+      "rxjs/*": [
+        "./node_modules/rxjs/*"
+      ],
+      "tslib": [
+        "./node_modules/tslib"
+      ]
+    }
   },
   "include": [
     "src/**/*.d.ts",
