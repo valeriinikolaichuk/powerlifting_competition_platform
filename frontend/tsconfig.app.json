@@ -1,35 +1,11 @@
-/* To learn more about Typescript configuration file: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html. */
-/* To learn more about Angular compiler options: https://angular.dev/reference/configs/angular-compiler-options. */
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "rootDirs": [
-      "src"
-    ],
+    "outDir": "./out-tsc/app",
+    "rootDir": "src",
     "types": [
       "node"
-    ],
-    // Використовуємо сучасний режим пошуку модулів без baseUrl
-    "moduleResolution": "bundler",
-    "paths": {
-      // Точний аліас на спільну точку входу
-      "@shared-frontend": [
-        "../shared/frontend/index.ts"
-      ],
-      // Ізолюємо основні пакети: примусово мапимо їх на локальну папку node_modules
-      "@angular/*": [
-        "./node_modules/@angular/*"
-      ],
-      "rxjs": [
-        "./node_modules/rxjs"
-      ],
-      "rxjs/*": [
-        "./node_modules/rxjs/*"
-      ],
-      "tslib": [
-        "./node_modules/tslib"
-      ]
-    }
+    ]
   },
   "include": [
     "src/**/*.ts"

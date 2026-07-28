@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 
-import { PopupService } from '@shared-frontend';
+import { PopupService } from './popup.service';
 import { SecondTabPopupComponent } from '../second-tab-popup/second-tab-popup.component';
 import { db } from '../database/database';
 

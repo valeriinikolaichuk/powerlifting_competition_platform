@@ -7,7 +7,7 @@ import { InfoPopupComponent } from '../../shared/components/popups/info-popup/in
 import { AboutContentComponent } from '../../shared/components/popups/info-popup/about-content/about-content.component';
 
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
-import { PopupService } from '../../../../../shared/frontend/src/services/popup.service';
+import { PopupService } from '../../services/popup.service';
 import { TranslationService } from '../../services/translation.service';
 
 @Component({

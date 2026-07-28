@@ -20,6 +20,7 @@
     "@angular/platform-server": "^20.0.0",
     "@angular/router": "^20.0.0",
     "@angular/ssr": "^20.0.0",
+    "@shared/frontend": "file:../shared/frontend",
     "@tailwindcss/postcss": "^4.2.4",
     "dexie": "^4.4.4",
     "rxjs": "~7.8.0",
