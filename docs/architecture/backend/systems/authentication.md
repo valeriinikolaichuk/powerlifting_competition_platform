@@ -12,7 +12,7 @@ The login process consists of two independent stages:
 - [LoginContext](#logincontext)
 - [MethodPipelineService](#methodpipelineservice)
 - [AuthFactoryService](#authfactoryservice)
-  - [Authenticator Architecture](authenticator-architecture)
+  - [Authenticator Architecture](#authenticator-architecture)
 - [SessionPolicyFactoryService](#sessionpolicyfactoryservice)
 - [JWT Authentication](#jwt-authentication)
 - [Cookie Management](#cookie-management)
@@ -131,6 +131,12 @@ execute()
     ├── generateRefreshToken()
     │
     └── populate LoginResultDto
+                      │
+                      ├── success
+                      ├── message
+                      ├── role
+                      ├── accessToken
+                      └── refreshToken
 </pre>
 Responsibilities of `AuthenticatorAbstract`
 - executing the authentication workflow;
