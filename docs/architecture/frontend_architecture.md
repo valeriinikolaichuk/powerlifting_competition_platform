@@ -26,7 +26,7 @@ The project uses Angular's standalone component API instead of NgModules. Each c
 ### [authentication](frontend/systems/authentication.md)
 Contains the components, services, and workflows responsible for authenticating users and controlling access to protected application features
 
-### [Popup System](frontend/systems/popup-system.md)
+### [popup](frontend/systems/popup-system.md)
 Dynamically renders popup components
 
 ### [i18n](frontend/systems/i18n.md) Translation Module  
@@ -37,8 +37,6 @@ Translation system based on Angular signals and lazy-loaded `JSON` files, suppor
 ### Components
 ### [pages/](frontend/pages.md)   
 Contains `route-level components` representing the main views of the application.
-### [popup/](frontend/popup.md)
-Global container that renders dynamic popup components and injects data into them.  
 ### shared/
 Reusable UI components, pipes, directives, and other common functionality shared across multiple features.
 - ### [components/](frontend/shared/components.md)
