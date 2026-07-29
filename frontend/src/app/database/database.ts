@@ -6,6 +6,7 @@ db.version(1).stores({
     frontend_session: `
         id,
         login_at,
-        heartbeat
+        heartbeat,
+        tab_id
     `
 });

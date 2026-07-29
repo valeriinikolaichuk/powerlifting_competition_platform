@@ -1,3 +1,5 @@
+@if (tService.hasScope()('pages/home')) {
+
 <div class="relative w-full h-screen">
 
     <video autoplay muted loop playsinline preload="auto"
@@ -30,17 +32,17 @@
                     font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
                 (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'ABOUT' | t:'home' }}</button>
+            >{{ 'ABOUT' | t:'pages/home' }}</button>
             <button class="w-[80%] h-[60px] border border-black text-black text-lg 
                     font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
                 (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'CLIENTS' | t:'home' }}</button>
+            >{{ 'CLIENTS' | t:'pages/home' }}</button>
             <button class="w-[80%] h-[60px] border border-black text-black text-lg 
                     font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
                 (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'SETUP' | t:'home' }}</button>
+            >{{ 'SETUP' | t:'pages/home' }}</button>
         </div>
 
         <div class="relative z-10">
@@ -53,26 +55,26 @@
                     font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
                 (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'DATA' | t:'home' }}</button>
+            >{{ 'DATA' | t:'pages/home' }}</button>
             <button class="w-[80%] h-[60px] border border-black text-black text-lg 
                     font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
                 (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'RUN' | t:'home' }}</button>
+            >{{ 'RUN' | t:'pages/home' }}</button>
             <button class="w-[80%] h-[60px] border border-black text-black text-lg 
                     font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600" 
                 type="button" 
                 (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'EXTRAS' | t:'home' }}</button>
+            >{{ 'EXTRAS' | t:'pages/home' }}</button>
         </div>
     </div>
 
     <div class="text-center">
-        <p><b>{{ 'head' | t:'home' }}</b></p>
-        <p>{{ 'lineOne' | t:'home' }}</p>
-        <p>{{ 'lineTwo' | t:'home' }}</p>
-        <p>{{ 'access' | t:'home' }}</p>
+        <p><b>{{ 'head' | t:'pages/home' }}</b></p>
+        <p>{{ 'lineOne' | t:'pages/home' }}</p>
+        <p>{{ 'lineTwo' | t:'pages/home' }}</p>
+        <p>{{ 'access' | t:'pages/home' }}</p>
     </div>
-
-    <app-popup></app-popup>
 </div>
+
+}

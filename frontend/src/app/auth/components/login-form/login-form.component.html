@@ -1,13 +1,17 @@
 <div class="w-[22%] h-[300px] mt-[30px] relative z-[2] text-center flex flex-col">
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <h5 class="text-center w-[182px]">LOGIN</h5>
+        <h5 class="text-center w-[182px]">
+            {{ 'LOGIN' | t:'forms/login-form' }}
+        </h5>
         <input  
             class="border-2 border-black" 
             type="text" 
             formControlName="login"
         >
         <br/><br/><br/><br/>
-        <h5 class="text-center w-[182px]">PASSWORD</h5>
+        <h5 class="text-center w-[182px]">
+            {{ 'PASSWORD' | t:'forms/login-form' }}
+        </h5>
         <input 
             class="border-2 border-black" 
             type="password" 
@@ -17,8 +21,9 @@
         <button 
             type="submit" 
             class="border-2 border-black p-0 w-[182px] bg-[rgba(0,0,135,0.2)] 
-                hover:bg-blue-600 text-black" 
-        >SING IN</button>
+                hover:bg-blue-600 text-black">
+                {{ 'SINGIN' | t:'forms/login-form' }}
+            </button>
     </form>
     <br/>
 </div>

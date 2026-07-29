@@ -2,26 +2,24 @@ import { Component, OnInit, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LoginFormComponent } from '../../auth/components/login-form/login-form.component';
-import { PopupComponent } from "../../popup/components/popup.component";
 import { InfoPopupComponent } from '../../popup/components/info-popups/info-popup.component';
 import { AboutContentComponent } from '../../popup/components/info-popups/about-content/about-content.component';
-
-import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { PopupService } from '../../popup/services/popup.service';
 import { TranslationService } from '../../i18n/services/translation.service';
+import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 
 @Component({
   selector: 'app-home',
   standalone: true, 
   imports: [
     LoginFormComponent, 
-    PopupComponent, 
     TranslatePipe, 
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
+  
   AboutContentComponent: Type<any> = AboutContentComponent;
 
   constructor(
@@ -30,7 +28,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.tService.load('home');
+    this.tService.load('pages/home');
   }
 
   setLang(lang: 'en' | 'uk' | 'pl') {

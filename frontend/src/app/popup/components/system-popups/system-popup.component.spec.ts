@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SecondTabPopupComponent } from './second-tab-popup.component';
+import { SystemPopupComponent } from './system-popup.component';
 
-describe('SecondTabPopupComponent', () => {
-  let component: SecondTabPopupComponent;
-  let fixture: ComponentFixture<SecondTabPopupComponent>;
+describe('SessionPopupComponent', () => {
+  let component: SystemPopupComponent;
+  let fixture: ComponentFixture<SystemPopupComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SecondTabPopupComponent]
+      imports: [SystemPopupComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SecondTabPopupComponent);
+    fixture = TestBed.createComponent(SystemPopupComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

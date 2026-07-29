@@ -2,23 +2,24 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { TranslationService } from '../../../../i18n/services/translation.service';
 
 @Component({
-  selector: 'app-about-content',
+  selector: 'app-second-tab-content',
   imports: [],
-  templateUrl: './about-content.component.html',
+  templateUrl: './second-tab-content.component.html',
 })
-export class AboutContentComponent {
+export class SecondTabContentComponent {
+
   tService = inject(TranslationService);
 
   data = signal<any>(null);
 
   constructor() {
-    this.tService.load('popups/about-popup');
+    this.tService.load('second-tab-popup');
 
     effect(() => {
       const lang = this.tService.lang();
       const translations = this.tService.translations();
 
-      const content = translations?.[lang]?.['popups/about-popup'];
+      const content = translations?.[lang]?.['second-tab-popup'];
 
       if (content) {
         this.data.set(content);

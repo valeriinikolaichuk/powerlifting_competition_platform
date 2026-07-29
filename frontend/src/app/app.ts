@@ -1,11 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { FrontendSessionService } from './session/services/frontend-session.service';
+import { PopupComponent } from './popup/components/popup.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
+  imports: [RouterOutlet,
+    PopupComponent, 
+  ],
   templateUrl: './app.html'
 })
 export class App implements OnInit {

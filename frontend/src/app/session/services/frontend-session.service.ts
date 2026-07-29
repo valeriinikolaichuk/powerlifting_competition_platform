@@ -2,7 +2,8 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 
 import { PopupService } from '../../popup/services/popup.service';
-import { SecondTabPopupComponent } from '../components/second-tab-popup/second-tab-popup.component';
+import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
+import { SecondTabContentComponent } from '../../popup/components/system-popups/second-tab-content/second-tab-content.component';
 import { db } from '../../database/database';
 
 @Injectable({
@@ -15,6 +16,7 @@ export class FrontendSessionService implements OnDestroy {
   ) {}
 
   private readonly SESSION_ID = 1;
+  private readonly currentTabId = crypto.randomUUID();
 
   private readonly HEARTBEAT_INTERVAL = 30000;
   private readonly HEARTBEAT_TIMEOUT = 90 * 1000;
@@ -107,20 +109,17 @@ export class FrontendSessionService implements OnDestroy {
     });
   }
 
-  async clearLogin(): Promise<void> {
-    await db.table('frontend_session').update(this.SESSION_ID, {
-      login_at: null,
-      heartbeat: Date.now(),
-    });
-  }
-
   async lockLogin(): Promise<boolean> {
 
     const session = await db.table('frontend_session').get(this.SESSION_ID);
 
     if (session?.login_at != null) {
 
-      this.popupService.open(SecondTabPopupComponent);
+      this.popupService.open(SystemPopupComponent, {
+
+        content: SecondTabContentComponent
+
+      });
 
       return false;
     }
@@ -128,12 +127,29 @@ export class FrontendSessionService implements OnDestroy {
     await db.table('frontend_session').update(this.SESSION_ID, {
       login_at: Date.now(),
       heartbeat: Date.now(),
+      tab_id: this.currentTabId,
     });
 
     return true;
   }
 
+  async clearLogin(): Promise<void> {
+    await db.table('frontend_session').update(this.SESSION_ID, {
+      login_at: null,
+      heartbeat: Date.now(),
+      tab_id: null,
+    });
+  }
+
+  async isCurrentTab(): Promise<boolean> {
+
+    const session = await db.table('frontend_session').get(this.SESSION_ID);
+
+    return session?.tab_id === this.currentTabId;
+  }
+
   ngOnDestroy(): void {
+
     this.heartbeatSubscription?.unsubscribe();
     this.wakeUpSubscription?.unsubscribe();
   }

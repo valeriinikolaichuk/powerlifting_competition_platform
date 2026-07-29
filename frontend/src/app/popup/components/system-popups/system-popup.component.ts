@@ -4,20 +4,16 @@ import { PopupService } from '../../services/popup.service';
 import { POPUP_DATA } from '../../tokens/popup-data.token';
 
 @Component({
-  selector: 'app-info-popup',
+  selector: 'app-system-popup',
   standalone: true,
   imports: [NgComponentOutlet],
-  templateUrl: './info-popup.component.html',
+  templateUrl: './system-popup.component.html',
 })
-export class InfoPopupComponent {
-  
+export class SystemPopupComponent {
+
   popup = inject(PopupService);
 
   data = inject(POPUP_DATA) as {
     content: Type<any>;
   };
-
-  close() {
-    this.popup.close();
-  }
 }

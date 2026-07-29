@@ -1,14 +1,19 @@
-import { Component, inject } from '@angular/core';
+import { Component, signal, effect, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
 import { AuthService } from '../../services/auth.service';
 import { RoleRouterServiceService } from '../../services/role-router-service.service'; 
 import { FrontendSessionService } from '../../../session/services/frontend-session.service';
+import { TranslationService } from '../../../i18n/services/translation.service';
+import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 
 @Component({
   selector: 'app-login-form',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [
+    ReactiveFormsModule,
+    TranslatePipe,
+  ],
   templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent {
@@ -24,7 +29,12 @@ export class LoginFormComponent {
     private readonly authService: AuthService,
     private readonly roleRouter: RoleRouterServiceService,
     private readonly frontendSessionService: FrontendSessionService,
+    public tService: TranslationService,
   ) {}
+
+  ngOnInit() {
+    this.tService.load('forms/login-form');
+  }
 
   async onSubmit() {
 
@@ -40,6 +50,8 @@ export class LoginFormComponent {
 
         if (!response.success || !response.role) 
         {
+          this.form.reset();
+
           alert(response.message);
 
           await this.frontendSessionService.clearLogin();

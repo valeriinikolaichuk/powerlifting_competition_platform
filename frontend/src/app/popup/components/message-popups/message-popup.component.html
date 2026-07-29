@@ -1,0 +1,17 @@
+<div class="w-[520px] rounded-lg bg-white shadow-xl">
+    <div class="p-6">
+        <ng-container
+            *ngComponentOutlet="data.content">
+        </ng-container>
+    </div>
+
+    <div class="flex justify-end border-t px-6 py-4">
+        <button
+            type="button"
+            class="rounded bg-blue-600 px-5 py-2 text-white"
+            (click)="close()">
+            OK
+        </button>
+    </div>
+
+</div>
