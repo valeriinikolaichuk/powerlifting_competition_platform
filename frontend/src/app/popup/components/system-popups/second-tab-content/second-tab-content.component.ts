@@ -1,29 +1,17 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslationService } from '../../../../i18n/services/translation.service';
+import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 @Component({
   selector: 'app-second-tab-content',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './second-tab-content.component.html',
 })
 export class SecondTabContentComponent {
 
-  tService = inject(TranslationService);
-
-  data = signal<any>(null);
-
-  constructor() {
-    this.tService.load('second-tab-popup');
-
-    effect(() => {
-      const lang = this.tService.lang();
-      const translations = this.tService.translations();
-
-      const content = translations?.[lang]?.['second-tab-popup'];
-
-      if (content) {
-        this.data.set(content);
-      }
-    });
+  constructor(
+    public tService: TranslationService,    
+  ) {
+    this.tService.load('popups/second-tab-popup');
   }
 }

@@ -1,19 +1,18 @@
-import { Component, signal, effect } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 import { FrontendSessionService } from '../../session/services/frontend-session.service';
 import { TranslationService } from '../../i18n/services/translation.service';
+import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 
 @Component({
   selector: 'app-mode',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './mode.component.html',
 })
 export class ModeComponent {
-
-  data = signal<any>(null);
 
   constructor(
     private readonly authService: AuthService,
@@ -22,17 +21,6 @@ export class ModeComponent {
     public tService: TranslationService,
   ) {
     this.tService.load('pages/mode');
-
-    effect(() => {
-      const lang = this.tService.lang();
-      const translations = this.tService.translations();
-
-      const content = translations?.[lang]?.['pages/mode'];
-
-      if (content) {
-        this.data.set(content);
-      }
-    });
   }
 
   async openLan(): Promise<void> {

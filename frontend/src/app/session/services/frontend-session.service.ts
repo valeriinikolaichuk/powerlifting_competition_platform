@@ -48,7 +48,8 @@ export class FrontendSessionService implements OnDestroy {
       await db.table('frontend_session')
         .update(this.SESSION_ID, {
           login_at: null,
-          heartbeat: Date.now()
+          heartbeat: Date.now(),
+          tab_id: null,
       });
 
       return true;

@@ -1,28 +1,22 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslationService } from '../../../../i18n/services/translation.service';
+import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 @Component({
   selector: 'app-about-content',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './about-content.component.html',
 })
 export class AboutContentComponent {
-  tService = inject(TranslationService);
 
-  data = signal<any>(null);
+  items = [
+    { title: 'CLIENT_1_TITLE', text: 'CLIENT_1_TEXT' },
+    { title: 'CLIENT_2_TITLE', text: 'CLIENT_2_TEXT' },
+  ];
 
-  constructor() {
+  constructor(
+    public tService: TranslationService,
+  ) {
     this.tService.load('popups/about-popup');
-
-    effect(() => {
-      const lang = this.tService.lang();
-      const translations = this.tService.translations();
-
-      const content = translations?.[lang]?.['popups/about-popup'];
-
-      if (content) {
-        this.data.set(content);
-      }
-    });
   }
 }

@@ -1,12 +1,12 @@
-@if (data()) {
+@if (tService.hasScope()('pages/mode')) {
     <div class="min-h-screen w-full bg-bisque flex flex-col items-center justify-between p-10">
         <div class="max-w-3xl text-center">
             <h2 class="text-3xl font-bold mb-5">
-                {{ data().TITLE }}
+                {{ 'TITLE' | t:'pages/mode' }}
             </h2>
 
             <p class="text-xl leading-relaxed">
-                {{ data().MESSAGE }}
+                {{ 'MESSAGE' | t:'pages/mode' }}
             </p>
         </div>
 
@@ -29,7 +29,9 @@
             type="button"
             class="w-[220px] h-[60px] rounded-lg bg-red-600 text-white text-2xl"
             (click)="logout()"
-            >{{ data().LOGOUT }}
+            >{{ 'LOGOUT' | t:'pages/mode' }}
         </button>
     </div>
+} @else {
+  <p>Loading...</p>
 }

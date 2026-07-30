@@ -1,11 +1,17 @@
-<h2 class="mb-4 text-xl font-semibold">
-    {{ data().TITLE }}
-</h2>
+@if (tService.hasScope()('popups/second-tab-popup')) {
 
-<p class="mb-2">
-    {{ data().MESSAGE }}
-</p>
+    <h2 class="mb-4 text-xl font-semibold">
+        {{ 'TITLE' | t:'popups/second-tab-popup' }}
+    </h2>
 
-<h2 class="mb-4 text-xl font-semibold">
-    {{ data().CONTINUE }}
-</h2>
+    <p class="mb-2">
+        {{ 'MESSAGE' | t:'popups/second-tab-popup' }}
+    </p>
+
+    <h2 class="mb-4 text-xl font-semibold">
+        {{ 'CONTINUE' | t:'popups/second-tab-popup' }}
+    </h2>
+
+} @else {
+  <p>Loading...</p>
+}

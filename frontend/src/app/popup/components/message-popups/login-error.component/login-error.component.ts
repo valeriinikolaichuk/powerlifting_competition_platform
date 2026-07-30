@@ -1,29 +1,17 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { TranslationService } from '../../../../i18n/services/translation.service';
+import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 @Component({
   selector: 'app-login-error',
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './login-error.component.html',
 })
 export class LoginErrorComponent {
 
-  tService = inject(TranslationService);
-
-  data = signal<any>(null);
-
-  constructor() {
-    this.tService.load('login-error');
-
-    effect(() => {
-      const lang = this.tService.lang();
-      const translations = this.tService.translations();
-
-      const content = translations?.[lang]?.['login-error'];
-
-      if (content) {
-        this.data.set(content);
-      }
-    });
+  constructor(
+    public tService: TranslationService,    
+  ) {
+    this.tService.load('popups/login-error');
   }
 }

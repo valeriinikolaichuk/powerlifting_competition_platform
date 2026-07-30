@@ -1,27 +1,30 @@
-@if (!data()) {
-  <p>Loading...</p>
-} @else {
-  @for (p of data().intro; track $index) {
-    <p class="m-0 p-[5px] text-left">{{ p }}</p>
-  }
+@if (tService.hasScope()('popups/about-popup')) {
 
-  <p class="m-0 p-[5px] text-left"><b>{{ data().scenariosTitle }}</b></p>
+  <p class="m-0 p-[5px] text-left">{{ 'intro_1'  | t:'popups/about-popup' }}</p>
+  <p class="m-0 p-[5px] text-left">{{ 'intro_2'  | t:'popups/about-popup' }}</p>
+
+  <p class="m-0 p-[5px] text-left"><b>{{ 'scenariosTitle' | t:'popups/about-popup' }}</b></p>
 
   <p class="m-0 p-[5px] text-left">
-    💻 <b>{{ data().admin.title }}</b>
-    {{ data().admin.text }}
+    💻 <b>{{ 'admin_title' | t:'popups/about-popup' }}</b>
+    {{ 'admin_text_1' | t:'popups/about-popup' }}
+    {{ 'admin_text_2' | t:'popups/about-popup' }}
   </p>
 
-  <p class="m-0 p-[5px] text-left"><b>{{ data().clientsTitle }}</b></p>
-  <p class="m-0 p-[5px] text-left">{{ data().clientsIntro }}</p>
+  <p class="m-0 p-[5px] text-left"><b>{{ 'clientsTitle' | t:'popups/about-popup' }}</b></p>
+  <p class="m-0 p-[5px] text-left">{{ 'clientsIntro' | t:'popups/about-popup' }}</p>
 
   <ul>
-    @for (c of data().clients; track $index) {
+    @for (item of items; track item.title) {
       <li class="p-[5px]">
-        💻 <b>{{ c.title }}</b> {{ c.text }}
+        💻 <b>{{ item.title | t:'popups/about-popup' }}</b> 
+              {{ item.text | t:'popups/about-popup' }}
       </li>
     }
   </ul>
 
-  <p class="m-0 p-[5px] text-left">{{ data().footer }}</p>
+  <p class="m-0 p-[5px] text-left">{{ 'footer' | t:'popups/about-popup' }}</p>
+
+} @else {
+  <p>Loading...</p>
 }

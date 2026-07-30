@@ -1,43 +1,33 @@
 {
-  "intro": [
-    "The system is designed to manage the process of powerlifting competitions in online mode, simulating the operation of a local network.",
-    "It allows multiple devices to work simultaneously and display live competition results in real time."
-  ],
+  "intro_1": "The system is designed to manage the process of powerlifting competitions in online mode, simulating the operation of a local network.",
+  "intro_2": "It allows multiple devices to work simultaneously and display live competition results in real time.",
+
   "scenariosTitle": "The system supports the following usage scenarios:",
-  "admin": {
-    "title": "Admin",
-    "text": [
-      "The main device used to manage data and control the operation of all clients.",
-      "It allows athlete registration, session and flight management, entering and displaying live changes, as well as pre- and post-competition documentation."
-    ]
-  },
+
+  "admin_title": "Admin",
+  "admin_text_1": "The main device used to manage data and control the operation of all clients. ",
+  "admin_text_2": "It allows athlete registration, session and flight management, entering and displaying live changes, as well as pre- and post-competition documentation.",
+
   "clientsTitle": "Clients",
   "clientsIntro": "The system supports an arbitrary number of client devices, which can operate according to the following scenarios:",
-  "clients": [
-    {
-      "title": "Competition Protocol",
-      "text": "Displays current competition protocols, results, and result predictions for the current session or weight category."
-    },
-    {
-      "title": "Attempt Order",
-      "text": "Displays the order of athlete attempts based on declared weight, draw results, and other rules."
-    },
-    {
-      "title": "Plate Loading Order",
-      "text": "Shows the plate loading sequence for the athlete on the platform and the next athlete."
-    },
-    {
-      "title": "Information Board",
-      "text": "An information display for spectators showing details about the athlete currently on the platform."
-    },
-    {
-      "title": "Timer",
-      "text": "Controls attempt time, countdowns, and time until the start of competition."
-    },
-    {
-      "title": "Weigh-in",
-      "text": "A separate client for judges responsible for athlete weigh-ins."
-    }
-  ],
+  
+  "CLIENT_1_TITLE": "Competition Protocol",
+  "CLIENT_1_TEXT": "Displays current competition protocols, results, and result predictions for the current session or weight category.",
+
+  "CLIENT_2_TITLE": "Attempt Order",
+  "CLIENT_2_TEXT": "Displays the order of athlete attempts based on declared weight, draw results, and other rules.",
+
+  "CLIENT_3_TITLE": "Plate Loading Order",
+  "CLIENT_3_TEXT": "Shows the plate loading sequence for the athlete on the platform and the next athlete.",
+
+  "CLIENT_4_TITLE": "Information Board",
+  "CLIENT_4_TEXT": "An information display for spectators showing details about the athlete currently on the platform.",
+
+  "CLIENT_5_TITLE": "Timer",
+  "CLIENT_5_TEXT": "Controls attempt time, countdowns, and time until the start of competition.",
+
+  "CLIENT_6_TITLE": "Weigh-in",
+  "CLIENT_6_TEXT": "A separate client for judges responsible for athlete weigh-ins.",
+
   "footer": "All weigh-in data is transferred directly into the system without the need to enter it manually through the main Admin device."
 }

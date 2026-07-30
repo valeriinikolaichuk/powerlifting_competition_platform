@@ -1,1 +1,5 @@
-<p>{{ data().loginError }}</p>
+@if (tService.hasScope()('popups/login-error')) {
+    <p>{{ 'loginError' | t:'popups/login-error' }}</p>
+} @else {
+  <p>Loading...</p>
+}

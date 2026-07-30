@@ -44,11 +44,17 @@
                 (click)="openInfoPopup(AboutContentComponent)"
             >{{ 'SETUP' | t:'pages/home' }}</button>
         </div>
-
+<div class="relative z-10 flex flex-col items-center">
         <div class="relative z-10">
             <app-login-form></app-login-form>
         </div>
-
+        <br/><br/><br/>
+<button
+            type="button"
+            class="w-[220px] h-[60px] rounded-lg bg-red-600 text-white text-2xl"
+            >LOGOUT
+</button>   
+</div>         
         <div class="w-[44%] h-[460px] relative z-[2] flex flex-col justify-between 
                 items-center pt-[100px] pb-[50px]">
             <button class="w-[80%] h-[60px] border border-black text-black text-lg 
@@ -77,4 +83,6 @@
     </div>
 </div>
 
+} @else {
+  <p>Loading...</p>
 }

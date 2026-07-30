@@ -1,16 +1,18 @@
+@if (tService.hasScope()('pages/lan')) {
+
 <div class="min-h-screen w-full bg-bisque flex flex-col items-center justify-between p-10">
 
     <div class="max-w-3xl text-center">
         <h2 class="text-3xl font-bold mb-5">
-            LAN Mode
+            {{ 'TITLE' | t:'pages/lan' }}
         </h2>
 
         <p class="text-xl leading-relaxed">
-            Coming soon.
+            {{ 'MESSAGE' | t:'pages/lan' }}
         </p>
 
         <p class="text-lg mt-4">
-            The offline runtime download will be available here.
+            {{ 'DOWNLOAD' | t:'pages/lan' }}
         </p>
     </div>
 
@@ -18,7 +20,11 @@
         type="button"
         class="w-[220px] h-[60px] rounded-lg bg-blue-600 text-white text-2xl"
         (click)="return()">
-        Return
+        {{ 'RETURN' | t:'pages/lan' }}
     </button>
 
 </div>
+
+} @else {
+  <p>Loading...</p>
+}
