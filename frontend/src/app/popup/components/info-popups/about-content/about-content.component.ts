@@ -12,6 +12,10 @@ export class AboutContentComponent {
   items = [
     { title: 'CLIENT_1_TITLE', text: 'CLIENT_1_TEXT' },
     { title: 'CLIENT_2_TITLE', text: 'CLIENT_2_TEXT' },
+    { title: 'CLIENT_3_TITLE', text: 'CLIENT_3_TEXT' },
+    { title: 'CLIENT_4_TITLE', text: 'CLIENT_4_TEXT' },
+    { title: 'CLIENT_5_TITLE', text: 'CLIENT_5_TEXT' },
+    { title: 'CLIENT_6_TITLE', text: 'CLIENT_6_TEXT' },
   ];
 
   constructor(
