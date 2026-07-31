@@ -1,6 +1,6 @@
 <div align="center">
   <h2>Powerlifting Competition Platform (in progress)</h2>
-  <h4>An offline-first platform for managing powerlifting competitions.</h4>
+  <h4>An offline-first Micro-SaaS platform for managing powerlifting competitions.</h4>
 </div>
 
 ---
@@ -10,7 +10,8 @@
 
 - [About the project](#about-the-project)
 - [Deployment Architecture](#deployment-architecture)
-- [Database](#database)
+- [Design Principles (Architecture Decisions)](#design-principles)
+- [Databases](#databases)
 - [Project Structure](#project-structure)
 - [Live Deployment](#live-deployment)
 - [Built With](#built-with)
@@ -30,16 +31,29 @@
 
 ---
 
-## Database
+## Design Principles
+➡ [Design Principles (Architecture Decisions)](docs/design_principles.md)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This section explains the key architectural decisions behind the project and the reasoning that shaped the overall system design.
+
+---
+
+## Databases
 ➡ [PostgreSQL documentation](docs/database.md)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Primary `server-side` data storage used by the `NestJS` backend.
+
 ➡ [PGlite documentation](docs/pglite.md)  
-➡ [IndexedDB documentation](docs/indexed.md)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Provides a PostgreSQL-compatible local database running directly inside the `browser`.  
+
+➡ [IndexedDB documentation](docs/indexed.md)  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client-side storage stores a minimal local session state
 
 ---
 
 ## Project Structure   
-➡ [frontend documentation](docs/architecture/frontend_architecture.md)  
+➡ [frontend documentation](docs/architecture/frontend_architecture.md) 
+
 ➡ [runtime documentation](docs/architecture/runtime_architecture.md)  
+
 ➡ [backend documentation](docs/architecture/backend_architecture.md)
 
 ---
@@ -71,7 +85,8 @@ This project is fully deployed to the cloud using `Render`.
 ## Setup and Run Instructions  
 ### How to run locally:  
 
-➡ [frontend_setup](docs/setup/frontend_setup.md)  
+➡ [frontend_setup](docs/setup/frontend_setup.md) 
+
 ➡ [backend_setup](docs/setup/backend_setup.md)  
 
 ---
