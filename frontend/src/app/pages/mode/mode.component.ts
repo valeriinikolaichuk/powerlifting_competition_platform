@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/services/auth.service';
 import { FrontendSessionService } from '../../session/services/frontend-session.service';
 import { TranslationService } from '../../i18n/services/translation.service';
@@ -26,6 +27,10 @@ export class ModeComponent {
   async openLan(): Promise<void> {
     console.log('openLan');
     await this.router.navigate(['/lan']);
+  }
+
+  openOnline(): void {
+    window.location.href = `${environment.apiUrl}/runtime`;
   }
 
   async logout() {

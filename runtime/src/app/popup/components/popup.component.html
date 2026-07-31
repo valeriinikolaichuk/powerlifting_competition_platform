@@ -1,0 +1,7 @@
+<dialog #dialog>
+  @if (component()) {
+    <ng-container
+      *ngComponentOutlet="component(); injector: customInjector()">
+    </ng-container>
+  }
+</dialog>
