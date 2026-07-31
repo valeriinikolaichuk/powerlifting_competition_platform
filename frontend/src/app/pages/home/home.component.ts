@@ -1,4 +1,4 @@
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, OnInit, Type, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LoginFormComponent } from '../../auth/components/login-form/login-form.component';
@@ -19,6 +19,13 @@ import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
+
+  isMobile = window.innerWidth < 768;
+
+  @HostListener('window:resize')
+  onResize(): void {
+    this.isMobile = window.innerWidth < 768;
+  }
   
   AboutContentComponent: Type<any> = AboutContentComponent;
 

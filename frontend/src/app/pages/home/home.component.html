@@ -8,22 +8,24 @@
     </video>
 
     <div class="w-full h-[85vh] flex justify-center items-center relative overflow-hidden z-[1]">
-        <div class="w-[240px] h-[50px] absolute top-0 right-0 z-[3]">
-            <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
-                [ngStyle]="{'background-color': tService.lang() === 'en' ? 'rgb(252, 78, 78)' : 'white'}"
-                type="button" 
-                (click)="setLang('en')"
-            >EN</button>
-            <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
-                [ngStyle]="{'background-color': tService.lang() === 'uk' ? 'rgb(252, 78, 78)' : 'white'}"
-                type="button" 
-                (click)="setLang('uk')"
-            >UK</button>
-            <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
-                [ngStyle]="{'background-color': tService.lang() === 'pl' ? 'rgb(252, 78, 78)' : 'white'}"
-                type="button" 
-                (click)="setLang('pl')"
-            >PL</button>
+        <div class="absolute top-0 left-0 right-0 md:left-auto md:right-0 w-full md:w-auto flex justify-center md:justify-end p-[15px] z-[50]">
+            <div class="flex gap-4 md:mr-5">
+                <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
+                    [ngStyle]="{'background-color': tService.lang() === 'en' ? 'rgb(252, 78, 78)' : 'white'}"
+                    type="button" 
+                    (click)="setLang('en')"
+                >EN</button>
+                <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
+                    [ngStyle]="{'background-color': tService.lang() === 'uk' ? 'rgb(252, 78, 78)' : 'white'}"
+                    type="button" 
+                    (click)="setLang('uk')"
+                >UK</button>
+                <button class="w-[50px] mt-[15px] ml-[20px] font-bold" 
+                    [ngStyle]="{'background-color': tService.lang() === 'pl' ? 'rgb(252, 78, 78)' : 'white'}"
+                    type="button" 
+                    (click)="setLang('pl')"
+                >PL</button>
+            </div>
         </div>
 
         <div class="w-[44%] h-[460px] relative z-[2] flex flex-col justify-between 
@@ -45,6 +47,8 @@
             >{{ 'SETUP' | t:'pages/home' }}</button>
         </div>
 
+    @if (!isMobile) {
+
         <div class="relative z-10 flex flex-col items-center">
 
             <div class="relative z-10">
@@ -54,14 +58,41 @@
             <br/><br/><br/>
             <button
                 type="button"
-                class="flex items-center gap-3 w-[240px] 
-                    h-[75px] rounded-lg border border-black text-black text-lg 
-                    font-bold bg-[rgba(0,0,135,0.2)] hover:bg-blue-600"  
-            ><img src="/assets/icons/bot.png"
-                class="w-20 h-20 hover:scale-105 transition">
+                class="flex items-center gap-3 
+                    w-[240px] h-[75px] 
+                    rounded-lg border border-black 
+                    text-black text-lg font-bold 
+                    bg-[rgba(0,0,135,0.2)] 
+                    hover:bg-blue-600">
+
+                <img src="/assets/icons/bot.png"
+                    class="w-20 h-20 hover:scale-105 transition">
+
                 <span>{{ 'ASSISTANT' | t:'pages/home' }}</span>
+
             </button> 
         </div>
+    
+    } @else {
+
+        <div class="relative z-10 flex h-full items-center justify-center">
+
+            <button
+                type="button"
+                class="flex items-center justify-center gap-3
+                    w-[90%] min-w-[115px] h-[75px]
+                    rounded-lg border border-black
+                    text-black text-lg font-bold
+                    bg-[rgba(0,0,135,0.2)]
+                    hover:bg-blue-600">
+
+                <img
+                    src="/assets/icons/bot.png"
+                    class="w-20 h-20 hover:scale-105 transition">
+
+            </button>
+        </div>
+    }
 
         <div class="w-[44%] h-[460px] relative z-[2] flex flex-col justify-between 
                 items-center pt-[100px] pb-[50px]">
@@ -84,11 +115,19 @@
     </div>
 
     <div class="text-center">
-        <p><b>{{ 'head' | t:'pages/home' }}</b></p>
-        <p>{{ 'lineOne' | t:'pages/home' }}</p>
-        <p>{{ 'lineTwo' | t:'pages/home' }}</p>
-        <p>{{ 'access' | t:'pages/home' }}</p>
+
+        @if (!isMobile) {
+            <p><b>{{ 'head' | t:'pages/home' }}</b></p>
+            <p>{{ 'lineOne' | t:'pages/home' }}</p>
+            <p>{{ 'lineTwo' | t:'pages/home' }}</p>
+            <p>{{ 'access' | t:'pages/home' }}</p>
+        } @else {
+
+            <p><b>{{ 'head' | t:'pages/home' }}</b></p>
+        }
     </div>
+
+
 </div>
 
 } @else {
