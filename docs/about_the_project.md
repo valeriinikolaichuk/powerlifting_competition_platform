@@ -28,7 +28,7 @@ Registers for competitions and accesses published competition results.
 
 ---
 
-### System Context (Level 1)
+## System Context (Level 1)
 
 The system allows organizers to configure multiple computers, each performing a dedicated role during a powerlifting competition. Every device connects to the same application and selects a predefined operating scenario according to its purpose.
 
