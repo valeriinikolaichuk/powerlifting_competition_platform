@@ -65,7 +65,7 @@ Only two things change:
 This guarantees that:
 * validation rules remain identical;
 * calculations always produce the same results;
-* 'SQL' queries are not duplicated;
+* `SQL queries` are not duplicated;
 * competition behavior is deterministic in every environment.
 
 **Running the same backend locally eliminates the need to reimplement business rules inside the browser. Competition validation, calculations, synchronization logic, and SQL access remain identical in every deployment, significantly reducing maintenance complexity.**
@@ -74,7 +74,7 @@ This guarantees that:
 
 ### Why PGlite?
 During a competition, continuous Internet access cannot be assumed.  
-`PGlite` provides a PostgreSQL-compatible local database running directly inside the browser.
+`PGlite` provides a `PostgreSQL`-compatible local database running directly inside the browser.
 
 This enables:
 * `offline-first` execution;
