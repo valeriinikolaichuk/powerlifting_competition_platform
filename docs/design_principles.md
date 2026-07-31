@@ -8,10 +8,14 @@ This approach was chosen for several reasons:
 * ensures identical competition behavior regardless of the environment;
 * simplifies testing and debugging.
 
-[Why two Angular applications?](why-two-angular-applications?)  
-[Why identical backend logic?](Why-identical-backend-logic?)  
-[Why PGlite?](why-pglite?)  
-[Why shared SQL Layer?](why-shared-sql-layer?)
+<details open="open"> 
+
+[Why two Angular applications?](#why-two-angular-applications)  
+[Why identical backend logic?](#why-identical-backend-logic)  
+[Why PGlite?](#why-pglite)  
+[Why shared SQL Layer?](#why-shared-sql-layer)
+
+</details>
 
 ---
 
