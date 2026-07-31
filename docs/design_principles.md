@@ -3,7 +3,6 @@ The platform is designed around a **single business logic implementation** that 
 Instead of maintaining separate `online` and `offline` systems, the project keeps the application architecture identical across deployments. The execution environment changes, while the application logic remains the same.
 
 This approach was chosen for several reasons:
-* reduces code duplication;
 * minimizes maintenance costs;
 * allows features to be implemented once and reused in both deployments;
 * ensures identical competition behavior regardless of the environment;
