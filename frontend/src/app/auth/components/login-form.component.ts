@@ -1,16 +1,16 @@
 import { Component, signal, effect, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 
-import { AuthService } from '../../services/auth.service';
-import { RoleRouterServiceService } from '../../services/role-router-service.service'; 
-import { FrontendSessionService } from '../../../session/services/frontend-session.service';
+import { AuthService } from '../services/auth.service';
+import { RoleRouterServiceService } from '../services/role-router-service.service'; 
+import { FrontendSessionService } from '../../session/services/frontend-session.service';
 
-import { PopupService } from '../../../popup/services/popup.service';
-import { MessagePopupComponent } from '../../../popup/components/message-popups/message-popup.component';
-import { LoginErrorComponent } from '../../../popup/components/message-popups/login-error.component/login-error.component';
+import { PopupService } from '../../popup/services/popup.service';
+import { MessagePopupComponent } from '../../popup/components/message-popups/message-popup.component';
+import { LoginErrorComponent } from '../../popup/components/message-popups/login-error.component/login-error.component';
 
-import { TranslationService } from '../../../i18n/services/translation.service';
-import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
+import { TranslationService } from '../../i18n/services/translation.service';
+import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 
 @Component({
   selector: 'app-login-form',

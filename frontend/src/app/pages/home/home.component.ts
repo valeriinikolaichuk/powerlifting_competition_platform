@@ -1,7 +1,7 @@
 import { Component, OnInit, Type, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { LoginFormComponent } from '../../auth/components/login-form/login-form.component';
+import { LoginFormComponent } from '../../auth/components/login-form.component';
 import { InfoPopupComponent } from '../../popup/components/info-popups/info-popup.component';
 import { AboutContentComponent } from '../../popup/components/info-popups/about-content/about-content.component';
 import { PopupService } from '../../popup/services/popup.service';
