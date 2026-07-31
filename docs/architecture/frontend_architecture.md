@@ -37,11 +37,6 @@ Translation system based on Angular signals and lazy-loaded `JSON` files, suppor
 ### Components
 ### [pages/](frontend/pages.md)   
 Contains `route-level components` representing the main views of the application.
-### shared/
-Reusable UI components, pipes, directives, and other common functionality shared across multiple features.
-- ### [components/](frontend/shared/components.md)
-- ### [pipes/](frontend/shared/pipes.md)
-- ### [tokens/](frontend/shared/tokens.md)
 
 ### [services/](frontend/services.md)
 Contains reusable application services that encapsulate business logic, data access, state management, and cross-cutting functionality.
