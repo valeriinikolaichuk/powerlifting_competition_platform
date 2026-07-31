@@ -141,9 +141,7 @@ powerlifting_competition_platform/
 		|		|
 		|		└── migrations/   <- PostgreSQL migrations
 		|
-		├── shared
-		|	  ├── frontend/
-		|     └── shared-sql/   <- SQL requests
+		├── shared-sql/   <- SQL requests	  
 		|
 		├── runtime/
 		|	|
@@ -161,7 +159,7 @@ pcp-frontend
       Angular Frontend
 pcp-backend 
       Backend API
-	    shared
+	    shared-sql
 	    Angular Runtime
 pcp-postgres
       Central PostgreSQL
@@ -169,7 +167,7 @@ pcp-postgres
 LOCAL
 pcp-backend 
       Backend API
-	    shared
+	    shared-sql
 	    Angular Runtime
 pcp-postgres
       Local PostgreSQL
