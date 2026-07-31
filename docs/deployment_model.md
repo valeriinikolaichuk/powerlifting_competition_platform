@@ -1,3 +1,20 @@
+## System Modes (Level 2)
+
+<details open="open">
+<summary>Contents</summary>  
+
+- [Deployment Architecture](#deployment-architecture)
+- [Frontend Application](#frontend-application)
+- [Competition Runtime Application](#competition-runtime-application)
+- [PGlite Database](#pglite-database)
+- [Backend API](#backend-api)
+- [PostgreSQL Database](#postgresql-database)
+- [Architecture](#architecture)
+
+</details>
+
+---
+
 ## Deployment Architecture
 The system uses a central data source for global management and can distribute isolated user datasets to local installations.
 
@@ -18,24 +35,8 @@ The application logic remains identical.
 
 ---
 
-## System Modes (Level 2)
-
-<details open="open">
-<summary>Contents</summary>  
-
-- [Frontend Application](#frontend-application)
-- [Competition Runtime Application](#competition-runtime-application)
-- [PGlite Database](#pglite-database)
-- [Backend API](#backend-api)
-- [PostgreSQL Database](#postgresql-database)
-- [Architecture](#architecture)
-
-</details>
-
----
-
 ### Frontend Application
-#### ( frontend/ )
+#### ( [frontend](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend_architecture.md) )
 Represents the public-facing system environment.  
 
 **Responsibilities:**
@@ -49,7 +50,7 @@ Represents the public-facing system environment.
 ---
 
 ### Competition Runtime Application
-#### ( runtime/ )
+#### ( [runtime](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime_architecture.md) )
 **Responsibilities:**  
 - competition workflow execution;
 - device role operation;
@@ -63,6 +64,7 @@ Runtime is a browser-based `Angular` application served as `static content` by `
 ---
 
 ### PGlite Database
+#### ( [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) )
 Client-side PostgreSQL-compatible database used by the `Competition Runtime Application`.
 
 `PGlite` implements the `offline-first` layer of the system. Instead of communicating directly with the backend for every operation, the `Competition Runtime Application` stores and updates working data `locally`, allowing uninterrupted operation regardless of network availability.
@@ -79,6 +81,7 @@ The database is synchronized with the server through the `Angular` synchronizati
 ---
 
 ### Backend API
+#### ( [backend](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend_architecture.md) )
 The backend provides centralized business logic and communication between clients and databases.
 
 **Responsibility:**  
@@ -98,6 +101,8 @@ The same backend codebase is used in both `central` and `local` deployments. The
 ---
 
 ### PostgreSQL Database
+#### ( [PostgreSQL](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database.md) )
+
 **Responsibility:**  
 Primary `server-side` data storage used by the `NestJS` backend.  
 The system supports two deployment modes:  
@@ -111,7 +116,7 @@ The central database stores the complete platform dataset, including:
 - system configuration.
 
 #### Local Competition Database
-The local database allows the `Competition Runtime Application` backend to execute the same `SQL` queries, calculations, and business logic as the central system while remaining fully operational inside a `local network`.
+The `local` database allows the `Competition Runtime Application` backend to execute the same `SQL` queries, calculations, and business logic as the `central system` while remaining fully operational inside a `local network`.
 
 It uses the same schema and business logic as the central database but stores only the subset of data available to the `authenticated user`. 
 
