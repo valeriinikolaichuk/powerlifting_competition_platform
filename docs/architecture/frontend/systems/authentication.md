@@ -60,7 +60,7 @@ Navigate according to user role
 Provides communication with the backend authentication API.
 
 **Responsibilities:**
-* Sends login requests to the [backend](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/authentication.md?plain=1).
+* Sends login requests to the [backend](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/authentication.md).
 * Includes authentication cookies (`withCredentials`) in every request.
 * Sends logout requests.
 
