@@ -29,16 +29,16 @@ Contains the components, services, and workflows responsible for authenticating 
 ### [popup](frontend/systems/popup-system.md)
 Dynamically renders popup components
 
+### [session](frontend/systems/session-system.md)
+Controls the frontend session across browser tabs and maintain a consistent application state during the session lifecycle
+
 ### [i18n](frontend/systems/i18n.md) Translation Module  
 Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
 
 ---
 
 ### Components
-### [pages/](frontend/pages.md)   
+### [pages](frontend/pages.md)   
 Contains `route-level components` representing the main views of the application.
-
-### [services/](frontend/services.md)
-Contains reusable application services that encapsulate business logic, data access, state management, and cross-cutting functionality.
 
 ---
