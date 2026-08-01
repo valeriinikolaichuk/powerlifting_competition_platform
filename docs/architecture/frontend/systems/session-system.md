@@ -15,9 +15,9 @@
   - [clearLogin()](#clearlogin)
   - [isCurrentTab()](#iscurrenttab)
   - [ngOnDestroy()](#ngondestroy)
-- [Session Guard](session-guard)
-- [Session Lifecycle](session-lifecycle)
-- [Design Notes](design-notes)
+- [Session Guard](#session-guard)
+- [Session Lifecycle](#session-lifecycle)
+- [Design Notes](#design-notes)
 
 </details>
 
