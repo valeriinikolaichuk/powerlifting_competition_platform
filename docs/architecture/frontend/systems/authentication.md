@@ -23,12 +23,12 @@ The login form is implemented using Angular `Reactive Forms`.
 
 **Responsibilities:**
 * Initializes the login form with required validation.
-* Loads translations for all form labels.
-* Prevents multiple simultaneous login attempts using `FrontendSessionService`.
-* Sends login credentials to the backend through `AuthService`.
-* Displays an error popup when authentication fails.
+* Loads translations for all form labels using [i18n Translation Module](i18n.md).
+* Prevents multiple simultaneous login attempts using [FrontendSessionService](session-system.md).
+* Sends login credentials to the backend through [AuthService](#services).
 * Clears the frontend login lock after unsuccessful authentication.
-* Redirects authenticated users according to their assigned role.
+* Displays an error popup when authentication fails by [LoginErrorComponent](popup-system.md#components).
+* Redirects authenticated users according to their assigned `role` through [RoleRouterService](#rolerouterservice).
 
 #### Authentication flow:
 
@@ -46,8 +46,8 @@ POST /api/login
         │
         ▼
 Login successful?
- ├── No → Show error popup → Release login lock
- └── Yes
+        ├── No → Show error popup → Release login lock
+        └── Yes
         │
         ▼
 Navigate according to user role
