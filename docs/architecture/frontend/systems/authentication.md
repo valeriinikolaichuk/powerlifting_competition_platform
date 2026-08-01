@@ -80,7 +80,7 @@ Centralizes role-based navigation.
 Current routing:
 | Role        | Route           |
 | ----------- | --------------- |
-| USER        | `/mode`         |
+| USER        | [/mode](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/pages.md#modecomponent) |
 | ADMIN       | `/admin`        |
 | PARTICIPANT | `/registration` |
 
