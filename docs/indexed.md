@@ -12,5 +12,6 @@
 |id	|Single record identifier|
 |login_at	|Timestamp set after successful login. Used to prevent opening multiple active tabs in the same browser after login.|
 |heartbeat	|Timestamp of the last frontend activity check. Used to detect abnormal application termination and restore the application state after unexpected failures.|
+| tab_id | Unique identifier of the browser tab that owns the session. |
 
 The table always contains exactly one record.
