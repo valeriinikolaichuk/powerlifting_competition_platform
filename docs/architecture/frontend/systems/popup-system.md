@@ -173,10 +173,12 @@ LoginErrorComponent
   - `AboutContentComponent`
 - `MessagePopupComponent`
   - `LoginErrorComponent`
-- `SystemPopupComponent`
-  - `SecondTabContentComponent`
+- `SystemPopupComponent` (The code is duplicated in both apps)
+  - `SecondTabContentComponent` (The code is duplicated in both apps)
 
 #### `Runtime`
+- `SystemPopupComponent` (The code is duplicated in both apps)
+  - `SecondTabContentComponent` (The code is duplicated in both apps)
 
 ---
 
