@@ -163,7 +163,7 @@ This is a reference table used by referee-related entities.
 - [athletes](#athletes)
 - [sport_officials](#sport_officials)
   - [DataScope enum](#datascope-enum)
-  - [Language Enum](language-enum)
+  - [Language Enum](#language-enum)
 
 </details>  
 
