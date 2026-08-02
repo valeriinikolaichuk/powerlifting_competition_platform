@@ -171,7 +171,8 @@ This is a reference table used by referee-related entities.
 
 ### countries
 Stores the list of countries available in the system.  
-Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
+Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
 #### Relations
 - related with ➡ [**users**](user.md) by `created_by_user_id`
@@ -182,7 +183,8 @@ Soft deletion is supported through the `is_deleted` flag.
 
 ### regions
 Stores administrative regions belonging to a country.  
-Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
+Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
 #### Relations
 - related with [**countries**](#countries)
@@ -194,7 +196,8 @@ Soft deletion is supported through the `is_deleted` flag.
 
 ### cities
 Stores cities belonging to a region.  
-Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
+Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
 #### Relations
 - related with [**regions**](#regions)
@@ -208,6 +211,7 @@ Soft deletion is supported through the `is_deleted` flag.
 Stores organizations that may be associated with athletes, competitions, or other entities within the system.
 
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
+Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.  
 Defines supported organization types using the `OrganizationType` enum:
 - `SPORT_SCHOOL`
 - `CLUB`
@@ -260,7 +264,8 @@ The federation defines the visibility scope of athlete records.
 
 ### sport_officials
 Stores sport officials participating in competitions.  
-Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum. 
+Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
+Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
 A sport official may have one or both roles:
 - Trainer (`trainer_role` Boolean)
