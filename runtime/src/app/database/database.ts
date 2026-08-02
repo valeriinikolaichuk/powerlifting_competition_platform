@@ -1,11 +1,10 @@
 import Dexie from 'dexie';
 
-export const db = new Dexie('BombingOutFrontend');
+export const db = new Dexie('BombingOutRuntime');
 
 db.version(1).stores({
     frontend_session: `
         id,
-        login_at,
         heartbeat,
         tab_id
     `

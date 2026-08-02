@@ -1,6 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { Component, OnInit, signal } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { RuntimeSessionService } from './session/services/runtime-session.service';
 import { PopupComponent } from './popup/components/popup.component';
 
 @Component({
@@ -12,4 +12,21 @@ import { PopupComponent } from './popup/components/popup.component';
 })
 export class App {
   protected readonly title = signal('runtime');
+
+  constructor(
+    private runtimeSession: RuntimeSessionService,
+    private router: Router
+  ) {}
+
+  async ngOnInit() {
+
+    const wasIncorrectShutdown = await this.runtimeSession.initialize();
+
+    if (wasIncorrectShutdown) {
+      await this.router.navigate(['/']);
+    }
+
+    this.runtimeSession.startHeartbeat();
+    this.runtimeSession.startWakeUpListener();
+  }
 }

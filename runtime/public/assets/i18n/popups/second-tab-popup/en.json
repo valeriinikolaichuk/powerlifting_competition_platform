@@ -1,0 +1,5 @@
+{
+    "TITLE": "This application is already running in another browser tab.",
+    "MESSAGE": "For security reasons, the application prevents logging in from multiple browser tabs and restricts access to certain pages opened in additional tabs. You can continue working in the original browser tab.",
+    "CONTINUE": "Close the existing tab to continue."
+}
