@@ -51,5 +51,6 @@ Database migrations are managed by `Prisma` Migrate.
 ➡ [System Runtime Tables](database/system_runtime.md) 
 - device_status
 - global_state
-- 
 
+➡ [Management Tables](database/management.md)
+- installations
