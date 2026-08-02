@@ -1,5 +1,13 @@
 ### Reference Tables
 
+<details open="open">
+<summary>Contents</summary>  
+
+- [Static Reference Tables](#static-reference-tables)
+- [User Reference Tables](#user-reference-tables)
+
+</details>  
+
 ---
 
 ### Static Reference Tables 
@@ -15,9 +23,7 @@
 
 </details>  
 
-Populated and modified by `ADMIN` user only
-
-[**User Reference Tables**](#user-reference-tables)
+**Populated and modified by `ADMIN` only**
 
 ---
 
@@ -157,6 +163,7 @@ This is a reference table used by referee-related entities.
 - [athletes](#athletes)
 - [sport_officials](#sport_officials)
   - [DataScope enum](#datascope-enum)
+  - [Language Enum](language-enum)
 
 </details>  
 
@@ -228,6 +235,7 @@ The federation defines the visibility scope of athlete records.
 | federation_id | Federation visibility scope |
 | created_by_user_id | User who created the record |
 | scope | Record ownership scope ([**DataScope**](#datascope-enum) enum) |
+| language | Language stored for faster athlete lookup during data entry ([**Language**](#language-enum) enum) |
 | created_at | Record creation timestamp |
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
@@ -286,5 +294,16 @@ The table supports two types of records:
 - `GLOBAL` records are system reference data and must have `created_by_user_id = NULL`.
 - `USER` records are user-defined and must reference the user who created them through `created_by_user_id`.
 - `GLOBAL` records may only be managed by `ADMIN` users.
+
+---
+
+#### Language Enum
+Defines the user interface language.
+
+| Value | Description |
+|--------|-------------|
+| EN | English |
+| UK | Ukrainian |
+| PL | Polish |
 
 ---
