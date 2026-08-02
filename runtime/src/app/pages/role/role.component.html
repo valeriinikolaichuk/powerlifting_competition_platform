@@ -1,0 +1,62 @@
+<div class="min-h-screen w-full bg-[bisque] 
+            grid grid-rows-[200px_200px_200px] 
+            gap-[25px] justify-items-center items-center mt-[25px]">
+    <div class="flex gap-[25px] justify-center">
+        <div>
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]">
+                {{ 'ADMIN' | t:'pages/role' }}
+            </button>
+        </div>
+
+        <div>
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]">
+                {{ 'WEIGHING_IN' | t:'pages/role' }}
+            </button>
+        </div>
+    </div>
+
+    <div class="flex gap-[25px] justify-center">
+        <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]">
+            {{ 'SCOREBOARD' | t:'pages/role' }}
+        </button>
+
+        <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]">
+            {{ 'LIFTING_ORDER' | t:'pages/role' }}
+        </button>
+
+        <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]">
+            {{ 'DISCS_SEQUENCE' | t:'pages/role' }}
+        </button>
+
+        <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]">
+            {{ 'INFORMATION' | t:'pages/role' }}
+        </button>
+
+        <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]">
+            {{ 'TIMER' | t:'pages/role' }}
+        </button>
+    </div>
+
+    <div class="row-start-3">
+        <button class="w-[200px] h-[200px] 
+                        bg-[rgb(90,90,254)] rounded-[10px] 
+                        text-2xl leading-[2]"
+            (click)="logout()">
+            {{ 'RETURN' | t:'pages/role' }}
+        </button>
+    </div>
+</div>

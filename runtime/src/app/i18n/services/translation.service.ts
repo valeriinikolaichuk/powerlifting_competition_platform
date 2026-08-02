@@ -7,8 +7,11 @@ type Lang = 'en' | 'uk' | 'pl';
   providedIn: 'root',
 })
 export class TranslationService {
-  constructor(private http: HttpClient) {}
   
+  constructor(private http: HttpClient) {
+    this.initializeLanguage();
+  }
+
   lang = signal<Lang>('en');
   loadedScopes = signal<string[]>([]);
 
@@ -25,14 +28,20 @@ export class TranslationService {
     };
   });
 
-  setLang(lang: Lang) {
-    this.lang.set(lang);
-  
-    const scopes = this.loadedScopes();
+  private initializeLanguage(): void {
 
-    scopes.forEach(scope => {
-      this.load(scope);
-    });
+    const params = new URLSearchParams(window.location.search);
+    const lang = params.get('lang');
+
+    if (lang === 'en' || lang === 'uk' || lang === 'pl') {
+      this.lang.set(lang);
+    }
+
+    window.history.replaceState(
+      {},
+      '',
+      window.location.pathname
+    );
   }
 
   load(scope: string) {

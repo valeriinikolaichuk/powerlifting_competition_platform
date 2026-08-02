@@ -30,7 +30,9 @@ export class ModeComponent {
   }
 
   openOnline(): void {
-    window.location.href = `${environment.apiUrl}/runtime`;
+    const lang = this.tService.lang();
+
+    window.location.href = `${environment.apiUrl}/runtime?lang=${lang}`;
   }
 
   async logout() {

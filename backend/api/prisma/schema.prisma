@@ -145,6 +145,12 @@ enum DataScope {
   USER
 }
 
+enum Language {
+  EN
+  UK
+  PL
+}
+
 model Countries {
   id                 String @id @default(uuid()) @db.Uuid
 
@@ -152,6 +158,7 @@ model Countries {
   country_code       String?
 
   scope              DataScope
+  language           Language
 
   created_by_user_id String? @db.Uuid
 
@@ -183,6 +190,7 @@ model Regions {
   region_code        String?
 
   scope              DataScope
+  language           Language
 
   created_by_user_id String? @db.Uuid
 
@@ -217,6 +225,7 @@ model Cities {
   name               String
 
   scope              DataScope
+  language           Language
 
   created_by_user_id String? @db.Uuid
 
@@ -258,6 +267,7 @@ model Organizations {
   type               OrganizationType
 
   scope              DataScope
+  language           Language
 
   created_by_user_id String? @db.Uuid
 
@@ -295,6 +305,7 @@ model Athletes {
   created_by_user_id String? @db.Uuid
 
   scope              DataScope
+  language           Language
 
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
@@ -324,6 +335,7 @@ model SportOfficials {
   created_by_user_id  String?     @db.Uuid
 
   scope               DataScope
+  language           Language
 
   created_at          DateTime    @default(now())
   updated_at          DateTime    @updatedAt
@@ -631,6 +643,8 @@ model User {
   competitions          Competitions[]
 
   deviceStatuses        DeviceStatus[]
+
+  installations         Installation[]
 
   @@map("users")
 }
@@ -1016,12 +1030,6 @@ model OrganizationResults {
 
 // ** system runtime
 
-enum Language {
-  EN
-  UK
-  PL
-}
-
 enum DeviceRole {
   ADMIN
   SCOREBOARD
@@ -1082,4 +1090,18 @@ model GlobalState {
   @@index([groups_in_session_id])
 
   @@map("global_state")
+}
+
+model Installation {
+  id         String   @id @default(uuid()) @db.Uuid
+  
+  user_id    String   @db.Uuid
+  language   Language
+
+  created_at DateTime @default(now())
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@map("installations")
 }
