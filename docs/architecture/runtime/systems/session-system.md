@@ -1,4 +1,4 @@
-## Frontend Session System
+## Runtime Session System
 
 <details open="open">
 <summary>Contents</summary>  
@@ -6,13 +6,11 @@
 - [Description](#description)
   - [Architecture](#architecture)
   - [Session Storage](#session-storage)
-- [FrontendSessionService](#frontendsessionservice)
+- [RuntimeSessionService](#runtimesessionservice)
   - [initialize()](#initialize)
   - [startHeartbeat()](#startheartbeat)
   - [startWakeUpListener()](#startwakeuplistener)
   - [updateHeartbeat()](#updateheartbeat)
-  - [lockLogin()](#locklogin)
-  - [clearLogin()](#clearlogin)
   - [isCurrentTab()](#iscurrenttab)
   - [ngOnDestroy()](#ngondestroy)
 - [Session Guard](#session-guard)
@@ -22,7 +20,7 @@
 </details>
 
 ### Description
-The frontend session module provides client-side session state management for the application. It uses **`Dexie.js`** with [IndexedDB](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md) to maintain a persistent session record shared between browser tabs.
+The frontend session module provides client-side session state management for the application. It uses **`Dexie.js`** with [IndexedDB](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime) to maintain a persistent session record shared between browser tabs.
 
 The main purpose of the system is to control the frontend session across browser tabs and maintain a consistent application state during the session lifecycle.
 
@@ -31,8 +29,8 @@ The main purpose of the system is to control the frontend session across browser
 - identifies which browser tab currently owns the session;
 - prevents other tabs from accessing protected application areas;
 - detects an `inactive` or `suspended` session using `heartbeat` monitoring;
-- recovers the frontend session after an unexpected application or browser termination;
-- restores the session state after the `computer wakes from sleep` or the `browser resumes execution`;
+- recovers the session after an unexpected application or browser termination;
+- restores the session state after the `device wakes from sleep` or the `browser resumes execution`;
 - automatically invalidates stale session data when the previous session can no longer be considered active.
 
 ### Architecture
@@ -40,10 +38,9 @@ The main purpose of the system is to control the frontend session across browser
 Angular Application
         │
         ▼
-FrontendSessionService
+RuntimeSessionService
         │
         ├── Session initialization
-        ├── Login locking
         ├── Tab identification
         ├── Heartbeat
         └── Wake-up detection
@@ -53,10 +50,10 @@ FrontendSessionService
         │
         ▼
     IndexedDB
-BombingOutFrontend
+BombingOutRuntime
         │
         ▼
-  frontend_session
+  runtime_session
 </pre>
 
 Route access is additionally protected by `sessionGuard`:
@@ -67,7 +64,7 @@ Route access is additionally protected by `sessionGuard`:
   sessionGuard
       │
       ▼
-FrontendSessionService
+RuntimeSessionService
       │
       ▼
 Is this the current tab?
@@ -79,14 +76,13 @@ Is this the current tab?
 ---
 
 ### Session Storage
-- The session is stored in an IndexedDB database named: [BombingOutFrontend](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md).   
+- The session is stored in an IndexedDB database named: [BombingOutRuntime](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime).   
 - **Dexie.js** provides the database abstraction.  
-- The database currently contains the `frontend_session` table:
+- The database currently contains the `runtime_session` table:
 
 | Field       | Purpose                                                     |
 | ----------- | ----------------------------------------------------------- |
 | `id`        | Unique session record identifier.                           |
-| `login_at`  | Indicates that a login is currently in progress/active.     |
 | `heartbeat` | Timestamp of the last activity update.                      |
 | `tab_id`    | Unique identifier of the browser tab that owns the session. |
 
@@ -104,13 +100,13 @@ This allows the application to distinguish between different browser tabs.
 
 ---
 
-## FrontendSessionService
-`FrontendSessionService` is responsible for managing the lifecycle of the frontend session.
+## RuntimeSessionService
+`RuntimeSessionService` is responsible for managing the lifecycle of the frontend session.
 
 **Responsibilities:**
 - Checks the current frontend state when the application starts;
 - Detects expired `heartbeat` after abnormal application termination;
-- Resets `login_at` and updates `heartbeat` during recovery;
+- Updates `heartbeat` during recovery;
 - Maintains the `heartbeat` while the application is running;
 - Detects device `wake-up` after sleep mode and updates the `heartbeat`.
 
@@ -121,11 +117,9 @@ This allows the application to distinguish between different browser tabs.
   - create the local record if missing;
   - verify `heartbeat` timeout;
   - checks whether the previous `heartbeat` has expired;
-  - clears an expired login state;
   - resets the associated tab identifier when the session expires
 
 A session is considered expired when no heartbeat has been received for more than **90 seconds**.
-
 
 - ### startHeartbeat()
   - starts periodic `heartbeat` updates;
@@ -160,26 +154,6 @@ Updates:
 heartbeat = NOW()
 ```
 
-- ### lockLogin()
-  - prevents multiple browser tabs from simultaneously acquiring the same frontend session;
-  - checks whether another login/session is already active;
-  - if `login_at` is already set:
-    - the login attempt is rejected;
-    - a system popup is displayed;
-    - the user remains on the current page.
-  - if no active login exists:
-    - `login_at` is set;
-    - `heartbeat` is updated;
-    - the current browser tab's `tab_id` is stored.
-
-
-- ### clearLogin()
-  - clears `login_at`;
-  - updates the heartbeat;
-  - removes the `tab_id`.
-
-This is used when authentication fails or when the current login session needs to be released.
-
 - ### isCurrentTab()
   - checks whether the current browser tab owns the active frontend session.
   - compares the stored `tab_id` with the `UUID` generated for the current tab.
@@ -210,23 +184,6 @@ If the current tab does not own the session:
 
 If the current tab owns the session, navigation is allowed.
 
-**Example:**
-```
-{
-    path: 'mode',
-    component: ModeComponent,
-    canActivate: [sessionGuard],
-}
-```
-
-The same protection is currently applied to:
-<pre>
-/mode
-/lan
-</pre>
-
-The home page remains publicly accessible.
-
 ---
 
 ## Session Lifecycle
@@ -240,9 +197,9 @@ Application starts
 initialize()
        │
        ▼
-Check IndexedDB session
+Check IndexedDB runtime_session
        │
-       ├── No session -> Create session -> login_at = NULL heartbeat = NOW()
+       ├── No session -> Create session -> heartbeat = NOW() tab_id = NULL
        │
        └── Existing session
                 │
@@ -254,39 +211,19 @@ Check IndexedDB session
        Active       Expired
           │           │
           │           ▼
-          │      Reset session -> App redirects to [\]
+          │      Reset session  tab_id = NULL -> App redirects to [\]
           │
           ▼
     Start heartbeat
           │
           ▼
-      User login
+Start wake-up listener
           │
           ▼
-     lockLogin()
+     sessionGuard
           │
-      ┌───┴────┐
-      ▼        ▼
-    Locked   Available
-      │        │
-      ▼        ▼
-    Popup   Set tab_id
-               │
-               ▼
-          Authentication
-               │
-          ┌────┴────┐
-          ▼         ▼
-        Failed    Success
-          │         │
-          ▼         ▼
-     clearLogin()  Protected routes
-                       │
-                       ▼
-                 sessionGuard
-                       │
-                       ▼
-                isCurrentTab()
+          ▼
+    isCurrentTab()
 </pre>
 
 ---
@@ -300,5 +237,5 @@ Check IndexedDB session
 * Detects inactive/suspended sessions automatically.
 * Prevents multiple tabs from simultaneously using the same frontend session.
 * Separates session management from route protection.
-* `FrontendSessionService` manages the session state, while `sessionGuard` controls access to protected routes.
+* `RuntimeSessionService` manages the session state, while `sessionGuard` controls access to protected routes.
 * System popups are reused to inform the user when another tab already owns the session.
