@@ -14,6 +14,8 @@
   - [lockLogin()](#locklogin)
   - [clearLogin()](#clearlogin)
   - [isCurrentTab()](#iscurrenttab)
+  - [createSession()](#createsession)
+  - [clearSession()](#clearsession)
   - [ngOnDestroy()](#ngondestroy)
 - [Session Guard](#session-guard)
 - [Session Lifecycle](#session-lifecycle)
@@ -172,13 +174,12 @@ heartbeat = NOW()
     - `heartbeat` is updated;
     - the current browser tab's `tab_id` is stored.
 
-
 - ### clearLogin()
   - clears `login_at`;
   - updates the heartbeat;
   - removes the `tab_id`.
 
-This is used when authentication fails or when the current login session needs to be released.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is used when authentication fails or when the current login session needs to be released.
 
 - ### isCurrentTab()
   - checks whether the current browser tab owns the active frontend session.
@@ -186,13 +187,22 @@ This is used when authentication fails or when the current login session needs t
   - returns: `true`.
   - if the current tab owns the session, otherwise: `false`
 
+- ### createSession()
+  - сreates the frontend session record in [IndexedDB](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md).
+  - stores the current login timestamp, heartbeat timestamp, and browser tab identifier. If a session record with the same ID already exists, it is replaced.
+ 
+- ### clearSession()
+  - removes the current frontend session record from [IndexedDB](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md).
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is used before leaving the main application for the Runtime application.
+
 - ### ngOnDestroy()
   - cleans up RxJS subscriptions when the service is destroyed.
   - the following subscriptions are terminated:
     - heartbeat subscription;
     - wake-up detection subscription.
 
-This prevents unnecessary background timers and memory leaks.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This prevents unnecessary background timers and memory leaks.
 
 ---
 
@@ -242,7 +252,7 @@ initialize()
        ▼
 Check IndexedDB session
        │
-       ├── No session -> Create session -> login_at = NULL heartbeat = NOW()
+       ├── No session -> Create session -> login_at = NULL heartbeat = NOW() tab_id: this.currentTabId
        │
        └── Existing session
                 │
