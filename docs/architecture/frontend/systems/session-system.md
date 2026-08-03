@@ -18,6 +18,7 @@
   - [clearSession()](#clearsession)
   - [ngOnDestroy()](#ngondestroy)
 - [Session Guard](#session-guard)
+- [Mode Guard](#mode-guard)
 - [Session Lifecycle](#session-lifecycle)
 - [Design Notes](#design-notes)
 
@@ -236,6 +237,15 @@ The same protection is currently applied to:
 </pre>
 
 The home page remains publicly accessible.
+
+---
+
+## Mode Guard
+Controls access to the `/mode` route.
+
+If the `frontend_session` record does not exist, the guard creates a new frontend session.  
+If the record already exists, the guard verifies that the current browser tab is the active session tab.  
+If the current tab is not the active tab, the guard opens the second-tab system popup and blocks navigation.  
 
 ---
 
