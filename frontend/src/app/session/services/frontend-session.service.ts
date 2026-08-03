@@ -36,7 +36,8 @@ export class FrontendSessionService implements OnDestroy {
       await db.table('frontend_session').add({
         id: this.SESSION_ID,
         login_at: null,
-        heartbeat: Date.now()
+        heartbeat: Date.now(),
+        tab_id: this.currentTabId,
       });
 
       return false;
@@ -49,11 +50,15 @@ export class FrontendSessionService implements OnDestroy {
         .update(this.SESSION_ID, {
           login_at: null,
           heartbeat: Date.now(),
-          tab_id: null,
+          tab_id: this.currentTabId,
       });
 
       return true;
     }
+
+    await db.table('frontend_session').update(this.SESSION_ID, {
+      tab_id: this.currentTabId,
+    });
 
     return false;
   }
@@ -147,6 +152,19 @@ export class FrontendSessionService implements OnDestroy {
     const session = await db.table('frontend_session').get(this.SESSION_ID);
 
     return session?.tab_id === this.currentTabId;
+  }
+
+  public async createSession(): Promise<void> {
+    await db.table('frontend_session').put({
+      id: this.SESSION_ID,
+      login_at: Date.now(),
+      heartbeat: Date.now(),
+      tab_id: this.currentTabId,
+    });
+  }
+
+  async clearSession(): Promise<void> {
+    await db.table('frontend_session').delete(this.SESSION_ID);
   }
 
   ngOnDestroy(): void {

@@ -60,7 +60,7 @@ export class TranslationService {
     if (current[lang]?.[scope]) return;
 
     this.http
-      .get<Record<string, string>>(`/assets/i18n/${scope}/${lang}.json`)
+      .get<Record<string, string>>(`assets/i18n/${scope}/${lang}.json`)
       .subscribe(data => {
 
         this.translations.set({

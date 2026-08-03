@@ -7,6 +7,8 @@ import { FrontendSessionService } from '../../session/services/frontend-session.
 import { TranslationService } from '../../i18n/services/translation.service';
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 
+import { db } from '../../database/database';
+
 @Component({
   selector: 'app-mode',
   standalone: true,
@@ -14,6 +16,8 @@ import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
   templateUrl: './mode.component.html',
 })
 export class ModeComponent {
+
+  private readonly SESSION_ID = 1;
 
   constructor(
     private readonly authService: AuthService,
@@ -29,10 +33,15 @@ export class ModeComponent {
     await this.router.navigate(['/lan']);
   }
 
-  openOnline(): void {
+  async openOnline(): Promise<void> {
+
     const lang = this.tService.lang();
 
-    window.location.href = `${environment.apiUrl}/runtime?lang=${lang}`;
+    await this.frontendSessionService.clearSession();
+
+    const url = `${environment.apiUrl}/runtime?lang=${lang}`;
+
+    window.location.href = url;
   }
 
   async logout() {

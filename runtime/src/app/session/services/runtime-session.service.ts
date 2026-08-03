@@ -33,7 +33,8 @@ export class RuntimeSessionService implements OnDestroy {
     if (!session) {
       await db.table('runtime_session').add({
         id: this.SESSION_ID,
-        heartbeat: Date.now()
+        heartbeat: Date.now(),
+        tab_id: this.currentTabId,
       });
 
       return false;
@@ -45,11 +46,15 @@ export class RuntimeSessionService implements OnDestroy {
       await db.table('runtime_session')
         .update(this.SESSION_ID, {
           heartbeat: Date.now(),
-          tab_id: null,
+          tab_id: this.currentTabId,
       });
 
       return true;
     }
+
+    await db.table('runtime_session').update(this.SESSION_ID, {
+      tab_id: this.currentTabId,
+    });
 
     return false;
   }
