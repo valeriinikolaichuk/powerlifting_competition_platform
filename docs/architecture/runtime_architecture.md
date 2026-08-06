@@ -14,12 +14,12 @@ This architecture allows the competition to continue operating even when the int
 The `LAN` installation flow prepares and installs an isolated local competition environment for a user.
 
 #### Flow
-1. The Frontend generates a `device_id` and sends the selected language and device ID to:
+1. The Frontend generates a `device_id` and sends the selected language (`lang`) and `device_id` to:
 ```
 POST /api/download/parameters
 ```
 
-2. The backend identifies the user from the authentication cookie and creates a `device_status` record containing:
+2. The backend identifies the user from the authentication cookie (`user_id`) and creates a [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) record containing:
 <pre>
 user_id
 device_id
@@ -30,35 +30,50 @@ mode = LAN
 
 3. The backend generates the `LAN` installation package containing the required `DOCKER` application containers and database image.
 
-4. After installation, the local application sends the language and previously generated `device_id` to:
+4. After installation, the `Frontend` sends the language (`lang`) and previously generated `device_id` to:
 ```
 POST /api/download/database
 ```
 
-5. The backend retrieves the user's required dataset using:
-```
-user_id
-device_id
-language
-```
-and transfers the data to the local installation.
+5. Backend:
+   - Extracts the `user_id` from the cookies.
+   - Retrieves data from the database based on the `user_id`, `device_id`, and `lang` parameters.
+   - Sends the data to the local installed service.
 
-6. After successful installation, the local application sends:
+6. After successful installation, the local application sends `success = true`:
 ```
 POST /api/download/completed
 ```
 
-The backend removes the temporary `device_status` record from the central database and creates an `installations` record representing the installed device.
-
-The local `device_status` record remains available to the installed application and is used when establishing the connection with the central server.
+The backend removes the temporary `device_status` record from the central database (the `device_status` record on `localhost` is not deleted) and creates an [installations](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md) record representing the installed device.
 
 ---
 
 ### ONLINE Runtime
+The `ONLINE` Runtime is loaded directly from the central backend.
 
-The `ONLINE` Runtime does not require a local installation package. It is loaded directly from the central backend.
+#### Flow
+1. The Frontend 
+- Deletes the record:
+```
+async clearSession(): Promise<void> {
+  await db.table('frontend_session').delete(this.SESSION_ID);
+}
+```
+This ensures that upon return, a new record is created so the system does not block the return due to an expired `heartbeat` or a deleted and recreated `currentTabId` (`currentTabId` must match the `tab_id` of [frontend_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md)).
 
-Before leaving the main Frontend, the frontend session record is removed from the local browser database. This allows the user to return to the main Frontend later without being blocked by the previous session state.
+- The application redirects to the server:
+```
+const url = `${environment.apiUrl}/runtime?lang=${lang}`;
+window.location.href = url;
+```
+
+
+
+
+*******
+
+
 
 The Frontend then redirects the user to:
 ```
