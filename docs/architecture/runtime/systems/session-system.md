@@ -211,7 +211,7 @@ Check IndexedDB runtime_session
        Active       Expired
           │           │
           │           ▼
-          │      Reset session  tab_id = NULL -> App redirects to [\]
+          │      Reset session
           │
           ▼
     Start heartbeat
