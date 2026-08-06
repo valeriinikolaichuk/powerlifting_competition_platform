@@ -5,7 +5,7 @@ import { PopupService } from '../../popup/services/popup.service';
 import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
 import { SecondTabContentComponent } from '../../popup/components/system-popups/second-tab-content/second-tab-content.component';
 
-export const sessionGuardGuard: CanActivateFn = async () => {
+export const sessionGuard: CanActivateFn = async () => {
   
   const sessionService = inject(RuntimeSessionService);
   const popupService = inject(PopupService);

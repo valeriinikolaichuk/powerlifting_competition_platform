@@ -643,6 +643,7 @@ model User {
   competitions          Competitions[]
 
   deviceStatuses        DeviceStatus[]
+  globalState           GlobalState[]
 
   installations         Installation[]
 
@@ -1030,6 +1031,11 @@ model OrganizationResults {
 
 // ** system runtime
 
+enum DeviceMode {
+  LAN
+  ONLINE
+}
+
 enum DeviceRole {
   ADMIN
   SCOREBOARD
@@ -1044,6 +1050,9 @@ model DeviceStatus {
   id          String @id @default(uuid()) @db.Uuid
 
   user_id     String @db.Uuid
+  device_id   String @db.Uuid
+
+  mode        DeviceMode
 
   language    Language
   device_role DeviceRole
@@ -1066,12 +1075,13 @@ model DeviceStatus {
 model GlobalState {
   id                     String @id @default(uuid()) @db.Uuid
 
+  user_id                String @db.Uuid
+
   competition_id         String? @db.Uuid
   competition_session_id String? @db.Uuid
   groups_in_session_id   String? @db.Uuid
 
   current_discipline     LiftType?
-
   current_attempt        Int?
 
   created_at             DateTime @default(now())
@@ -1079,10 +1089,9 @@ model GlobalState {
 
   is_deleted             Boolean @default(false)
 
+  user User @relation(fields: [user_id], references: [id])
   competition Competitions? @relation(fields: [competition_id], references: [id])
-
   competitionSession CompetitionSessions? @relation(fields: [competition_session_id], references: [id])
-
   groupsInSession GroupsInSession? @relation(fields: [groups_in_session_id], references: [id])
 
   @@index([competition_id])
@@ -1096,6 +1105,8 @@ model Installation {
   id         String   @id @default(uuid()) @db.Uuid
   
   user_id    String   @db.Uuid
+  device_id  String @db.Uuid
+
   language   Language
 
   created_at DateTime @default(now())

@@ -1,4 +1,4 @@
-import { Controller, Get, Res } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import { join } from 'path';
 
@@ -6,7 +6,15 @@ import { join } from 'path';
 export class RuntimeController {
 
   @Get()
-  getRuntime(@Res() res: Response) {
+  async getRuntime(
+//    @Query('lang') lang: string,
+    @Res() res: Response,
+  ) {
+
+//    if (lang === 'en' || lang === 'uk' || lang === 'pl') {
+      // записати мову в БД
+      // await ...
+//    }
 
     return res.sendFile(
       join(

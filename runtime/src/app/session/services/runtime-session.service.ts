@@ -27,7 +27,7 @@ export class RuntimeSessionService implements OnDestroy {
       private readonly popupService: PopupService,
   ) {}
 
-  async initialize(): Promise<boolean> {
+  async initialize(): Promise<void> {
     const session = await db.table('runtime_session').get(this.SESSION_ID);
     
     if (!session) {
@@ -37,7 +37,7 @@ export class RuntimeSessionService implements OnDestroy {
         tab_id: this.currentTabId,
       });
 
-      return false;
+      return;
     }
 
     const expired = Date.now() - session.heartbeat > this.HEARTBEAT_TIMEOUT;
@@ -49,14 +49,14 @@ export class RuntimeSessionService implements OnDestroy {
           tab_id: this.currentTabId,
       });
 
-      return true;
+      return;
     }
 
     await db.table('runtime_session').update(this.SESSION_ID, {
       tab_id: this.currentTabId,
     });
 
-    return false;
+    return;
   }
 
   public startHeartbeat(): void {
