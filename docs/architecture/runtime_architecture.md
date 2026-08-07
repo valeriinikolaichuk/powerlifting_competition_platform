@@ -53,7 +53,7 @@ The backend removes the temporary `device_status` record from the central databa
 The `ONLINE` Runtime is loaded directly from the central backend.
 
 #### Flow
-1. The `Frontend` 
+1. The `Frontend` ([ModeComponent](frontend/pages.md#openonline)) 
 - Deletes the record:
 ```
 async clearSession(): Promise<void> {
