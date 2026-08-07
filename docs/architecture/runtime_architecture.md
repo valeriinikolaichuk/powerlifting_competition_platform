@@ -53,7 +53,7 @@ The backend removes the temporary `device_status` record from the central databa
 The `ONLINE` Runtime is loaded directly from the central backend.
 
 #### Flow
-1. The Frontend 
+1. The `Frontend` 
 - Deletes the record:
 ```
 async clearSession(): Promise<void> {
@@ -62,32 +62,35 @@ async clearSession(): Promise<void> {
 ```
 This ensures that upon return, a new record is created so the system does not block the return due to an expired `heartbeat` or a deleted and recreated `currentTabId` (`currentTabId` must match the `tab_id` of [frontend_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md)).
 
-- The application redirects to the server:
+- Redirects the user to the `Runtime` using:
 ```
 const url = `${environment.apiUrl}/runtime?lang=${lang}`;
 window.location.href = url;
 ```
 
+2. The `NestJS` backend
+- Serves the compiled Angular `Runtime` application through the `/runtime` endpoint. The `RuntimeController` returns the Runtime `index.html`, while the `NestJS` application serves the compiled static assets under the `/runtime/` path.
+
+This allows the Angular `Runtime` to be executed directly from the same backend without running a separate frontend development server.
 
 
-
-*******
-
+*****
 
 
-The Frontend then redirects the user to:
+3. The `Runtime`:
+- Reads the language from the `URL`.
 ```
-/runtime?lang={language}
+?lang={language}
 ```
-
-The Runtime:
-
-1. Reads the language from the `URL`.  
-2. Generates a new `device_id`.  
-3. Sends the language and device ID to:  
+- Generates a new `device_id`.  
+4. Sends the language and device ID to:  
 ```
 POST /api/connections/check
 ```
+
+
+
+
 
 4. Waits for the connection state returned by the backend.
 
