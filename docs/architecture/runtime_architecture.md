@@ -43,7 +43,8 @@ mode = LAN
 <pre>
 {
   "device_id": "the-unique-device-id-here",
-   "language": "EN"
+   "language": "en",
+    "mode": "lan"
 }
 </pre>
 
@@ -67,10 +68,21 @@ The backend removes the temporary `device_status` record from the central databa
 **7. How the Launcher works**  
 When the `application icon` is clicked, the launcher performs the following sequence:
 - reads the local `config.json` file.
-- extracts the local variables: `device_id` and `language`.
+- extracts the local variables: `device_id` and `language` and `mode`.
 - opens the default browser with the formatted URL:
-   `http://localhost:3000/runtime?lang={language}&device_id={device_id}`
+   `http://localhost:3000/runtime?lang={language}&device_id={device_id}&mode=lan`
 
+**8. Running on Other LAN Devices**
+To connect other devices within the same local network (LAN), you need to manually construct the `URL` in the remote device's browser by specifying your host machine's `IP address` and your preferred `language`: 
+<pre>
+http://<SERVER_IP>:3000/runtime?lang=<LANGUAGE_CODE>&mode=lan 
+</pre>
+
+**Parameters to Fill Manually:**  
+* **<SERVER_IP>**: The local `IP address` of the machine running the backend (e.g., 192.168.1.50).
+* **<LANGUAGE_CODE>**: The desired `language` for the interface (e.g., uk for Ukrainian, en for English).
+
+*Example:* `http://192.168.1.50:3000/runtime?lang=en&mode=lan`
 #### Notes:
 The full installation process is described here: [local installation](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/installation.md)
 
