@@ -239,3 +239,11 @@ Controls the frontend session across browser tabs and maintain a consistent appl
 
 ### [i18n](frontend/systems/i18n.md) Translation Module  
 Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
+
+---
+
+### Components
+### [entry](runtime/entry.md)   
+Starts the `Runtime` initialization process.
+
+---
