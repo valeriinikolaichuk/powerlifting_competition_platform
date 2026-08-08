@@ -109,6 +109,14 @@ window.location.href = url;
 ```
 
 **2. The `NestJS` backend**  
+- backend processes and routes requests dynamically based on the network architecture, utilizing one of three distinct `URL` structures:
+
+| Mode | URL Structure | Description |
+| --- | --- | --- |
+| **LAN (Local)** | `http://localhost:3000/runtime?lang={lang}&device_id={device_id}&mode=lan` | Initialized locally on the host computer. |
+| **LAN (Remote)** | `http://<SERVER_IP>:3000/runtime?lang={lang}&mode=lan` | Accessed by other local network endpoints. Requires manual IP setup. |
+| **ONLINE** | `${environment.apiUrl}/runtime?lang=${lang}&mode=online` | Powered directly by the central production cloud API. |
+
 - serves the compiled Angular `Runtime` application through the `/runtime` endpoint. The `RuntimeController` returns the Runtime `index.html`, while the `NestJS` application serves the compiled static assets under the `/runtime/` path.
 
 This allows the Angular `Runtime` to be executed directly from the same backend without running a separate frontend development server.
