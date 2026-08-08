@@ -132,6 +132,22 @@ If the session is indeed expired, a new valid record is created inside the runti
   - **Heartbeat Activation.** The service triggers the `startHeartbeat()` method to regularly ping and keep the current session active.
   - **Wake-Up Listener Activation.** The service launches the `startWakeUpListener()` method to monitor system wake-up events (e.g., when the device wakes up from sleep mode).
 
+- [EntryComponent](runtime/entry.md)
+  - reads `lang` and `mode` from the `URL` parameters.
+  - generates a new `device_id`.
+  - if the `Runtime` is running in `LAN mode` on `localhost`, it uses the existing `device_id` provided in the `URL` instead.
+  - creates a `DeviceParameters` DTO containing:
+  <pre>
+    device_id
+    language
+    mode
+  </pre>
+  - sends the DTO to:
+<pre>
+    POST /api/connections/admin
+</pre>
+  - waits for the server response before continuing `Runtime` initialization.
+
 
 *****
 
