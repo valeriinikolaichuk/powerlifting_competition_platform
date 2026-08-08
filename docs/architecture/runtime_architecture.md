@@ -113,11 +113,21 @@ window.location.href = url;
 
 This allows the Angular `Runtime` to be executed directly from the same backend without running a separate frontend development server.
 
+**3. The `Runtime`:**
+- initializes the [RuntimeSessionService](runtime/systems/session-system.md), which executes the following startup sequence:
+  - **Database Check.** The service verifies the existence of the [runtime_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime) table.
+  - **Session Expiration Check.** It checks if the local runtime session has expired using the following logic:
+<pre>
+    const expired = Date.now() - session.heartbeat > this.HEARTBEAT_TIMEOUT;
+</pre>
+If the session is indeed expired, a new valid record is created inside the runtime_session table.
+  - **Heartbeat Activation.** The service triggers the `startHeartbeat()` method to regularly ping and keep the current session active.
+  - **Wake-Up Listener Activation.** The service launches the `startWakeUpListener()` method to monitor system wake-up events (e.g., when the device wakes up from sleep mode).
+
 
 *****
 
 
-3. The `Runtime`:
 - Reads the language from the `URL`.
 ```
 ?lang={language}
