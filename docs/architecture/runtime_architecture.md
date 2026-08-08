@@ -14,12 +14,13 @@ This architecture allows the competition to continue operating even when the int
 The `LAN` installation flow prepares and installs an isolated local competition environment for a user.
 
 #### Flow
-1. The Frontend generates a `device_id` and sends the selected language (`lang`) and `device_id` to:
+**1. The Frontend** generates a `device_id` and sends the selected language (`lang`) and `device_id` to:
 ```
 POST /api/download/parameters
 ```
 
-2. The backend identifies the user from the authentication cookie (`user_id`) and creates a [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) record containing:
+**2. The backend**
+- identifies the user from the authentication cookie (`user_id`) and creates a [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) record containing:
 <pre>
 user_id
 device_id
@@ -28,29 +29,56 @@ device_role = ADMIN
 mode = LAN
 </pre>
 
-3. The backend generates the `LAN` installation package containing the required `DOCKER` application containers and database image.
+- generates the `LAN` installation package containing the required `DOCKER` application containers and database image.  
+**Installation package:**
+<pre>
+- Docker containers
+- Database image
+- Launcher
+- Installer
+- Installation parameters (`device_id`, `language`)
+</pre>
 
-4. After installation, the `Frontend` sends the language (`lang`) and previously generated `device_id` to:
+**3. During deployment** `device_id` `language` are automatically saved into a local `config.json` file on the device.
+<pre>
+{
+  "device_id": "the-unique-device-id-here",
+   "language": "EN"
+}
+</pre>
+
+**4. After installation** the `Frontend` sends the `language` and previously generated `device_id` to:
 ```
 POST /api/download/database
 ```
 
-5. Backend:
+**5. The backend**
    - Extracts the `user_id` from the cookies.
    - Retrieves data from the database based on the `user_id`, `device_id`, and `lang` parameters.
    - Sends the data to the local installed service.
 
-6. After successful installation, the local application sends `success = true`:
+**6. After successful installation**, the local application sends `success = true`:
 ```
 POST /api/download/completed
 ```
 
 The backend removes the temporary `device_status` record from the central database (the `device_status` record on `localhost` is not deleted) and creates an [installations](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md) record representing the installed device.
 
+**7. How the Launcher works**  
+When the `application icon` is clicked, the launcher performs the following sequence:
+- reads the local `config.json` file.
+- extracts the local variables: `device_id` and `language`.
+- opens the default browser with the formatted URL:
+   `http://localhost:3000/runtime?lang={language}&device_id={device_id}`
+
+#### Notes:
+The full installation process is described here: [local installation](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/installation.md)
+
 ---
 
-### ONLINE Runtime
-The `ONLINE` Runtime is loaded directly from the central backend.
+### Runtime Lifecycle
+The `ONLINE` Runtime is loaded directly from the central backend.  
+The `LAN` Runtime is loaded from `localhost`.
 
 #### Flow
 1. The `Frontend` ([ModeComponent](frontend/pages.md#openonline)) 
