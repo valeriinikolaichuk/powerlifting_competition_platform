@@ -76,13 +76,13 @@ The full installation process is described here: [local installation](https://gi
 
 ---
 
-### Runtime Lifecycle
+### Runtime Entry Prosess
 The `ONLINE` Runtime is loaded directly from the central backend.  
 The `LAN` Runtime is loaded from `localhost`.
 
 #### Flow
-1. The `Frontend` ([ModeComponent](frontend/pages.md#openonline)) 
-- Deletes the record:
+**1. if `ONLINE` the `Frontend`** ([ModeComponent](frontend/pages.md#openonline)) 
+- deletes the record:
 ```
 async clearSession(): Promise<void> {
   await db.table('frontend_session').delete(this.SESSION_ID);
@@ -90,14 +90,14 @@ async clearSession(): Promise<void> {
 ```
 This ensures that upon return, a new record is created so the system does not block the return due to an expired `heartbeat` or a deleted and recreated `currentTabId` (`currentTabId` must match the `tab_id` of [frontend_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md)).
 
-- Redirects the user to the `Runtime` using:
+- redirects the user to the `Runtime` using:
 ```
 const url = `${environment.apiUrl}/runtime?lang=${lang}`;
 window.location.href = url;
 ```
 
-2. The `NestJS` backend
-- Serves the compiled Angular `Runtime` application through the `/runtime` endpoint. The `RuntimeController` returns the Runtime `index.html`, while the `NestJS` application serves the compiled static assets under the `/runtime/` path.
+**2. The `NestJS` backend**  
+- serves the compiled Angular `Runtime` application through the `/runtime` endpoint. The `RuntimeController` returns the Runtime `index.html`, while the `NestJS` application serves the compiled static assets under the `/runtime/` path.
 
 This allows the Angular `Runtime` to be executed directly from the same backend without running a separate frontend development server.
 
