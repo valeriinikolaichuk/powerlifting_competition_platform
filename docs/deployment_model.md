@@ -10,6 +10,7 @@
 - [Backend API](#backend-api)
 - [PostgreSQL Database](#postgresql-database)
 - [Architecture](#architecture)
+- [Local Installation](#local-installation)
 
 </details>
 
@@ -172,3 +173,9 @@ pcp-backend
 pcp-postgres
       Local PostgreSQL
 </pre>
+
+---
+
+### Local Installation
+
+The local installation process is described here: [local installation](installation.md)
