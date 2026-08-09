@@ -117,7 +117,7 @@ window.location.href = url;
 
 ---
 
-**2. The `NestJS` backend**  
+**2. The [Runtime Module](backend/modules.md#runtime-module)**  
 - backend processes and routes requests dynamically based on the network architecture, utilizing one of three distinct `URL` structures:
 
 | Mode | URL Structure | Description |
@@ -132,7 +132,7 @@ This allows the Angular `Runtime` to be executed directly from the same backend 
 
 ---
 
-**3. The `Runtime`:**
+**3. The [Runtime](runtime/entry.md):**
 - initializes the [RuntimeSessionService](runtime/systems/session-system.md), which executes the following startup sequence:
   - **Database Check.** The service verifies the existence of the [runtime_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime) table.
   - **Session Expiration Check.** It checks if the local runtime session has expired using the following logic:
