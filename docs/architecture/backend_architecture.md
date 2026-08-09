@@ -26,3 +26,6 @@ This approach allows the Competition `Runtime` Application to execute the same b
 
 ### [authentication](backend/systems/authentication.md)
 Processes dynamic login strategies, initializes secure `cookie-based` user sessions, and validates environment configurations asynchronously.
+
+### [connections](backend/systems/connections.md)
+Manages device registration and connection state for the [Runtime](runtime_architecture.md). It handles both `LAN` and `ONLINE` modes
