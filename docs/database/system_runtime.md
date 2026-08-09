@@ -18,22 +18,23 @@ The table is used for device coordination, localization, and real-time communica
 |--------|-------------|
 | id | Unique record identifier |
 | user_id | Logged-in user |
-| language | User interface language (`Language` enum) |
+| device_id | Unique device identifier |
+| mode | Device operating mode (`DeviceMode` enum) |
 | device_role | Assigned device role (`DeviceRole` enum) |
+| language | User interface language (`Language` enum) |
 | ip_address | Device IP address |
 | user_agent | Device user agent |
 | created_at | Record creation timestamp |
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
 
-#### Language (enum)
-Defines the user interface language.
+#### DeviceMode (enum)
+Defines the mode in which a device operates:
 
 | Value | Description |
 |--------|-------------|
-| EN | English |
-| UK | Ukrainian |
-| PL | Polish |
+| LAN | local network mode|
+| ONLINE | online mode|
 
 #### DeviceRole (enum)
 Defines the purpose of a connected device.
@@ -47,6 +48,15 @@ Defines the purpose of a connected device.
 | INFORMATION | Information display |
 | TIMER | Competition timer |
 | WEIGHING_IN | Weigh-in workstation |
+
+#### Language (enum)
+Defines the user interface language.
+
+| Value | Description |
+|--------|-------------|
+| EN | English |
+| UK | Ukrainian |
+| PL | Polish |
 
 #### Relations
 
@@ -67,6 +77,7 @@ The table is used for real-time synchronization between competition workstations
 | Column | Description |
 |--------|-------------|
 | id | Unique record identifier |
+| user_id | User associated with the state |
 | competition_id | Current competition |
 | competition_session_id | Current competition session |
 | groups_in_session_id | Current competition group |
@@ -86,6 +97,7 @@ Defines the competition lift.
 | DEADLIFT | Deadlift. |
 
 #### Relations
+- related with ➡ [**users**](user.md) by `user_id`
 - related with ➡ [competitions](competition.md) by `competition_id`
 - related with **competition_sessions** by `competition_session_id`
 - related with **groups_in_session** by `groups_in_session_id`

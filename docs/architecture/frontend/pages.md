@@ -176,7 +176,8 @@ await this.router.navigate(['/lan']);
 The [`[/lan]`](#lancomponent) route is protected by [sessionGuard](systems/session-system.md#session-guard), so only the browser tab that owns the current frontend session can access it.
 
 - #### openOnline()
-Opens the online runtime using the backend URL configured in the Angular environment:
+- clears the current [frontend_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md), and redirects the user to the ONLINE `Runtime`.
+- opens the online runtime using the backend URL configured in the Angular `environment`:
 ```
 window.location.href = `${environment.apiUrl}/runtime`;
 ```
