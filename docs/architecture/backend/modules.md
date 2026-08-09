@@ -31,8 +31,8 @@ Provides the Angular **Runtime Application** through the NestJS backend.
 
 The Runtime is therefore accessed through the NestJS backend, for example:
 
-```text
-/runtime?lang=en
+```
+/runtime?lang=${lang}&mode=online
 ```
 
 The controller returns the Angular application's `index.html`, while `ServeStaticModule` provides its JavaScript, CSS, assets, and other static files.
