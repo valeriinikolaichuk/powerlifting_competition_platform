@@ -16,8 +16,8 @@ import { AuthFactoryService } from './authentication/auth-factory.service';
 import { AuthDefaultService } from './authentication/auth-default.service';
 
 import { SessionPolicyFactoryService } from './policy/session-policy-factory.service';
-import { OfflineSessionPolicy } from './policy/offline-session-policy';
-import { OnlineSessionPolicy } from './policy/online-session-policy';
+import { PersistentSessionPolicy } from './policy/persistent-session-policy';
+import { RefreshableSessionPolicy } from './policy/refreshable-session-policy';
 
 @Module({
   imports: [
@@ -71,21 +71,21 @@ import { OnlineSessionPolicy } from './policy/online-session-policy';
     AuthFactoryService,
 
 // iterable<SessionPolicyInterface>
-    OfflineSessionPolicy,
-    OnlineSessionPolicy,
+    PersistentSessionPolicy,
+    RefreshableSessionPolicy,
 
     {
         provide: TOKEN_COOKIE_POLICY,
         useFactory: (
-            offline: OfflineSessionPolicy,
-            online: OnlineSessionPolicy,
+            offline: PersistentSessionPolicy,
+            online: RefreshableSessionPolicy,
         ) => [
             offline,
             online,
         ],
         inject: [
-            OfflineSessionPolicy,
-            OnlineSessionPolicy,
+            PersistentSessionPolicy,
+            RefreshableSessionPolicy,
         ],
     },
 

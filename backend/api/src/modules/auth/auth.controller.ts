@@ -42,7 +42,7 @@ export class AuthController {
     getProfile(@CurrentUser() user: any) { 
         return {
             success: true,
-            data: user,
+            user_id: user.sub,
         };
     }
 

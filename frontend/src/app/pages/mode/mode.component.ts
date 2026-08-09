@@ -7,8 +7,6 @@ import { FrontendSessionService } from '../../session/services/frontend-session.
 import { TranslationService } from '../../i18n/services/translation.service';
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 
-import { db } from '../../database/database';
-
 @Component({
   selector: 'app-mode',
   standalone: true,
@@ -39,7 +37,7 @@ export class ModeComponent {
 
     await this.frontendSessionService.clearSession();
 
-    const url = `${environment.apiUrl}/runtime?lang=${lang}`;
+    const url = `${environment.apiUrl}/runtime?lang=${lang}&mode=online`;
 
     window.location.href = url;
   }

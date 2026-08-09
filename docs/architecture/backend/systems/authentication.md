@@ -48,7 +48,7 @@ The login process consists of two independent stages:
             ↓                              SessionPolicyInterface       |       |
     MethodPipelineService                  ________|________            |       |
       (LOGIN_METHODS)                      ↓               ↓            |       |
-  MethodPipelineInterface     OfflineSessionPolicy  OnlineSessionPolicy |       |
+  MethodPipelineInterface     PersistentSessionPolicy  RefreshableSessionPolicy |
             |                                                           |       |
             ├── LoginMethodDefault                                      |       |
             |                                                           |       |
@@ -171,16 +171,16 @@ Authenticated User
         ▼
 SessionPolicyFactoryService
         │
-        ├── OfflineSessionPolicy
-        └── OnlineSessionPolicy
+        ├── PersistentSessionPolicy
+        └── RefreshableSessionPolicy
 ```
 
 The `Policy Factory Session` selects the appropriate policy based on the authenticated user's `ROLE`.
 
 |Policy	|Description|
 |-----------|-----------|
-|OfflineSessionPolicy|	Long-lived authentication intended for Competition Runtime users.|
-|OnlineSessionPolicy|	Short-lived access tokens with refresh support for users operating exclusively online.|
+|PersistentSessionPolicy|	Long-lived authentication intended for Competition Runtime users.|
+|RefreshableSessionPolicy|	Short-lived access tokens with refresh support for users operating exclusively online.|
 
 The selected policy determines:
 - `access token` lifetime;

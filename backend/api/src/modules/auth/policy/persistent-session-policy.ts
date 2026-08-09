@@ -2,7 +2,7 @@ import { SessionPolicyInterface } from "./session-policy.interface";
 import { UserRole } from "@prisma/client";
 import type { StringValue } from 'ms';
 
-export class OfflineSessionPolicy implements SessionPolicyInterface {
+export class PersistentSessionPolicy implements SessionPolicyInterface {
 
     supports(role: UserRole): boolean {
         return role === UserRole.USER;

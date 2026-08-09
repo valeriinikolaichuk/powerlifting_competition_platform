@@ -1055,7 +1055,7 @@ model DeviceStatus {
   mode        DeviceMode
 
   language    Language
-  device_role DeviceRole
+  device_role DeviceRole?
 
   ip_address  String?
   user_agent  String?

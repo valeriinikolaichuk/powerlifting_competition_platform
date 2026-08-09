@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { RuntimeModule } from './modules/runtime/runtime.module';
+import { ConnectionsModule } from './modules/connections/connections.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { RuntimeModule } from './modules/runtime/runtime.module';
     PrismaModule,
     AuthModule,
     RuntimeModule,
+    ConnectionsModule,
   ],
   controllers: [],
   providers: [],
