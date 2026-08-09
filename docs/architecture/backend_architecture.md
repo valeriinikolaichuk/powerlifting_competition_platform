@@ -29,3 +29,11 @@ Processes dynamic login strategies, initializes secure `cookie-based` user sessi
 
 ### [connections](backend/systems/connections.md)
 Manages device registration and connection state for the [Runtime](runtime_architecture.md). It handles both `LAN` and `ONLINE` modes
+
+---
+
+### Modules
+
+### [](backend/modules.md)
+
+### [](backend/modules.md)
