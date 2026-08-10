@@ -12,8 +12,11 @@
   - [startWakeUpListener()](#startwakeuplistener)
   - [updateHeartbeat()](#updateheartbeat)
   - [isCurrentTab()](#iscurrenttab)
+  - [createSession()](#createsession)
+  - [clearSession()](#clearsession)
   - [ngOnDestroy()](#ngondestroy)
 - [Session Guard](#session-guard)
+- [Entry Guard](#entry-guard)
 - [Session Lifecycle](#session-lifecycle)
 - [Design Notes](#design-notes)
 
@@ -162,6 +165,15 @@ heartbeat = NOW()
   - returns: `true`.
   - if the current tab owns the session, otherwise: `false`
 
+- ### createSession()
+  - сreates the runtime session record in [IndexedDB](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime).
+  - stores the current heartbeat timestamp, and browser tab identifier. If a session record with the same ID already exists, it is replaced.
+ 
+- ### clearSession()
+  - removes the current runtime session record from [IndexedDB](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime).
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This is used before leaving the main application for the Frontend application.
+
 - ### ngOnDestroy()
   - cleans up RxJS subscriptions when the service is destroyed.
   - the following subscriptions are terminated:
@@ -185,6 +197,15 @@ If the current tab does not own the session:
 3. The user remains outside the protected route.  
 
 If the current tab owns the session, navigation is allowed.
+
+---
+
+## Entry Guard
+Controls access to the `/entry` route.
+
+- If the `runtime_session` record does not exist, the guard creates a new runtime session.  
+- If the record already exists, the guard verifies that the current browser tab is the active session tab.  
+- If the current tab is not the active tab, the guard opens the second-tab system popup and blocks navigation.  
 
 ---
 
