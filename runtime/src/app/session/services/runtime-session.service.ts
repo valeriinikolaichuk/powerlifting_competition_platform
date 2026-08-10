@@ -52,10 +52,6 @@ export class RuntimeSessionService implements OnDestroy {
       return;
     }
 
-    await db.table('runtime_session').update(this.SESSION_ID, {
-      tab_id: this.currentTabId,
-    });
-
     return;
   }
 
@@ -116,6 +112,18 @@ export class RuntimeSessionService implements OnDestroy {
     const session = await db.table('runtime_session').get(this.SESSION_ID);
 
     return session?.tab_id === this.currentTabId;
+  }
+
+  public async createSession(): Promise<void> {
+    await db.table('runtime_session').put({
+      id: this.SESSION_ID,
+      heartbeat: Date.now(),
+      tab_id: this.currentTabId,
+    });
+  }
+
+  async clearSession(): Promise<void> {
+    await db.table('runtime_session').delete(this.SESSION_ID);
   }
 
   ngOnDestroy(): void {

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { DeviceParameters } from '../dto/device-parameters';
+import { ConnectionsResultDto } from '../dto/connections-result-dto';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class EntryService {
     private readonly http: HttpClient,
   ) {}
 
-  async check(): Promise<void> {
+  createParameters(): DeviceParameters {
 
     const params = new URLSearchParams(window.location.search);
 
@@ -26,16 +27,35 @@ export class EntryService {
         deviceId = params.get('device_id') ?? '';
     }
 
-    const dto: DeviceParameters = {
+    return {
       device_id: deviceId,
       language: language,
       mode: mode
     };
+  }
 
-    await firstValueFrom(
-      this.http.post(
+  async check(
+    dto: DeviceParameters,
+  ): Promise<ConnectionsResultDto> {
+
+    return await firstValueFrom(
+      this.http.post<ConnectionsResultDto>(
         '/api/connections/entry',
         dto,
+      ),
+    );
+  }
+
+  async deleteConnections(
+    deviceIds: string[],
+  ): Promise<void> {
+
+    await firstValueFrom(
+      this.http.post<void>(
+        '/api/connections/delete',
+        {
+          device_ids: deviceIds,
+        },
       ),
     );
   }

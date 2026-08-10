@@ -1,10 +1,10 @@
 {
- "ADMIN":"АДМІН",
- "WEIGHING_IN":"ЗВАЖУВАННЯ",
- "SCOREBOARD":"ПРОТОКОЛ ЗМАГАНЬ",
- "LIFTING_ORDER":"ПОРЯДОК ВИХОДУ",
- "DISCS_SEQUENCE":"ПОРЯДОК ДИСКІВ",
- "INFORMATION":"ІНФОРМАЦІЯ",
- "TIMER":"ТАЙМЕР",
- "RETURN":"ВИЙТИ"
+ "ADMIN": "АДМІН",
+ "WEIGHING_IN": "ЗВАЖУВАННЯ",
+ "SCOREBOARD": "ПРОТОКОЛ ЗМАГАНЬ",
+ "LIFTING_ORDER": "ПОРЯДОК ВИХОДУ",
+ "DISCS_SEQUENCE": "ПОРЯДОК ДИСКІВ",
+ "INFORMATION": "ІНФОРМАЦІЯ",
+ "TIMER": "ТАЙМЕР",
+ "EXIT": "ВИЙТИ"
 }

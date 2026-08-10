@@ -2,28 +2,24 @@ import { Component } from '@angular/core';
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
 import { environment } from '../../../environments/environment';
-import { RuntimeSessionService } from '../../session/services/runtime-session.service';
 
 @Component({
-  selector: 'app-role',
+  selector: 'app-admin',
   standalone: true,
   imports: [TranslatePipe],
-  templateUrl: './role.component.html',
+  templateUrl: './admin.component.html'
 })
-export class RoleComponent {
+export class AdminComponent {
 
   constructor(
-    public tService: TranslationService,
-    private readonly runtimeSessionService: RuntimeSessionService,
+    public tService: TranslationService
   ){}
 
   ngOnInit(){
     this.tService.load('pages/role');
   }
 
-  async backToMode(): Promise<void> {
-    await this.runtimeSessionService.clearSession();
-
+  backToMode(): void {
     window.location.href = `${environment.frontendUrl}/mode`;
   }
 }

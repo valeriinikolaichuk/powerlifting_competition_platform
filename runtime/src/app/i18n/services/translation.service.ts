@@ -42,6 +42,7 @@ export class TranslationService {
       '',
       window.location.pathname
     );
+
   }
 
   load(scope: string) {

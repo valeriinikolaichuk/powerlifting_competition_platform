@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
-import { RoleComponent } from './pages/role/role.component';
+import { EntryComponent } from './entry/entry.component/entry.component';
+import { entryGuard } from './session/guards/entry-guard';
 
 export const routes: Routes = [
     { 
         path: '', 
-        component: RoleComponent,
+        component: EntryComponent,
+        canActivate: [entryGuard],
     },
 ];

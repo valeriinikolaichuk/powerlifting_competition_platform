@@ -8,25 +8,13 @@
             grid grid-rows-[200px_200px_200px] 
             gap-[25px] justify-items-center items-center pt-[50px]">
     <div class="flex gap-[25px] justify-center">
-        <div>
-            <button class="w-[200px] h-[200px] 
-                        bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                        rounded-[10px] 
-                        text-2xl leading-[2]"
-                        type="button">
-                {{ 'ADMIN' | t:'pages/role' }}
-            </button>
-        </div>
-
-        <div>
-            <button class="w-[200px] h-[200px] 
-                        bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                        rounded-[10px] 
-                        text-2xl leading-[2]"
-                        type="button">
-                {{ 'WEIGHING_IN' | t:'pages/role' }}
-            </button>
-        </div>
+        <button class="w-[200px] h-[200px] 
+                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
+                    rounded-[10px] 
+                    text-2xl leading-[2]"
+                    type="button">
+            {{ 'WEIGHING_IN' | t:'pages/role' }}
+        </button>
     </div>
 
     <div class="flex gap-[25px] justify-center">
@@ -77,8 +65,8 @@
                     rounded-[10px] 
                     text-2xl leading-[2]"
                     type="button"
-                (click)="return()">
-            {{ 'RETURN' | t:'pages/role' }}
+                (click)="backToMode()">
+            {{ 'EXIT' | t:'pages/role' }}
         </button>
     </div>
 </div>

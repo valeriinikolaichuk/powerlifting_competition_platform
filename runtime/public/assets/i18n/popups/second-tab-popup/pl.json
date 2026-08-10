@@ -1,5 +1,5 @@
 {
     "TITLE": "Aplikacja jest już uruchomiona w innej karcie przeglądarki.",
-    "MESSAGE": "Ze względów bezpieczeństwa aplikacja uniemożliwia logowanie się w wielu kartach przeglądarki i ogranicza dostęp do niektórych stron otwartych w dodatkowych kartach. Możesz kontynuować pracę w oryginalnej karcie przeglądarki.",
+    "MESSAGE": "Ze względów bezpieczeństwa aplikacja blokuje dostęp z wielu kart przeglądarki i ogranicza dostęp do niektórych stron otwartych w dodatkowych kartach. Możesz kontynuować pracę w oryginalnej karcie przeglądarki.",
     "CONTINUE": "Zamknij istniejącą kartę, aby kontynuować."
 }

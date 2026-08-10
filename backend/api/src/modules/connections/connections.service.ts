@@ -14,14 +14,15 @@ export class ConnectionsService {
 
   async checkAdmin(
     dto: DeviceParametersDto,
-    cookieUserId?: string,
+    userId?: string,
   ): Promise<ConnectionsResultDto> {
-
+console.log('MODE:', dto.mode);
+console.log('USER ID:', userId);
     if (dto.mode === 'LAN') {
       return this.checkLan(dto);
     }
 
-    return this.checkOnline(dto, cookieUserId);
+    return this.checkOnline(dto, userId);
   }
 
   private async checkLan(
@@ -43,9 +44,7 @@ export class ConnectionsService {
     });
 
     if (!admin) {
-      throw new NotFoundException(
-        'LAN ADMIN device was not found',
-      );
+      throw new NotFoundException('LAN ADMIN device was not found');
     }
 
     const userId = admin.user_id;
@@ -66,8 +65,7 @@ export class ConnectionsService {
      */
     if (currentDevice) {
 
-      const connections =
-        await this.findConnectionsWithoutAdmin(userId);
+      const connections = await this.findConnectionsWithoutAdmin(userId);
 
       return {
         adminExists: false,
@@ -100,14 +98,8 @@ export class ConnectionsService {
     userId?: string,
   ): Promise<ConnectionsResultDto> {
 
-    if (!userId) {
-      throw new UnauthorizedException();
-    }
+    if (!userId) { throw new UnauthorizedException(); }
 
-    /*
-     * IMPORTANT:
-     * Check ADMIN every time.
-     */
     const admin = await this.prisma.deviceStatus.findFirst({
       where: {
         user_id: userId,
@@ -159,8 +151,7 @@ export class ConnectionsService {
       },
     });
 
-    const connections =
-      await this.findConnections(userId);
+    const connections = await this.findConnections(userId);
 
     return {
       adminExists: true,

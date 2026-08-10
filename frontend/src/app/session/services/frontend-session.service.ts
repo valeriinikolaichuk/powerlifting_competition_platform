@@ -56,10 +56,6 @@ export class FrontendSessionService implements OnDestroy {
       return true;
     }
 
-    await db.table('frontend_session').update(this.SESSION_ID, {
-      tab_id: this.currentTabId,
-    });
-
     return false;
   }
 
