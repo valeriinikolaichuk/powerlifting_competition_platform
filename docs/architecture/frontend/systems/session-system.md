@@ -117,6 +117,8 @@ This allows the application to distinguish between different browser tabs.
 - Maintains the `heartbeat` while the application is running;
 - Detects device `wake-up` after sleep mode and updates the `heartbeat`.
 
+**Frontend session state is stored in `IndexedDB`. Each browser tab has a unique `tab_id` stored in `sessionStorage`, so page reloads do not invalidate the current tab while a new tab is detected as a separate session.**
+
 ---
 
 - ### initialize()
