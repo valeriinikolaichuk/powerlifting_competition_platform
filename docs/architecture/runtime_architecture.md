@@ -1,16 +1,23 @@
 ## Runtime Architecture
 
-The `runtime` is the operational layer where the competition is actually executed. It runs in a web browser on each workstation and provides role-specific interfaces for competition management.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The `runtime` is the operational layer where the competition is actually executed. It runs in a web browser on each workstation and provides role-specific interfaces for competition management.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Each runtime instance operates with its own local `PGlite` database and executes the same business logic and data operations independently. This allows workstations to continue operating without a permanent network connection while remaining synchronized with the rest of the system.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works entirely within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This architecture allows the competition to continue operating even when the internet connection is unavailable and synchronize changes when connectivity is restored.
 
-Each runtime instance operates with its own local `PGlite` database and executes the same business logic and data operations independently. This allows workstations to continue operating without a permanent network connection while remaining synchronized with the rest of the system.
+<details open="open">
+<summary>Contents</summary>  
 
-The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works entirely within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.
+- [LAN Download and Installation](#lan-download-and-installation)
+- [Runtime Entry Prosess](#runtime-entry-prosess)
+- [Systems](#systems)
+- [Conponents](#components)
 
-This architecture allows the competition to continue operating even when the internet connection is unavailable and synchronize changes when connectivity is restored.
+</details>
 
 ---
 
-### LAN Download / Installation
+### LAN Download and Installation
 The `LAN` installation flow prepares and installs an isolated local competition environment for a user.
 
 #### Flow
@@ -108,7 +115,9 @@ const url = `${environment.apiUrl}/runtime?lang=${lang}`;
 window.location.href = url;
 ```
 
-**2. The `NestJS` backend**  
+---
+
+**2. The [Runtime Module](backend/modules.md#runtime-module)**  
 - backend processes and routes requests dynamically based on the network architecture, utilizing one of three distinct `URL` structures:
 
 | Mode | URL Structure | Description |
@@ -121,7 +130,9 @@ window.location.href = url;
 
 This allows the Angular `Runtime` to be executed directly from the same backend without running a separate frontend development server.
 
-**3. The `Runtime`:**
+---
+
+**3. The [Runtime](runtime/entry.md):**
 - initializes the [RuntimeSessionService](runtime/systems/session-system.md), which executes the following startup sequence:
   - **Database Check.** The service verifies the existence of the [runtime_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime) table.
   - **Session Expiration Check.** It checks if the local runtime session has expired using the following logic:
@@ -144,82 +155,125 @@ If the session is indeed expired, a new valid record is created inside the runti
   </pre>
   - sends the DTO to:
 <pre>
-    POST /api/connections/admin
+    POST /api/connections/entry
 </pre>
   - waits for the server response before continuing `Runtime` initialization.
 
-
-*****
-
-
-- Reads the language from the `URL`.
-```
-?lang={language}
-```
-- Generates a new `device_id`.  
-4. Sends the language and device ID to:  
-```
-POST /api/connections/check
-```
-
-
-
-
-
-4. Waits for the connection state returned by the backend.
-
-5. Initializes the Runtime according to the returned connection state.
-
-Unlike `LAN` installation, `ONLINE` Runtime does not create an installation package or transfer a local `PostgreSQL` database during startup.
-
 ---
 
-### `/api/connections/check`
+**4. The [Connections Module]((backend/systems/connections.md)) `/api/connections/entry`**  
 
-`/api/connections/check` provides the common connection initialization logic for both `LAN`and `ONLINE` Runtime.
+The endpoint receives `DeviceParametersDto` containing:
+* `device_id`
+* `language`
+* `mode`
 
-The endpoint receives:
+The service then executes different logic depending on the device mode.
+
+#### LAN
+
+- Find the active LAN `ADMIN` record in `device_status`:
+
+```sql
+SELECT user_id
+FROM device_status
+WHERE device_role = 'ADMIN'
+  AND mode = 'LAN'
+  AND is_deleted = false;
+```
+
+- Use the returned `user_id` as the owner of the `LAN` environment.
+
+- Check whether an active `device_status` registration record exists for the received `device_id`.
+
+- **If the device already exists:**
+   * Query all active devices belonging to the same `user_id`.
+   * Exclude the `ADMIN` device.
+   * Map the records to `ConnectionDto`.
+   * Return `ConnectionsResultDto` with:
+
+     * `adminExists = false`
+     * `connections` containing the existing non-ADMIN connections.
+
+- **If the device does not exist:**
+   * Create a new `device_status` record with:
+
+     * `user_id`
+     * `device_id`
+     * `language`
+     * `mode = LAN`
+     * `device_role = null`
+   * Return `ConnectionsResultDto` with:
+
+     * `adminExists = true`
+     * an empty `connections` array.
+
+#### ONLINE
+
+- Resolve `user_id` from the authenticated user's cookie.
+
+- Find an active `ADMIN` record for this user:
+
+```sql
+SELECT *
+FROM device_status
+WHERE user_id = :user_id
+  AND device_role = 'ADMIN'
+  AND is_deleted = false;
+```
+
+- **If an `ADMIN` does not exist:**  
+   * Create a new `device_status` record:
+     * `user_id`
+     * `device_id`
+     * `language`
+     * `mode = ONLINE`
+     * `device_role = ADMIN`
+   * Query all active non-ADMIN connections.
+   * Map them to `ConnectionDto`.
+   * Return `ConnectionsResultDto` with:
+
+     * `adminExists = false`
+     * `connections` containing the non-ADMIN connections.
+
+- **If an `ADMIN` already exists:**
+   * Create a new `device_status` record for the current device:
+     * `user_id`
+     * `device_id`
+     * `language`
+     * `mode = ONLINE`
+     * `device_role = null`
+   * Query all active connections belonging to the user, including `ADMIN`.
+   * Map them to `ConnectionDto`.
+   * Return `ConnectionsResultDto` with:
+     * `adminExists = true`
+     * `connections` containing all active connections.
+
+**Result**  
+The Runtime receives a `ConnectionsResultDto` describing the current connection state:
 <pre>
-language
-device_id
+ConnectionsResultDto
+├── adminExists
+└── connections[]
+    ├── device_id
+    ├── language
+    ├── device_role
+    └── mode
 </pre>
 
-The `user_id` is obtained either from the request or from the authentication cookie.
+The `device_status` table therefore acts as the **central connection registry**, while `ConnectionsService` contains the mode-specific logic for registering devices and determining which connections are visible to the Runtime.
 
-#### Connection initialization
-The backend first checks `device_status` for an active `ADMIN` device belonging to the user:
-<pre>
-user_id = current user
-device_role = ADMIN
-is_deleted = false
-</pre>
 
-#### No active ADMIN exists:
-A new `ADMIN` connection is created using:
-<pre>
-user_id
-device_id
-language
-</pre>
 
-The response contains:
-```
-adminExists = false
-```
 
-#### ADMIN already exists:
-The backend compares the current `device_id` and connection mode with the existing LAN ADMIN connection.
 
-* **ONLINE** — a new connection is created without an assigned role.
-* **LAN with a different `device_id`** — a new connection is created without an assigned role.
-* **LAN with the same `device_id`** — no new connection is created.
 
-The response contains:
-```
-adminExists = true
-```
 
-The backend then retrieves the user's active device connections from `device_status` and returns them to the Runtime as a DTO.
+****
+
+
+
+
 
 #### Runtime initialization
 After receiving the DTO, the Runtime:
