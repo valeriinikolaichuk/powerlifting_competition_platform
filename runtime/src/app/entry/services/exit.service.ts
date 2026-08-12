@@ -1,0 +1,42 @@
+import { Injectable } from '@angular/core';
+
+import { environment } from '../../../environments/environment';
+import { RuntimeSessionService } from '../../session/services/runtime-session.service';
+import { ConnectionsService } from '../../connections/services/connections.service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ExitService {
+
+  constructor(
+    private readonly runtimeSessionService: RuntimeSessionService,
+    private readonly connectionsService: ConnectionsService,
+  ) {}
+
+  async backToMode(): Promise<void> {
+  
+    const dto = this.connectionsService.exitParameters();
+
+    let deviceId = dto.device_id;
+    const mode = dto.mode;
+    const lang = dto.language;
+
+    if (deviceId) {
+      await this.connectionsService.deleteCurrentDevice(deviceId);
+    }
+
+    localStorage.removeItem('device_id');
+
+    await this.runtimeSessionService.clearSession();
+  
+    if (mode === 'online') {
+  
+      window.location.href = `${environment.frontendUrl}/mode?lang=${lang}`;
+  
+      return;
+    }
+  
+    window.close();
+  }
+}

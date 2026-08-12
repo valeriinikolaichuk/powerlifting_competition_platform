@@ -14,6 +14,8 @@ export const entryGuard: CanActivateFn = async () => {
   const sessionService = inject(RuntimeSessionService);
   const popupService = inject(PopupService);
 
+  await sessionService.initialize();
+
   const session = await db.table('runtime_session').get(SESSION_ID);
 
   if (!session) {

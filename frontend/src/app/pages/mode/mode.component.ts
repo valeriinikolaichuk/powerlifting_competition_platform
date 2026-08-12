@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
-import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/services/auth.service';
 import { FrontendSessionService } from '../../session/services/frontend-session.service';
@@ -15,15 +15,29 @@ import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 })
 export class ModeComponent {
 
-  private readonly SESSION_ID = 1;
-
   constructor(
     private readonly authService: AuthService,
     private readonly frontendSessionService: FrontendSessionService,
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     public tService: TranslationService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+
+    const lang = this.route.snapshot.queryParamMap.get('lang');
+
+    if (lang === 'en' || lang === 'uk' || lang === 'pl') {
+      this.tService.setLang(lang);
+    }
+
     this.tService.load('pages/mode');
+
+    window.history.replaceState(
+      {},
+      '',
+      window.location.pathname
+    );
   }
 
   async openLan(): Promise<void> {

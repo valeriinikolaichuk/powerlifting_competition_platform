@@ -28,7 +28,7 @@ export class TranslationService {
     };
   });
 
-  private initializeLanguage(): void {
+  public initializeLanguage(): void {
 
     const params = new URLSearchParams(window.location.search);
     const lang = params.get('lang');
@@ -36,13 +36,6 @@ export class TranslationService {
     if (lang === 'en' || lang === 'uk' || lang === 'pl') {
       this.lang.set(lang);
     }
-
-    window.history.replaceState(
-      {},
-      '',
-      window.location.pathname
-    );
-
   }
 
   load(scope: string) {

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
+
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
-import { environment } from '../../../environments/environment';
-import { RuntimeSessionService } from '../../session/services/runtime-session.service';
+import { ExitService } from '../../entry/services/exit.service';
 
 @Component({
   selector: 'app-role',
@@ -14,16 +14,12 @@ export class RoleComponent {
 
   constructor(
     public tService: TranslationService,
-    private readonly runtimeSessionService: RuntimeSessionService,
+    public exitService: ExitService,
   ){}
 
   ngOnInit(){
+    console.log('role');
+
     this.tService.load('pages/role');
-  }
-
-  async backToMode(): Promise<void> {
-    await this.runtimeSessionService.clearSession();
-
-    window.location.href = `${environment.frontendUrl}/mode`;
   }
 }

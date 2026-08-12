@@ -11,12 +11,10 @@ import { db } from '../../database/database';
 })
 export class FrontendSessionService implements OnDestroy {
 
-  constructor(
-      private readonly popupService: PopupService,
-  ) {}
-
   private readonly SESSION_ID = 1;
-  private readonly currentTabId = crypto.randomUUID();
+
+  private readonly TAB_ID_KEY = 'frontend_tab_id';
+  private readonly currentTabId: string;
 
   private readonly HEARTBEAT_INTERVAL = 30000;
   private readonly HEARTBEAT_TIMEOUT = 90 * 1000;
@@ -28,6 +26,19 @@ export class FrontendSessionService implements OnDestroy {
   private wakeUpSubscription?: Subscription;
 
   private lastCheck = Date.now();
+
+  constructor(
+      private readonly popupService: PopupService,
+  ) {
+    let tabId = sessionStorage.getItem(this.TAB_ID_KEY);
+
+    if (!tabId) {
+      tabId = crypto.randomUUID();
+      sessionStorage.setItem(this.TAB_ID_KEY, tabId);
+    }
+
+    this.currentTabId = tabId;
+  }
   
   async initialize(): Promise<boolean> {
     const session = await db.table('frontend_session').get(this.SESSION_ID);

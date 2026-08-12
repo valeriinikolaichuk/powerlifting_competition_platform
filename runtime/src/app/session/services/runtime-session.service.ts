@@ -10,7 +10,9 @@ import { db } from '../../database/database';
 export class RuntimeSessionService implements OnDestroy {
 
   private readonly SESSION_ID = 1;
-  private readonly currentTabId = crypto.randomUUID();
+
+  private readonly TAB_ID_KEY = 'frontend_tab_id';
+  private readonly currentTabId: string;
 
   private readonly HEARTBEAT_INTERVAL = 30000;
   private readonly HEARTBEAT_TIMEOUT = 90 * 1000;
@@ -25,13 +27,22 @@ export class RuntimeSessionService implements OnDestroy {
 
   constructor(
       private readonly popupService: PopupService,
-  ) {}
+  ) {
+    let tabId = sessionStorage.getItem(this.TAB_ID_KEY);
+
+    if (!tabId) {
+      tabId = crypto.randomUUID();
+      sessionStorage.setItem(this.TAB_ID_KEY, tabId);
+    }
+
+    this.currentTabId = tabId;
+  }
 
   async initialize(): Promise<void> {
     const session = await db.table('runtime_session').get(this.SESSION_ID);
     
     if (!session) {
-      await db.table('runtime_session').add({
+      await db.table('runtime_session').put({
         id: this.SESSION_ID,
         heartbeat: Date.now(),
         tab_id: this.currentTabId,

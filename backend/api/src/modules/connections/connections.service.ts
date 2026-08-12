@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {Injectable, NotFoundException, UnauthorizedException,} from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { DeviceParametersDto } from './dto/device-parameters-dto';
@@ -16,11 +16,8 @@ export class ConnectionsService {
     dto: DeviceParametersDto,
     userId?: string,
   ): Promise<ConnectionsResultDto> {
-console.log('MODE:', dto.mode);
-console.log('USER ID:', userId);
-    if (dto.mode === 'LAN') {
-      return this.checkLan(dto);
-    }
+
+    if (dto.mode === 'LAN') { return this.checkLan(dto); }
 
     return this.checkOnline(dto, userId);
   }
@@ -29,9 +26,8 @@ console.log('USER ID:', userId);
     dto: DeviceParametersDto,
   ): Promise<ConnectionsResultDto> {
 
-    /*
-     * LAN ADMIN is the source of user_id.
-     */
+    /** LAN ADMIN is the source of user_id.*/
+
     const admin = await this.prisma.deviceStatus.findFirst({
       where: {
         device_role: 'ADMIN',
@@ -49,9 +45,8 @@ console.log('USER ID:', userId);
 
     const userId = admin.user_id;
 
-    /*
-     * Check whether this exact device already registered (ADMIN / KLIENT checking).
-     */
+    /** Check whether this exact device already registered.*/
+
     const currentDevice = await this.prisma.deviceStatus.findFirst({
       where: {
         user_id: userId,
@@ -60,9 +55,8 @@ console.log('USER ID:', userId);
       },
     });
 
-    /*
-     * LAN ADMIN itself.
-     */
+    /** LAN ADMIN itself.*/
+
     if (currentDevice) {
 
       const connections = await this.findConnectionsWithoutAdmin(userId);
@@ -73,9 +67,8 @@ console.log('USER ID:', userId);
       };
     }
 
-    /*
-     * LAN client does not exist yet.
-     */
+    /** LAN client does not exist yet.*/
+
     await this.prisma.deviceStatus.create({
       data: {
         user_id: userId,
@@ -100,6 +93,46 @@ console.log('USER ID:', userId);
 
     if (!userId) { throw new UnauthorizedException(); }
 
+    /** Check whether this exact ONLINE device already exists.*/
+
+    const currentDevice = await this.prisma.deviceStatus.findFirst({
+        where: {
+          user_id: userId,
+          device_id: dto.device_id,
+          is_deleted: false,
+        },
+        select: {
+          id: true,
+          device_role: true,
+        },
+      });
+
+    /** Device already exists.
+     * Do not create another record.*/
+
+    if (currentDevice) {
+
+      const admin = await this.prisma.deviceStatus.findFirst({
+        where: {
+          user_id: userId,
+          device_role: 'ADMIN',
+          is_deleted: false,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const connections = await this.findConnections(userId);
+
+      return {
+        adminExists: !!admin,
+        connections,
+      };
+    }
+
+    /** Check whether ADMIN exists.*/
+
     const admin = await this.prisma.deviceStatus.findFirst({
       where: {
         user_id: userId,
@@ -111,9 +144,9 @@ console.log('USER ID:', userId);
       },
     });
 
-    /*
-     * No ADMIN exists.
-     */
+    /** No ADMIN exists.
+     * Current device becomes ADMIN.*/
+
     if (!admin) {
 
       await this.prisma.deviceStatus.create({
@@ -127,8 +160,7 @@ console.log('USER ID:', userId);
         },
       });
 
-      const connections =
-        await this.findConnectionsWithoutAdmin(userId);
+      const connections = await this.findConnectionsWithoutAdmin(userId);
 
       return {
         adminExists: false,
@@ -136,10 +168,9 @@ console.log('USER ID:', userId);
       };
     }
 
-    /*
-     * ADMIN already exists.
-     * Current ONLINE device gets a record without role.
-     */
+    /** ADMIN already exists.
+     * Register current ONLINE device without role.*/
+
     await this.prisma.deviceStatus.create({
       data: {
         user_id: userId,
@@ -176,6 +207,8 @@ console.log('USER ID:', userId);
         language: true,
         device_role: true,
         mode: true,
+        ip_address: true,
+        user_agent: true,
       },
     });
 
@@ -196,6 +229,23 @@ console.log('USER ID:', userId);
         language: true,
         device_role: true,
         mode: true,
+        ip_address: true,
+        user_agent: true,
+      },
+    });
+  }
+
+  async deleteDevice(
+    deviceId: string,
+    userId?: string,
+  ): Promise<void> {
+
+    if (!userId) { throw new UnauthorizedException(); }
+
+    await this.prisma.deviceStatus.deleteMany({
+      where: {
+        user_id: userId,
+        device_id: deviceId,
       },
     });
   }

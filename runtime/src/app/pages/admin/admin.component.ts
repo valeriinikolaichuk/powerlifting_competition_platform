@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
-import { environment } from '../../../environments/environment';
+import { ExitService } from '../../entry/services/exit.service';
 
 @Component({
   selector: 'app-admin',
@@ -12,14 +13,13 @@ import { environment } from '../../../environments/environment';
 export class AdminComponent {
 
   constructor(
-    public tService: TranslationService
+    public tService: TranslationService,
+    public exitService: ExitService,
   ){}
 
   ngOnInit(){
-    this.tService.load('pages/role');
-  }
+    console.log('admin');
 
-  backToMode(): void {
-    window.location.href = `${environment.frontendUrl}/mode`;
+    this.tService.load('pages/role');
   }
 }

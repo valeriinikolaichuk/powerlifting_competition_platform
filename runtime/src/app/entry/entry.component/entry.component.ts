@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { EntryService } from '../services/entry.service';
-import { DeviceParameters } from '../dto/device-parameters';
-import { ConnectionDto } from '../dto/connection-dto';
+import { ConnectionsService } from '../../connections/services/connections.service';
+import { DeviceParameters } from '../../connections/dto/device-parameters';
+import { ConnectionDto } from '../../connections/dto/connection-dto';
 
 import { RoleComponent } from '../../pages/role/role.component';
 import { AdminComponent } from '../../pages/admin/admin.component';
@@ -22,13 +22,13 @@ export class EntryComponent implements OnInit {
   adminExists = false;
 
   constructor(
-    private readonly entryService: EntryService,
+    private readonly connectionsService: ConnectionsService,
     private readonly router: Router,
   ) {}
 
   async ngOnInit(): Promise<void> {
 
-    const dto = this.entryService.createParameters();
+    const dto = this.connectionsService.createParameters();
 
     await this.check(dto);
   }
@@ -37,7 +37,7 @@ export class EntryComponent implements OnInit {
     dto: DeviceParameters,
   ): Promise<void> {
 
-    const result = await this.entryService.check(dto);
+    const result = await this.connectionsService.check(dto);
 
     this.adminExists = result.adminExists;
 
@@ -60,7 +60,7 @@ export class EntryComponent implements OnInit {
       return;
     }
 
-    await this.entryService.deleteConnections(deletedDeviceIds,);
+    await this.connectionsService.deleteConnections(deletedDeviceIds,);
 
     await this.showDeletedMessage();
 

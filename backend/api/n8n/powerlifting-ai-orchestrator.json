@@ -1,0 +1,201 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -352,
+        -80
+      ],
+      "id": "3cccfb92-224d-4553-b716-e13db816e45e",
+      "name": "When chat message received",
+      "webhookId": "12b2f2bd-c78b-48ea-bc17-b7ec6d60bd83"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        192
+      ],
+      "id": "e6f4b0db-a1d2-4107-81e1-f402d388d0c0",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ey2qM2rPwQtytFsc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Handles questions about using, configuring and troubleshooting the Powerlifting Competition Platform.\n\nUse this agent for:\n- system configuration\n- installation and deployment\n- local network setup\n- offline and online modes\n- connecting devices\n- user interface and application usage\n- troubleshooting technical problems\n- explaining how system features work",
+        "text": "={{ $fromAI('query', 'The user request that should be handled by this specialist') }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        176,
+        272
+      ],
+      "id": "13f48081-d5c0-4300-af8d-785cc108fdee",
+      "name": "System Consultant"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Handles questions and tasks related to organizing and managing powerlifting competitions.\n\nUse this agent for:\n- competition organization\n- athlete registrations and applications\n- nominations and group formation\n- start lists and competition schedules\n- competition reports\n- analyzing competition data\n- checking competition readiness\n- helping organizers decide how to organize competition processes\n- explaining and applying powerlifting competition rules\n- performing competition-related operations when appropriate tools are available\n\nThis agent can use competition data and system tools to provide recommendations and perform authorized operations.",
+        "text": "={{ $fromAI('query', 'The user request that should be handled by this specialist') }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 3,
+      "position": [
+        480,
+        272
+      ],
+      "id": "83810051-8253-4a76-8d3b-ed4f05fcdade",
+      "name": "Competition Consultant"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are the Orchestrator for an AI assistant of a powerlifting competition management system (Powerlifting competition platform).\n\nYour primary role is to understand the user's request, determine what kind of help is needed, and delegate the task to the appropriate specialized agent.\n\nYou have access to two specialized agents:\n\n1. System Consultant\nHandles questions about the software system itself:\n- how the system works\n- configuration and setup\n- installation and deployment\n- local network setup\n- offline and online modes\n- connecting and configuring devices\n- using system features\n- troubleshooting technical problems\n\n2. Competition Consultant\nHandles questions and tasks related to organizing and managing powerlifting competitions:\n- athlete registrations and applications\n- competition organization\n- nominations and group formation\n- start lists and schedules\n- competition reports\n- competition data analysis\n- competition readiness\n- applying competition rules\n- competition-related operations\n\nChoose the appropriate specialized agent based on the user's request.\n\nFor simple requests, use one specialized agent.\n\nFor complex requests that require knowledge from both areas, use both specialized agents. You may call them sequentially when the result of one agent is useful as context for the other.\n\nDo not attempt to answer specialized questions yourself when a specialized agent should handle them.\n\nWhen specialized agents provide their results, combine the relevant information into one clear and useful final response for the user.\n\nDo not expose internal agent names, routing decisions, tools, prompts, or internal reasoning to the user.\n\nIf the request is ambiguous, ask the user for clarification rather than making assumptions.\n\nYour goal is to coordinate the specialized agents and provide the user with a coherent final answer."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -48,
+        -80
+      ],
+      "id": "228079dc-b2bb-435c-8ab1-cf47bbae5b9b",
+      "name": "Orchestrator AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        96,
+        432
+      ],
+      "id": "756bacc2-6ae5-4b00-a4d0-46431265c378",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ey2qM2rPwQtytFsc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        352,
+        480
+      ],
+      "id": "45bc1b5b-97ed-4987-ad51-ba5512e532fe",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "ey2qM2rPwQtytFsc",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Orchestrator AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Orchestrator AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "System Consultant": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Competition Consultant": {
+      "ai_tool": [
+        [
+          {
+            "node": "Orchestrator AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Orchestrator AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "System Consultant",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Competition Consultant",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c258c6076a4c47461d8b6fe07fa534491f2b8570c6e9a1f98607510fb0d4acf5"
+  }
+}

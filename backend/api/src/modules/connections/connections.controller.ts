@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards, Delete, Query } from '@nestjs/common';
 import type { Request } from 'express';
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -21,10 +21,18 @@ export class ConnectionsController {
     @CurrentUser() user: any,
     @Req() request: Request,
   ) {
-    console.log('COOKIES:', request.cookies);
-    console.log('USER:', user);
-    console.log('MODE:', dto.mode);
-
     return this.connectionsService.checkAdmin(dto, user?.id,);
+  }
+
+  @Delete('entry')
+  @UseGuards(JwtAuthGuard)
+  async deleteEntry(
+    @Query('device_id') deviceId: string,
+    @CurrentUser() user: any,
+  ) {
+    return this.connectionsService.deleteDevice(
+      deviceId,
+      user?.id,
+    );
   }
 }
