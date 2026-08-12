@@ -162,7 +162,7 @@ If the session is indeed expired, a new valid record is created inside the runti
 
 ---
 
-**4. The [Connections Module]((backend/systems/connections.md)) `/api/connections/entry`**  
+**4. The [Connections Module](backend/systems/connections.md) `/api/connections/entry`**  
 
 The endpoint receives `DeviceParametersDto` containing:
 * `device_id`
@@ -170,7 +170,8 @@ The endpoint receives `DeviceParametersDto` containing:
 * `mode`
 * `user_agent`
 
-`ConnectionsController` extracts the client's `IP address` directly from the `HTTP` request.  
+`ConnectionsController` extracts the client's `IP address` directly from the `HTTP` request. 
+
 The service then executes different logic depending on the device mode.
 
 #### LAN
@@ -189,27 +190,25 @@ WHERE device_role = 'ADMIN'
 
 - Check whether an active `device_status` registration record exists for the received `device_id`.
 
-- **If the device already exists:**
+- **If the device already exists** (`ADMIN` role):
    * Query all active devices belonging to the same `user_id`.
    * Exclude the `ADMIN` device.
    * Map the records to `ConnectionDto`.
    * Return `ConnectionsResultDto` with:
-
      * `adminExists = false`
-     * `connections` containing the existing non-ADMIN connections.
+     * `connections` containing the existing `non-ADMIN` connections.
 
-- **If the device does not exist:**
+- **If the device does not exist** (`CLIENT` role):
    * Create a new `device_status` record with:
-
      * `user_id`
      * `device_id`
      * `language`
      * `mode = LAN`
      * `device_role = null`
-     * `ip_address` (is taken from `HTTP request`)
+     * `ip_address`
      * `user_agent`
+  
    * Return `ConnectionsResultDto` with:
-
      * `adminExists = true`
      * an empty `connections` array.
 
@@ -227,36 +226,27 @@ WHERE user_id = :user_id
   AND is_deleted = false;
 ```
 
-- **If an `ADMIN` does not exist:**  
-   * Create a new `device_status` record:
-     * `user_id`
-     * `device_id`
-     * `language`
-     * `mode = ONLINE`
-     * `device_role = ADMIN`
-     * `ip_address` (is taken from `HTTP request`)
-     * `user_agent`
-   * Query all active non-ADMIN connections.
-   * Map them to `ConnectionDto`.
+- **If an `ADMIN` does not exist:**
+   * Create the `ADMIN` record
    * Return `ConnectionsResultDto` with:
-
      * `adminExists = false`
-     * `connections` containing the non-ADMIN connections.
+     * `connections` containing the `non-ADMIN` connections.
 
 - **If an `ADMIN` already exists:**
-   * Create a new `device_status` record for the current device:
+   * Create a new `device_status` record with:
      * `user_id`
      * `device_id`
      * `language`
-     * `mode = ONLINE`
+     * `mode = LAN`
      * `device_role = null`
      * `ip_address` (is taken from `HTTP request`)
      * `user_agent`
-   * Query all active connections belonging to the user, including `ADMIN`.
+
+   * Query all active connections belonging to the user, including `ADMIN` (excluding the just created one).
    * Map them to `ConnectionDto`.
    * Return `ConnectionsResultDto` with:
      * `adminExists = true`
-     * `connections` containing all active connections.
+     * `connections` containing all active connections (excluding the just created one).
 
 **Result**  
 The Runtime receives a `ConnectionsResultDto` describing the current connection state:
@@ -267,7 +257,10 @@ ConnectionsResultDto
     ├── device_id
     ├── language
     ├── device_role
-    └── mode
+    ├── language
+    ├── ip_address
+    ├── user_agent
+    └── created_at 
 </pre>
 
 The `device_status` table therefore acts as the **central connection registry**, while `ConnectionsService` contains the mode-specific logic for registering devices and determining which connections are visible to the Runtime.
@@ -283,6 +276,7 @@ The `device_status` table therefore acts as the **central connection registry**,
 
 
 
+****
 
 #### Runtime initialization
 After receiving the DTO, the Runtime:
