@@ -4,8 +4,9 @@
 - Works with the ``PostgreSQL [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table, which stores the current state of devices connected to a user's competition environment.
 
 ### ConnectionsController
-Provides the `/api/connections/entry` endpoint.  
-`POST /api/connections/entry` receives `DeviceParametersDto` and delegates the connection check to `ConnectionsService`.
+- Provides the `/api/connections/entry` endpoint.  
+- `POST /api/connections/entry` receives `DeviceParametersDto` and delegates the connection check to `ConnectionsService`.
+- Extracts the client's `IP address` directly from the `HTTP` request and passes it to the `ConnectionsService`.
 
 ### ConnectionsService
 Contains the main connection management logic.
@@ -46,6 +47,8 @@ Defines and validates the parameters received from the Runtime:
 * `device_id` — device identifier.
 * `language` — supported system language.
 * `mode` — `LAN` or `ONLINE`.
+* `ip_address` — device `IP` address
+* `user_agent` — device browser
 
 Input values for `language` and `mode` are normalized to uppercase before enum validation.
 
@@ -55,6 +58,8 @@ Represents a registered device connection:
 * `language`
 * `device_role`
 * `mode`
+* `ip_address`
+* `user_agent`
 
 `device_role` can be `null` because newly connected devices do not necessarily have an assigned role yet.
 

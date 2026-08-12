@@ -36,7 +36,8 @@ export class ConnectionsService {
     return {
       device_id: deviceId,
       language: language,
-      mode: mode
+      mode: mode,
+      user_agent: navigator.userAgent,
     };
   }
 
@@ -82,7 +83,8 @@ export class ConnectionsService {
     return {
       device_id: deviceId!,
       language: lang,
-      mode: mode
+      mode: mode,
+      user_agent: null,
     };
   }
 

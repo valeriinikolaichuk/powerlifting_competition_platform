@@ -3,7 +3,6 @@ export interface ConnectionDto {
   language: string;
   device_role: string | null;
   mode: string;
-
   ip_address: string | null;
   user_agent: string | null;
 }

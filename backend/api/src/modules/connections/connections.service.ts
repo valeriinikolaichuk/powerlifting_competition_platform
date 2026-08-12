@@ -15,15 +15,21 @@ export class ConnectionsService {
   async checkAdmin(
     dto: DeviceParametersDto,
     userId?: string,
+    ipAddress?: string | null,
   ): Promise<ConnectionsResultDto> {
 
-    if (dto.mode === 'LAN') { return this.checkLan(dto); }
+    if (dto.mode === 'LAN') { return this.checkLan(dto, ipAddress); }
 
-    return this.checkOnline(dto, userId);
+    return this.checkOnline(
+      dto, 
+      userId, 
+      ipAddress
+    );
   }
 
   private async checkLan(
     dto: DeviceParametersDto,
+    ipAddress?: string | null,
   ): Promise<ConnectionsResultDto> {
 
     /** LAN ADMIN is the source of user_id.*/
@@ -76,6 +82,8 @@ export class ConnectionsService {
         language: dto.language,
         mode: 'LAN',
         device_role: null,
+        ip_address: ipAddress,
+        user_agent: dto.user_agent,
         is_deleted: false,
       },
     });
@@ -89,6 +97,7 @@ export class ConnectionsService {
   private async checkOnline(
     dto: DeviceParametersDto,
     userId?: string,
+    ipAddress?: string | null,
   ): Promise<ConnectionsResultDto> {
 
     if (!userId) { throw new UnauthorizedException(); }
@@ -156,6 +165,8 @@ export class ConnectionsService {
           language: dto.language,
           mode: 'ONLINE',
           device_role: 'ADMIN',
+          ip_address: ipAddress,
+          user_agent: dto.user_agent,
           is_deleted: false,
         },
       });
@@ -178,6 +189,8 @@ export class ConnectionsService {
         language: dto.language,
         mode: 'ONLINE',
         device_role: null,
+        ip_address: ipAddress,
+        user_agent: dto.user_agent,
         is_deleted: false,
       },
     });

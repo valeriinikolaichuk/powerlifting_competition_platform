@@ -14,4 +14,10 @@ export class DeviceParametersDto {
     @IsEnum(DeviceMode)
     @Transform(({ value }) => typeof value === 'string' ? value.toUpperCase() : value)
     mode!: DeviceMode;
+
+    @IsString()
+    ip_address!: string;
+
+    @IsString()
+    user_agent!: string;
 }

@@ -152,6 +152,7 @@ If the session is indeed expired, a new valid record is created inside the runti
     device_id
     language
     mode
+    user_agent
   </pre>
   - sends the DTO to:
 <pre>
@@ -167,7 +168,9 @@ The endpoint receives `DeviceParametersDto` containing:
 * `device_id`
 * `language`
 * `mode`
+* `user_agent`
 
+`ConnectionsController` extracts the client's `IP address` directly from the `HTTP` request.  
 The service then executes different logic depending on the device mode.
 
 #### LAN
@@ -203,6 +206,8 @@ WHERE device_role = 'ADMIN'
      * `language`
      * `mode = LAN`
      * `device_role = null`
+     * `ip_address` (is taken from `HTTP request`)
+     * `user_agent`
    * Return `ConnectionsResultDto` with:
 
      * `adminExists = true`
@@ -229,6 +234,8 @@ WHERE user_id = :user_id
      * `language`
      * `mode = ONLINE`
      * `device_role = ADMIN`
+     * `ip_address` (is taken from `HTTP request`)
+     * `user_agent`
    * Query all active non-ADMIN connections.
    * Map them to `ConnectionDto`.
    * Return `ConnectionsResultDto` with:
@@ -243,6 +250,8 @@ WHERE user_id = :user_id
      * `language`
      * `mode = ONLINE`
      * `device_role = null`
+     * `ip_address` (is taken from `HTTP request`)
+     * `user_agent`
    * Query all active connections belonging to the user, including `ADMIN`.
    * Map them to `ConnectionDto`.
    * Return `ConnectionsResultDto` with:

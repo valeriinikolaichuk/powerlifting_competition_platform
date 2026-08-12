@@ -21,7 +21,16 @@ export class ConnectionsController {
     @CurrentUser() user: any,
     @Req() request: Request,
   ) {
-    return this.connectionsService.checkAdmin(dto, user?.id,);
+    const ipAddress =
+    request.headers['x-forwarded-for']?.toString().split(',')[0].trim()
+    ?? request.socket.remoteAddress
+    ?? null;
+
+    return this.connectionsService.checkAdmin(
+      dto, 
+      user?.id,
+      ipAddress,
+    );
   }
 
   @Delete('entry')
