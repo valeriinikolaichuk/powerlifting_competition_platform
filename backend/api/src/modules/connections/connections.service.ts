@@ -18,7 +18,12 @@ export class ConnectionsService {
     ipAddress?: string | null,
   ): Promise<ConnectionsResultDto> {
 
-    if (dto.mode === 'LAN') { return this.checkLan(dto, ipAddress); }
+    if (dto.mode === 'LAN') { 
+      return this.checkLan(
+        dto, 
+        ipAddress
+      ); 
+    }
 
     return this.checkOnline(
       dto, 
@@ -57,6 +62,7 @@ export class ConnectionsService {
       where: {
         user_id: userId,
         device_id: dto.device_id,
+        device_role: 'ADMIN',
         is_deleted: false,
       },
     });
@@ -73,20 +79,39 @@ export class ConnectionsService {
       };
     }
 
+    /** Check whether this exact LAN Client device already exists.*/
+
+    const currentClient = await this.prisma.deviceStatus.findFirst({
+        where: {
+          user_id: userId,
+          device_id: dto.device_id,
+          is_deleted: false,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+    /** Device already exists.
+     * Do not create another record.*/
+
+    if (!currentClient) {
+
     /** LAN client does not exist yet.*/
 
-    await this.prisma.deviceStatus.create({
-      data: {
-        user_id: userId,
-        device_id: dto.device_id,
-        language: dto.language,
-        mode: 'LAN',
-        device_role: null,
-        ip_address: ipAddress,
-        user_agent: dto.user_agent,
-        is_deleted: false,
-      },
-    });
+      await this.prisma.deviceStatus.create({
+        data: {
+          user_id: userId,
+          device_id: dto.device_id,
+          language: dto.language,
+          mode: 'LAN',
+          device_role: null,
+          ip_address: ipAddress,
+          user_agent: dto.user_agent,
+          is_deleted: false,
+        },
+      });
+    }
 
     return {
       adminExists: true,
@@ -112,7 +137,6 @@ export class ConnectionsService {
         },
         select: {
           id: true,
-          device_role: true,
         },
       });
 
@@ -132,7 +156,10 @@ export class ConnectionsService {
         },
       });
 
-      const connections = await this.findConnections(userId);
+      const connections = await this.findConnectionsWithoutCurrentDevice(
+        userId,
+        dto.device_id
+      );
 
       return {
         adminExists: !!admin,
@@ -195,7 +222,10 @@ export class ConnectionsService {
       },
     });
 
-    const connections = await this.findConnections(userId);
+    const connections = await this.findConnectionsWithoutCurrentDevice(
+      userId,
+      dto.device_id
+    );
 
     return {
       adminExists: true,
@@ -222,19 +252,24 @@ export class ConnectionsService {
         mode: true,
         ip_address: true,
         user_agent: true,
+        created_at: true,
       },
     });
 
     return records;
   }
 
-  private async findConnections(
+  private async findConnectionsWithoutCurrentDevice(
     userId: string,
+    current_device_id: string
   ): Promise<ConnectionDto[]> {
 
     return this.prisma.deviceStatus.findMany({
       where: {
         user_id: userId,
+        device_id: {
+          not: current_device_id,
+        },
         is_deleted: false,
       },
       select: {
@@ -244,6 +279,7 @@ export class ConnectionsService {
         mode: true,
         ip_address: true,
         user_agent: true,
+        created_at: true,
       },
     });
   }

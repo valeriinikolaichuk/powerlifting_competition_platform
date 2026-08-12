@@ -1,0 +1,36 @@
+<div class="bg-white 
+        rounded-xl 
+        w-[650px] 
+        max-w-[90%] 
+        p-5 
+        shadow-[0_5px_25px_rgba(0,0,0,0.25)] 
+        font-sans">
+    <button class="absolute flex items-center justify-center
+            right-[5px] top-[5px]
+            w-[30px] h-[30px] pb-[6px]
+            bg-[rgb(255,217,80)]
+            text-black font-extrabold text-2xl
+            rounded-full cursor-pointer"
+            (click)="close()">
+            &times;
+    </button>
+
+    <ng-container
+        *ngComponentOutlet="data.content">
+    </ng-container>
+
+    <button type="button"
+        class="px-4 
+            py-2 
+            rounded-md 
+            border-0 
+            cursor-pointer 
+            text-sm ml-2
+            bg-green-600 
+            text-white 
+            hover:opacity-85"
+            (click)="close()">
+            CLOSE
+        </button>
+
+</div>

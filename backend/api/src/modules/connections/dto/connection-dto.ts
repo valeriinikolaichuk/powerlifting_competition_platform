@@ -5,4 +5,5 @@ export interface ConnectionDto {
   mode: string;
   ip_address: string | null;
   user_agent: string | null;
+  created_at: Date;
 }
