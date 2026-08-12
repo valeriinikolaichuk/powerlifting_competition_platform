@@ -37,8 +37,8 @@ The `ADMIN` device is checked on every request to ensure that the connection sta
 - #### findConnectionsWithoutAdmin()
 Returns active connections belonging to the user while excluding the `ADMIN` device.
 
-- #### findConnections()
-Returns all active device connections belonging to the user, including the `ADMIN` device.
+- #### findConnectionsWithoutCurrentDevice()
+Returns all active device connections belonging to the user, including the `ADMIN` device and excluding the currunt device.
 
 ---
 
@@ -60,6 +60,7 @@ Represents a registered device connection:
 * `mode`
 * `ip_address`
 * `user_agent`
+* `created_at`
 
 `device_role` can be `null` because newly connected devices do not necessarily have an assigned role yet.
 
