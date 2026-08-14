@@ -284,17 +284,32 @@ export class ConnectionsService {
     });
   }
 
-  async deleteDevice(
-    deviceId: string,
+  async deleteDevices(
+    deviceIds: string[],
     userId?: string,
   ): Promise<void> {
 
-    if (!userId) { throw new UnauthorizedException(); }
+    // ONLINE
+    if (userId) {
+      await this.prisma.deviceStatus.deleteMany({
+        where: {
+          user_id: userId,
+          device_id: {
+            in: deviceIds,
+          },
+        },
+      });
 
+      return;
+    }
+
+    // LAN
     await this.prisma.deviceStatus.deleteMany({
       where: {
-        user_id: userId,
-        device_id: deviceId,
+        device_id: {
+          in: deviceIds,
+        },
+        mode: 'LAN',
       },
     });
   }

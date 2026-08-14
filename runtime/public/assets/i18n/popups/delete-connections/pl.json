@@ -1,0 +1,10 @@
+{
+    "MESSAGE": "Lista przedstawia połączenia wykryte przez system. Niektóre z nich mogą być połączeniami widmowymi (zawieszonymi sesjami), które pozostały po niepoprawnym zamknięciu aplikacji lub awarii sieci. Prosimy o ich weryfikację, zaznaczenie nieaktualnych i usunięcie.",
+    "NUMBER": "#",
+    "IP": "IP",
+    "BROWSER": "PRZEGLĄDARKA",
+    "ROLE": "ROLA URZĄDZENIA",
+    "CONNECTED": "POŁĄCZONO",
+    "DELETE_WARNING": "⚠️ Uwaga! Usunięcie urządzenia, które jest obecnie połączone z systemem, może spowodować jego nieprawidłowe działanie. Czy na pewno chcesz usunąć wybrane połączenia?",
+    "DELETED": "Wybrane połączenia zostały usunięte."
+}

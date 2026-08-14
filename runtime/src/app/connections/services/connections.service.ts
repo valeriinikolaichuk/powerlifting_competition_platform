@@ -53,20 +53,6 @@ export class ConnectionsService {
     );
   }
 
-  async deleteConnections(
-    deviceIds: string[],
-  ): Promise<void> {
-
-    await firstValueFrom(
-      this.http.post<void>(
-        '/api/connections/delete',
-        {
-          device_ids: deviceIds,
-        },
-      ),
-    );
-  }
-
   exitParameters(): DeviceParameters {
 
     const params = new URLSearchParams(window.location.search);
@@ -88,13 +74,15 @@ export class ConnectionsService {
     };
   }
 
-  async deleteCurrentDevice(deviceId: string): Promise<void> {
+  async deleteDevices(
+    deviceIds: string[]
+  ): Promise<void> {
     await firstValueFrom(
       this.http.delete(
         `${environment.apiUrl}/api/connections/entry`,
         {
           params: {
-            device_id: deviceId,
+            device_id: deviceIds,
           },
           withCredentials: true,
         }

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
-import { ExitService } from '../../entry/services/exit.service';
+import { ExitService } from '../services/exit.service';
 
 @Component({
   selector: 'app-role',

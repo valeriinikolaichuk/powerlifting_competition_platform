@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Type } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ConnectionsService } from '../../connections/services/connections.service';
 import { DeviceParameters } from '../../connections/dto/device-parameters';
 import { ConnectionDto } from '../../connections/dto/connection-dto';
+
+import { PopupService } from '../../popup/services/popup.service';
+import { ConnectionsPopupComponent } from '../../popup/components/connections-popup/connections-popup.component';
+import { DeleteConnectionsComponent } from '../../popup/components/connections-popup/delete-connections/delete-connections.component';
 
 import { RoleComponent } from '../../pages/role/role.component';
 import { AdminComponent } from '../../pages/admin/admin.component';
@@ -23,6 +27,7 @@ export class EntryComponent implements OnInit {
 
   constructor(
     private readonly connectionsService: ConnectionsService,
+    public popup: PopupService,
     private readonly router: Router,
   ) {}
 
@@ -48,11 +53,9 @@ export class EntryComponent implements OnInit {
       return;
     }
 
-    const deletedDeviceIds = await this.openConnectionsPopup(result.connections,);
+    const deletedDeviceIds = await this.openConnectionsPopup(result.connections);
 
-    /*
-     * Користувач просто закрив popup.
-     */
+    // user closed the popup.
     if (deletedDeviceIds.length === 0) {
 
       await this.navigate();
@@ -60,19 +63,11 @@ export class EntryComponent implements OnInit {
       return;
     }
 
-    await this.connectionsService.deleteConnections(deletedDeviceIds,);
-
-    await this.showDeletedMessage();
-
-    /*
-     * OK → використовуємо ТОЙ САМИЙ dto.
-     */
+    // showing connections after deletion
     await this.check(dto);
   }
 
   private async navigate(): Promise<void> {
-
-    const params = new URLSearchParams(window.location.search);
 
     if (this.adminExists === false) {
 
@@ -88,12 +83,12 @@ export class EntryComponent implements OnInit {
     connections: ConnectionDto[],
   ): Promise<string[]> {
 
-    // PopupService
-    return [];
-  }
-
-  private async showDeletedMessage(): Promise<void> {
-
-    // PopupService
+    return this.popup.open<string[]>(
+      ConnectionsPopupComponent,
+      {
+        content: DeleteConnectionsComponent,
+        connections,
+      },
+    );
   }
 }

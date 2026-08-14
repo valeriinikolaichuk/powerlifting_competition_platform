@@ -1,0 +1,10 @@
+{
+    "MESSAGE": "The list shows connections detected by the system. Some of these may be phantom (stale) sessions left behind due to a previous improper shutdown or network drop. Please review them, select any invalid connections, and remove them.",
+    "NUMBER": "#",
+    "IP": "IP",
+    "BROWSER": "BROWSER",
+    "ROLE": "DEVICE ROLE",
+    "CONNECTED": "CONNECTED AT",
+    "DELETE_WARNING": "⚠️ Warning! Removing a device currently connected to the system may cause it to malfunction. Are you sure you want to delete the selected connections?",
+    "DELETED": "Selected connections have been deleted."
+}

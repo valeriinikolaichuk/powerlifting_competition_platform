@@ -23,7 +23,7 @@ export class ExitService {
     const lang = dto.language;
 
     if (deviceId) {
-      await this.connectionsService.deleteCurrentDevice(deviceId);
+      await this.connectionsService.deleteDevices([deviceId]);
     }
 
     localStorage.removeItem('device_id');

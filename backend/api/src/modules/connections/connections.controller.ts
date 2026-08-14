@@ -6,6 +6,7 @@ import { CurrentUser } from '../auth/guards/current-user.decorator';
 
 import { ConnectionsService } from './connections.service';
 import { DeviceParametersDto } from './dto/device-parameters-dto';
+import { DeleteDevicesDto } from './dto/delete-devices';
 
 @Controller('api/connections')
 export class ConnectionsController {
@@ -34,13 +35,12 @@ export class ConnectionsController {
   }
 
   @Delete('entry')
-  @UseGuards(JwtAuthGuard)
-  async deleteEntry(
-    @Query('device_id') deviceId: string,
+  async deleteDevices(
+    @Body() dto: DeleteDevicesDto,
     @CurrentUser() user: any,
   ) {
-    return this.connectionsService.deleteDevice(
-      deviceId,
+    return this.connectionsService.deleteDevices(
+      dto.device_ids,
       user?.id,
     );
   }

@@ -3,6 +3,8 @@ import { NgComponentOutlet } from '@angular/common';
 import { PopupService } from '../../services/popup.service';
 import { POPUP_DATA } from '../../tokens/popup-data.token';
 
+import { ConnectionDto } from '../../../connections/dto/connection-dto';
+
 @Component({
   selector: 'app-connections-popup',
   standalone: true,
@@ -15,9 +17,10 @@ export class ConnectionsPopupComponent {
 
   data = inject(POPUP_DATA) as {
     content: Type<any>;
+    connections: ConnectionDto[];
   };
 
   close() {
-    this.popup.close();
+    this.popup.close([]);
   }
 }
