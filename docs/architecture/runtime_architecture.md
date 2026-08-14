@@ -312,7 +312,7 @@ This allows the user to clean up stale device connections and establish a new va
 
 ### Systems
 
-### [popup](frontend/systems/popup-system.md)
+### [popup](runtime/systems/popup-system.md)
 Dynamically renders popup components
 
 ### [session](runtime/systems/session-system.md)
