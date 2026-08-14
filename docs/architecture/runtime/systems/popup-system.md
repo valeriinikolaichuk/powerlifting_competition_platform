@@ -169,7 +169,7 @@ Popup Content
 
 - `ConnectionsPopupComponent`
   - [DeleteConnectionsComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md)
-  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md)
+  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md#connectionspopupservice)
 - `SystemPopupComponent` (The code is duplicated in both apps)
   - `SecondTabContentComponent` (The code is duplicated in both apps)
 
