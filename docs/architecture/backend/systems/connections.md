@@ -1,7 +1,7 @@
 ## Connections Module
 - Manages device registration and connection state for the Competition `Runtime`.
 - Handles both `LAN` and `ONLINE` modes.
-- Works with the ``PostgreSQL [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table, which stores the current state of devices connected to a user's competition environment.
+- Works with the `PostgreSQL` [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table, which stores the current state of devices connected to a user's competition environment.
 
 <details open="open">
 <summary>Contents</summary>  
