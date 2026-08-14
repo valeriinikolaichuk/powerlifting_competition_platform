@@ -26,9 +26,6 @@ The popup system is divided into three architectural levels.
 ## Level 1 (Popup Infrastructure)
 Responsible only for opening, closing, and rendering `popup windows`.
 
-⚠️ **WARNING**
-#### *The same implementation of `Level 1` is used by both the `Frontend Application` and the `Competition Runtime Application`. The code is duplicated in both apps. Other levels differ in their implementation.*
-
 **Components:**
 * `PopupService` - stores popup state and controls popup lifecycle
 * `PopupComponent` - global popup host
@@ -167,16 +164,10 @@ LoginErrorComponent
 ---
 
 ### Components
-
-#### `Fontend`
 - `InfoPopupComponent`
   - `AboutContentComponent`
 - `MessagePopupComponent`
   - `LoginErrorComponent`
-- `SystemPopupComponent` (The code is duplicated in both apps)
-  - `SecondTabContentComponent` (The code is duplicated in both apps)
-
-#### `Runtime`
 - `SystemPopupComponent` (The code is duplicated in both apps)
   - `SecondTabContentComponent` (The code is duplicated in both apps)
 
