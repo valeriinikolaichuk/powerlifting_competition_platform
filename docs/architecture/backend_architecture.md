@@ -34,8 +34,8 @@ Manages device registration and connection state for the [Runtime](runtime_archi
 
 ### Modules
 
-### [Prisma Module](backend/modules.md)
+### [prisma](backend/modules.md)
 Provides a globally available `PrismaService` for database access throughout the backend.
 
-### [Runtime Module](backend/modules.md#runtime-module)
+### [runtime](backend/modules.md#runtime-module)
 Provides the Angular `Runtime Application` through the NestJS backend.
