@@ -11,6 +11,45 @@ Responsibilities:
 * Displays translated messages.
 * Returns deleted device IDs through `PopupService`.
 
+#### Popup Flow
+<pre>
+EntryComponent
+      │
+      │ result.connections
+      ▼
+PopupService.open(...) ----------------.
+      │                                |
+      ▼                                |
+PopupComponent                         |            
+      │                                |
+      ▼                                |
+ConnectionsPopupComponent              |
+      │                                |
+      │ POPUP_DATA                     |
+      ├───────────────┐                |
+      │               │                |
+      ▼               ▼                |
+   content       connections           |
+      │                                |
+      ▼                                |
+DeleteConnectionsComponent             |
+      │                                |
+      ├── ConnectionsPopupService      |
+      ├── ConnectionsService           |
+      ├── TranslationService           |
+      └── PopupService                 |
+      │                                |
+      ▼                                |
+selectedDeviceIds                      |
+      │                                |
+      ▼                                |
+PopupService.close(result) ------------'
+      │                                
+      ▼
+EntryComponent
+</pre>
+
+
 ---
 
 ### ConnectionsPopupService
