@@ -26,9 +26,6 @@ The popup system is divided into three architectural levels.
 ## Level 1 (Popup Infrastructure)
 Responsible only for opening, closing, and rendering `popup windows`.
 
-⚠️ **WARNING**
-#### *The same implementation of `Level 1` is used by both the `Frontend Application` and the `Competition Runtime Application`. The code is duplicated in both apps. Other levels differ in their implementation.*
-
 **Components:**
 * `PopupService` - stores popup state and controls popup lifecycle
 * `PopupComponent` - global popup host
@@ -37,9 +34,11 @@ Responsible only for opening, closing, and rendering `popup windows`.
 #### Responsibilities:
 * Stores the currently active popup.
 * Opens and closes modal windows.
+* Stores optional popup data.
 * Creates a custom injector.
 * Passes data to dynamically created components.
 * Controls the HTML `<dialog>` element.
+* Dynamically renders popup components using `NgComponentOutlet`.
 
 #### *This layer is completely independent of application business logic.*
 
@@ -52,14 +51,36 @@ Responsible only for opening, closing, and rendering `popup windows`.
 * Acts as the communication layer between application components and the global popup host.
 * Stores the active popup component.
 * Stores popup data.
-* Opens popups.
-* Closes popups.
+* Opens popup windows.
+* Closes popup windows.
+* Returns popup results to the component that opened the popup.
 
 The service uses `Angular Signals` to automatically notify the `UI` whenever the popup state changes.
 
-**Public methods:**
-* `open(component, data)`
-* `close()`
+**Generic popup results**  
+The `open()` and `close()` methods use TypeScript generics:  
+```
+open<T = void>(...): Promise<T>
+```
+and:  
+```
+close<T = void>(result?: T): void
+```
+This allows different popup types to return different result types.
+
+For example, a popup can return:  
+```
+string[]
+```
+for deleted device IDs:  
+```
+this.popup.close<string[]>(this.selectedDeviceIds);
+```
+while another popup could return:
+```
+boolean
+```
+or no result at all.
 
 ---
 
@@ -111,12 +132,14 @@ Each template represents a different popup type while reusing the same infrastru
 Contains only feature-specific content.
 
 #### Responsibilities:
-* Displays popup information.
+* Displays feature-specific information.
+* Handles user interaction.
+* Uses application services when required.
 * Loads translations.
-* Contains no popup management logic.
-* Can be reused inside different popup templates.
-
-These components are unaware of how they are displayed and simply render their own content.
+* Performs feature-specific operations.
+* Returns the result through `PopupService`.
+* Does not control the popup layout or the native `<dialog>` element.
+* These components are unaware of how they are displayed and simply render their own content.
 
 ---
 
@@ -137,46 +160,16 @@ Popup Template
       │
       ▼
 Popup Content
-(LoginError, About, ...)
-</pre>
-
-#### Example
-
-Displaying the login error popup:
-
-<pre>
-this.popupService.open(MessagePopupComponent, {
-    content: LoginErrorComponent,
-});
-</pre>
-
-**Execution flow:**
-<pre>
-PopupService
-      │
-      ▼
-PopupComponent
-      │
-      ▼
-MessagePopupComponent
-      │
-      ▼
-LoginErrorComponent
+(SecondTabContent, DeleteConnections, ...)
 </pre>
 
 ---
 
 ### Components
 
-#### `Fontend`
-- `InfoPopupComponent`
-  - `AboutContentComponent`
-- `MessagePopupComponent`
-  - `LoginErrorComponent`
-- `SystemPopupComponent` (The code is duplicated in both apps)
-  - `SecondTabContentComponent` (The code is duplicated in both apps)
-
-#### `Runtime`
+- `ConnectionsPopupComponent`
+  - `DeleteConnectionsComponent`
+  - `ConnectionsPopupService`
 - `SystemPopupComponent` (The code is duplicated in both apps)
   - `SecondTabContentComponent` (The code is duplicated in both apps)
 
@@ -185,10 +178,15 @@ LoginErrorComponent
 ### Design Notes
 
 * Uses `Angular Signals` for reactive popup state management.
-* Uses `NgComponentOutlet` to dynamically render popup components.
+* Uses `NgComponentOutlet` for dynamic component rendering.
 * Uses `Angular Dependency Injection` for passing popup data.
-* Separates popup infrastructure from popup layouts and popup content.
-* Allows new popup types and popup content to be added without modifying the popup infrastructure.
-* Promotes reusable, modular, and feature-independent popup components.
+* Uses a custom `InjectionToken` to decouple dynamic components from the popup host.
+* Separates popup infrastructure from popup templates.
+* Separates popup templates from feature-specific content.
+* Uses `PopupService promises` to return results from popup interactions.
+* Keeps connection-management logic inside the feature-specific content component.
+* Allows popup templates to be reused with different content components.
+* Allows new popup types and content components to be added without modifying the `Level 1` infrastructure.
+* Keeps the global popup infrastructure independent from connection-specific business logic.
 
 ---
