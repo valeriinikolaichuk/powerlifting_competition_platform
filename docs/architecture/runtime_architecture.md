@@ -12,6 +12,7 @@
 - [Runtime Entry Prosess](#runtime-entry-prosess)
 - [Systems](#systems)
 - [Conponents](#components)
+- [Services](#services)
 
 </details>
 
@@ -328,3 +329,6 @@ Translation system based on Angular signals and lazy-loaded `JSON` files, suppor
 Starts the `Runtime` initialization process.
 
 ---
+
+### Services
+### [connections](runtime/connection_service.md)
