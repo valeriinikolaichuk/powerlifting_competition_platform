@@ -70,7 +70,7 @@ The method sends the device parameters to:
 ```
 POST /api/connections/entry
 ```
-The backend returns [ConnectionsResultDto](connectionsresultdto) with [ConnectionDto](connectiondto)
+The backend returns [ConnectionsResultDto](#connectionsresultdto) with [ConnectionDto](#connectiondto)
 
 ---
 
