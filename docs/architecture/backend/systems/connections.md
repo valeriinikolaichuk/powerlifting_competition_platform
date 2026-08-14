@@ -3,10 +3,27 @@
 - Handles both `LAN` and `ONLINE` modes.
 - Works with the ``PostgreSQL [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table, which stores the current state of devices connected to a user's competition environment.
 
+<details open="open">
+<summary>Contents</summary>  
+
+- [ConnectionsController](#connectionscontroller)
+- [ConnectionsService](#connectionsservice)
+- [DTOs](#dtos)
+
+</details>
+
+---
+
 ### ConnectionsController
-- Provides the `/api/connections/entry` endpoint.  
-- `POST /api/connections/entry` receives `DeviceParametersDto` and delegates the connection check to `ConnectionsService`.
-- Extracts the client's `IP address` directly from the `HTTP` request and passes it to the `ConnectionsService`.
+ - #### `POST /api/connections/entry` endpoint
+   - Checks the current device connection state
+   - `POST /api/connections/entry` receives `DeviceParametersDto` and delegates the connection check to `ConnectionsService`.
+   - Extracts the client's `IP address` directly from the `HTTP` request and passes it to the `ConnectionsService`.
+- #### `DELETE /api/connections/entry` endpoint
+  - removes selected device connections
+  - delegates the operation to [connectionsService.deleteDevices](#deletedevices)
+
+---
 
 ### ConnectionsService
 Contains the main connection management logic.
@@ -40,7 +57,28 @@ Returns active connections belonging to the user while excluding the `ADMIN` dev
 - #### findConnectionsWithoutCurrentDevice()
 Returns all active device connections belonging to the user, including the `ADMIN` device and excluding the currunt device.
 
+- #### deleteDevices()
+Performs the actual deletion of device connection records.
+
+The method supports two different connection contexts:
+* ONLINE
+* LAN
+
+The context is determined by whether an authenticated `userId` is available.
+
+**ONLINE deletion**  
+When userId is present:
+```
+if (userId) {
+```
+the method deletes only connections belonging to that authenticated user.
+
+**LAN deletion**  
+When no userId is available, the method deletes connections using only `device_id` identifier
+
 ---
+
+### DTOs
 
 ### DeviceParametersDto
 Defines and validates the parameters received from the Runtime:
@@ -73,3 +111,8 @@ connections[]
 
 `adminExists` indicates whether an `ADMIN` connection already exists, while `connections` contains the devices currently available to the Runtime.
 
+### DeleteDevicesDto
+defines the request payload containing the device IDs to be deleted by the `deleteDevices()` method.
+<pre>
+device_ids!: string[];
+</pre>
