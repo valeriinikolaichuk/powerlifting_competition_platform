@@ -1,27 +1,68 @@
-## Entry
-
 ### EntryComponent
-The entry point of the `Runtime` application. It starts the `Runtime` initialization process by calling `EntryService.check()` when the component is initialized.
+The entry point of the `Runtime` application responsible for checking the current device connection state before allowing the user to continue to the appropriate application flow.
 
-### EntryService
-Determines the Runtime environment and prepares the device parameters required to establish the administrator connection.
+#### Responsibilities
+- Creates the current device parameters using [ConnectionsService](connection_service.md).
+- Checks existing device connections through the [backend](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md).
+- Determines whether an administrator connection already exists.
+- Opens the [connections popup](delete_connections.md) when existing connections are found.
+- Waits for the popup result using [PopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#popupservice).
+- Re-checks connections after a deletion.
+- [Navigates](#navigation) to the appropriate route based on the administrator state.
 
-**Initialization logic**  
-- Reads `lang` and `mode` from the Runtime `URL`.
-- Generates a unique `device_id` using `crypto.randomUUID()`.
-- In `LAN` mode, if the `Runtime` is running on `localhost`, the service uses the existing `device_id` from the `URL`. This allows the installed `LAN` Runtime to keep the device identity created during installation.
-- In `ONLINE` mode, a new `device_id` is generated for the current Runtime instance.
-- Creates a `DeviceParameters` DTO containing the device ID, language, and mode.
-- Sends the `DTO` to `POST /api/connections/admin`.
-- Uses `firstValueFrom()` to wait for the `HTTP` request to complete before continuing Runtime initialization.
+#### Initialization
+When the component is initialized, it creates the device parameters and starts the connection check  
 
-The service therefore provides a single entry point for identifying the Runtime environment and registering the current device with the backend.
+---
 
-### DeviceParameters
-Defines the parameters sent by the `Runtime` when establishing the administrator connection:
+- ### check()
+Requests the current connection state from [ConnectionsService](connection_service.md).
 
-|Field	|Description|
-|---|---|
-|device_id	|Unique identifier of the Runtime device|
-|language	|Selected application language|
-|mode	|Runtime operation mode (`lan` or `online`)|
+The returned ConnectionsResultDto provides:  
+`adminExists` — whether an administrator connection exists.  
+`connections` — existing device connections.  
+
+- If no connections exist, the component proceeds directly to [navigation](#navigation).  
+- If connections exist, the component opens `ConnectionsPopupComponent`.
+
+---
+
+- ### openConnectionsPopup()
+uses the generic `PopupService` to open the connections popup and waits for its result:
+```
+return this.popup.open<string[]>(
+  ConnectionsPopupComponent,
+  {
+    content: DeleteConnectionsComponent,
+    connections,
+  },
+);
+```
+The returned `string[]` contains the IDs of devices deleted by the user.
+
+If the user closes the popup without deleting anything, the component proceeds to [navigation](#navigation).  
+After devices are deleted, the component calls `check(dto)` again to obtain the updated connection state.
+
+---
+
+- ### navigation()
+  - Determines the next route based on `adminExists`.  
+  - Acts as the entry decision point between the administrator setup and the role-selection flow.
+
+If no administrator exists:
+```
+await this.router.navigate(['/admin']);
+```
+Otherwise:
+```
+await this.router.navigate(['/role']);
+```
+
+#### Template
+```
+@if (adminExists) {
+  <app-role></app-role>
+} @else {
+  <app-admin></app-admin>
+}
+```
