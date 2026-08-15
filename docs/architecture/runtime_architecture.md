@@ -307,48 +307,20 @@ ConnectionsResultDto
 
 The `device_status` table therefore acts as the **central connection registry**, while `ConnectionsService` contains the mode-specific logic for registering devices and determining which connections are visible to the Runtime.
 
-
-
-
-
-
-
-****
-
-
-
-
-****
-
-#### Runtime initialization
-After receiving the DTO, the Runtime:
-
-1. Reads `adminExists`.
-2. Starts `EntryComponent`.
-3. Loads the available administrator/device role information.
-4. Initializes `RuntimeSessionService`.
-5. Checks and initializes the local `runtime_session`.
-6. Starts heartbeat and wake-up monitoring.
-7. Opens the connections popup.
-
-The connections popup displays the available device connections, including stale or "phantom" connections when present.
-
-The user can select connections for deletion.
-
-#### Connection deletion
-Selected connections are sent to:
-```
-POST /api/connections/delete
-```
-
-The backend removes the selected `device_status` records and returns the result.
-
-After deletion:
-
-* **LAN Runtime** repeats the local connection check.
-* **ONLINE Runtime** reloads `/runtime?lang={language}` and repeats the Runtime initialization flow.
-
-This allows the user to clean up stale device connections and establish a new valid connection without restarting the entire application.
-
 ---
 
+**5. After receiving `ConnectionsResultDto`, the `EntryComponent`** stores the `adminExists` value.  
+The value determines which application flow will be used after the connection check.
+
+- If the backend returns no existing connections the `Runtime proceeds` directly to the next step without displaying the connections popup.
+- If existing connections are returned the [EntryComponent](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the [popup](runtime/delete_connections.md). The user can select devices and delete their connections.
+- If the popup is closed without deleting any devices the Runtime proceeds to the next step.
+- If devices were deleted, the [EntryComponent](runtime/entry.md) performs the connection check again:
+```
+await this.check(dto);
+```
+This ensures that the `Runtime` works with the updated connection state.
+
+
+
+---
