@@ -229,30 +229,17 @@ If the session is indeed expired, a new valid record is created inside the runti
 
 **4. The [Connections Module](backend/systems/connections.md) `/api/connections/entry`**  
 
-The endpoint receives `DeviceParametersDto` containing:
-* `device_id`
-* `language`
-* `mode`
-* `user_agent`
-
-`ConnectionsController` extracts the client's `IP address` directly from the `HTTP` request. 
+The `ConnectionsController`
+- retrieves the authenticated `user_id` from the `JWT` payload extracted from the authentication cookie.
+- extracts the client's `IP address` directly from the `HTTP` request.
+- receives `DeviceParametersDto `and delegates the connection check to `ConnectionsService`.
 
 The service then executes different logic depending on the device mode.
 
 #### LAN
 
 - Find the active LAN `ADMIN` record in `device_status`:
-
-```sql
-SELECT user_id
-FROM device_status
-WHERE device_role = 'ADMIN'
-  AND mode = 'LAN'
-  AND is_deleted = false;
-```
-
 - Use the returned `user_id` as the owner of the `LAN` environment.
-
 - Check whether an active `device_status` registration record exists for the received `device_id`.
 
 - **If the device already exists** (`ADMIN` role):
@@ -278,18 +265,8 @@ WHERE device_role = 'ADMIN'
      * an empty `connections` array.
 
 #### ONLINE
-
-- Resolve `user_id` from the authenticated user's cookie.
-
+- Receives `user_id`.
 - Find an active `ADMIN` record for this user:
-
-```sql
-SELECT *
-FROM device_status
-WHERE user_id = :user_id
-  AND device_role = 'ADMIN'
-  AND is_deleted = false;
-```
 
 - **If an `ADMIN` does not exist:**
    * Create the `ADMIN` record
