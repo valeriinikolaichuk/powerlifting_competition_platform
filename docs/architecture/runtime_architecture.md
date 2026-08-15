@@ -313,7 +313,16 @@ The `device_status` table therefore acts as the **central connection registry**,
 The value determines which application flow will be used after the connection check.
 
 - If the backend returns no existing connections the `Runtime proceeds` directly to the next step without displaying the connections popup.
-- If existing connections are returned the [EntryComponent](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the [popup](runtime/delete_connections.md). The user can select devices and delete their connections.
+- If existing connections are returned the [EntryComponent](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
+  - The popup receives the existing connections through `POPUP_DATA` and passes them to the dynamically loaded `DeleteConnectionsComponent`.
+  - [DeleteConnectionsComponent](runtime/delete_connections.md) provides the user interface for selecting and deleting device connections.
+  - The component:
+    - Displays the existing connections.
+    - Allows the user to select individual devices.
+    - Stores the selected device_id values.
+    - Asks the user for confirmation before deletion.
+    - Calls [ConnectionsService.deleteDevices()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#deletedevices) with the selected IDs.
+    - Returns the `deletedDeviceIds` to the parent popup.
 - If the popup is closed without deleting any devices the Runtime proceeds to the next step.
 - If devices were deleted, the [EntryComponent](runtime/entry.md) performs the connection check again:
 ```
@@ -321,6 +330,107 @@ await this.check(dto);
 ```
 This ensures that the `Runtime` works with the updated connection state.
 
-
-
 ---
+
+<pre>
+   EntryComponent ──────────────> ConnectionsService
+        |                               └── createParameters()
+        |                                       |
+     check() <───────── DeviceParameters ───────'
+        |
+        ├─────────────────────> ConnectionsService
+        |                               └──── check()
+        |                                       |
+        |                                 DeviceParameters
+        |                                       ↓
+        |                               ConnectionsController
+        |                                       |
+        |                               DeviceParametersDto
+        |                                       ↓
+        |                               ConnectionsService
+        |                                   checkAdmin()
+        |                                       |
+        |                          ┌────────────┴────────────┐
+        |                          │                         │
+        |                          ▼                         ▼
+        |                       ┌──────┐                 ┌────────┐
+        |                       │ LAN  │                 │ ONLINE │
+        |                       └──┬───┘                 └───┬────┘
+        |                          │                         │
+        |                          ▼                         ▼
+        |               Find active LAN ADMIN         Get authenticated
+        |                in device_status            user_id from cookie
+        |                          │                         │
+        |                          ▼                         ▼
+        |                Resolve LAN owner            Find user's ADMIN
+        |                       user_id                 in device_status
+        |                          │                         │
+        |                          ▼                         ▼
+        |                  Check device_id              ADMIN exists?
+        |                    registration                    │
+        |                          │                  ┌──────┴──────┐
+        |                  ┌───────┴───────┐          │             │
+        |                  │               │          ▼             ▼
+        |                  ▼               ▼         NO            YES
+        |               EXISTS          NEW DEVICE    │             │
+        |                  │               │          ▼             ▼
+        |                  ▼               ▼       Create ADMIN   Create device
+        |             Get existing       Create      record        record
+        |              non-ADMIN         device       |             |
+        |              connections       record       |             |
+        |                  │               │          │             │
+        |                  ▼               ▼          └──────┬──────┘
+        |               adminExists      adminExists         │
+        |                = false          = true             ▼
+        |                  │               │        Query active connections
+        |                  │               │           belonging to user
+        |                  └───────┬───────┘                 │
+        |                          │                         │
+        |                          └────────────┬────────────┘
+        |                                       ▼
+        |                            ┌──────────────────────┐
+        |                            │ ConnectionsResultDto │
+        | <──────────────────────────│ adminExists          │
+        |                            │ connections[]        │
+        |                            └──────────────────────┘
+        │_______
+                │
+       connections.length?      deletedDeviceIds <──────────────────────────────.
+        ┌───────┴──────┐──────────────────'                                     |
+        │              │                                                        |
+      0 │              │ > 0                                                    |
+        |              ▼                                                        |
+        |          Open popup                                                   |
+        |              │                                                        |
+        |      ┌───────┴───────┐                                                |
+        |      │               │                                                |
+        |  no deletion       delete ──────────────> ConnectionsController       |
+        |      |               |                              |                 |
+        |      │               │                        DeleteDevicesDto        |
+        |      |               ▼                           user?.id             |
+        |      |           check(dto)                         ↓                 |
+        |      |               │                      ConnectionsService        |
+        |      |               ▼                        deleteDevices()         |
+        |      |         updated result                       |                 |
+        |      |               │                              ▼                 |
+        └──────┴────┬──────────┘                       userId available?        |
+                    ▼                                     |          |          |
+                navigate()                               YES         NO         |
+                    │                                     |          |          |
+          ┌─────────┴─────────┐                           ▼          ▼          |
+          │                   │                         ONLINE      LAN         |
+   adminExists=false   adminExists=true                   |          |          |
+          │                   │                           ▼          ▼          |
+          ▼                   ▼                       user_id +   device_id     |
+       /admin               /role                     device_id      |          |
+                                                          |          |          |
+                                                          ▼          ▼          |
+                                                 deleteMany()  deleteMany()     |
+                                                          │          │          |
+                                                          └────┬─────┘          |
+                                                               ▼                |
+                                                        Device connections      |
+                                                           are deleted          |
+                                                               |________________|
+
+</pre>
