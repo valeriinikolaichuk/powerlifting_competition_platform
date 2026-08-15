@@ -201,7 +201,7 @@ This allows the Angular `Runtime` to be executed directly from the same backend 
 
 ---
 
-**3. The [Runtime](runtime/entry.md):**
+**3. The [Runtime]([runtime/entry.md](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/app.ts)):**
 - initializes the [RuntimeSessionService](runtime/systems/session-system.md), which executes the following startup sequence:
   - **Database Check.** The service verifies the existence of the [runtime_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime) table.
   - **Session Expiration Check.** It checks if the local runtime session has expired using the following logic:
