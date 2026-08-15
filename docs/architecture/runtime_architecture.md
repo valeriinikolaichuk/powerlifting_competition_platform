@@ -213,14 +213,14 @@ If the session is indeed expired, a new valid record is created inside the runti
   - **Wake-Up Listener Activation.** The service launches the `startWakeUpListener()` method to monitor system wake-up events (e.g., when the device wakes up from sleep mode).
 
 - The [EntryComponent](runtime/entry.md)
-  - creates the current device parameters using [ConnectionsService](connection_service.md#createparameters).
+  - creates the current device parameters using [ConnectionsService](runtime/connection_service.md#createparameters).
     - `language`
     - `mode`
     - `user_agent`
     - generates a new `device_id`.
     - if the `Runtime` is running in `LAN mode` on `localhost`, it uses the existing `device_id` provided in the `URL` instead.
   - creates a `DeviceParametersDTO`
-  - [checks](connection_service.md#check) the current device connection state through the backend:
+  - [checks](runtime/connection_service.md#check) the current device connection state through the backend:
 <pre>
     POST /api/connections/entry
 </pre>
