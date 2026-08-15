@@ -334,7 +334,7 @@ This ensures that the `Runtime` works with the updated connection state.
 
 Determines the next route based on `adminExists`.
 - If no administrator exists navigates to [/admin](runtime/pages.md#admincomponent);
-- Otherwise navigates to [/role](runtime/role.md#admincomponent);
+- Otherwise navigates to [/role](runtime/pages.md#rolecomponent);
 
 ---
 
