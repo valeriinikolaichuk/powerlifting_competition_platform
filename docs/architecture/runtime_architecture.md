@@ -8,13 +8,43 @@
 <details open="open">
 <summary>Contents</summary>  
 
-- [LAN Download and Installation](#lan-download-and-installation)
-- [Runtime Entry Prosess](#runtime-entry-prosess)
 - [Systems](#systems)
 - [Conponents](#components)
 - [Services](#services)
+- [LAN Download and Installation](#lan-download-and-installation)
+- [Runtime Entry Flow](#runtime-entry-flow)
 
 </details>
+
+---
+
+### Systems
+
+### [popup](runtime/systems/popup-system.md)
+Dynamically renders popup components
+
+### [session](runtime/systems/session-system.md)
+Controls the frontend session across browser tabs and maintain a consistent application state during the session lifecycle
+
+### [i18n](frontend/systems/i18n.md) Translation Module  
+Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
+
+---
+
+### Components
+
+### [entry](runtime/entry.md)   
+Starts the `Runtime` initialization process.
+
+### [pages](runtime/pages.md)   
+Contains `route-level components` representing the main views of the application.
+
+---
+
+### Services
+
+### [connections](runtime/connection_service.md)
+The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
 
 ---
 
@@ -96,11 +126,10 @@ The full installation process is described here: [local installation](https://gi
 
 ---
 
-### Runtime Entry Prosess
+### Runtime Entry Flow
 The `ONLINE` Runtime is loaded directly from the central backend.  
 The `LAN` Runtime is loaded from `localhost`.
 
-#### Flow
 **1. if `ONLINE` the `Frontend`** ([ModeComponent](frontend/pages.md#openonline)) 
 - deletes the record:
 ```
@@ -128,6 +157,45 @@ window.location.href = url;
 | **ONLINE** | `${environment.apiUrl}/runtime?lang=${lang}&mode=online` | Powered directly by the central production cloud API. |
 
 - serves the compiled Angular `Runtime` application through the `/runtime` endpoint. The `RuntimeController` returns the Runtime `index.html`, while the `NestJS` application serves the compiled static assets under the `/runtime/` path.
+
+<pre>
+          ┌─────────────────────────────┐
+          │          Frontend           │
+          │       ModeComponent         │
+          └──────────────┬──────────────┘
+                         │
+                         │ openOnline()
+                         ▼
+┌───────────────────────────────────────────────────┐
+│             Clear frontend_session                │
+│                                                   │
+│  db.table('frontend_session').delete(SESSION_ID)  │
+└────────────────────────┬──────────────────────────┘
+                         │
+                         │ window.location.href
+                         ▼
+       ┌──────────────────────────────────┐
+       │         Backend / Runtime        │
+       │                                  │
+       │ /runtime?lang={lang}&mode=online │
+       └─────────────────┬────────────────┘
+                         │
+                         │ GET /runtime
+                         ▼
+          ┌─────────────────────────────┐
+          │      RuntimeController      │
+          │                             │
+          │ returns Runtime index.html  │
+          └──────────────┬──────────────┘
+                         │
+                         ▼
+          ┌─────────────────────────────┐
+          │       Angular Runtime       │
+          │                             │
+          │  Loads compiled application │
+          │  and static assets          │
+          └─────────────────────────────┘
+</pre>
 
 This allows the Angular `Runtime` to be executed directly from the same backend without running a separate frontend development server.
 
@@ -159,7 +227,6 @@ If the session is indeed expired, a new valid record is created inside the runti
 <pre>
     POST /api/connections/entry
 </pre>
-  - waits for the server response before continuing `Runtime` initialization.
 
 ---
 
@@ -311,30 +378,3 @@ This allows the user to clean up stale device connections and establish a new va
 
 ---
 
-### Systems
-
-### [popup](runtime/systems/popup-system.md)
-Dynamically renders popup components
-
-### [session](runtime/systems/session-system.md)
-Controls the frontend session across browser tabs and maintain a consistent application state during the session lifecycle
-
-### [i18n](frontend/systems/i18n.md) Translation Module  
-Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
-
----
-
-### Components
-
-### [entry](runtime/entry.md)   
-Starts the `Runtime` initialization process.
-
-### [pages](runtime/pages.md)   
-Contains `route-level components` representing the main views of the application.
-
----
-
-### Services
-
-### [connections](runtime/connection_service.md)
-The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
