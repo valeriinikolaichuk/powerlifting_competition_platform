@@ -8,12 +8,43 @@
 <details open="open">
 <summary>Contents</summary>  
 
-- [LAN Download and Installation](#lan-download-and-installation)
-- [Runtime Entry Prosess](#runtime-entry-prosess)
 - [Systems](#systems)
 - [Conponents](#components)
+- [Services](#services)
+- [LAN Download and Installation](#lan-download-and-installation)
+- [Runtime Entry Flow](#runtime-entry-flow)
 
 </details>
+
+---
+
+### Systems
+
+### [popup](runtime/systems/popup-system.md)
+Dynamically renders popup components
+
+### [session](runtime/systems/session-system.md)
+Controls the frontend session across browser tabs and maintain a consistent application state during the session lifecycle
+
+### [i18n](frontend/systems/i18n.md) Translation Module  
+Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
+
+---
+
+### Components
+
+### [entry](runtime/entry.md)   
+Starts the `Runtime` initialization process.
+
+### [pages](runtime/pages.md)   
+Contains `route-level components` representing the main views of the application.
+
+---
+
+### Services
+
+### [connections](runtime/connection_service.md)
+The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
 
 ---
 
@@ -95,11 +126,10 @@ The full installation process is described here: [local installation](https://gi
 
 ---
 
-### Runtime Entry Prosess
+### Runtime Entry Flow
 The `ONLINE` Runtime is loaded directly from the central backend.  
 The `LAN` Runtime is loaded from `localhost`.
 
-#### Flow
 **1. if `ONLINE` the `Frontend`** ([ModeComponent](frontend/pages.md#openonline)) 
 - deletes the record:
 ```
@@ -128,11 +158,50 @@ window.location.href = url;
 
 - serves the compiled Angular `Runtime` application through the `/runtime` endpoint. The `RuntimeController` returns the Runtime `index.html`, while the `NestJS` application serves the compiled static assets under the `/runtime/` path.
 
+<pre>
+          ┌─────────────────────────────┐
+          │          Frontend           │
+          │       ModeComponent         │
+          └──────────────┬──────────────┘
+                         │
+                         │ openOnline()
+                         ▼
+┌───────────────────────────────────────────────────┐
+│             Clear frontend_session                │
+│                                                   │
+│  db.table('frontend_session').delete(SESSION_ID)  │
+└────────────────────────┬──────────────────────────┘
+                         │
+                         │ window.location.href
+                         ▼
+       ┌──────────────────────────────────┐
+       │         Backend / Runtime        │
+       │                                  │
+       │ /runtime?lang={lang}&mode=online │
+       └─────────────────┬────────────────┘
+                         │
+                         │ GET /runtime
+                         ▼
+          ┌─────────────────────────────┐
+          │      RuntimeController      │
+          │                             │
+          │ returns Runtime index.html  │
+          └──────────────┬──────────────┘
+                         │
+                         ▼
+          ┌─────────────────────────────┐
+          │       Angular Runtime       │
+          │                             │
+          │  Loads compiled application │
+          │  and static assets          │
+          └─────────────────────────────┘
+</pre>
+
 This allows the Angular `Runtime` to be executed directly from the same backend without running a separate frontend development server.
 
 ---
 
-**3. The [Runtime](runtime/entry.md):**
+**3. The [Runtime](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/app.ts):**
 - initializes the [RuntimeSessionService](runtime/systems/session-system.md), which executes the following startup sequence:
   - **Database Check.** The service verifies the existence of the [runtime_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime) table.
   - **Session Expiration Check.** It checks if the local runtime session has expired using the following logic:
@@ -143,51 +212,34 @@ If the session is indeed expired, a new valid record is created inside the runti
   - **Heartbeat Activation.** The service triggers the `startHeartbeat()` method to regularly ping and keep the current session active.
   - **Wake-Up Listener Activation.** The service launches the `startWakeUpListener()` method to monitor system wake-up events (e.g., when the device wakes up from sleep mode).
 
-- [EntryComponent](runtime/entry.md)
-  - reads `lang` and `mode` from the `URL` parameters.
-  - generates a new `device_id`.
-  - if the `Runtime` is running in `LAN mode` on `localhost`, it uses the existing `device_id` provided in the `URL` instead.
-  - creates a `DeviceParameters` DTO containing:
-  <pre>
-    device_id
-    language
-    mode
-    user_agent
-  </pre>
-  - sends the DTO to:
+- The [EntryComponent](runtime/entry.md)
+  - creates the current device parameters using [ConnectionsService](runtime/connection_service.md#createparameters).
+    - `language`
+    - `mode`
+    - `user_agent`
+    - generates a new `device_id`.
+    - if the `Runtime` is running in `LAN mode` on `localhost`, it uses the existing `device_id` provided in the `URL` instead.
+  - creates a `DeviceParametersDTO`
+  - [checks](runtime/connection_service.md#check) the current device connection state through the backend:
 <pre>
     POST /api/connections/entry
 </pre>
-  - waits for the server response before continuing `Runtime` initialization.
 
 ---
 
 **4. The [Connections Module](backend/systems/connections.md) `/api/connections/entry`**  
 
-The endpoint receives `DeviceParametersDto` containing:
-* `device_id`
-* `language`
-* `mode`
-* `user_agent`
-
-`ConnectionsController` extracts the client's `IP address` directly from the `HTTP` request. 
+The `ConnectionsController`
+- retrieves the authenticated `user_id` from the `JWT` payload extracted from the authentication cookie.
+- extracts the client's `IP address` directly from the `HTTP` request.
+- receives `DeviceParametersDto `and delegates the connection check to `ConnectionsService`.
 
 The service then executes different logic depending on the device mode.
 
 #### LAN
 
 - Find the active LAN `ADMIN` record in `device_status`:
-
-```sql
-SELECT user_id
-FROM device_status
-WHERE device_role = 'ADMIN'
-  AND mode = 'LAN'
-  AND is_deleted = false;
-```
-
 - Use the returned `user_id` as the owner of the `LAN` environment.
-
 - Check whether an active `device_status` registration record exists for the received `device_id`.
 
 - **If the device already exists** (`ADMIN` role):
@@ -213,18 +265,8 @@ WHERE device_role = 'ADMIN'
      * an empty `connections` array.
 
 #### ONLINE
-
-- Resolve `user_id` from the authenticated user's cookie.
-
+- Receives `user_id`.
 - Find an active `ADMIN` record for this user:
-
-```sql
-SELECT *
-FROM device_status
-WHERE user_id = :user_id
-  AND device_role = 'ADMIN'
-  AND is_deleted = false;
-```
 
 - **If an `ADMIN` does not exist:**
    * Create the `ADMIN` record
@@ -265,66 +307,126 @@ ConnectionsResultDto
 
 The `device_status` table therefore acts as the **central connection registry**, while `ConnectionsService` contains the mode-specific logic for registering devices and determining which connections are visible to the Runtime.
 
+---
 
+**5. After receiving `ConnectionsResultDto`, the `EntryComponent`** stores the `adminExists` value.  
+The value determines which application flow will be used after the connection check.
 
-
-
-
-
-****
-
-
-
-
-****
-
-#### Runtime initialization
-After receiving the DTO, the Runtime:
-
-1. Reads `adminExists`.
-2. Starts `EntryComponent`.
-3. Loads the available administrator/device role information.
-4. Initializes `RuntimeSessionService`.
-5. Checks and initializes the local `runtime_session`.
-6. Starts heartbeat and wake-up monitoring.
-7. Opens the connections popup.
-
-The connections popup displays the available device connections, including stale or "phantom" connections when present.
-
-The user can select connections for deletion.
-
-#### Connection deletion
-Selected connections are sent to:
+- If `connections` is empty, the `EntryComponent` calls [navigate()](runtime/entry.md#navigate) directly without displaying the connections popup.
+- If existing connections are returned the [EntryComponent](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
+  - The popup receives the existing connections through `POPUP_DATA` and passes them to the dynamically loaded `DeleteConnectionsComponent`.
+  - [DeleteConnectionsComponent](runtime/delete_connections.md) provides the user interface for selecting and deleting device connections.
+  - The component:
+    - Displays the existing connections.
+    - Allows the user to select individual devices.
+    - Stores the selected device_id values.
+    - Asks the user for confirmation before deletion.
+    - Calls [ConnectionsService.deleteDevices()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#deletedevices) with the selected IDs.
+    - Returns the `deletedDeviceIds` to the parent popup.
+- If the popup is closed without deleting any devices the Runtime proceeds to the next step.
+- If devices were deleted, the [EntryComponent](runtime/entry.md) performs the connection check again:
 ```
-POST /api/connections/delete
+await this.check(dto);
 ```
+This ensures that the `Runtime` works with the updated connection state.
 
-The backend removes the selected `device_status` records and returns the result.
+**Navigation**  
 
-After deletion:
-
-* **LAN Runtime** repeats the local connection check.
-* **ONLINE Runtime** reloads `/runtime?lang={language}` and repeats the Runtime initialization flow.
-
-This allows the user to clean up stale device connections and establish a new valid connection without restarting the entire application.
+Determines the next route based on `adminExists`.
+- If no administrator exists navigates to [/admin](runtime/pages.md#admincomponent);
+- Otherwise navigates to [/role](runtime/pages.md#rolecomponent);
 
 ---
 
-### Systems
-
-### [popup](frontend/systems/popup-system.md)
-Dynamically renders popup components
-
-### [session](runtime/systems/session-system.md)
-Controls the frontend session across browser tabs and maintain a consistent application state during the session lifecycle
-
-### [i18n](frontend/systems/i18n.md) Translation Module  
-Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
-
----
-
-### Components
-### [entry](runtime/entry.md)   
-Starts the `Runtime` initialization process.
-
----
+<pre>
+ EntryComponent ──────────────> ConnectionsService
+        |                               └── createParameters()
+        |                                       |
+     check() <───────── DeviceParameters ───────'
+        |
+        ├─────────────────────> ConnectionsService
+        |                               └──── check()
+        |                                       |
+        |                                 DeviceParameters
+        |                                       ↓
+        |                               ConnectionsController
+        |                                       |
+        |                               DeviceParametersDto
+        |                                       ↓
+        |                               ConnectionsService
+        |                                   checkAdmin()
+        |                                       |
+        |                          ┌────────────┴────────────┐
+        |                          │                         │
+        |                          ▼                         ▼
+        |                       ┌──────┐                 ┌────────┐
+        |                       │ LAN  │                 │ ONLINE │
+        |                       └──┬───┘                 └───┬────┘
+        |                          │                         │
+        |                          ▼                         ▼
+        |               Find active LAN ADMIN         Get authenticated
+        |                in device_status            user_id from cookie
+        |                          │                         │
+        |                          ▼                         ▼
+        |                Resolve LAN owner            Find user's ADMIN
+        |                       user_id                 in device_status
+        |                          │                         │
+        |                          ▼                         ▼
+        |                  Check device_id              ADMIN exists?
+        |                    registration                    │
+        |                          │                  ┌──────┴──────┐
+        |                  ┌───────┴───────┐          │             │
+        |                  │               │          ▼             ▼
+        |                  ▼               ▼         NO            YES
+        |               EXISTS          NEW DEVICE    │             │
+        |                  │               │          ▼             ▼
+        |                  ▼               ▼       Create ADMIN   Create device
+        |             Get existing       Create      record        record
+        |              non-ADMIN         device       |             |
+        |              connections       record       |             |
+        |                  │               │          │             │
+        |                  ▼               ▼          └──────┬──────┘
+        |               adminExists      adminExists         │
+        |                = false          = true             ▼
+        |                  │               │        Query active connections
+        |                  │               │           belonging to user
+        |                  └───────┬───────┘                 │
+        |                          │                         │
+        |                          └────────────┬────────────┘
+        |                                       ▼
+        |                            ┌──────────────────────┐
+        |                            │ ConnectionsResultDto │
+        | <──────────────────────────│ adminExists          │
+        |                            │ connections[]        │
+        |                            └──────────────────────┘
+        │_______
+                │
+       connections.length?              deletedDeviceIds? <─────────────────────.
+        ┌───────┴──────┐                ┌───────┴──────┐                        |
+        │              │                │              │                        |
+      0 │              │ > 0          0 │              │ > 0                    |
+        |              ▼                |              │                        |
+        |          Open popup           ▼              ▼                        |
+        |              │             navigate()     check(dto)                  |
+        |      ┌───────┴───────┐                                                |
+        |      │               │                                                |
+        |  no deletion       delete ──────────────> ConnectionsController       |
+        |      |               |                              |                 |
+        |      │               │                        DeleteDevicesDto        |
+        |      |               ▼                           user?.id             |
+        |      |           check(dto)                         ↓                 |
+        |      |               │                      ConnectionsService        |
+        |      |               ▼                        deleteDevices()         |
+        |      |         updated result                       |                 |
+        |      |               │                              ▼                 |
+        └──────┴────┬──────────┘                           device_id            |
+                    ▼                                         |                 |
+                navigate()                                    ▼                 |
+                    │                                     deleteMany()          |
+          ┌─────────┴─────────┐                               |                 |
+          │                   │                               ▼                 |
+   adminExists=false   adminExists=true                Device connections       |
+          │                   │                           are deleted           |
+          ▼                   ▼                                |________________|
+       /admin               /role                              
+</pre>
