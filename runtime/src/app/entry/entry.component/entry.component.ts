@@ -23,7 +23,7 @@ import { AdminComponent } from '../../pages/admin/admin.component';
 })
 export class EntryComponent implements OnInit {
 
-  adminExists = false;
+  adminExists: boolean | null = null;
 
   constructor(
     private readonly connectionsService: ConnectionsService,
@@ -32,6 +32,14 @@ export class EntryComponent implements OnInit {
   ) {}
 
   async ngOnInit(): Promise<void> {
+
+    const role = sessionStorage.getItem('device_role');
+
+    if (role === 'ADMIN') {
+      this.adminExists = false;
+      await this.navigate();
+      return;
+    }
 
     const dto = this.connectionsService.createParameters();
 
@@ -45,6 +53,10 @@ export class EntryComponent implements OnInit {
     const result = await this.connectionsService.check(dto);
 
     this.adminExists = result.adminExists;
+
+    if (result.adminExists === false) {
+      sessionStorage.setItem('device_role', 'ADMIN');
+    }
 
     if (result.connections.length === 0) {
 

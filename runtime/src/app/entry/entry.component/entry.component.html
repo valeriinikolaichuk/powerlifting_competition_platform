@@ -1,5 +1,11 @@
-@if (adminExists) {
+@if (adminExists === null) {
+
+} @else if (adminExists) {
+
   <app-role></app-role>
+
 } @else {
+
   <app-admin></app-admin>
+
 }

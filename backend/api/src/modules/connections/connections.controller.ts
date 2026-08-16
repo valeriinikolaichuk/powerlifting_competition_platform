@@ -35,13 +35,11 @@ export class ConnectionsController {
   }
 
   @Delete('entry')
-  async deleteDevices(
+    async deleteDevices(
     @Body() dto: DeleteDevicesDto,
-    @CurrentUser() user: any,
   ) {
     return this.connectionsService.deleteDevices(
       dto.device_ids,
-      user?.id,
     );
   }
 }

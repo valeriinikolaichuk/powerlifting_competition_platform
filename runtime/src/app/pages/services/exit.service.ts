@@ -27,6 +27,7 @@ export class ExitService {
     }
 
     localStorage.removeItem('device_id');
+    sessionStorage.removeItem('device_role');
 
     await this.runtimeSessionService.clearSession();
   

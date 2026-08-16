@@ -47,7 +47,6 @@ Defines and validates the parameters received from the Runtime:
 * `device_id` — device identifier.
 * `language` — supported system language.
 * `mode` — `LAN` or `ONLINE`.
-* `ip_address` — device `IP` address
 * `user_agent` — device browser
 
 Input values for `language` and `mode` are normalized to uppercase before enum validation.

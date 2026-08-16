@@ -75,18 +75,18 @@ export class ConnectionsService {
   }
 
   async deleteDevices(
-    deviceIds: string[]
+    deviceIds: string[],
   ): Promise<void> {
     await firstValueFrom(
       this.http.delete(
         `${environment.apiUrl}/api/connections/entry`,
         {
-          params: {
-            device_id: deviceIds,
+          body: {
+            device_ids: deviceIds,
           },
           withCredentials: true,
-        }
-      )
+        },
+      ),
     );
   }
 }

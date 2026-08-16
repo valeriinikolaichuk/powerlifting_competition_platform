@@ -286,30 +286,13 @@ export class ConnectionsService {
 
   async deleteDevices(
     deviceIds: string[],
-    userId?: string,
   ): Promise<void> {
 
-    // ONLINE
-    if (userId) {
-      await this.prisma.deviceStatus.deleteMany({
-        where: {
-          user_id: userId,
-          device_id: {
-            in: deviceIds,
-          },
-        },
-      });
-
-      return;
-    }
-
-    // LAN
     await this.prisma.deviceStatus.deleteMany({
       where: {
         device_id: {
           in: deviceIds,
         },
-        mode: 'LAN',
       },
     });
   }

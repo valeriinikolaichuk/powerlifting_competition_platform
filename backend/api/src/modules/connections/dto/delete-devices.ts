@@ -1,4 +1,8 @@
-export class DeleteDevicesDto{
-    
-    device_ids!: string[];
+import { IsArray, IsString } from 'class-validator';
+
+export class DeleteDevicesDto {
+
+  @IsArray()
+  @IsString({ each: true })
+  device_ids!: string[];
 }

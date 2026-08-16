@@ -16,8 +16,5 @@ export class DeviceParametersDto {
     mode!: DeviceMode;
 
     @IsString()
-    ip_address!: string;
-
-    @IsString()
     user_agent!: string;
 }
