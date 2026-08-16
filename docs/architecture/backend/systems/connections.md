@@ -59,22 +59,7 @@ Returns all active device connections belonging to the user, including the `ADMI
 
 - #### deleteDevices()
 Performs the actual deletion of device connection records.
-
-The method supports two different connection contexts:
-* ONLINE
-* LAN
-
-The context is determined by whether an authenticated `userId` is available.
-
-**ONLINE deletion**  
-When userId is present:
-```
-if (userId) {
-```
-the method deletes only connections belonging to that authenticated user.
-
-**LAN deletion**  
-When no userId is available, the method deletes connections using only `device_id` identifier
+The method deletes connections using only `device_id` identifier
 
 ---
 
