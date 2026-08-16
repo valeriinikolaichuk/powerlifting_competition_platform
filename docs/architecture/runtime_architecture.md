@@ -401,13 +401,13 @@ Determines the next route based on `adminExists`.
         |                            └──────────────────────┘
         │_______
                 │
-       connections.length?      deletedDeviceIds <──────────────────────────────.
-        ┌───────┴──────┐──────────────────'                                     |
-        │              │                                                        |
-      0 │              │ > 0                                                    |
-        |              ▼                                                        |
-        |          Open popup                                                   |
-        |              │                                                        |
+       connections.length?              deletedDeviceIds? <─────────────────────.
+        ┌───────┴──────┐                ┌───────┴──────┐                        |
+        │              │                │              │                        |
+      0 │              │ > 0          0 │              │ > 0                    |
+        |              ▼                |              │                        |
+        |          Open popup           ▼              ▼                        |
+        |              │             navigate()     check(dto)                  |
         |      ┌───────┴───────┐                                                |
         |      │               │                                                |
         |  no deletion       delete ──────────────> ConnectionsController       |
