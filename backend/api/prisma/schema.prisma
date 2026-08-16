@@ -1102,17 +1102,35 @@ model GlobalState {
 }
 
 model Installation {
-  id         String   @id @default(uuid()) @db.Uuid
+  id                  String   @id @default(uuid()) @db.Uuid
   
-  user_id    String   @db.Uuid
-  device_id  String @db.Uuid
+  user_id             String   @db.Uuid
+  device_id           String @db.Uuid
 
-  language   Language
+  runtime_version_id  String   @db.Uuid
+  language            Language
 
-  created_at DateTime @default(now())
+  created_at          DateTime @default(now())
 
   user User @relation(fields: [user_id], references: [id])
+  runtime_version     RuntimeVersion @relation(fields: [runtime_version_id], references: [id])
 
   @@index([user_id])
+  @@index([runtime_version_id])
   @@map("installations")
+}
+
+model RuntimeVersion {
+  id                   String   @id @default(uuid()) @db.Uuid
+
+  application_version  String
+  data_version         Int
+  is_required          Boolean  @default(false)
+
+  created_at           DateTime @default(now())
+
+  installations        Installation[]
+
+  @@unique([application_version])
+  @@map("runtime_versions")
 }

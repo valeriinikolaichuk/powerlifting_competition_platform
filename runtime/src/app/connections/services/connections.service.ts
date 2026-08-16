@@ -23,7 +23,7 @@ export class ConnectionsService {
     const mode = params.get('mode')?.toUpperCase() ?? '';
 
     let deviceId = localStorage.getItem('device_id');
-console.log('NAVIGATOR USER AGENT:', navigator.userAgent);
+
     if (!deviceId) {
       deviceId = crypto.randomUUID();
       localStorage.setItem('device_id', deviceId);
