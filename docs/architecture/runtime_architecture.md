@@ -339,7 +339,7 @@ Determines the next route based on `adminExists`.
 ---
 
 <pre>
-   EntryComponent ──────────────> ConnectionsService
+ EntryComponent ──────────────> ConnectionsService
         |                               └── createParameters()
         |                                       |
      check() <───────── DeviceParameters ───────'
@@ -419,24 +419,14 @@ Determines the next route based on `adminExists`.
         |      |               ▼                        deleteDevices()         |
         |      |         updated result                       |                 |
         |      |               │                              ▼                 |
-        └──────┴────┬──────────┘                       userId available?        |
-                    ▼                                     |          |          |
-                navigate()                               YES         NO         |
-                    │                                     |          |          |
-          ┌─────────┴─────────┐                           ▼          ▼          |
-          │                   │                         ONLINE      LAN         |
-   adminExists=false   adminExists=true                   |          |          |
-          │                   │                           ▼          ▼          |
-          ▼                   ▼                       user_id +   device_id     |
-       /admin               /role                     device_id      |          |
-                                                          |          |          |
-                                                          ▼          ▼          |
-                                                 deleteMany()  deleteMany()     |
-                                                          │          │          |
-                                                          └────┬─────┘          |
-                                                               ▼                |
-                                                        Device connections      |
-                                                           are deleted          |
-                                                               |________________|
-
+        └──────┴────┬──────────┘                           device_id            |
+                    ▼                                         |                 |
+                navigate()                                    ▼                 |
+                    │                                     deleteMany()          |
+          ┌─────────┴─────────┐                               |                 |
+          │                   │                               ▼                 |
+   adminExists=false   adminExists=true                Device connections       |
+          │                   │                           are deleted           |
+          ▼                   ▼                                |________________|
+       /admin               /role                              
 </pre>
