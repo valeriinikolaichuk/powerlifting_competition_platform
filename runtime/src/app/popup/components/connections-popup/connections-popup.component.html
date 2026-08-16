@@ -15,12 +15,119 @@
             &times;
     </button>
 
-    <ng-container
-        *ngComponentOutlet="data.content">
-    </ng-container>
+    <div class="text-xl font-bold mb-4">
+        <span>{{ 'MESSAGE' | t:'popups/delete-connections' }}</span>
+    </div>
 
-    <button type="button"
-        class="px-4 
+    <table class="w-full 
+            border-collapse 
+            my-4">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="w-10 
+                    px-2.5 py-2 
+                    text-center 
+                    border-b 
+                    border-gray-300">
+                    {{ 'NUMBER' | t:'popups/delete-connections' }}</th>
+                <th class="w-10 
+                    px-2.5 py-2 
+                    text-center 
+                    border-b 
+                    border-gray-300"></th>
+                <th class="px-2.5 py-2 
+                    text-left 
+                    border-b 
+                    border-gray-300">
+                    {{ 'IP' | t:'popups/delete-connections' }}</th>
+                <th class="px-2.5 py-2 text-left border-b border-gray-300">
+                    {{ 'BROWSER' | t:'popups/delete-connections' }}</th>
+                <th class="px-2.5 py-2 
+                    text-left 
+                    border-b 
+                    border-gray-300">
+                    {{ 'ROLE' | t:'popups/delete-connections' }}</th>
+                <th class="px-2.5 py-2 
+                    text-left 
+                    border-b 
+                    border-gray-300">
+                    {{ 'CONNECTED' | t:'popups/delete-connections' }}</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @for (connection of connections; track connection.device_id; let i = $index) {
+            <tr>
+                <td class="w-10 
+                    px-2.5 py-2 
+                    text-center 
+                    border-b 
+                    border-gray-300">
+                {{ i + 1 }}
+                </td>
+
+                <td class="w-10 
+                    px-2.5 py-2 
+                    text-center 
+                    border-b 
+                    border-gray-300">
+                    <input
+                        type="checkbox"
+                        [attr.data-device-id]="connection.device_id"
+                        class="h-4 w-4 cursor-pointer"
+                    />
+                </td>
+
+                <td class="px-2.5 py-2 
+                    text-center 
+                    text-[22px] 
+                    border-b 
+                    border-gray-300">
+                {{ connection.ip_address }}
+                </td>
+
+                <td class="px-2.5 py-2 
+                    text-left 
+                    border-b 
+                    border-gray-300">
+                {{ connection.browser }}
+                </td>
+
+                <td class="px-2.5 py-2 
+                    text-left 
+                    border-b 
+                    border-gray-300">
+                {{ connection.device_role }}
+                </td>
+
+                <td class="px-2.5 py-2 
+                    text-left 
+                    border-b 
+                    border-gray-300">
+                {{ connection.created_at }}
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="mt-5 text-right">
+        <button
+            class="px-4 py-2 
+            rounded-md 
+            border-0 
+            cursor-pointer 
+            text-sm ml-2
+            bg-red-600 
+            text-white 
+            hover:opacity-85 
+            disabled:opacity-50 
+            disabled:cursor-not-allowed"
+            (click)="delete()">
+            DELETE
+        </button>
+        <button type="button"
+            class="px-4 
             py-2 
             rounded-md 
             border-0 
@@ -32,5 +139,5 @@
             (click)="close()">
             CLOSE
         </button>
-
+    </div>
 </div>

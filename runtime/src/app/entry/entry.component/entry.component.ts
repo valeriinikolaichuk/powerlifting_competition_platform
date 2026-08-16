@@ -7,7 +7,6 @@ import { ConnectionDto } from '../../connections/dto/connection-dto';
 
 import { PopupService } from '../../popup/services/popup.service';
 import { ConnectionsPopupComponent } from '../../popup/components/connections-popup/connections-popup.component';
-import { DeleteConnectionsComponent } from '../../popup/components/connections-popup/delete-connections/delete-connections.component';
 
 import { RoleComponent } from '../../pages/role/role.component';
 import { AdminComponent } from '../../pages/admin/admin.component';
@@ -98,7 +97,6 @@ export class EntryComponent implements OnInit {
     return this.popup.open<string[]>(
       ConnectionsPopupComponent,
       {
-        content: DeleteConnectionsComponent,
         connections,
       },
     );

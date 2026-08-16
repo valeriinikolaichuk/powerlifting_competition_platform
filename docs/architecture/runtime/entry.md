@@ -33,7 +33,6 @@ uses the generic `PopupService` to open the connections popup and waits for its 
 return this.popup.open<string[]>(
   ConnectionsPopupComponent,
   {
-    content: DeleteConnectionsComponent,
     connections,
   },
 );

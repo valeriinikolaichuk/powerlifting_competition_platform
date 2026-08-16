@@ -102,7 +102,7 @@ DELETE /api/connections/entry
 ```
 
 The method is used by: 
-- [DeleteConnectionsComponent](delete_connections.md) after the user confirms the deletion.
+- [ConnectionsPopupComponent](delete_connections.md) after the user confirms the deletion.
 
 ---
 

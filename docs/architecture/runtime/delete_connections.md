@@ -1,4 +1,4 @@
-### DeleteConnectionsComponent
+### ConnectionsPopupComponent
 Contains the actual connection deletion functionality.
 
 Responsibilities:
@@ -31,8 +31,6 @@ ConnectionsPopupComponent              |
       ▼               ▼                |
    content       connections           |
       │                                |
-      ▼                                |
-DeleteConnectionsComponent             |
       │                                |
       ├── ConnectionsPopupService      |
       ├── ConnectionsService           |

@@ -5,5 +5,6 @@ export interface ConnectionDto {
   mode: string;
   ip_address: string;
   user_agent: string;
+  browser?: string;
   created_at: Date;
 }
