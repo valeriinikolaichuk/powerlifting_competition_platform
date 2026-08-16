@@ -126,6 +126,8 @@ Provides reusable popup layouts.
 
 Each template represents a different popup type while reusing the same infrastructure.
 
+For interactive popup functionality, the required `HTML` and logic may be implemented directly in the `Level 2` component to ensure proper event handling and interaction.
+
 ---
 
 ## Level 3 (Popup Content)
