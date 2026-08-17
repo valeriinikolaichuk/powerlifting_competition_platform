@@ -181,11 +181,78 @@ Defines the athlete's qualification status during the competition.
 
 ---
 
+### athlete_nominations
+Stores online athlete applications for participation in a competition before they are reviewed and approved by the competition organizer.
+
+A nomination may reference an existing athlete using athlete_id, or contain athlete information directly if the athlete does not yet exist in the database. The same approach is used for countries, regions, cities, organizations, and trainers.
+
+After approval, the nomination can be used to create an athlete_registrations record.
+
+|Column	|Type	|NULL	|Description|
+|------|------|-----|-----------|
+| id	|UUID	|No	|Unique nomination identifier|
+| competition_id	|UUID	|No	|Competition for which the nomination was submitted|
+| athlete_id	|UUID	|Yes	|Existing athlete identifier|
+| full_name	|TEXT	|Yes	|Athlete's full name submitted in the nomination|
+| date_of_birth	|TIMESTAMP	|Yes	|Athlete's date of birth|
+| country_id	|UUID	|Yes	|Existing country identifier|
+| country_name	|TEXT	|Yes	|Country name submitted in the nomination|
+| region_id	|UUID	|Yes	|Existing region identifier|
+| region_name	|TEXT	|Yes	|Region name submitted in the nomination|
+| city_id	|UUID	|Yes	|Existing city identifier|
+| city_name	|TEXT	|Yes	|City name submitted in the nomination|
+| sport_society_id	|UUID	|Yes	|Existing sport society identifier|
+| sport_society_code	|TEXT	|Yes	|Sport society code|
+| club_id	|UUID	|Yes	|Existing club identifier|
+| club_code	|TEXT	|Yes	|Club code|
+| sport_school_id	|UUID	|Yes	|Existing sport school identifier|
+| sport_school_code	|TEXT	|Yes	|Sport school code|
+| university_id	|UUID	|Yes	|Existing university identifier|
+| university_code	|TEXT	|Yes	|University code|
+| competition_age_group_id	|UUID	|No	|Competition age group and sex category|
+| trainer_1_id	|UUID	|Yes	|Existing first trainer identifier|
+| trainer_1_full_name	|TEXT	|Yes	|First trainer's full name|
+| trainer_2_id	|UUID	|Yes	|Existing second trainer identifier|
+| trainer_2_full_name	|TEXT	|Yes	|Second trainer's full name|
+| trainer_3_id	|UUID	|Yes	|Existing third trainer identifier|
+| trainer_3_full_name	|TEXT	|Yes	|Third trainer's full name|
+| trainer_4_id	|UUID	|Yes	|Existing fourth trainer identifier|
+| trainer_4_full_name	|TEXT	|Yes	|Fourth trainer's full name|
+| sport_rank_class	|TEXT	|Yes	|Athlete's sport rank/class|
+| squat_nominated	|DECIMAL(4,1)	|Yes	|Nominated squat weight|
+| bench_press_nominated	|DECIMAL(4,1)	|Yes	|Nominated bench press weight|
+| deadlift_nominated	|DECIMAL(4,1)	|Yes	|Nominated deadlift weight|
+| total_nominated	|DECIMAL(5,1)	|Yes	|Nominated total|
+| weight_class_id	|UUID	|Yes	|Weight class in which the athlete is registered|
+| status	|AthleteRegistrationStatus	|No	|Athlete registration type|
+| created_by_participant_id	|UUID	|No	|Participant who submitted the nomination|
+| verification_status	|VerificationStatus	|No	|Nomination verification status|
+| created_at	|TIMESTAMP	|No	|Creation timestamp|
+| updated_at	|TIMESTAMP	|No	|Last update timestamp|
+| is_deleted	|BOOLEAN	|No	|Indicates whether the nomination has been logically deleted|
+
+### Relations
+
+* related with ➡ [**competitions**](#competition) by `competition_id`
+* related with ➡ **athletes** by `athlete_id`
+* related with ➡ [**countries**](reference.md#countries) by `country_id`
+* related with ➡ [**regions**](reference.md#regions) by `region_id`
+* related with ➡ [**cities**](reference.md#cities) by `city_id`
+* related with ➡ [**organizations**](reference.md#organizations) by `sport_society_id`, `club_id`, `sport_school_id`, `university_id`
+* related with ➡ **competition_age_groups** by `competition_age_group_id`
+* related with ➡ [**sport_officials**](reference.md#sport_officials) by `trainer_1_id`,`trainer_2_id`, `trainer_3_id`, `trainer_4_id`
+* related with ➡ **weight_classes** by `weight_class_id`
+* related with ➡ [**participants**](user.md#participants) by `created_by_participant_id`
 
 
+#### AthleteQualification
+Defines the athlete's qualification status during the competition.
 
-
-
+| Value          | Description                                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------- |
+| QUALIFIED      | The athlete is qualified to continue participating in the competition.                                        |
+| WITHDRAWN      | The athlete has withdrawn from the competition, for example due to a medical decision.                        |
+| DISQUALIFIED   | The athlete has been disqualified from the competition due to a rule violation or other disqualifying reason. |
 
 
 #### VerificationStatus
@@ -196,9 +263,6 @@ Defines the verification status of a referee assignment.
 | PENDING | Verification has not yet been completed. |
 | APPROVED | The referee assignment has been verified and approved. |
 | REJECTED | The referee assignment has been rejected. |
-
-
-| WITHDRAWN | The athlete was withdrawn from the competition by the competition doctor before performing the attempt. |
 
 ---
 
