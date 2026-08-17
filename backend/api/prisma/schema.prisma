@@ -70,6 +70,7 @@ model WeightClasses {
 
   groups               WeightClassesInGroup[]
   athleteRegistrations AthleteRegistrations[]
+  athleteNominations   AthleteNominations[]
 
   @@unique([weight_class_group, weight_class])
 
@@ -103,15 +104,16 @@ model FederationCategories {
 }
 
 model RefereeCategories {
-  id            String @id @default(uuid()) @db.Uuid
+  id              String @id @default(uuid()) @db.Uuid
 
-  category_name String
-  category_code String
+  category_name   String
+  category_code   String
 
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 
   refereeCompetitions RefereeCompetition[]
+  refereeNominations  RefereeNominations[]
 
   @@unique([category_code])
 
@@ -173,7 +175,9 @@ model Countries {
 
   participants         Participants[]
   refereeCompetitions  RefereeCompetition[]
+  refereeNominations   RefereeNominations[]
   athleteRegistrations AthleteRegistrations[]
+  athleteNominations   AthleteNominations[]
   competitionOrganizations CompetitionOrganizations[]
 
   @@unique([name])
@@ -207,7 +211,9 @@ model Regions {
 
   participants         Participants[]
   refereeCompetitions  RefereeCompetition[]
+  refereeNominations   RefereeNominations[]
   athleteRegistrations AthleteRegistrations[]
+  athleteNominations   AthleteNominations[]
   competitionOrganizations CompetitionOrganizations[]
 
   @@unique([country_id, name])
@@ -241,7 +247,9 @@ model Cities {
   participants          Participants[]
   competitions          Competitions[]
   refereeCompetitions   RefereeCompetition[]
+  refereeNominations    RefereeNominations[]
   athleteRegistrations  AthleteRegistrations[]
+  athleteNominations    AthleteNominations[]
   competitionOrganizations CompetitionOrganizations[]
 
   @@unique([region_id, name])
@@ -283,6 +291,11 @@ model Organizations {
   sportSchool       AthleteRegistrations[] @relation("SportSchool")
   university        AthleteRegistrations[] @relation("University")
 
+  athleteNominationSportSociety      AthleteNominations[] @relation("NominationSportSociety")
+  athleteNominationClub              AthleteNominations[] @relation("NominationClub")
+  athleteNominationSportSchool       AthleteNominations[] @relation("NominationSportSchool")
+  athleteNominationUniversity        AthleteNominations[] @relation("NominationUniversity")
+
   competitionOrganizations CompetitionOrganizations[]
 
   @@map("organizations")
@@ -317,6 +330,7 @@ model Athletes {
   created_by_user User? @relation("AthleteCreatedBy", fields: [created_by_user_id], references: [id])
 
   athleteRegistrations AthleteRegistrations[]
+  athleteNominations   AthleteNominations[]
 
   @@index([federation_id, full_name])
 
@@ -335,7 +349,7 @@ model SportOfficials {
   created_by_user_id  String?     @db.Uuid
 
   scope               DataScope
-  language           Language
+  language            Language
 
   created_at          DateTime    @default(now())
   updated_at          DateTime    @updatedAt
@@ -347,11 +361,17 @@ model SportOfficials {
   created_by_user User? @relation("SportOfficialCreatedBy", fields: [created_by_user_id], references: [id])
 
   refereeCompetitions RefereeCompetition[]
+  refereeNominations  RefereeNominations[]
 
   trainer1            AthleteRegistrations[] @relation("Trainer1")
   trainer2            AthleteRegistrations[] @relation("Trainer2")
   trainer3            AthleteRegistrations[] @relation("Trainer3")
   trainer4            AthleteRegistrations[] @relation("Trainer4")
+
+  athleteNominationTrainer1            AthleteNominations[] @relation("NominationTrainer1")
+  athleteNominationTrainer2            AthleteNominations[] @relation("NominationTrainer2")
+  athleteNominationTrainer3            AthleteNominations[] @relation("NominationTrainer3")
+  athleteNominationTrainer4            AthleteNominations[] @relation("NominationTrainer4")
 
   @@index([federation_id])
 
@@ -404,12 +424,13 @@ model CompetitionAgeGroups {
 
   is_deleted             Boolean @default(false)
 
-  competition Competitions @relation(fields: [competition_id], references: [id])
+  competition            Competitions @relation(fields: [competition_id], references: [id])
 
-  federationCategory FederationCategories @relation(fields: [federation_category_id], references: [id])
+  federationCategory     FederationCategories @relation(fields: [federation_category_id], references: [id])
 
-  athleteRegistrations AthleteRegistrations[]
-  organizationResults OrganizationResults[]
+  athleteRegistrations   AthleteRegistrations[]
+  athleteNominations     AthleteNominations[]
+  organizationResults    OrganizationResults[]
 
   @@unique([competition_id, federation_category_id])
 
@@ -461,9 +482,9 @@ model CompetitionSessions {
 
   is_deleted         Boolean @default(false)
 
-  competition Competitions @relation(fields: [competition_id], references: [id])
+  competition        Competitions @relation(fields: [competition_id], references: [id])
 
-  groupsInSession GroupsInSession[]
+  groupsInSession    GroupsInSession[]
   refereeCompetitionRoles RefereeCompetitionRoles[]
 
   globalStates       GlobalState[]
@@ -517,12 +538,6 @@ model WeightClassesInGroup {
   @@map("weight_classes_in_group")
 }
 
-enum VerificationStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
-
 model RefereeCompetition {
   id                  String @id @default(uuid()) @db.Uuid
 
@@ -534,8 +549,6 @@ model RefereeCompetition {
   country_id          String? @db.Uuid
   region_id           String? @db.Uuid
   city_id             String? @db.Uuid
-
-  verification_status VerificationStatus @default(PENDING)
 
   created_at          DateTime @default(now())
   updated_at          DateTime @updatedAt
@@ -562,6 +575,58 @@ model RefereeCompetition {
   @@index([referee_id])
 
   @@map("referee_competition")
+}
+
+enum VerificationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model RefereeNominations {
+  id                        String @id @default(uuid()) @db.Uuid
+
+  competition_id            String @db.Uuid
+
+  referee_id                String? @db.Uuid
+  full_name                 String?
+
+  referee_category_id       String @db.Uuid
+
+  country_id                String? @db.Uuid
+  country_name              String?
+  region_id                 String? @db.Uuid
+  region_name               String?
+  city_id                   String? @db.Uuid
+  city_name                 String?
+
+  verification_status       VerificationStatus @default(PENDING)
+
+  created_by_participant_id String @db.Uuid
+
+  created_at                DateTime @default(now())
+  updated_at                DateTime @updatedAt
+
+  is_deleted                Boolean @default(false)
+
+  competition               Competitions @relation(fields: [competition_id], references: [id])
+
+  referee                   SportOfficials? @relation(fields: [referee_id], references: [id])
+
+  refereeCategory           RefereeCategories @relation(fields: [referee_category_id], references: [id])
+
+  country                   Countries? @relation(fields: [country_id], references: [id])
+  region                    Regions? @relation(fields: [region_id], references: [id])
+  city                      Cities? @relation(fields: [city_id], references: [id])
+
+  createdByParticipant      Participants @relation(fields: [created_by_participant_id], references: [id])
+
+  @@index([competition_id])
+  @@index([referee_id])
+  @@index([created_by_participant_id])
+  @@index([verification_status]) 
+
+  @@map("referee_nominations")
 }
 
 model RefereeCompetitionRoles {
@@ -684,6 +749,9 @@ model Participants {
 
   city Cities? @relation(fields: [city_id], references: [id])
 
+  refereeNominations     RefereeNominations[]
+  athleteNominations     AthleteNominations[]
+
   @@map("participants")
 }
 
@@ -744,9 +812,11 @@ model Competitions {
   
   competitionAgeGroups   CompetitionAgeGroups[]
   refereeCompetitions    RefereeCompetition[]
+  refereeNominations     RefereeNominations[]
   nominationStatuses     NominationStatus?
   competitionSessions    CompetitionSessions[]
   athleteRegistrations   AthleteRegistrations[]
+  athleteNominations     AthleteNominations[]
   competitionOrganizations CompetitionOrganizations[]
 
   globalStates           GlobalState[]
@@ -761,6 +831,12 @@ enum AthleteRegistrationStatus {
   TEAM
   PERSONALLY
   OUT_OF_COMP
+}
+
+enum AthleteQualification {
+  QUALIFIED
+  WITHDRAWN
+  DISQUALIFIED
 }
 
 model AthleteRegistrations {
@@ -804,40 +880,37 @@ model AthleteRegistrations {
 
   double                Boolean @default(false)
 
-  status                AthleteRegistrationStatus
-
-  verification_status   VerificationStatus @default(PENDING)
+  status                AthleteRegistrationStatus @default(TEAM)
+  qualification         AthleteQualification @default(QUALIFIED)
 
   created_at            DateTime @default(now())
   updated_at            DateTime @updatedAt
 
   is_deleted            Boolean @default(false)
 
-  athlete Athletes @relation(fields: [athlete_id], references: [id])
+  athlete               Athletes @relation(fields: [athlete_id], references: [id])
 
-  competition Competitions @relation(fields: [competition_id], references: [id])
+  competition           Competitions @relation(fields: [competition_id], references: [id])
 
-  country Countries? @relation(fields: [country_id], references: [id])
+  country               Countries? @relation(fields: [country_id], references: [id])
+  region                Regions? @relation(fields: [region_id], references: [id])
+  city                  Cities? @relation(fields: [city_id], references: [id])
 
-  region Regions? @relation(fields: [region_id], references: [id])
+  sportSociety          Organizations? @relation("SportSociety", fields: [sport_society_id], references: [id])
+  club                  Organizations? @relation("Club", fields: [club_id], references: [id])
+  sportSchool           Organizations? @relation("SportSchool", fields: [sport_school_id], references: [id])
+  university            Organizations? @relation("University", fields: [university_id], references: [id])
 
-  city Cities? @relation(fields: [city_id], references: [id])
-
-  sportSociety Organizations? @relation("SportSociety", fields: [sport_society_id], references: [id])
-  club Organizations? @relation("Club", fields: [club_id], references: [id])
-  sportSchool Organizations? @relation("SportSchool", fields: [sport_school_id], references: [id])
-  university Organizations? @relation("University", fields: [university_id], references: [id])
-
-  competitionAgeGroup CompetitionAgeGroups @relation(fields: [competition_age_group_id], references: [id])
+  competitionAgeGroup   CompetitionAgeGroups @relation(fields: [competition_age_group_id], references: [id])
 
   trainer1 SportOfficials? @relation("Trainer1", fields: [trainer_1_id], references: [id])
   trainer2 SportOfficials? @relation("Trainer2", fields: [trainer_2_id], references: [id])
   trainer3 SportOfficials? @relation("Trainer3", fields: [trainer_3_id], references: [id])
   trainer4 SportOfficials? @relation("Trainer4", fields: [trainer_4_id], references: [id])
 
-  weightClass WeightClasses? @relation(fields: [weight_class_id], references: [id])
+  weightClass           WeightClasses? @relation(fields: [weight_class_id], references: [id])
 
-  groupInSession GroupsInSession? @relation(fields: [group_in_session_id], references: [id])
+  groupInSession        GroupsInSession? @relation(fields: [group_in_session_id], references: [id])
 
   athleteLifts AthleteLifts[]
   competitionResult CompetitionResults?
@@ -848,12 +921,104 @@ model AthleteRegistrations {
   @@index([weight_class_id])
   @@index([group_in_session_id])
   @@index([status])
-  @@index([verification_status])
   @@index([competition_age_group_id])
   @@index([competition_id, weight_class_id])
   @@index([competition_id, group_in_session_id])
 
   @@map("athlete_registrations")
+}
+
+model AthleteNominations {
+  id                        String @id @default(uuid()) @db.Uuid
+
+  competition_id            String @db.Uuid
+
+  athlete_id                String? @db.Uuid
+  full_name                 String?
+  date_of_birth             DateTime?
+
+  country_id                String? @db.Uuid
+  country_name              String?
+  region_id                 String? @db.Uuid
+  region_name               String?
+  city_id                   String? @db.Uuid
+  city_name                 String?
+
+  sport_society_id          String? @db.Uuid
+  sport_society_code        String?
+  club_id                   String? @db.Uuid
+  club_code                 String?
+  sport_school_id           String? @db.Uuid
+  sport_school_code         String?
+  university_id             String? @db.Uuid
+  university_code           String?
+
+  competition_age_group_id  String @db.Uuid
+
+  trainer_1_id              String? @db.Uuid
+  trainer_1_full_name       String?
+  trainer_2_id              String? @db.Uuid
+  trainer_2_full_name       String?
+  trainer_3_id              String? @db.Uuid
+  trainer_3_full_name       String?
+  trainer_4_id              String? @db.Uuid
+  trainer_4_full_name       String?
+
+  sport_rank_class          String?
+
+  squat_nominated           Decimal? @db.Decimal(4, 1)
+  bench_press_nominated     Decimal? @db.Decimal(4, 1)
+  deadlift_nominated        Decimal? @db.Decimal(4, 1)
+  total_nominated           Decimal? @db.Decimal(5, 1)
+
+  weight_class_id           String? @db.Uuid
+
+  status                    AthleteRegistrationStatus
+
+  created_by_participant_id String @db.Uuid
+
+  verification_status       VerificationStatus @default(PENDING)
+
+  created_at                DateTime @default(now())
+  updated_at                DateTime @updatedAt
+
+  is_deleted                Boolean @default(false)
+
+  competition               Competitions @relation(fields: [competition_id], references: [id])
+  athlete                   Athletes? @relation(fields: [athlete_id], references: [id])
+
+  country                   Countries? @relation(fields: [country_id], references: [id])
+  region                    Regions? @relation(fields: [region_id], references: [id])
+  city                      Cities? @relation(fields: [city_id], references: [id])
+
+  sportSociety              Organizations? @relation("NominationSportSociety", fields: [sport_society_id], references: [id])
+  club                      Organizations? @relation("NominationClub", fields: [club_id], references: [id])
+  sportSchool               Organizations? @relation("NominationSportSchool", fields: [sport_school_id], references: [id])
+  university                Organizations? @relation("NominationUniversity", fields: [university_id], references: [id])
+
+  competitionAgeGroup       CompetitionAgeGroups @relation(fields: [competition_age_group_id], references: [id])
+
+  trainer1                  SportOfficials? @relation("NominationTrainer1", fields: [trainer_1_id], references: [id])
+
+  trainer2                  SportOfficials? @relation("NominationTrainer2", fields: [trainer_2_id], references: [id])
+
+  trainer3                  SportOfficials? @relation("NominationTrainer3", fields: [trainer_3_id], references: [id])
+
+  trainer4                  SportOfficials? @relation("NominationTrainer4", fields: [trainer_4_id], references: [id])
+
+  weightClass               WeightClasses? @relation(fields: [weight_class_id], references: [id])
+
+  createdByParticipant      Participants @relation(fields: [created_by_participant_id], references: [id])
+
+  @@index([competition_id])
+  @@index([weight_class_id])
+  @@index([status])
+  @@index([verification_status])
+  @@index([competition_age_group_id])
+  @@index([created_by_participant_id])
+  @@index([competition_id, weight_class_id])
+
+  @@map("athlete_nominations")
 }
 
 enum CompetitionOrganizationType {
@@ -916,7 +1081,6 @@ enum AttemptStatus {
   REQUESTED
   GOOD_LIFT
   NO_LIFT
-  WITHDRAWN
 }
 
 model AthleteLifts {
