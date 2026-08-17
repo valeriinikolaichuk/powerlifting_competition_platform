@@ -63,7 +63,6 @@ Defines the status of a competition attempt.
 | REQUESTED | The attempt has been declared but has not yet been performed. |
 | GOOD_LIFT | The attempt was successful. |
 | NO_LIFT | The attempt was unsuccessful. |
-| WITHDRAWN | The athlete was withdrawn from the competition by the competition doctor before performing the attempt. |
 
 #### Relations
 - related with **athlete_registrations** by `athlete_registration_id`

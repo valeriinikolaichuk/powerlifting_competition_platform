@@ -54,3 +54,4 @@ Database migrations are managed by `Prisma` Migrate.
 
 ➡ [Management Tables](database/management.md)
 - installations
+- runtime_versions
