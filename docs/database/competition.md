@@ -6,6 +6,7 @@
 
 - [competitions](#competitions)
 - [athlete_registrations](#athlete_registrations)
+- [athlete_nominations](#athlete_nominations)
 - [competition_organizations](#competition_organizations)
 
 </details>
