@@ -124,7 +124,7 @@ Each record contains the athlete's competition entry, nomination attempts, compe
 | lot | Lot number |
 | double | Indicates participation outside the main classification |
 | status | Participation status (`AthleteRegistrationStatus` enum) |
-| verification_status | Registration verification status (`VerificationStatus` enum) |
+| qualification | Defines the athlete's qualification status (`AthleteQualification` enum) |
 | created_at | Record creation timestamp |
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
@@ -138,14 +138,16 @@ Defines the athlete's participation status in a competition.
 | PERSONALLY | The athlete competes individually. |
 | OUT_OF_COMP | The athlete competes outside the official competition standings. |
 
-#### VerificationStatus
-Defines the verification status of a referee assignment.
+#### AthleteQualification
 
-| Value | Description |
-|--------|-------------|
-| PENDING | Verification has not yet been completed. |
-| APPROVED | The referee assignment has been verified and approved. |
-| REJECTED | The referee assignment has been rejected. |
+Defines the athlete's qualification status during the competition.
+
+| Value          | Description                                                                                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------- |
+| QUALIFIED      | The athlete is qualified to continue participating in the competition.                                        |
+| WITHDRAWN      | The athlete has withdrawn from the competition, for example due to a `medical decision`.                        |
+| DISQUALIFIED   | The athlete has been disqualified from the competition due to a rule violation or other disqualifying reason. |
+
 
 #### Relations
 - related with **athletes** by `athlete_id`
@@ -176,6 +178,27 @@ Defines the verification status of a referee assignment.
 - Registrations created directly by a USER are automatically assigned the `APPROVED` status.
 - Athletes with the `REJECTED` verification status are automatically removed after the nomination period closes.
 - If both the `AthleteRegistrations` and `Athletes` records were created at the same time during online registration, both records are removed automatically.
+
+---
+
+
+
+
+
+
+
+
+#### VerificationStatus
+Defines the verification status of a referee assignment.
+
+| Value | Description |
+|--------|-------------|
+| PENDING | Verification has not yet been completed. |
+| APPROVED | The referee assignment has been verified and approved. |
+| REJECTED | The referee assignment has been rejected. |
+
+
+| WITHDRAWN | The athlete was withdrawn from the competition by the competition doctor before performing the attempt. |
 
 ---
 
