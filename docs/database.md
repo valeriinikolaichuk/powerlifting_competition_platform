@@ -9,6 +9,8 @@ Database migrations are managed by `Prisma` Migrate.
 ➡ [Reference Tables](database/reference.md)  
 - Static Reference Tables  
   - federations
+  - coefficients
+  - federation_coefficients
   - age_groups
   - weight_classes
   - federation_categories
