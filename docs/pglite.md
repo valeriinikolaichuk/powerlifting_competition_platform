@@ -13,16 +13,33 @@ The following tables are available in the browser database:
   - Static Reference Tables
     - [federations](database/reference.md#federations)
 
+
+
     - [age_groups](database/reference.md#age_groups)
-
-
+    - [weight_classes](database/reference.md#weight_classes)
+    - [federation_categories](database/reference.md#federation_categories)
+    - [referee_categories](database/reference.md#referee_categories)
+    - [referee_roles](database/reference.md#referee_roles)
+  - User Reference Tables
+    - [countries](reference.md#countries)
+    - [regions](reference.md#regions)
+    - [cities](reference.md#cities)
+    - [organizations](reference.md#organizations)
+    - [athletes](reference.md#athletes)
+    - [sport_officials](reference.md#sport_officials)
 
 - **Configuration Tables**
 
 
+  - [user_federations](configuration.md#user_federations)
+
+
+
 - **Business Data Tables (User Data)**
   - [users](#users) (differs from the server database)
+  - [participants](#participants) (differs from the server database)
 
+- **Business Data Tables (Competition Data)**
 
 
 
@@ -36,3 +53,20 @@ Only the following columns are stored locally:
 | id | UUID |
 
 Server-specific authentication fields are not stored in the browser database.
+
+---
+
+#### participants
+Stores the local participant identity associated with a user account.
+
+Only the information required by the offline-first application is stored locally.
+
+|Field	|Description|
+|-------|-----------|
+|id	|UUID primary key. Identifies the participant.|
+|user_id	|UUID identifying the related user account.|
+
+**Browser-specific notes**  
+The browser database does not define a foreign key between `participants.user_id` and `users.id`.
+
+`user_id` is stored only as an identifier used by the application to associate the local participant with the corresponding local user.
