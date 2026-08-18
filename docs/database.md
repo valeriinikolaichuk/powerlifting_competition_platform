@@ -9,6 +9,8 @@ Database migrations are managed by `Prisma` Migrate.
 ➡ [Reference Tables](database/reference.md)  
 - Static Reference Tables  
   - federations
+  - coefficients
+  - federation_coefficients
   - age_groups
   - weight_classes
   - federation_categories
@@ -30,6 +32,7 @@ Database migrations are managed by `Prisma` Migrate.
 - groups_in_session
 - weight_classes_in_group
 - referee_competition
+- referee_nominations
 - referee_competition_roles
 
 ➡ [Business Data Tables (User Data)](database/user.md)  
@@ -39,6 +42,7 @@ Database migrations are managed by `Prisma` Migrate.
 ➡ [Business Data Tables (Competition Data)](database/competition.md) 
 - competitions
 - athlete_registrations
+- athlete_nominations
 - competition_organizations
 
 ➡ [Competition Runtime Tables](database/competition_runtime.md)  
