@@ -56,11 +56,13 @@ Each participant is associated with exactly one user account.
 The registration scope determines which athlete records the participant is allowed to register or manage.  
 
 #### Relations
-- related with - [users](#users) by `user_id`
-- related with - [users](#users) by `created_by_user_id`
-- related with **`countries`** by `country_id`
-- related with **`regions`** by `region_id`
-- related with **`cities`** by `city_id`
+- related with ➡ [users](#users) by `user_id`
+- related with ➡ [users](#users) by `created_by_user_id`
+- related with ➡ [countries](reference.md#countries) by `country_id`
+- related with ➡ [regions](reference.md#regions) by `region_id`
+- related with ➡ [cities](reference.md#cities) by `city_id`
+- related with ➡ [athlete_nominations](competition.md#athlete_nominations)
+- related with ➡ [referee_nominations](configuration.md#referee_nominations)
 
 #### Business Rules
 - Each `PARTICIPANT` is linked to exactly one user account.
