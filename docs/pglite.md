@@ -21,29 +21,48 @@ The following tables are available in the browser database:
     - [referee_categories](database/reference.md#referee_categories)
     - [referee_roles](database/reference.md#referee_roles)
   - User Reference Tables
-    - [countries](reference.md#countries)
-    - [regions](reference.md#regions)
-    - [cities](reference.md#cities)
-    - [organizations](reference.md#organizations)
-    - [athletes](reference.md#athletes)
-    - [sport_officials](reference.md#sport_officials)
+    - [countries](database/reference.md#countries)
+    - [regions](database/reference.md#regions)
+    - [cities](database/reference.md#cities)
+    - [organizations](database/reference.md#organizations)
+    - [athletes](database/reference.md#athletes)
+    - [sport_officials](database/reference.md#sport_officials)
 
 - **Configuration Tables**
-  - [competition_age_groups](configuration.md#competition_age_groups)
-  - [user_federations](configuration.md#user_federations)
-  - [nomination_status](configuration.md#nomination_status)
+  - [competition_age_groups](database/configuration.md#competition_age_groups)
+  - [user_federations](database/configuration.md#user_federations)
+  - [nomination_status](database/configuration.md#nomination_status)
+  - [competition_sessions](database/configuration.md#competition_sessions)
+  - [groups_in_session](database/configuration.md#groups_in_session)
+  - [weight_classes_in_group](database/configuration.md#weight_classes_in_group)
+  - [referee_competition](database/configuration.md#referee_competition)
 
 
-  - [referee_competition](configuration.md#referee_competition)
 
-
+  - [referee_competition_roles](database/configuration.md#referee_competition_roles)
 
 - **Business Data Tables (User Data)**
   - [users](#users) (differs from the server database)
   - [participants](#participants) (differs from the server database)
 
 - **Business Data Tables (Competition Data)**
-  - [competitions](competition.md#competitions)
+  - [competitions](database/competition.md#competitions)
+  - [athlete_registrations](database/competition.md#athlete_registrations)
+
+
+
+  - [competition_organizations](database/competition.md#competition_organizations)
+
+- **Competition Runtime Tables**
+  - [athlete_lifts](database/competition_runtime.md#athlete_lifts)
+  - [competition_results](database/competition_runtime.md#competition_results)
+
+- **Calculated Tables**
+  - [organization_results](database/calculated.md)
+
+- **System Runtime Tables**
+
+
 
 
 ---
