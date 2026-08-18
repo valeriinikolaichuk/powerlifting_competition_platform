@@ -29,9 +29,12 @@ The following tables are available in the browser database:
     - [sport_officials](reference.md#sport_officials)
 
 - **Configuration Tables**
-
-
+  - [competition_age_groups](configuration.md#competition_age_groups)
   - [user_federations](configuration.md#user_federations)
+  - [nomination_status](configuration.md#nomination_status)
+
+
+  - [referee_competition](configuration.md#referee_competition)
 
 
 
@@ -40,7 +43,7 @@ The following tables are available in the browser database:
   - [participants](#participants) (differs from the server database)
 
 - **Business Data Tables (Competition Data)**
-
+  - [competitions](competition.md#competitions)
 
 
 ---
