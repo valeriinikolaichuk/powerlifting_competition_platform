@@ -2,11 +2,13 @@ import { JwtService } from '@nestjs/jwt';
 import { SessionPolicyFactoryService } from '../policy/session-policy-factory.service';
 import { LoginContext } from "../login-context";
 import { LoginResultDto } from "../dto/login-result.dto";
+import { PrismaService } from '../../prisma/prisma.service';
 import { SessionPolicyInterface } from '../policy/session-policy.interface';
 
 export abstract class AuthenticatorAbstract {
 
     constructor(
+        protected readonly prisma: PrismaService,
         protected readonly jwtService: JwtService,
         protected readonly sessionPolicyFactory: SessionPolicyFactoryService,
     ) {}
@@ -23,6 +25,8 @@ export abstract class AuthenticatorAbstract {
             return context.result;
         }
 
+        await this.updateLastLogin(context);
+
         const policy = this.sessionPolicyFactory.get(context.user.role);
 
         context.result.accessToken = await this.generateAccessToken(
@@ -38,6 +42,17 @@ export abstract class AuthenticatorAbstract {
         }
 
         return context.result;
+    }
+
+    protected async updateLastLogin(context: LoginContext): Promise<void> {
+        await this.prisma.user.update({
+            where: {
+                id: context.user.id,
+            },
+            data: {
+                last_login: new Date(),
+            },
+        });
     }
 
     protected async generateAccessToken(

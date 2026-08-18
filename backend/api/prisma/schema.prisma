@@ -10,20 +10,16 @@ datasource db {
 // ** reference **
 // *** static reference ***
 
-enum DefaultCoefficient {
-  WILKS
-  IPF_GL
-}
-
 model Federations {
   id                   String              @id @default(uuid()) @db.Uuid
+  
   name                 String
   federation_code      String              @unique
-  default_coefficient  DefaultCoefficient
 
   updated_at           DateTime            @updatedAt
-
   created_at           DateTime            @default(now())
+
+  coefficients         FederationCoefficients[]
 
   categories           FederationCategories[]
 
@@ -38,6 +34,45 @@ model Federations {
 enum Sex {
   MEN
   WOMEN
+}
+
+enum CoefficientDivision {
+  CLASSIC
+  EQUIPPED
+  ANY
+}
+
+enum CoefficientDiscipline {
+  POWERLIFT
+  BENCH_PRESS
+  ANY
+}
+
+model Coefficients {
+  id          String   @id @default(uuid()) @db.Uuid
+
+  code        String              @unique
+  name        String
+  sex         Sex
+  division    CoefficientDivision
+  discipline  CoefficientDiscipline
+
+  federations FederationCoefficients[]
+
+  @@map("coefficients")
+}
+
+model FederationCoefficients {
+  id              String   @id @default(uuid()) @db.Uuid
+
+  federationId    String      @map("federation_id") @db.Uuid
+  coefficientId   String      @map("coefficient_id") @db.Uuid
+
+  federation      Federations  @relation(fields: [federationId], references: [id], onDelete: Cascade)
+  coefficient     Coefficients @relation(fields: [coefficientId], references: [id], onDelete: Cascade)
+
+  @@unique([federationId, coefficientId])
+  @@map("federation_coefficients")
 }
 
 model AgeGroups {

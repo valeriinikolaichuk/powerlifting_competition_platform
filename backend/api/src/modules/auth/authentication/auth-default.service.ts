@@ -13,11 +13,12 @@ import { SessionPolicyFactoryService } from '../policy/session-policy-factory.se
 export class AuthDefaultService extends AuthenticatorAbstract {
 
     constructor(
-        private readonly prisma: PrismaService,
+        prisma: PrismaService,
         jwtService: JwtService,
         sessionPolicyFactory: SessionPolicyFactoryService,
+                
     ) {
-        super(jwtService, sessionPolicyFactory);
+        super(prisma, jwtService, sessionPolicyFactory);
     }
 
     supports(context: LoginContext): boolean 
