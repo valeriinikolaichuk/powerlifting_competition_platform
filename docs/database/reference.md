@@ -15,6 +15,8 @@
 <summary>Contents</summary>  
 
 - [federations](#federations)
+- [coefficients](#coefficients)
+- [federation_coefficients](#federation_coefficients)
 - [age_groups](#age_groups)
 - [weight_classes](#weight_classes)
 - [federation_categories](#federation_categories)
@@ -35,17 +37,68 @@ Stores powerlifting federation information.
 | id | UUID | Primary key generated automatically |
 | name | String | Federation name |
 | federation_code | String | Unique federation identifier |
-| default_coefficient | Enum | Default scoring coefficient |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
 
-The `default_coefficient` field supports:
+#### Relations
+- related with [**federation_coefficients**](#federation_coefficients)
+- related with [**federation_categories**](#federation_categories)
 
-- `WILKS`
-- `IPF_GL`
+---
+
+### coefficients
+Acts as a global dictionary containing all valid powerlifting scoring variants.  
+Each formula's variant is isolated by sex, athletic discipline, and protective equipment setup.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Unique identifier for the specific coefficient variant. |
+| code | TEXT | Standardized uppercase lookup code. |
+| name | TEXT | Human-readable title displayed in the UI. |
+| sex | ENUM | Biological sex constraint required by all formulas. |
+| division | ENUM | Lifting equipment layer rules (Raw vs Equipped). |
+| discipline | ENUM | Competition discipline. |
+
+#### Sex enum
+Defines the biological sex of the athlete. This is a foundational constraint required by 100% of powerlifting formulas, as calculation curves differ significantly between men and women.
+- `MEN`
+- `WOMEN`
+
+#### CoefficientDivision enum
+Specifies the lifting equipment category rules. This is critical for some systems, which utilize completely different mathematical models depending on whether protective gear is used.
+
+| Value | Description |
+|--------|-------------|
+| CLASSIC | Classic (raw) division. |
+| EQUIPPED | Equipped division. |
+| ANY | Used for universal formulas where the equipment type does not alter the mathematical equation. |
+
+#### CoefficientDiscipline enum
+Defines the competition discipline.
+
+| Value | Description |
+|--------|-------------|
+| POWERLIFT | Full powerlifting competition (Squat, Bench Press, Deadlift). |
+| BENCH_PRESS | Bench Press competition only. |
+| ANY | Used as a wildcard for formulas that apply uniformly across all lifting disciplines. |
 
 #### Relations
-- related with [**federation_categories**](#federation_categories)
+- related with [**federation_coefficients**](#federation_coefficients)
+
+---
+
+### federation_coefficients
+A strict junction table handling the `Many-to-Many` routing matrix between federations and active formulas.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| id | UUID | Junction record unique tracking identifier. |
+| federation_id | UUID | Linked federation ID.|
+| coefficient_id | UUID | Linked coefficient system variant ID. |
+
+#### Relations
+- related with [**federations**](#federations)
+- related with [**coefficients**](#coefficients)
 
 ---
 
