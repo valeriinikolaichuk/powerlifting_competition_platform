@@ -10,6 +10,7 @@ CREATE TABLE "athletes" (
     "federation_id" UUID NOT NULL,
     "created_by_user_id" UUID,
     "scope" "DataScope" NOT NULL,
+    "language" "Language" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,

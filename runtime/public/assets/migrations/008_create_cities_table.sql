@@ -3,6 +3,7 @@ CREATE TABLE "cities" (
     "id" UUID NOT NULL,
     "region_id" UUID NOT NULL,
     "name" TEXT NOT NULL,
+    "language" "Language" NOT NULL,
     "scope" "DataScope" NOT NULL,
     "created_by_user_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

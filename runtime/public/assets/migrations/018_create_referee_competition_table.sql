@@ -1,6 +1,3 @@
--- CreateEnum
-CREATE TYPE "VerificationStatus" AS ENUM ('PENDING', 'APPROVED', 'REJECTED');
-
 -- CreateTable
 CREATE TABLE "referee_competition" (
     "id" UUID NOT NULL,
@@ -10,7 +7,6 @@ CREATE TABLE "referee_competition" (
     "country_id" UUID,
     "region_id" UUID,
     "city_id" UUID,
-    "verification_status" "VerificationStatus" NOT NULL DEFAULT 'PENDING',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,

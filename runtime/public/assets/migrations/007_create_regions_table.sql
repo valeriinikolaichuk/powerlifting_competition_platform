@@ -4,6 +4,7 @@ CREATE TABLE "regions" (
     "country_id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "region_code" TEXT,
+    "language" "Language" NOT NULL,
     "scope" "DataScope" NOT NULL,
     "created_by_user_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

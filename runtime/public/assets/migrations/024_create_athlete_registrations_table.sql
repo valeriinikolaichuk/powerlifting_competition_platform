@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "AthleteRegistrationStatus" AS ENUM ('TEAM', 'PERSONALLY', 'OUT_OF_COMP');
 
+-- CreateEnum
+CREATE TYPE "AthleteQualification" AS ENUM ('QUALIFIED', 'WITHDRAWN', 'DISQUALIFIED');
+
 -- CreateTable
 CREATE TABLE "athlete_registrations" (
     "id" UUID NOT NULL,
@@ -30,8 +33,8 @@ CREATE TABLE "athlete_registrations" (
     "group_in_session_id" UUID,
     "lot" INTEGER,
     "double" BOOLEAN NOT NULL DEFAULT false,
-    "status" "AthleteRegistrationStatus" NOT NULL,
-    "verification_status" "VerificationStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "AthleteRegistrationStatus" NOT NULL DEFAULT 'TEAM',
+    "qualification" "AthleteQualification" NOT NULL DEFAULT 'QUALIFIED',
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,
@@ -50,9 +53,6 @@ CREATE INDEX "athlete_registrations_group_in_session_id_idx" ON "athlete_registr
 
 -- CreateIndex
 CREATE INDEX "athlete_registrations_status_idx" ON "athlete_registrations"("status");
-
--- CreateIndex
-CREATE INDEX "athlete_registrations_verification_status_idx" ON "athlete_registrations"("verification_status");
 
 -- CreateIndex
 CREATE INDEX "athlete_registrations_competition_age_group_id_idx" ON "athlete_registrations"("competition_age_group_id");

@@ -1,4 +1,7 @@
 -- CreateEnum
+CREATE TYPE "Language" AS ENUM ('EN', 'UK', 'PL');
+
+-- CreateEnum
 CREATE TYPE "DataScope" AS ENUM ('GLOBAL', 'USER');
 
 -- CreateTable
@@ -6,6 +9,7 @@ CREATE TABLE "countries" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "country_code" TEXT,
+    "language" "Language" NOT NULL,
     "scope" "DataScope" NOT NULL,
     "created_by_user_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -2,7 +2,7 @@
 CREATE TYPE "LiftType" AS ENUM ('SQUAT', 'BENCH_PRESS', 'DEADLIFT');
 
 -- CreateEnum
-CREATE TYPE "AttemptStatus" AS ENUM ('REQUESTED', 'GOOD_LIFT', 'NO_LIFT', 'WITHDRAWN');
+CREATE TYPE "AttemptStatus" AS ENUM ('REQUESTED', 'GOOD_LIFT', 'NO_LIFT');
 
 -- CreateTable
 CREATE TABLE "athlete_lifts" (

@@ -7,6 +7,7 @@ CREATE TABLE "organizations" (
     "organization_code" TEXT NOT NULL,
     "name" TEXT,
     "type" "OrganizationType" NOT NULL,
+    "language" "Language" NOT NULL,
     "scope" "DataScope" NOT NULL,
     "created_by_user_id" UUID,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

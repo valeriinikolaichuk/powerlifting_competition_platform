@@ -654,7 +654,7 @@ model RefereeNominations {
   region                    Regions? @relation(fields: [region_id], references: [id])
   city                      Cities? @relation(fields: [city_id], references: [id])
 
-  createdByParticipant      Participants @relation(fields: [created_by_participant_id], references: [id])
+  createdByParticipant      Participants @relation(fields: [created_by_participant_id], references: [user_id])
 
   @@index([competition_id])
   @@index([referee_id])
@@ -1043,7 +1043,7 @@ model AthleteNominations {
 
   weightClass               WeightClasses? @relation(fields: [weight_class_id], references: [id])
 
-  createdByParticipant      Participants @relation(fields: [created_by_participant_id], references: [id])
+  createdByParticipant      Participants @relation(fields: [created_by_participant_id], references: [user_id])
 
   @@index([competition_id])
   @@index([weight_class_id])
