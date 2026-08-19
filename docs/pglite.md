@@ -42,8 +42,8 @@ The following tables are available in the browser database:
   - [referee_competition_roles](database/configuration.md#referee_competition_roles)
 
 - **Business Data Tables (User Data)**
-  - [users](#users) (differs from the server database)
-  - [participants](#participants) (differs from the server database)
+  - [users](#users) (Differs from the server database. Server-specific authentication fields are not stored.)
+  - [participants](database/user.md#participants) (The browser table does not define a foreign key between `participants.user_id` and `users.id`.)
 
 - **Business Data Tables (Competition Data)**
   - [competitions](database/competition.md#competitions)
@@ -61,7 +61,8 @@ The following tables are available in the browser database:
   - [organization_results](database/calculated.md)
 
 - **System Runtime Tables**
-
+  - [device_status](database/system_runtime.md#device_status)
+  - [global_state](database/system_runtime.md#global_state)
 
 
 
@@ -77,18 +78,3 @@ Only the following columns are stored locally:
 Server-specific authentication fields are not stored in the browser database.
 
 ---
-
-#### participants
-Stores the local participant identity associated with a user account.
-
-Only the information required by the offline-first application is stored locally.
-
-|Field	|Description|
-|-------|-----------|
-|id	|UUID primary key. Identifies the participant.|
-|user_id	|UUID identifying the related user account.|
-
-**Browser-specific notes**  
-The browser database does not define a foreign key between `participants.user_id` and `users.id`.
-
-`user_id` is stored only as an identifier used by the application to associate the local participant with the corresponding local user.
