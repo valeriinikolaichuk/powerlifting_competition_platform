@@ -101,7 +101,11 @@ POST /api/download/database
 POST /api/download/completed
 ```
 
-The backend removes the temporary `device_status` record from the central database (the `device_status` record on `localhost` is not deleted) and creates an [installations](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md) record representing the installed device.
+The backend:
+- removes the temporary `device_status` record from the central database;
+- keeps the corresponding `device_status` record in the `LAN localhost` database;
+- creates an [installations](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md) record representing the installed device;
+- sends the corresponding `installations` and [runtime_versions](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#runtime_versions) data to the `LAN localhost` database.
 
 **7. How the Launcher works**  
 When the `application icon` is clicked, the launcher performs the following sequence:
