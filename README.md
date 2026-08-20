@@ -11,6 +11,7 @@
 - [About the project](#about-the-project)
 - [Deployment Architecture](#deployment-architecture)
 - [Design Principles (Architecture Decisions)](#design-principles)
+- [AI Assistant](#ai-assistant)
 - [Databases](#databases)
 - [Project Structure](#project-structure)
 - [Live Deployment](#live-deployment)
@@ -34,6 +35,14 @@
 ## Design Principles
 ➡ [Design Principles (Architecture Decisions)](docs/design_principles.md)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This section explains the key architectural decisions behind the project and the reasoning that shaped the overall system design.
+
+---
+
+## AI Assistant
+The platform includes an AI assistant for system support and competition management.
+
+AI Assistant repository:  
+➡ [powerlifting-ai-assistant](https://github.com/valeriinikolaichuk/powerlifting-ai-assistant)
 
 ---
 
