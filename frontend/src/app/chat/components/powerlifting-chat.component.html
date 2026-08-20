@@ -1,0 +1,50 @@
+<div 
+  id="n8n-chat-window-wrapper" 
+  [class.hidden]="!(chatService.chatState$ | async)"
+  [class.block]="chatService.chatState$ | async"
+  class="fixed 
+    top-1/2
+    left-1/2
+    -translate-x-1/2
+    -translate-y-1/2
+
+    w-[95vw]
+    h-[90vh]
+    max-w-[700px]
+
+    sm:w-[90vw]
+    sm:h-[85vh]
+
+    md:w-[700px]
+    md:h-[600px]
+
+    z-[9998]
+    overflow-hidden 
+    border 
+    border-gray-100">
+
+  <button 
+    (click)="closeChat()" 
+    class="absolute 
+      top-1 
+      right-1 
+      bg-white 
+      text-black 
+      hover:bg-gray-800 
+      rounded-full 
+      w-10 
+      h-10 
+      flex 
+      items-center 
+      justify-center 
+      text-xs 
+      font-bold 
+      z-50 
+      cursor-pointer">
+    ✕
+  </button>
+  
+  <div id="n8n-chat-container" class="w-full h-full"></div>
+
+
+</div>

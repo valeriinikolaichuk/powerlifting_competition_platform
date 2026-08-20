@@ -2,11 +2,15 @@ import { Component, OnInit, Type, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { LoginFormComponent } from '../../auth/components/login-form.component';
+
 import { InfoPopupComponent } from '../../popup/components/info-popups/info-popup.component';
 import { AboutContentComponent } from '../../popup/components/info-popups/about-content/about-content.component';
 import { PopupService } from '../../popup/services/popup.service';
+
 import { TranslationService } from '../../i18n/services/translation.service';
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
+
+import { PowerliftingChatService } from '../../chat/services/powerlifting-chat.service';
 
 @Component({
   selector: 'app-home',
@@ -31,7 +35,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     public popup: PopupService, 
-    public tService: TranslationService
+    public tService: TranslationService,
+    private chatService: PowerliftingChatService
   ) {}
 
   ngOnInit() {
@@ -46,5 +51,9 @@ export class HomeComponent implements OnInit {
     this.popup.open(InfoPopupComponent, {
       content
     });
+  }
+
+  openAssistant() {
+    this.chatService.openChat();
   }
 }

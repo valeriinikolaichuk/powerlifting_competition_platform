@@ -2,12 +2,14 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { FrontendSessionService } from './session/services/frontend-session.service';
 import { PopupComponent } from './popup/components/popup.component';
+import { PowerliftingChatComponent } from './chat/components/powerlifting-chat.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet,
     PopupComponent, 
+    PowerliftingChatComponent
   ],
   templateUrl: './app.html'
 })

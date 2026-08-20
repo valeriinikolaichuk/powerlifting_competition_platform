@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://powerlifting-competition-platform-5.onrender.com'
+  apiUrl: 'https://powerlifting-competition-platform-5.onrender.com',
+  n8nChatUrl: ''
 };
