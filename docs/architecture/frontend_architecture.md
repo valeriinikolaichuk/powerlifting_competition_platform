@@ -41,4 +41,7 @@ Translation system based on Angular signals and lazy-loaded `JSON` files, suppor
 ### [pages](frontend/pages.md)   
 Contains `route-level components` representing the main views of the application.
 
+### [chat](frontend/chat.md)
+Provides a real-time `AI Assistant` chat interface.
+
 ---
