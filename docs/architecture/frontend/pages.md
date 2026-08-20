@@ -16,7 +16,7 @@ The main application page responsible for composing the user interface and coord
 
 #### Responsibilities:
 - Displays the landing page layout.
-- Renders the fullscreen background video.
+- Renders the fullscreen background `video`.
 - Displays the [LoginFormComponent](systems/authentication.md) in the center of the page.
 - Provides language selection:
   - English (`en`)
@@ -26,6 +26,7 @@ The main application page responsible for composing the user interface and coord
   - Page translations are loaded when the component is initialized.
   - Users can switch the active language without reloading the application.
   - Text is rendered using a custom [TranslatePipe](systems/i18n.md#translatepipe).
+- Handles cross-component feature triggers, including launching the [AI Assistant Chat](chat.md).
 - Provides navigation buttons that open informational popup dialogs through the [PopupService](systems/popup-system.md).
 - Hosts the global `PopupComponent` used to render modal windows.
 
@@ -45,7 +46,11 @@ HomeComponent
 |               |
 │               └── SystemPopupComponent
 │
-└── TranslationService
+├── TranslationService
+|
+└── PowerliftingChatService
+                |
+                └── PowerliftingChatComponent
 </pre>
 
 - #### ngOnInit()
@@ -102,6 +107,15 @@ This provides separate layouts for:
 
 On desktop, the login form and assistant button are displayed. On mobile, the layout is simplified and the assistant button is presented separately.
 
+- #### openAssistant()
+Triggers the initialization and canvas visibility state of the AI assistant by communicating with the shared chat service layer:
+```typescript
+openAssistant() {
+  this.chatService.openChat();
+}
+```
+This decouples the visual interaction logic from the native embedding script, delegating execution contexts entirely to [PowerliftingChatComponent](chat.md).
+
 #### Login Form
 
 The authentication form is provided by the reusable `LoginFormComponent`:
@@ -128,7 +142,9 @@ The video is positioned as a background layer while the application's interactiv
 * Supports runtime language switching.
 * Provides separate desktop and mobile layouts.
 * Keeps authentication, popup management, and translation logic outside the page component itself.
-* Uses Angular standalone components and modern Angular control flow (`@if`).
+* Uses reactive control flow blocks (`@if`/`@else`) inside the component markup:
+  * **Desktop layout:** Embeds the primary authentication login block container and renders the static structural action icons.
+  * **Mobile layout:** Removes the primary authentication login container, preventing dynamic runtime system access via mobile devices.
 * Uses `Type<any>` to allow the popup content component to be selected dynamically.
 
 ---

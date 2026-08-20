@@ -11,6 +11,7 @@
 - [About the project](#about-the-project)
 - [Deployment Architecture](#deployment-architecture)
 - [Design Principles (Architecture Decisions)](#design-principles)
+- [AI Assistant](#ai-assistant)
 - [Databases](#databases)
 - [Project Structure](#project-structure)
 - [Live Deployment](#live-deployment)
@@ -34,6 +35,14 @@
 ## Design Principles
 ➡ [Design Principles (Architecture Decisions)](docs/design_principles.md)  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This section explains the key architectural decisions behind the project and the reasoning that shaped the overall system design.
+
+---
+
+## AI Assistant
+The platform includes an AI assistant for system support and competition management.
+
+AI Assistant repository:  
+➡ [powerlifting-ai-assistant](https://github.com/valeriinikolaichuk/powerlifting-ai-assistant)
 
 ---
 
@@ -63,7 +72,7 @@
 This project is fully deployed to the cloud using `Render`.
 - Frontend: https://powerlifting-competition-platform-6.onrender.com
 - Backend API: https://powerlifting-competition-platform-5.onrender.com
-- Database: Hosted on Render PostgreSQL
+- Database: Hosted on Render PostgreSQL **(not available now)**
 
 <h4>beta version: <a href="https://bombingout.com">BOMBINGOUT.COM</a></h4>
 
