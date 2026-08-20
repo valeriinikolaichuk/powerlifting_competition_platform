@@ -63,7 +63,7 @@
 This project is fully deployed to the cloud using `Render`.
 - Frontend: https://powerlifting-competition-platform-6.onrender.com
 - Backend API: https://powerlifting-competition-platform-5.onrender.com
-- Database: Hosted on Render PostgreSQL
+- Database: Hosted on Render PostgreSQL (not available now)
 
 <h4>beta version: <a href="https://bombingout.com">BOMBINGOUT.COM</a></h4>
 
