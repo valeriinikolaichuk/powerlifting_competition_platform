@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
-//import migration001 from '/public/assets/migrations/001_init.sql' with { type: 'text' };
-//import migration002 from '/public/assets/migrations/002_add_new_table.sql' with { type: 'text' };
-
 @Injectable({
   providedIn: 'root',
 })
@@ -14,8 +11,40 @@ export class PgliteService {
   private initialized = false;
 
   private readonly migrationFiles = [
-//    { fileName: '001_init.sql', sqlContent: migration001 },
-//    { fileName: '002_add_new_table.sql', sqlContent: migration002 },
+    'assets/migrations/001_create_federations_table.sql',
+    'assets/migrations/002_create_age_groups.sql',
+    'assets/migrations/003_create_users_table.sql',
+    'assets/migrations/004_create_weight_classes.sql',
+    'assets/migrations/005_create_federation_categories.sql',
+    'assets/migrations/006_create_countries_table.sql',
+    'assets/migrations/007_create_regions_table.sql',
+    'assets/migrations/008_create_cities_table.sql',
+    'assets/migrations/009_create_organizations_table.sql',
+    'assets/migrations/010_create_athletes_table.sql',
+    'assets/migrations/011_create_sport_officials_table.sql',
+    'assets/migrations/012_create_referee_categories_table.sql',
+    'assets/migrations/013_create_referee_roles_table.sql',
+    'assets/migrations/014_create_user_federations_table.sql',
+    'assets/migrations/015_create_participants_table.sql',
+    'assets/migrations/016_create_competitions_table.sql',
+    'assets/migrations/017_create_competition_age_groups_table.sql',
+    'assets/migrations/018_create_referee_competition_table.sql',
+    'assets/migrations/019_create_nomination_status_table.sql',
+    'assets/migrations/020_create_competition_sessions_table.sql',
+    'assets/migrations/021_create_groups_in_session_table.sql',
+    'assets/migrations/022_create_weight_classes_in_group_table.sql',
+    'assets/migrations/023_create_referee_competition_roles_table.sql',
+    'assets/migrations/024_create_athlete_registrations_table.sql',
+    'assets/migrations/025_create_competition_organizations_table.sql',
+    'assets/migrations/026_create_athlete_lifts_table.sql',
+    'assets/migrations/027_create_competition_results_table.sql',
+    'assets/migrations/028_create_organization_results_table.sql',
+    'assets/migrations/029_create_device_status_table.sql',
+    'assets/migrations/030_create_global_state_table.sql',
+    'assets/migrations/031_create_referee_nominations_table.sql',
+    'assets/migrations/032_create_athlete_nominations_table.sql',
+    'assets/migrations/033_create_coefficients_table.sql',
+    'assets/migrations/034_create_federation_coefficients_table.sql',
   ];
 
   async initialize(): Promise<void> {
@@ -50,19 +79,38 @@ export class PgliteService {
       'SELECT name FROM __migrations'
     );
 
-    const appliedMigrations = new Set(appliedResult.rows.map(r => r.name));
+    const appliedMigrations = new Set(
+      appliedResult.rows.map(r => r.name)
+    );
 
-    for (const { fileName, sqlContent } of this.migrationFiles) {
+    for (const filePath of this.migrationFiles) {
 
-      if (!appliedMigrations.has(fileName)) {
+      const fileName = filePath.split('/').pop()!;
 
-        console.log(`Applying migration: ${fileName}`);
+      if (appliedMigrations.has(fileName)) { continue; }
 
-        await this.pg.transaction(async (tx) => {
-          await tx.exec(sqlContent);
-          await tx.query('INSERT INTO __migrations (name) VALUES ($1)', [fileName]);
-        });
+      console.log(`Applying migration: ${fileName}`);
+
+      const response = await fetch(filePath);
+
+      if (!response.ok) {
+        throw new Error(`Failed to load migration "${filePath}". ` + `HTTP ${response.status}`);
       }
+
+      const sqlContent = await response.text();
+
+      await this.pg.transaction(async (tx) => {
+
+        await tx.exec(sqlContent);
+
+        await tx.query(
+          'INSERT INTO "__migrations" ("name") VALUES ($1)',
+          [fileName]
+        );
+
+      });
+
+      console.log(`Migration applied: ${fileName}`);
     }
   }
   
