@@ -27,4 +27,8 @@ export class RoleRouterServiceService {
         return;
     }
   }
+
+  async navigateToJudge(): Promise<void> {
+    await this.router.navigate(['/judge']);
+  }
 }

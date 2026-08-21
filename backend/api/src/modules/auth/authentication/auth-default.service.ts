@@ -28,12 +28,12 @@ export class AuthDefaultService extends AuthenticatorAbstract {
 
     protected async authenticate(context: LoginContext): Promise<boolean> 
     {
-        const user =
-            await this.prisma.user.findUnique({
+        const user = await this.prisma.user.findUnique({
                 where: {
                     username: context.dto.login,
                 },
-            });
+            }
+        );
 
         if (!user) {
             context.result.message ='Invalid credentials';

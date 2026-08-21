@@ -1,7 +1,7 @@
 import { MethodPipelineInterface } from "./method-pipeline.interface";
 import { LoginContext } from "../login-context";
 
-export class LoginMethodDefault  implements MethodPipelineInterface 
+export class LoginMethodDefault implements MethodPipelineInterface 
 {
   async handle(context: LoginContext): Promise<void> {
 

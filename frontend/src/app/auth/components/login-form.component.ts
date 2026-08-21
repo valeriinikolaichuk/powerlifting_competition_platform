@@ -49,8 +49,15 @@ export class LoginFormComponent {
     if (!(await this.frontendSessionService.lockLogin())) {return;}
 
     const dto = this.form.value;
+    const rawLogin = dto.login || '';
+    const isJudge = rawLogin.endsWith('JUDGE');
 
-    this.authService.login(dto).subscribe({
+    const cleanDto = { 
+      ...dto, 
+      login: isJudge ? rawLogin.slice(0, -5) : rawLogin 
+    };
+
+    this.authService.login(cleanDto).subscribe({
       next: async(response) => {
         console.log(response);
 
@@ -67,7 +74,14 @@ export class LoginFormComponent {
           return;
         }
 
+        if (isJudge) {
+          await this.roleRouter.navigateToJudge();
+
+          return;
+        }
+
         await this.roleRouter.navigate(response.role);
+
       },
       error: async() => {
         
