@@ -25,9 +25,12 @@ The login form is implemented using Angular `Reactive Forms`.
 * Initializes the login form with required validation.
 * Loads translations for all form labels using [i18n Translation Module](i18n.md).
 * Prevents multiple simultaneous login attempts using [FrontendSessionService](session-system.md).
+* Detects the optional `JUDGE` login suffix before sending credentials to the backend.
+* Removes the `JUDGE` suffix from the login before sending the authentication request.
 * Sends login credentials to the backend through [AuthService](#services).
 * Clears the frontend login lock after unsuccessful authentication.
 * Displays an error popup when authentication fails by [LoginErrorComponent](popup-system.md#components).
+* Navigates users authenticated with the `JUDGE` suffix to the Judge interface.
 * Redirects authenticated users according to their assigned `role` through [RoleRouterService](#rolerouterservice).
 
 #### Authentication flow:
@@ -42,16 +45,36 @@ Validate form
 Acquire frontend login lock
         │
         ▼
+Check login suffix
+        │
+        ├── Ends with "JUDGE" ────> Remove "JUDGE" ────> Send cleaned credentials
+        │
+        ▼
+Send credentials
+        │
+        ▼
 POST /api/login
         │
         ▼
 Login successful?
         ├── No → Show error popup → Release login lock
         └── Yes
-        │
-        ▼
-Navigate according to user role
+             │
+             ▼
+        Judge login?
+             ├── Yes → Navigate to Judge interface
+             │
+             └── No  → Navigate according to UserRole
 ```
+
+#### Judge login mode
+The frontend supports a special `JUDGE` login suffix.  
+A user can enter:
+```
+usernameJUDGE
+```
+The frontend detects the suffix and removes it before sending the credentials to the backend.  
+The backend therefore receives a regular username and password and performs the standard authentication flow. `JUDGE` is not a `UserRole` and does not require a separate backend authentication method.
 
 ---
 
@@ -75,6 +98,7 @@ Centralizes role-based navigation.
 
 **Responsibilities:**
 * Redirects authenticated users to the appropriate application module.
+* Provides navigation for the Judge interface.
 * Prevents routing logic from being duplicated across components.
 
 Current routing:
@@ -83,6 +107,7 @@ Current routing:
 | USER        | [/mode](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/pages.md#modecomponent) |
 | ADMIN       | `/admin`        |
 | PARTICIPANT | `/registration` |
+| JUDGE login mode | `/judge`   |
 
 ---
 
@@ -116,6 +141,7 @@ Defines all supported application roles.
 * Uses Angular **Reactive Forms** for form management and validation.
 * Keeps HTTP communication isolated inside `AuthService`.
 * Keeps routing logic isolated inside `RoleRouterService`.
+* Uses the `JUDGE` login suffix as a frontend-only navigation mode without introducing a separate `UserRole` or backend authentication method.
 * Uses popup components instead of browser alerts for authentication errors.
 * Integrates with the frontend session locking mechanism to prevent concurrent login attempts.
 * Supports internationalization through the translation service and `TranslatePipe`.
