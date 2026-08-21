@@ -102,7 +102,7 @@ Centralizes role-based navigation.
 * Prevents routing logic from being duplicated across components.
 
 Current routing:
-| Role        | Route           |
+| Route       | Destination     |
 | ----------- | --------------- |
 | USER        | [/mode](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/pages.md#modecomponent) |
 | ADMIN       | `/admin`        |
