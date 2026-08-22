@@ -13,7 +13,7 @@ CREATE TABLE "device_status" (
     "device_role" "DeviceRole",
     "ip_address" TEXT,
     "user_agent" TEXT,
-    "mode" "DeviceMode" NOT NULL;
+    "mode" "DeviceMode" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "is_deleted" BOOLEAN NOT NULL DEFAULT false,

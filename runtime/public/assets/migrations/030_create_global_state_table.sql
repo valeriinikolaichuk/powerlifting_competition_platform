@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "global_state" (
     "id" UUID NOT NULL,
-    "user_id" UUID NOT NULL;
+    "user_id" UUID NOT NULL,
     "competition_id" UUID,
     "competition_session_id" UUID,
     "groups_in_session_id" UUID,
