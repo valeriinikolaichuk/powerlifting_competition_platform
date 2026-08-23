@@ -10,7 +10,7 @@ The login process consists of two independent stages:
 
 - [AuthService](#authservice)
 - [LanService](#lanservice)
-- [LAN token flow](#lan-token-flow)
+  - [LAN token flow](#lan-token-flow)
 - [Login Flow](#login-flow)
 - [LoginContext](#logincontext)
 - [MethodPipelineService](#methodpipelineservice)
