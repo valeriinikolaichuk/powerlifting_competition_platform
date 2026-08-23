@@ -36,6 +36,7 @@ Creates the device parameters used when entering the application.
 - Retrieves the persistent `device_id` from `localStorage`.
 - Generates a new `UUID` if the device does not have an `ID` yet.
 - Handles the special `LAN`/`ONLINE` development case.
+- Ensuring that a `LAN` authentication token exists before the device parameters are returned.
 - Adds the current browser user_agent.
 - Returns a [DeviceParameters](#deviceparameters) object.
 
@@ -52,6 +53,12 @@ For a local `LAN` runtime, the device `ID` can instead be supplied through the U
 ```
 ?mode=LAN&device_id=<device-id>
 ```
+
+For `ONLINE` mode, the existing authentication session is used.
+
+For `LAN` mode, `LanTokenService` is called before returning the parameters. The service requests the server to ensure that an `access_token` cookie exists. If the cookie already exists, it is preserved; otherwise, the server creates and sets a new token.
+
+The method therefore guarantees that `LAN` authentication is established before the runtime proceeds with the connection flow.
 
 ---
 
