@@ -21,9 +21,16 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "types": ["node", "jest"],
-    
+
+    "rootDir": "../../",
+    "rootDirs": [
+      "./src",
+      "../../shared-sql"
+    ],
+
     "paths": {
-      "#shared-sql": ["../shared/shared-sql/index.ts"]
+      "#shared-sql": ["../../shared-sql/index.ts"],
+      "#shared-sql/*": ["../../shared-sql/*"]
     }
   }
 }

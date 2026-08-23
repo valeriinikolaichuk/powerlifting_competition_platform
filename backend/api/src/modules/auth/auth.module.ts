@@ -18,6 +18,9 @@ import { AuthDefaultService } from './authentication/auth-default.service';
 import { SessionPolicyFactoryService } from './policy/session-policy-factory.service';
 import { PersistentSessionPolicy } from './policy/persistent-session-policy';
 import { RefreshableSessionPolicy } from './policy/refreshable-session-policy';
+import { TokenService } from './token/token.service';
+
+import { LanService } from './lan.service';
 
 @Module({
   imports: [
@@ -93,7 +96,9 @@ import { RefreshableSessionPolicy } from './policy/refreshable-session-policy';
 
     AuthService,
     JwtStrategy,
+    TokenService,
     AuthenticationCookieService,
+    LanService,
   ],
 })
 export class AuthModule {}

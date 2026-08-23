@@ -20,6 +20,6 @@ export class RoleComponent {
   ngOnInit(){
     console.log('role');
 
-    this.tService.load('pages/role');
+    this.tService.load('pages/entry');
   }
 }

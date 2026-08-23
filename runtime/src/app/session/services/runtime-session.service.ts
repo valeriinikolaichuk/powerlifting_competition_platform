@@ -1,7 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { interval, Subscription } from 'rxjs';
 
-import { PopupService } from '../../popup/services/popup.service';
 import { db } from '../../database/database';
 
 @Injectable({
@@ -25,9 +24,8 @@ export class RuntimeSessionService implements OnDestroy {
 
   private lastCheck = Date.now();
 
-  constructor(
-      private readonly popupService: PopupService,
-  ) {
+  constructor() {
+
     let tabId = sessionStorage.getItem(this.TAB_ID_KEY);
 
     if (!tabId) {
@@ -39,6 +37,7 @@ export class RuntimeSessionService implements OnDestroy {
   }
 
   async initialize(): Promise<void> {
+    
     const session = await db.table('runtime_session').get(this.SESSION_ID);
     
     if (!session) {

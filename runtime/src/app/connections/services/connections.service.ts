@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { DeviceParameters } from '../dto/device-parameters';
+import { LanTokenService } from '../../cookies/services/lan-token.service';
 import { ConnectionsResultDto } from '../dto/connections-result-dto';
 
 @Injectable({
@@ -13,9 +14,10 @@ export class ConnectionsService {
   
   constructor(
     private readonly http: HttpClient,
+    private readonly lanTokenService:LanTokenService,
   ) {}
 
-  createParameters(): DeviceParameters {
+  async createParameters(): Promise<DeviceParameters> {
 
     const params = new URLSearchParams(window.location.search);
 
@@ -31,6 +33,12 @@ export class ConnectionsService {
 
     if (mode === 'LAN' && window.location.hostname === 'localhost') {
         deviceId = params.get('device_id') ?? '';
+    }
+
+    if (mode === 'LAN') {
+      await firstValueFrom(
+        this.lanTokenService.ensureToken()
+      );
     }
 
     return {

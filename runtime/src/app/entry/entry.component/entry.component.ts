@@ -8,6 +8,8 @@ import { ConnectionDto } from '../../connections/dto/connection-dto';
 import { PopupService } from '../../popup/services/popup.service';
 import { ConnectionsPopupComponent } from '../../popup/components/connections-popup/connections-popup.component';
 
+import { SyncService } from '../../database/services/sync.service';
+
 import { RoleComponent } from '../../pages/role/role.component';
 import { AdminComponent } from '../../pages/admin/admin.component';
 
@@ -27,6 +29,7 @@ export class EntryComponent implements OnInit {
   constructor(
     private readonly connectionsService: ConnectionsService,
     public popup: PopupService,
+    private readonly syncService: SyncService,
     private readonly router: Router,
   ) {}
 
@@ -35,12 +38,15 @@ export class EntryComponent implements OnInit {
     const role = sessionStorage.getItem('device_role');
 
     if (role === 'ADMIN') {
+      
       this.adminExists = false;
+
       await this.navigate();
+
       return;
     }
 
-    const dto = this.connectionsService.createParameters();
+    const dto = await this.connectionsService.createParameters();
 
     await this.check(dto);
   }
@@ -79,6 +85,8 @@ export class EntryComponent implements OnInit {
   }
 
   private async navigate(): Promise<void> {
+
+    await this.syncService.initialize();
 
     if (this.adminExists === false) {
 

@@ -1,15 +1,14 @@
-import { JwtService } from '@nestjs/jwt';
 import { SessionPolicyFactoryService } from '../policy/session-policy-factory.service';
 import { LoginContext } from "../login-context";
 import { LoginResultDto } from "../dto/login-result.dto";
 import { PrismaService } from '../../prisma/prisma.service';
-import { SessionPolicyInterface } from '../policy/session-policy.interface';
+import { TokenService } from '../token/token.service';
 
 export abstract class AuthenticatorAbstract {
 
     constructor(
         protected readonly prisma: PrismaService,
-        protected readonly jwtService: JwtService,
+        protected readonly tokenService: TokenService,
         protected readonly sessionPolicyFactory: SessionPolicyFactoryService,
     ) {}
 
@@ -29,13 +28,13 @@ export abstract class AuthenticatorAbstract {
 
         const policy = this.sessionPolicyFactory.get(context.user.role);
 
-        context.result.accessToken = await this.generateAccessToken(
+        context.result.accessToken = await this.tokenService.generateAccessToken(
             context,
             policy
         );
 
         if (policy.issueRefreshToken) {
-            context.result.refreshToken = await this.generateRefreshToken(
+            context.result.refreshToken = await this.tokenService.generateRefreshToken(
                 context, 
                 policy
             );
@@ -53,35 +52,5 @@ export abstract class AuthenticatorAbstract {
                 last_login: new Date(),
             },
         });
-    }
-
-    protected async generateAccessToken(
-        context: LoginContext, 
-        policy: SessionPolicyInterface
-    ): Promise<string>{
-
-        return this.jwtService.signAsync(
-            {
-                sub: context.user.id,
-            },
-            {
-                expiresIn: policy.accessTokenExpiresIn,
-            },
-        );
-    }
-
-    protected async generateRefreshToken(
-        context: LoginContext,
-        policy: SessionPolicyInterface,
-    ): Promise<string> {
-
-        return this.jwtService.signAsync(
-            {
-                sub: context.user.id,
-            },
-            {
-                expiresIn: policy.refreshTokenExpiresIn,
-            },
-        );
     }
 }

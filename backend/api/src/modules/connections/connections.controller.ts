@@ -1,8 +1,8 @@
 import { Body, Controller, Post, Req, UseGuards, Delete, Query } from '@nestjs/common';
 import type { Request } from 'express';
 
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/guards/current-user.decorator';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { CurrentUser } from '../../guards/current-user.decorator';
 
 import { ConnectionsService } from './connections.service';
 import { DeviceParametersDto } from './dto/device-parameters-dto';
@@ -23,9 +23,9 @@ export class ConnectionsController {
     @Req() request: Request,
   ) {
     const ipAddress =
-    request.headers['x-forwarded-for']?.toString().split(',')[0].trim()
-    ?? request.socket.remoteAddress
-    ?? null;
+      request.headers['x-forwarded-for']?.toString().split(',')[0].trim()
+      ?? request.socket.remoteAddress
+      ?? null;
 
     return this.connectionsService.checkAdmin(
       dto, 

@@ -1,18 +1,20 @@
-import { Controller, Post, Get, Body, Res, UseGuards } from '@nestjs/common';
-import type { Response } from 'express';
-import { CurrentUser } from './guards/current-user.decorator';
+import { Controller, Post, Get, Body, Req, Res, UseGuards } from '@nestjs/common';
+import type { Request, Response } from 'express';
+import { CurrentUser } from '../../guards/current-user.decorator';
 
 import { AuthService } from './auth.service';
+import { LanService } from './lan.service';
 import { AuthenticationCookieService } from './cookies/authentication-cookie.service';
 import { LoginDto } from './dto/login.dto';
 
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 
 @Controller('api')
 export class AuthController {
 
     constructor(
         private readonly authService: AuthService,
+        private readonly lanService: LanService,
         private readonly cookieService: AuthenticationCookieService,
     ) {}
 
@@ -52,5 +54,22 @@ export class AuthController {
         this.cookieService.clearCookies(response);
 
         return {success: true};
+    }
+
+    @Post('lan-token')
+    async createLanToken(
+    @Req() request: Request,
+    @Res({ passthrough: true }) response: Response,
+    ) {
+        const context = await this.lanService.ensureToken(request);
+
+        if (context.result.accessToken) {
+            this.cookieService.setLoginCookies(
+                response,
+                context,
+            );
+        }
+
+        return { success: true };
     }
 }
