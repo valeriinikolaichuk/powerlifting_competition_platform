@@ -46,6 +46,9 @@ Contains `route-level components` representing the main views of the application
 ### [connections](runtime/connection_service.md)
 The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
 
+### [cookies](runtime/cookies.md)
+Ensures that the `LAN` runtime has an authentication session before performing connection checks.
+
 ---
 
 ### LAN Download and Installation
@@ -223,6 +226,7 @@ If the session is indeed expired, a new valid record is created inside the runti
     - `user_agent`
     - generates a new `device_id`.
     - if the `Runtime` is running in `LAN mode` on `localhost`, it uses the existing `device_id` provided in the `URL` instead.
+  - - in `LAN mode`, ensures that the authentication `access_token` cookie exists before creating the device parameters. If the cookie is already present, it is not replaced.
   - creates a `DeviceParametersDTO`
   - [checks](runtime/connection_service.md#check) the current device connection state through the backend:
 <pre>
