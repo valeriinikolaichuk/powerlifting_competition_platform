@@ -8,6 +8,9 @@ The login process consists of two independent stages:
 <details open="open">
 <summary>Contents</summary>  
 
+- [AuthService](#authservice)
+- [LanService](#lanservice)
+- [LAN token flow](#lan-token-flow)
 - [Login Flow](#login-flow)
 - [LoginContext](#logincontext)
 - [MethodPipelineService](#methodpipelineservice)
@@ -15,10 +18,74 @@ The login process consists of two independent stages:
   - [Authenticator Architecture](#authenticator-architecture)
 - [SessionPolicyFactoryService](#sessionpolicyfactoryservice)
 - [JWT Authentication](#jwt-authentication)
+- [TokenService](#tokenservice)
 - [Cookie Management](#cookie-management)
 - [Design Principles](#design-principles)
 
 </details>
+
+---
+
+### AuthService
+Coordinates the authentication process by creating a [LoginContext](#logincontext), executing the login pipeline, and authenticating the user through the configured authentication strategy. It returns the completed [LoginContext](#logincontext) containing the authentication result.
+
+---
+
+### LanService
+Responsible for establishing authentication for devices operating in `LAN` mode.
+
+Unlike the standard online authentication flow, LAN devices do not provide login credentials and do not initially have an authentication token. The service identifies the LAN user from the server-side `device_status` data and creates an authentication context for that user.
+
+#### Responsibilities:
+- Check whether an `access_token` cookie already exists.
+- Reuse the existing authentication session without creating a new token.
+- Identify the user associated with the LAN ADMIN device.
+- Create a `LoginContext` for the identified user.
+- Resolve the appropriate session policy.
+- Generate an access token using the existing `TokenService`.
+- Return the authentication context to the controller.
+
+The service does **not** manage `HTTP` cookies directly. Cookie management remains the responsibility of `AuthenticationCookieService`.
+
+This keeps `LAN` authentication consistent with the standard authentication architecture while avoiding a separate token-generation mechanism.
+
+#### LAN token flow
+<pre>
+LAN Runtime
+    │
+    │ POST /api/lan-token
+    ▼
+AuthController
+    │
+    ▼
+LanService
+    │
+    ├── access_token exists?
+    │       │
+    │       └── YES → reuse existing session
+    │
+    ├── obtain user data
+    │
+    ├── create LoginContext
+    │
+    ├── resolve session policy
+    │
+    └── generate access token
+            │
+            ▼
+       TokenService
+            │
+            ▼
+      AuthController
+            │
+            ▼
+AuthenticationCookieService
+            │
+            ▼
+       HTTP-only cookie
+</pre>
+
+The `LAN` token flow therefore reuses the existing [LoginContext](#logincontext), [SessionPolicyFactoryService](#sessionpolicyfactoryservice), [TokenService](#tokenservice), and [AuthenticationCookieService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/backend/api/src/modules/auth/cookies/authentication-cookie.service.ts). components instead of introducing a separate authentication mechanism.
 
 ---
 
@@ -35,36 +102,37 @@ The login process consists of two independent stages:
         LoginDto
             ↓
     .----------------.
-    | AuthController | <────────────────────────────────────────────────────────.
-    '----------------'                                                          |
-            |   |                                                               |
-            |   ├───────────> ? AuthenticationCookieService <───────────────────|
-            |   |                         ↓        ↑                            |
-            |   └──> HTTP Response     httpOnly    |                            |
-            ↓                                      |                            |
-        AuthService                                |                            |
-            ↓                           SessionPolicyFactoryService ────.       |
-       LoginContext                        (TOKEN_COOKIE_POLICY)        |       |
-            ↓                              SessionPolicyInterface       |       |
-    MethodPipelineService                  ________|________            |       |
-      (LOGIN_METHODS)                      ↓               ↓            |       |
-  MethodPipelineInterface     PersistentSessionPolicy  RefreshableSessionPolicy |
-            |                                                           |       |
-            ├── LoginMethodDefault                                      |       |
-            |                                                           |       |
-            |                                                           |       |
-            ↓                                                           |       |
-    AuthFactoryService                                                  |       |
-    (LOGIN_STRATEGIES)                                                  |       |
-   AuthenticatorAbstract ───────.                                       |       |
-    ________|________           |                                       |       |
-            ↓                Response,                                  |       |
-        AuthDefault        LoginContext                                 |       |
-                                |                                       |       |
-                                ├── authenticate()                      |       |
-                                ├── generateToken() ? <─────────────────|       |
-                                ├── generateToken() ? <─────────────────'       |
-                                └── LoginResultDto ─────────────────────────────'
+    | AuthController | <────────────────────────────────────────────────────────────.
+    '----------------'                                                              |
+            |   |                                                                   |
+            |   ├───────────> ? AuthenticationCookieService <───────────────────────|
+            |   |                         ↓        ↑                                |
+            |   └──> HTTP Response     httpOnly    |                                |
+            ↓                                      |                                |
+        AuthService                                |                                |
+            ↓                           SessionPolicyFactoryService ────.           |
+       LoginContext                        (TOKEN_COOKIE_POLICY)          |         |
+            ↓                              SessionPolicyInterface         |         |
+    MethodPipelineService                  ________|________              |         |
+      (LOGIN_METHODS)                      ↓               ↓              |         |
+  MethodPipelineInterface     PersistentSessionPolicy  RefreshableSessionPolicy     |
+            |                                                             |         |
+            ├── LoginMethodDefault                                        |         |
+            |                                                             |         |
+            |                                                             |         |
+            ↓                                                             |         |
+    AuthFactoryService                                                    |         |
+    (LOGIN_STRATEGIES)                                                    |         |
+   AuthenticatorAbstract ───────.                                         |         |
+    ________|________           |                                         |         |
+            ↓                Response,                                    |         |
+        AuthDefault        LoginContext                                   |         |
+                                |                                         |         |
+                                ├── authenticate()                        |         |
+                                ├── TokenService                          |         |
+                                |         ├── generateToken() ? <─────────|         |
+                                |         └── generateToken() ? <─────────'         |
+                                └── LoginResultDto ─────────────────────────────────'
 </pre>
 
 ---
@@ -126,9 +194,9 @@ execute()
     │       │
     │       └── SessionPolicyInterface
     │
-    ├── generateAccessToken()
+    ├── tokenService.generateAccessToken()
     │
-    ├── generateRefreshToken()
+    ├── tokenService.generateRefreshToken()
     │
     └── populate LoginResultDto
                       │
@@ -164,7 +232,7 @@ They do not generate tokens or manage session behavior.
 ### SessionPolicyFactoryService
 Session behavior is separated from authentication logic through `Session Policies`.
 
-After successful authentication, AuthenticatorAbstract requests the appropriate policy from the SessionPolicyFactory.
+After successful authentication, AuthenticatorAbstract requests the appropriate policy from the `SessionPolicyFactory`.
 ```
 Authenticated User
         │
@@ -201,6 +269,11 @@ Typical JWT payload:
 </pre>
 
 The payload intentionally contains only the information required for authorization.
+
+---
+
+### TokenService
+The `TokenService` is responsible for generating `JWT` access and refresh tokens for authenticated users. It uses the configured session policy to determine the token expiration time.
 
 ---
 
