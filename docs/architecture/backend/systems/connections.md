@@ -29,14 +29,12 @@
 Contains the main connection management logic.
 
 - #### checkAdmin()
-Determines the connection flow based on the requested device mode:
-* `LAN` → processes the request using the existing LAN `ADMIN` device as the source of `user_id`.
-* `ONLINE` → uses the authenticated user's ID and verifies the current `ADMIN` device on every request.
+Determines the connection flow based on the requested device mode.  
+Uses the authenticated user's ID and verifies the current `ADMIN` device on every request.
 
 - #### checkLan()
 Handles initial `LAN` device registration.
-* Finds the active LAN `ADMIN` device.
-* Uses its `user_id` as the owner of the local connections.
+* Requires an authenticated `user_id`.
 * Checks whether the requesting device is already registered.
 * Registers a new LAN device when necessary.
 * Returns the available connections and whether an `ADMIN` already exists.
