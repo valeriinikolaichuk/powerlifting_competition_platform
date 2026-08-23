@@ -60,6 +60,29 @@ For `LAN` mode, `LanTokenService` is called before returning the parameters. The
 
 The method therefore guarantees that `LAN` authentication is established before the runtime proceeds with the connection flow.
 
+#### Flow
+<pre>
+  createParameters()
+       │
+       ├── Read URL parameters
+       │
+       ├── Get/create device_id
+       │
+       ├── LAN?
+       │     │
+       │     └── YES → LanTokenService.ensureToken()
+       │                       │
+       │                       ▼
+       │                  POST /api/lan-token
+       │                       │
+       │                       ├── token exists → keep it
+       │                       │
+       │                       └── token missing → create token
+       │
+       ▼
+Return DeviceParameters
+</pre>
+
 ---
 
 - ### check()
