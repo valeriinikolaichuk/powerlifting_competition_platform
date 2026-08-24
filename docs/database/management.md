@@ -12,7 +12,7 @@ Stores synchronization operations received by the backend before they are proces
 
 The backend uses `operation_id` to select the corresponding SQL operation from the shared SQL layer and executes it using the provided `payload`.
 
-### Synchronization flow
+#### Synchronization flow
 <pre>
 Runtime
    │
