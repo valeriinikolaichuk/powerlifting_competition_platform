@@ -58,6 +58,9 @@ The following tables are available in the browser database:
 - **System Runtime Tables**
   - [device_status](database/system_runtime.md#device_status)
   - [global_state](database/system_runtime.md#global_state)
+ 
+- **Management Tables**
+  - [sync_queue](#sync_queue)
 
 > Note: The following server tables are not included in the browser database:
 > - `installations`
@@ -75,3 +78,38 @@ Only the following columns are stored locally:
 Server-specific authentication fields are not stored in the browser database.
 
 ---
+
+#### sync_queue
+Stores local changes that are waiting to be synchronized with the backend.
+* `id` — unique identifier of the synchronization operation.
+* `source_id` — identifier of the device that created the operation.
+* `operation_id` — identifier of the SQL operation that must be executed. The corresponding SQL statement is defined in the shared SQL layer.
+* `record_id` — identifier of the affected record.
+* `payload` — data required to execute the operation.
+* `created_at` — timestamp when the operation was added to the queue.
+* `processed_at` — timestamp when the operation was successfully processed.
+
+The `Runtime` adds changes to `sync_queue` instead of scanning application tables for pending records. During synchronization, queued operations are sent to the backend for processing.
+
+#### Synchronization flow
+<pre>
+Runtime
+   │
+   │  create change
+   ▼
+sync_queue
+   │
+   │  synchronization
+   ▼
+Backend API
+   │
+   ▼
+sync_inbox
+   │
+   │  operation_id
+   ▼
+shared SQL
+   │
+   ▼
+PostgreSQL
+</pre>
