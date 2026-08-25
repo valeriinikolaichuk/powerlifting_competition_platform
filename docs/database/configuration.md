@@ -201,7 +201,7 @@ Each record links a sport official to a competition, specifies the referee categ
 
 - related with ➡ [**competitions**](competition.md) by `competition_id`
 - related with **sport_officials** by `referee_id`
-- related with **referee_rategories** by `referee_category_id`
+- related with ➡ [**referee_categories**](reference.md#referee_categories) by `referee_category_id`
 - related with ➡ [**countries**](reference.md#countries) by `country_id`
 - related with ➡ [**regions**](reference.md#regions) by `region_id`
 - related with ➡ [**cities**](reference.md#cities) by `city_id`
@@ -280,7 +280,7 @@ Each record assigns a role to a referee participating in a specific competition 
 #### Relations
 - related with [competition_sessions](#competition_sessions) by `competition_session_id`
 - related with [referee_competition](#referee_competition) by `referee_competition_id`
-- related with **referee_roles** by `referee_role_id`
+- related with ➡ [**referee_roles**](reference.md#referee_roles) by `referee_role_id`
 
 #### Business Rules
 - A referee may perform different roles in different competition sessions.
