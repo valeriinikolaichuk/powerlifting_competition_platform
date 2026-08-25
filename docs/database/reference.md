@@ -212,6 +212,15 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 ---
 
 ### Static Reference ER Diagram
+- federations
+- coefficients
+- federation_coefficients
+- age_groups
+- weight_classes
+- federation_categories
+- referee_categories
+- referee_roles
+
 ![ER Diagram](reference_tables_static.png)
 
 ---
