@@ -29,7 +29,7 @@ Controls the frontend session across browser tabs and maintain a consistent appl
 ### [i18n](frontend/systems/i18n.md) Translation Module  
 Based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
 
-### [sync](runtime/sync-system.md)
+### [sync](runtime/systems/sync-system.md)
 Syncs the browser's `PGlite` with the `PostgreSQL` server, exchanging changes to keep data consistent.
 
 ---
