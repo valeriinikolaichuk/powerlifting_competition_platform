@@ -1,6 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 
+import { PrismaService } from '../prisma/prisma.service';
+import { USER_TABLES } from '#shared-sql';
 import { SyncChange } from './dto/sync-change.dto';
 
 @Injectable()
@@ -50,6 +51,20 @@ export class SyncService {
     }
 
     async getDatabaseSnapshot(){
-        
+
+        const data: Record<string, any[]> = {};
+
+        for (const table of USER_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `SELECT * FROM ${table}`
+            );
+
+            data[table] = result as any[];
+        }
+
+        return {
+            data,
+        };
     }
 }
