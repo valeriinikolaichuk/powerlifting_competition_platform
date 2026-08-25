@@ -27,7 +27,10 @@ Dynamically renders popup components
 Controls the frontend session across browser tabs and maintain a consistent application state during the session lifecycle
 
 ### [i18n](frontend/systems/i18n.md) Translation Module  
-Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
+Based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
+
+### [sync](runtime/sync-system.md)
+Syncs the browser's `PGlite` with the `PostgreSQL` server, exchanging changes to keep data consistent.
 
 ---
 
