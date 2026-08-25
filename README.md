@@ -81,6 +81,7 @@ This project is fully deployed to the cloud using `Render`.
 ## Built With
 
 - NestJS
+- Socket.IO
 - Docker
 - PostgreSQL
 - Prisma
@@ -88,6 +89,8 @@ This project is fully deployed to the cloud using `Render`.
 - Dexie (IndexedDB)
 - PGlite
 - Tailwind
+- n8n
+- Google Gemini
 
 ---
 
