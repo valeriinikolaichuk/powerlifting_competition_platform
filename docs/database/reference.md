@@ -179,7 +179,7 @@ Separates:
 | id | UUID | Primary key |
 | federation_id | UUID | Reference to `federations` |
 | age_group_id | UUID | Reference to `age_groups` |
-| weight_class_group | Integer | `weight_classes` group **identifier** |
+| weight_class_group | Integer | [weight_classes](#weight_classes) group **identifier** |
 | sort_order | Integer | Display order |
 | default_team_scoring | Integer | Default team scoring configuration |
 | created_at | DateTime | Automatically created timestamp |
@@ -188,13 +188,16 @@ Separates:
 ### Relations
 - related with - [federations](#federations) by `federation_id`
 - related with - [age_groups](#age_groups) by `age_group_id`
-- related with ➡ [**competition_age_groups**](configuration.md)
+- related with ➡ [**competition_age_groups**](configuration.md#competition_age_groups)
 
 ---
 
 ### referee_categories
 Stores the list of referee qualification categories.  
-This is a reference table used by referee-related entities.  
+This is a reference table used by referee-related entities.
+
+related with [referee_competition](configuration.md#referee_competition)  
+related with [referee_nominations](configuration.md#referee_nominations)
 
 ---
 
@@ -202,6 +205,8 @@ This is a reference table used by referee-related entities.
 Stores the list of referee roles used during competitions.  
 The `sort_order` field defines the display order.  
 This is a reference table used by referee-related entities.
+
+related with [referee_competition_roles](configuration.md#referee_competition_roles)
 
 ---
 
