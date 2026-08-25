@@ -21,6 +21,7 @@ export class ConnectionsService {
     if (dto.mode === 'LAN') { 
       return this.checkLan(
         dto, 
+        userId,
         ipAddress
       ); 
     }
@@ -34,29 +35,13 @@ export class ConnectionsService {
 
   private async checkLan(
     dto: DeviceParametersDto,
+    userId?: string,
     ipAddress?: string | null,
   ): Promise<ConnectionsResultDto> {
 
-    /** LAN ADMIN is the source of user_id.*/
-
-    const admin = await this.prisma.deviceStatus.findFirst({
-      where: {
-        device_role: 'ADMIN',
-        mode: 'LAN',
-        is_deleted: false,
-      },
-      select: {
-        user_id: true,
-      },
-    });
-
-    if (!admin) {
-      throw new NotFoundException('LAN ADMIN device was not found');
-    }
-
-    const userId = admin.user_id;
-
     /** Check whether this exact device already registered.*/
+
+    if (!userId) { throw new UnauthorizedException(); }
 
     const currentDevice = await this.prisma.deviceStatus.findFirst({
       where: {

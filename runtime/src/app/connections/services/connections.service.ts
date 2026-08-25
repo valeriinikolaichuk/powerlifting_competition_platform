@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { DeviceParameters } from '../dto/device-parameters';
-import { LanTokenService } from '../../cookies/services/lan-token.service';
+import { LanTokenService } from '../../cookies/lan-token.service';
 import { ConnectionsResultDto } from '../dto/connections-result-dto';
 
 @Injectable({

@@ -8,7 +8,7 @@ import { ConnectionDto } from '../../connections/dto/connection-dto';
 import { PopupService } from '../../popup/services/popup.service';
 import { ConnectionsPopupComponent } from '../../popup/components/connections-popup/connections-popup.component';
 
-import { SyncService } from '../../database/services/sync.service';
+import { SyncService } from '../../sync/services/sync.service';
 
 import { RoleComponent } from '../../pages/role/role.component';
 import { AdminComponent } from '../../pages/admin/admin.component';
@@ -86,6 +86,7 @@ export class EntryComponent implements OnInit {
 
   private async navigate(): Promise<void> {
 
+    // pgLite synchronization
     await this.syncService.initialize();
 
     if (this.adminExists === false) {

@@ -1300,6 +1300,18 @@ model GlobalState {
   @@map("global_state")
 }
 
+model SyncInbox {
+  id              String    @id @default(uuid()) @db.Uuid
+  source_id       String    @db.Uuid
+  operation_id    String
+  record_id       String    @db.Uuid
+  payload         Json      @db.JsonB
+  received_at     DateTime  @default(now())
+  processed_at    DateTime?
+
+  @@map("sync_inbox")
+}
+
 model Installation {
   id                  String   @id @default(uuid()) @db.Uuid
   
