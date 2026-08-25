@@ -22,6 +22,7 @@
 - [federation_categories](#federation_categories)
 - [referee_categories](#referee_categories)
 - [referee_roles](#referee_roles)
+- [Static Reference ER Diagram](#static-reference-er-diagram)
 
 </details>  
 
@@ -207,6 +208,11 @@ The `sort_order` field defines the display order.
 This is a reference table used by referee-related entities.
 
 related with [referee_competition_roles](configuration.md#referee_competition_roles)
+
+---
+
+### Static Reference ER Diagram
+![ER Diagram](reference_tables_static.png)
 
 ---
 
