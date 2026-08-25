@@ -1,5 +1,42 @@
 ### Management Tables
 
+### sync_inbox
+Stores synchronization operations received by the backend before they are processed.
+* `id` — unique identifier of the synchronization operation.
+* `source_id` — identifier of the device that created the operation.
+* `operation_id` — identifier of the SQL operation that must be executed.
+* `record_id` — identifier of the affected record.
+* `payload` — data required to execute the operation.
+* `received_at` — timestamp when the backend received the operation.
+* `processed_at` — timestamp when the operation was successfully processed.
+
+The backend uses `operation_id` to select the corresponding SQL operation from the shared SQL layer and executes it using the provided `payload`.
+
+#### Synchronization flow
+<pre>
+Runtime
+   │
+   │  create change
+   ▼
+sync_queue
+   │
+   │  synchronization
+   ▼
+Backend API
+   │
+   ▼
+sync_inbox
+   │
+   │  operation_id
+   ▼
+shared SQL
+   │
+   ▼
+PostgreSQL
+</pre>
+
+---
+
 ### installations
 Stores records of `LAN` application installations created for users. Each record identifies the user for whom the installation was created, the language of the installed application, by `device_id` and the installation creation time.
 

@@ -27,7 +27,10 @@ Dynamically renders popup components
 Controls the frontend session across browser tabs and maintain a consistent application state during the session lifecycle
 
 ### [i18n](frontend/systems/i18n.md) Translation Module  
-Translation system based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
+Based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
+
+### [sync](runtime/systems/sync-system.md)
+Syncs the browser's `PGlite` with the `PostgreSQL` server, exchanging changes to keep data consistent.
 
 ---
 
@@ -45,6 +48,9 @@ Contains `route-level components` representing the main views of the application
 
 ### [connections](runtime/connection_service.md)
 The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
+
+### [cookies](runtime/cookies.md)
+Ensures that the `LAN` runtime has an authentication session before performing connection checks.
 
 ---
 
@@ -223,6 +229,7 @@ If the session is indeed expired, a new valid record is created inside the runti
     - `user_agent`
     - generates a new `device_id`.
     - if the `Runtime` is running in `LAN mode` on `localhost`, it uses the existing `device_id` provided in the `URL` instead.
+  - in `LAN mode`, ensures that the authentication `access_token` cookie exists before creating the device parameters. If the cookie is already present, it is not replaced by [LanTokenService](runtime/cookies.md).
   - creates a `DeviceParametersDTO`
   - [checks](runtime/connection_service.md#check) the current device connection state through the backend:
 <pre>
@@ -241,9 +248,7 @@ The `ConnectionsController`
 The service then executes different logic depending on the device mode.
 
 #### LAN
-
-- Find the active LAN `ADMIN` record in `device_status`:
-- Use the returned `user_id` as the owner of the `LAN` environment.
+- Receives `user_id`.
 - Check whether an active `device_status` registration record exists for the received `device_id`.
 
 - **If the device already exists** (`ADMIN` role):

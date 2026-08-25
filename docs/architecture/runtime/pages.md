@@ -18,5 +18,7 @@ Provides the centralized exit workflow for the `Runtime` application.
 - Clears the current local `runtime_session` using [RuntimeSessionService.clearSession()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/session-system.md#clearsession).
 - Handles the final exit according to the `mode`:
   - `ONLINE` — redirects the user back to the [Frontend mode page](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/pages.md#modecomponent) while preserving the selected `language`.
-  - `LAN` — closes the Runtime window.
+  - `LAN` — Clears cookies with token using `clearCookies()`. Closes the Runtime window.
 
+- #### clearCookies()
+Sends a request to the backend `${environment.apiUrl}/api/logout` to clear the  'LAN' authentication token cookies.
