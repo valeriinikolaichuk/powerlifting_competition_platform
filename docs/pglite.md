@@ -27,10 +27,10 @@ The following tables are available in the browser database:
     - [organizations](database/reference.md#organizations)
     - [athletes](database/reference.md#athletes)
     - [sport_officials](database/reference.md#sport_officials)
+    - [user_federations](database/reference.md#user_federations)
 
 - **Configuration Tables**
   - [competition_age_groups](database/configuration.md#competition_age_groups)
-  - [user_federations](database/configuration.md#user_federations)
   - [nomination_status](database/configuration.md#nomination_status)
   - [competition_sessions](database/configuration.md#competition_sessions)
   - [groups_in_session](database/configuration.md#groups_in_session)
