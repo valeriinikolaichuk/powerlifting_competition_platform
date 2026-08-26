@@ -57,6 +57,9 @@ model Coefficients {
   division    CoefficientDivision
   discipline  CoefficientDiscipline
 
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
   federations FederationCoefficients[]
 
   @@map("coefficients")
@@ -67,6 +70,9 @@ model FederationCoefficients {
 
   federationId    String      @map("federation_id") @db.Uuid
   coefficientId   String      @map("coefficient_id") @db.Uuid
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   federation      Federations  @relation(fields: [federationId], references: [id], onDelete: Cascade)
   coefficient     Coefficients @relation(fields: [coefficientId], references: [id], onDelete: Cascade)

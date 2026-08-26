@@ -12,6 +12,8 @@ CREATE TABLE "coefficients" (
     "sex" "Sex" NOT NULL,
     "division" "CoefficientDivision" NOT NULL,
     "discipline" "CoefficientDiscipline" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "coefficients_pkey" PRIMARY KEY ("id")
 );

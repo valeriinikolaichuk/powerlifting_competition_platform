@@ -3,6 +3,8 @@ CREATE TABLE "federation_coefficients" (
     "id" UUID NOT NULL,
     "federation_id" UUID NOT NULL,
     "coefficient_id" UUID NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "federation_coefficients_pkey" PRIMARY KEY ("id")
 );

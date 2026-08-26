@@ -1,3 +1,13 @@
-import { USER_TABLES } from './sync.config.js';
+import { 
+    STATIC_REFERENCE_TABLES, 
+    USER_REFERENCE_TABLES, 
+    USER_REFERENCE_FEDERATIONS,
+    USER_TABLES, 
+} from './sync.config.js';
 
-export { USER_TABLES };
+export { 
+    STATIC_REFERENCE_TABLES, 
+    USER_REFERENCE_TABLES, 
+    USER_REFERENCE_FEDERATIONS, 
+    USER_TABLES, 
+};

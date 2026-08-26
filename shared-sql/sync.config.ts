@@ -1,17 +1,28 @@
-export const USER_TABLES = [
+export const STATIC_REFERENCE_TABLES = [
     'federations',
+    'coefficients',
+    'federation_coefficients',
     'age_groups',
-//    'users',
     'weight_classes',
     'federation_categories',
+    'referee_categories',
+    'referee_roles',
+];
+
+export const USER_REFERENCE_TABLES = [
     'countries',
     'regions',
     'cities',
     'organizations',
+];
+
+export const USER_REFERENCE_FEDERATIONS = [
     'athletes',
     'sport_officials',
-    'referee_categories',
-    'referee_roles',
+];
+
+export const USER_TABLES = [
+    'users',
     'user_federations',
     'participants',
     'competitions',
@@ -31,6 +42,4 @@ export const USER_TABLES = [
     'global_state',
     'referee_nominations',
     'athlete_nominations',
-    'coefficients',
-    'federation_coefficients'
 ];

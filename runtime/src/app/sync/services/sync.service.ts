@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
-import { USER_TABLES } from '#shared-sql';
+import { 
+  STATIC_REFERENCE_TABLES,
+  USER_REFERENCE_TABLES, 
+  USER_REFERENCE_FEDERATIONS,
+  USER_TABLES,  
+} from '#shared-sql';
 
 import { PgliteService } from '../../database/services/pglite.service';
 import { QueueSyncResult } from '../dto/queue-sync-result';
@@ -16,11 +21,18 @@ export class SyncService {
 
   private pg!: PGlite;
 
+  private tables = [
+    ...STATIC_REFERENCE_TABLES, 
+    ...USER_REFERENCE_TABLES, 
+    ...USER_REFERENCE_FEDERATIONS, 
+    ...USER_TABLES, 
+  ];
+
   constructor(
     private readonly pgliteService: PgliteService,
     private readonly http: HttpClient,
   ){}
-  
+
   async initialize(): Promise<void> {
 
     await this.pgliteService.initialize();
@@ -34,8 +46,16 @@ export class SyncService {
 
     await this.handleQueueSync();
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const language = urlParams.get('lang')?.toUpperCase() ?? '';
+
+    const params = new HttpParams().set('language', language);
+
     const snapshot = await firstValueFrom(
-      this.http.get<SnapshotDto>('/api/sync/snapshot')
+      this.http.get<SnapshotDto>(
+        '/api/sync/snapshot',
+        { params }
+      )
     );
 
     if (snapshot){
@@ -94,7 +114,7 @@ export class SyncService {
     try {
       console.log('Database synchronization started...');
 
-      for (const table of USER_TABLES) {
+      for (const table of this.tables) {
 
         await this.pg.query(
           `TRUNCATE TABLE ${table} CASCADE;`
@@ -117,7 +137,7 @@ export class SyncService {
     dto: SnapshotDto
   ): Promise<void> {
 
-    for (const table of USER_TABLES) {
+    for (const table of this.tables) {
 
       const rows = dto.data[table];
 
