@@ -23,10 +23,10 @@ Database migrations are managed by `Prisma` Migrate.
   - organizations
   - athletes
   - sport_officials
+  - user_federations
 
 ➡ [Configuration Tables](database/configuration.md)  
 - competition_age_groups
-- user_federations
 - nomination_status
 - competition_sessions
 - groups_in_session
