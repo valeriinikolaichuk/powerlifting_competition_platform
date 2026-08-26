@@ -16,6 +16,9 @@
 
 - [federations](#federations)
 - [coefficients](#coefficients)
+  - [Sex enum](#sex-enum)
+  - [CoefficientDivision enum](#coefficientdivision-enum)
+  - [CoefficientDiscipline enum](#coefficientdiscipline-enum)
 - [federation_coefficients](#federation_coefficients)
 - [age_groups](#age_groups)
 - [weight_classes](#weight_classes)
@@ -44,6 +47,9 @@ Stores powerlifting federation information.
 #### Relations
 - related with [**federation_coefficients**](#federation_coefficients)
 - related with [**federation_categories**](#federation_categories)
+- related with [**athletes**](#athletes)
+- related with [**sport_officials**](#sport_officials)
+- related with [**user_federations**](configuration.md#user_federations)
 
 ---
 
@@ -59,6 +65,8 @@ Each formula's variant is isolated by sex, athletic discipline, and protective e
 | sex | ENUM | Biological sex constraint required by all formulas. |
 | division | ENUM | Lifting equipment layer rules (Raw vs Equipped). |
 | discipline | ENUM | Competition discipline. |
+| created_at | DateTime | Automatically created timestamp |
+| updated_at | DateTime | Automatically updated timestamp |
 
 #### Sex enum
 Defines the biological sex of the athlete. This is a foundational constraint required by 100% of powerlifting formulas, as calculation curves differ significantly between men and women.
@@ -96,6 +104,8 @@ A strict junction table handling the `Many-to-Many` routing matrix between feder
 | id | UUID | Junction record unique tracking identifier. |
 | federation_id | UUID | Linked federation ID.|
 | coefficient_id | UUID | Linked coefficient system variant ID. |
+| created_at | DateTime | Automatically created timestamp |
+| updated_at | DateTime | Automatically updated timestamp |
 
 #### Relations
 - related with [**federations**](#federations)
@@ -145,6 +155,7 @@ Weight classes are grouped by `weight_class_group`.
 | weight_class | Integer | Weight category identifier |
 | name | String | Display name |
 | weight_class_group | Integer | Group identifier used by a list of categories |
+| created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
 
 The combination of `weight_class_group` and `weight_class` must be **unique**.
@@ -160,7 +171,10 @@ The combination of `weight_class_group` and `weight_class` must be **unique**.
 | 56 | 3 |
 
 #### Relations
-- related with [**federation_categories**](#federation_categories) by `weight_class_group` field.
+- related with [**federation_categories**](#federation_categories) by `weight_class_group` field (indirect relationship).
+- related with [**weight_classes_in_group**](configuration.md#weight_classes_in_group)
+- related with [**athlete_registrations**](competition.md#athlete_registrations)
+- related with [**athlete_nominations**](competition.md#athlete_nominations)
 
 ---
 
@@ -197,6 +211,13 @@ Separates:
 Stores the list of referee qualification categories.  
 This is a reference table used by referee-related entities.
 
+**Fields**
+- `id` UUID
+- `category_name` String
+- `category_code` String
+- `created_at` DateTime
+- `updated_at` DateTime
+
 related with [referee_competition](configuration.md#referee_competition)  
 related with [referee_nominations](configuration.md#referee_nominations)
 
@@ -206,6 +227,14 @@ related with [referee_nominations](configuration.md#referee_nominations)
 Stores the list of referee roles used during competitions.  
 The `sort_order` field defines the display order.  
 This is a reference table used by referee-related entities.
+
+**Fields**
+- `id` UUID
+- `role_name` String
+- `role_short` String
+- `sort_order` Int
+- `created_at` DateTime
+- `updated_at` DateTime
 
 related with [referee_competition_roles](configuration.md#referee_competition_roles)
 
@@ -233,10 +262,13 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 - [regions](#regions)
 - [cities](#cities)
 - [organizations](#organizations)
+  - [OrganizationType enum](#organizationtype)
 - [athletes](#athletes)
+  - [AthleteSex enum](#athletesex-enum)
 - [sport_officials](#sport_officials)
   - [DataScope enum](#datascope-enum)
   - [Language Enum](#language-enum)
+- [User Reference ER Diagram](#user-reference-er-diagram)
 
 </details>  
 
@@ -244,11 +276,30 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 
 ### countries
 Stores the list of countries available in the system.  
+
+**Fields**
+- `id` UUID
+- `name` String
+- `country_code` `String?`
+- `scope` ENUM [DataScope](#datascope-enum)
+- `language` ENUM [Language](#language-enum)
+- `created_by_user_id` String?
+- `created_at` DateTime
+- `updated_at` DateTime
+- `is_deleted` Boolean
+
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
 Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
 #### Relations
-- related with ➡ [**users**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
+- related with [regions](#regions)
+- related with [participants](user.md#participants)
+- related with [referee_competition](configuration.md#referee_competition)
+- related with [referee_nominations](configuration.md#referee_nominations)
+- related with [athlete_registrations](competition.md#athlete_registrations)
+- related with [athlete_nominations](competition.md#athlete_nominations)
+- related with [competition_organizations](competition.md#competition_organizations)
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -256,12 +307,32 @@ Soft deletion is supported through the `is_deleted` flag.
 
 ### regions
 Stores administrative regions belonging to a country.  
+
+**Fields**
+- `id` UUID
+- `country_id` String
+- `name` String
+- `region_code` String?
+- `scope` ENUM [DataScope](#datascope-enum)
+- `language` ENUM [Language](#language-enum)
+- `created_by_user_id` String?
+- `created_at` DateTime
+- `updated_at` DateTime
+- `is_deleted` Boolean
+
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
 Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
 #### Relations
 - related with [**countries**](#countries)
-- related with ➡ [**users**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
+- related with [cities](#cities)
+- related with [participants](user.md#participants)
+- related with [referee_competition](configuration.md#referee_competition)
+- related with [referee_nominations](configuration.md#referee_nominations)
+- related with [athlete_registrations](competition.md#athlete_registrations)
+- related with [athlete_nominations](competition.md#athlete_nominations)
+- related with [competition_organizations](competition.md#competition_organizations)
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -272,9 +343,27 @@ Stores cities belonging to a region.
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
 Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
+**Fields**
+- `id` UUID
+- `region_id` String
+- `name` String
+- `scope` ENUM [DataScope](#datascope-enum)
+- `language` ENUM [Language](#language-enum)
+- `created_by_user_id` String?
+- `created_at` DateTime
+- `updated_at` DateTime
+- `is_deleted` Boolean
+
 #### Relations
 - related with [**regions**](#regions)
-- related with ➡ [**users**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
+- related with [participants](user.md#participants)
+- related with [referee_competition](configuration.md#referee_competition)
+- related with [referee_nominations](configuration.md#referee_nominations)
+- related with [competitions](competition.md#competitions)
+- related with [athlete_registrations](competition.md#athlete_registrations)
+- related with [athlete_nominations](competition.md#athlete_nominations)
+- related with [competition_organizations](competition.md#competition_organizations)
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -283,16 +372,32 @@ Soft deletion is supported through the `is_deleted` flag.
 ### organizations
 Stores organizations that may be associated with athletes, competitions, or other entities within the system.
 
+**Fields**
+- `id` UUID
+- `organization_code` String
+- `name` String?
+- `type` ENUM `OrganizationType`
+- `scope` ENUM [DataScope](#datascope-enum)
+- `language` ENUM [Language](#language-enum)
+- `created_by_user_id` String?
+- `created_at` DateTime
+- `updated_at` DateTime
+- `is_deleted` Boolean
+
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
 Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.  
 Defines supported organization types using the `OrganizationType` enum:
+#### OrganizationType
 - `SPORT_SCHOOL`
 - `CLUB`
 - `UNIVERSITY`
 - `SPORT_SOCIETY`
 
 #### Relations
-- related with ➡ [**users**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
+- related with [athlete_registrations](competition.md#athlete_registrations)
+- related with [athlete_nominations](competition.md#athlete_nominations)
+- related with [competition_organizations](competition.md#competition_organizations)
 
 Soft deletion is supported through the `is_deleted` flag.
 
@@ -323,7 +428,9 @@ The federation defines the visibility scope of athlete records.
 
 #### Relations
 - related with [**federations**](#federations) by `federation_id`
-- related with ➡ [**users**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
+- related with [athlete_registrations](competition.md#athlete_registrations)
+- related with [athlete_nominations](competition.md#athlete_nominations)
 
 #### Business Rules
 - `federation_id` defines the visibility area of the athlete.
@@ -336,7 +443,21 @@ The federation defines the visibility scope of athlete records.
 ---
 
 ### sport_officials
-Stores sport officials participating in competitions.  
+Stores sport officials participating in competitions.
+
+**Fields**
+- `id` UUID
+- `full_name` String
+- `trainer_role` Boolean
+- `referee_role` Boolean
+- `federation_id` String
+- `scope` ENUM [DataScope](#datascope-enum)
+- `language` ENUM [Language](#language-enum)
+- `created_by_user_id` String?
+- `created_at` DateTime
+- `updated_at` DateTime
+- `is_deleted` Boolean
+
 Defines the ownership scope of reference data using the [**DataScope**](#datascope-enum) enum.  
 Defines the language context used for record lookup and data entry using the [**Language**](#language-enum) enum.
 
@@ -348,7 +469,11 @@ The federation defines the visibility scope of sport official records.
 
 #### Relations
 - related with [**federations**](#federations) by `federation_id`
-- related with ➡ [**users**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
+- related with [referee_competition](configuration.md#referee_competition)
+- related with [referee_nominations](configuration.md#referee_nominations)
+- related with [athlete_registrations](competition.md#athlete_registrations)
+- related with [athlete_nominations](competition.md#athlete_nominations)
 
 #### Business Rules
 - A sport official may be a trainer, a referee, or both.
@@ -383,5 +508,17 @@ Defines the user interface language.
 | EN | English |
 | UK | Ukrainian |
 | PL | Polish |
+
+---
+
+### User Reference ER Diagram
+- countries
+- regions
+- cities
+- organizations
+- athletes
+- sport_officials
+
+![ER Diagram](reference_tables_user.png)
 
 ---
