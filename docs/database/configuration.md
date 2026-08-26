@@ -74,7 +74,7 @@ This table maps users to the federations they are allowed to work with.
 
 #### Relations
 - related with ➡ [**federations**](reference.md#federations) by `federation_id`
-- related with ➡ [**user**](business.md) by `created_by_user_id`
+- related with ➡ [**user**](user.md#users) by `created_by_user_id`
 
 #### Business Rules
 - A `USER` may have access to one or more federations.
