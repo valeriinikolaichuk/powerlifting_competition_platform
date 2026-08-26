@@ -3,6 +3,7 @@
 <summary>Contents</summary>  
 
 - [competition_age_groups](#competition_age_groups)
+  - [TeamScoringMethod enum](#teamscoringmethod-enum)
 - [user_federations](#user_federations)
 - [nomination_status](#nomination_status)
 - [competition_sessions](#competition_sessions)
@@ -34,8 +35,11 @@ Each record references a federation category and contains competition-specific t
 
 #### Relations
 
-- related with ➡ [competitions](competition.md) by `competition_id`
-- related with **federation_categories** by `federation_category_id`
+- related with ➡ [competitions](competition.md#competitions) by `competition_id`
+- related with ➡ [federation_categories](reference.md#federation_categories) by `federation_category_id`
+- related with ➡ [athlete_registrations](competition.md#athlete_registrations)
+- related with ➡ [athlete_nominations](competition.md#athlete_nominations)
+- related with ➡ [organization_results](calculated.md)
 
 #### TeamScoringMethod enum
 Defines how team scores are calculated.
@@ -61,8 +65,15 @@ Defines how team scores are calculated.
 Defines which federations are accessible to each user.
 This table maps users to the federations they are allowed to work with.
 
+**Fields**
+- `id` UUID
+- `user_id` UUID
+- `federation_id` UUID
+- `updated_at`DateTime
+- `created_at` DateTime
+
 #### Relations
-- related with ➡ [**federations**](reference.md) by `federation_id`
+- related with ➡ [**federations**](reference.md#federations) by `federation_id`
 - related with ➡ [**user**](business.md) by `created_by_user_id`
 
 #### Business Rules
