@@ -14,6 +14,7 @@
 - [referee_nominations](#referee_nominations)
   - [VerificationStatus enum](#verificationstatus)
 - [referee_competition_roles](#referee_competition_roles)
+- [ER Diagram](#er-diagram)
 
 </details>
 
@@ -290,5 +291,19 @@ Each record assigns a role to a referee participating in a specific competition 
 - A referee may perform different roles in different competition sessions.
 - Each role assignment belongs to a single competition session.
 - Referee roles are selected from `RefereeRoles`.
+
+---
+
+### ER Diagram
+- competition_age_groups
+- nomination_status
+- competition_sessions
+- groups_in_session
+- weight_classes_in_group
+- referee_competition
+- referee_nominations
+- referee_competition_roles
+
+![ER Diagram](configuration_tables.png)
 
 ---
