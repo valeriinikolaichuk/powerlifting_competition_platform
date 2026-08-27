@@ -45,7 +45,7 @@ export class ConnectionsService {
 
     const currentDevice = await this.prisma.deviceStatus.findFirst({
       where: {
-        user_id: userId,
+        created_by_user_id: userId,
         device_id: dto.device_id,
         device_role: 'ADMIN',
         is_deleted: false,
@@ -68,7 +68,7 @@ export class ConnectionsService {
 
     const currentClient = await this.prisma.deviceStatus.findFirst({
         where: {
-          user_id: userId,
+          created_by_user_id: userId,
           device_id: dto.device_id,
           is_deleted: false,
         },
@@ -86,7 +86,7 @@ export class ConnectionsService {
 
       await this.prisma.deviceStatus.create({
         data: {
-          user_id: userId,
+          created_by_user_id: userId,
           device_id: dto.device_id,
           language: dto.language,
           mode: 'LAN',
@@ -116,7 +116,7 @@ export class ConnectionsService {
 
     const currentDevice = await this.prisma.deviceStatus.findFirst({
         where: {
-          user_id: userId,
+          created_by_user_id: userId,
           device_id: dto.device_id,
           is_deleted: false,
         },
@@ -132,7 +132,7 @@ export class ConnectionsService {
 
       const admin = await this.prisma.deviceStatus.findFirst({
         where: {
-          user_id: userId,
+          created_by_user_id: userId,
           device_role: 'ADMIN',
           is_deleted: false,
         },
@@ -156,7 +156,7 @@ export class ConnectionsService {
 
     const admin = await this.prisma.deviceStatus.findFirst({
       where: {
-        user_id: userId,
+        created_by_user_id: userId,
         device_role: 'ADMIN',
         is_deleted: false,
       },
@@ -172,7 +172,7 @@ export class ConnectionsService {
 
       await this.prisma.deviceStatus.create({
         data: {
-          user_id: userId,
+          created_by_user_id: userId,
           device_id: dto.device_id,
           language: dto.language,
           mode: 'ONLINE',
@@ -196,7 +196,7 @@ export class ConnectionsService {
 
     await this.prisma.deviceStatus.create({
       data: {
-        user_id: userId,
+        created_by_user_id: userId,
         device_id: dto.device_id,
         language: dto.language,
         mode: 'ONLINE',
@@ -224,7 +224,7 @@ export class ConnectionsService {
 
     const records = await this.prisma.deviceStatus.findMany({
       where: {
-        user_id: userId,
+        created_by_user_id: userId,
         device_role: {
           not: 'ADMIN',
         },
@@ -251,7 +251,7 @@ export class ConnectionsService {
 
     return this.prisma.deviceStatus.findMany({
       where: {
-        user_id: userId,
+        created_by_user_id: userId,
         device_id: {
           not: current_device_id,
         },

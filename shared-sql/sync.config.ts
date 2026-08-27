@@ -9,7 +9,7 @@ export const STATIC_REFERENCE_TABLES = [
     'referee_roles',
 ];
 
-export const REFERENCE_TABLES = [
+export const ADMIN_REFERENCE_TABLES = [
     'user_federations',
 ];
 
@@ -31,14 +31,17 @@ export const COMPETITION_TABLES = [
     'competition_sessions', 
     'referee_competition', 
     'referee_nominations', 
+    'athlete_registrations', 
+    'athlete_nominations', 
+    'competition_organizations', 
 ];
 
-export const SESSION_TABLES = [
+export const COMPETITION_SESSION_TABLES = [
     'groups_in_session', 
     'referee_competition_roles',
 ];
 
-export const GROUP_TABLES = [
+export const COMPETITION_GROUP_TABLES = [
     'weight_classes_in_group',
 ];
 
@@ -46,25 +49,26 @@ export const TABLE_USERS = [
     'users'
 ];
 
+export const CREATED_BY_USER_TABLES = [
+    'participants',
+    'competitions',
+    'device_status',
+    'global_state',
+];
+
+export const COMPETITION_RUNTIME_TABLES = [
+    'athlete_lifts', 
+    'competition_results',
+];
 
 
 export const USER_TABLES = [
-    
-    
+
     
 
 
+
     
-    'participants',
-    'competitions',
-    
-    'athlete_registrations',
-    'competition_organizations',
-    'athlete_lifts',
-    'competition_results',
     'organization_results',
-    'device_status',
-    'global_state',
     
-    'athlete_nominations',
 ];

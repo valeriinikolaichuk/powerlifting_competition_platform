@@ -737,21 +737,21 @@ model User {
   createdCountries         Countries[]
   createdRegions           Regions[]
   createdCities            Cities[]
-  createdOrganizations Organizations[] @relation("OrganizationCreatedBy")
-  createdAthletes Athletes[] @relation("AthleteCreatedBy")
-  createdSportOfficials SportOfficials[] @relation("SportOfficialCreatedBy")
+  createdOrganizations     Organizations[] @relation("OrganizationCreatedBy")
+  createdAthletes          Athletes[] @relation("AthleteCreatedBy")
+  createdSportOfficials    SportOfficials[] @relation("SportOfficialCreatedBy")
 
-  userFederations       UserFederations[]
+  userFederations          UserFederations[]
 
-  participant Participants? @relation("ParticipantUser")
-  participantCreatedBy Participants[] @relation("ParticipantCreatedBy")
+  participant              Participants? @relation("ParticipantUser")
+  participantCreatedBy     Participants[] @relation("ParticipantCreatedBy")
 
-  competitions          Competitions[]
+  competitions             Competitions[]
 
-  deviceStatuses        DeviceStatus[]
-  globalState           GlobalState[]
+  deviceStatuses           DeviceStatus[]
+  globalState              GlobalState[]
 
-  installations         Installation[]
+  installations            Installation[]
 
   @@map("users")
 }
@@ -824,32 +824,32 @@ enum CompetitionStatus {
 }
 
 model Competitions {
-  id                String @id @default(uuid()) @db.Uuid
+  id                  String @id @default(uuid()) @db.Uuid
 
-  user_id           String @db.Uuid
+  created_by_user_id  String @db.Uuid
 
-  name              String
+  name                String
 
-  city_id           String @db.Uuid
+  city_id             String @db.Uuid
 
-  start_date        DateTime
-  end_date          DateTime
+  start_date          DateTime
+  end_date            DateTime
 
-  competition_level CompetitionLevel
-  type              CompetitionType
-  division          CompetitionDivision
-  status            CompetitionStatus @default(ACTIVE)
+  competition_level   CompetitionLevel
+  type                CompetitionType
+  division            CompetitionDivision
+  status              CompetitionStatus @default(ACTIVE)
 
-  archived_at DateTime?
+  archived_at         DateTime?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
 
-  is_deleted Boolean @default(false)
+  is_deleted          Boolean @default(false)
 
-  user User @relation(fields: [user_id], references: [id])
+  created_by_user     User @relation(fields: [created_by_user_id], references: [id])
 
-  city Cities @relation(fields: [city_id], references: [id])
+  city                Cities @relation(fields: [city_id], references: [id])
   
   competitionAgeGroups   CompetitionAgeGroups[]
   refereeCompetitions    RefereeCompetition[]
@@ -862,7 +862,7 @@ model Competitions {
 
   globalStates           GlobalState[]
 
-  @@index([user_id])
+  @@index([created_by_user_id])
   @@index([start_date])
 
   @@map("competitions")
@@ -1252,27 +1252,27 @@ enum DeviceRole {
 }
 
 model DeviceStatus {
-  id          String @id @default(uuid()) @db.Uuid
+  id                  String @id @default(uuid()) @db.Uuid
 
-  user_id     String @db.Uuid
-  device_id   String @db.Uuid
+  created_by_user_id  String @db.Uuid
+  device_id           String @db.Uuid
 
-  mode        DeviceMode
+  mode                DeviceMode
 
-  language    Language
-  device_role DeviceRole?
+  language            Language
+  device_role         DeviceRole?
 
-  ip_address  String?
-  user_agent  String?
+  ip_address          String?
+  user_agent          String?
 
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
 
-  is_deleted  Boolean @default(false)
+  is_deleted          Boolean @default(false)
 
-  user User @relation(fields: [user_id], references: [id])
+  created_by_user     User @relation(fields: [created_by_user_id], references: [id])
 
-  @@index([user_id])
+  @@index([created_by_user_id])
 
   @@map("device_status")
 }
@@ -1280,7 +1280,7 @@ model DeviceStatus {
 model GlobalState {
   id                     String @id @default(uuid()) @db.Uuid
 
-  user_id                String @db.Uuid
+  created_by_user_id     String @db.Uuid
 
   competition_id         String? @db.Uuid
   competition_session_id String? @db.Uuid
@@ -1294,10 +1294,10 @@ model GlobalState {
 
   is_deleted             Boolean @default(false)
 
-  user User @relation(fields: [user_id], references: [id])
-  competition Competitions? @relation(fields: [competition_id], references: [id])
-  competitionSession CompetitionSessions? @relation(fields: [competition_session_id], references: [id])
-  groupsInSession GroupsInSession? @relation(fields: [groups_in_session_id], references: [id])
+  created_by_user        User @relation(fields: [created_by_user_id], references: [id])
+  competition            Competitions? @relation(fields: [competition_id], references: [id])
+  competitionSession     CompetitionSessions? @relation(fields: [competition_session_id], references: [id])
+  groupsInSession        GroupsInSession? @relation(fields: [groups_in_session_id], references: [id])
 
   @@index([competition_id])
   @@index([competition_session_id])

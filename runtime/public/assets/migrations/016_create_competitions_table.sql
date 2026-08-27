@@ -13,7 +13,7 @@ CREATE TYPE "CompetitionStatus" AS ENUM ('ACTIVE', 'ARCHIVED');
 -- CreateTable
 CREATE TABLE "competitions" (
     "id" UUID NOT NULL,
-    "user_id" UUID NOT NULL,
+    "created_by_user_id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "city_id" UUID NOT NULL,
     "start_date" TIMESTAMP(3) NOT NULL,
@@ -31,13 +31,13 @@ CREATE TABLE "competitions" (
 );
 
 -- CreateIndex
-CREATE INDEX "competitions_user_id_idx" ON "competitions"("user_id");
+CREATE INDEX "competitions_created_by_user_id_idx" ON "competitions"("created_by_user_id");
 
 -- CreateIndex
 CREATE INDEX "competitions_start_date_idx" ON "competitions"("start_date");
 
 -- AddForeignKey
-ALTER TABLE "competitions" ADD CONSTRAINT "competitions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "competitions" ADD CONSTRAINT "competitions_created_by_user_id_fkey" FOREIGN KEY ("created_by_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "competitions" ADD CONSTRAINT "competitions_city_id_fkey" FOREIGN KEY ("city_id") REFERENCES "cities"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -5,12 +5,14 @@ import { SyncChange } from './dto/sync-change.dto';
 
 import { 
     STATIC_REFERENCE_TABLES, 
-    REFERENCE_TABLES, 
+    ADMIN_REFERENCE_TABLES, 
     USER_REFERENCE_TABLES, 
     USER_REFERENCE_FEDERATIONS, 
     COMPETITION_TABLES, 
-    SESSION_TABLES, 
-    GROUP_TABLES, 
+    COMPETITION_SESSION_TABLES, 
+    COMPETITION_GROUP_TABLES, 
+    CREATED_BY_USER_TABLES, 
+    COMPETITION_RUNTIME_TABLES, 
     USER_TABLES, 
 } from '#shared-sql';
 
@@ -76,8 +78,7 @@ export class SyncService {
             data[table] = result as any[];
         }
 
-
-        for (const table of REFERENCE_TABLES) {
+        for (const table of ADMIN_REFERENCE_TABLES) {
 
             const result = await this.prisma.$queryRawUnsafe(
                 `
@@ -155,7 +156,7 @@ export class SyncService {
                 FROM "${table}" t
                 INNER JOIN competitions c
                     ON c.id = t.competition_id
-                WHERE c.user_id = $1
+                WHERE c.created_by_user_id = $1
                 `,
                 userId,
             );
@@ -163,7 +164,7 @@ export class SyncService {
             data[table] = result as any[];
         }
 
-        for (const table of SESSION_TABLES) {
+        for (const table of COMPETITION_SESSION_TABLES) {
 
             const result = await this.prisma.$queryRawUnsafe(
                 `
@@ -173,7 +174,7 @@ export class SyncService {
                     ON cs.id = t.competition_session_id
                 INNER JOIN competitions c
                     ON c.id = cs.competition_id
-                WHERE c.user_id = $1
+                WHERE c.created_by_user_id = $1
                 `,
                 userId,
             );
@@ -181,7 +182,7 @@ export class SyncService {
             data[table] = result as any[];
         }
 
-        for (const table of GROUP_TABLES) {
+        for (const table of COMPETITION_GROUP_TABLES) {
 
             const result = await this.prisma.$queryRawUnsafe(
                 `
@@ -193,7 +194,7 @@ export class SyncService {
                     ON cs.id = gis.competition_session_id
                 INNER JOIN competitions c
                     ON c.id = cs.competition_id
-                WHERE c.user_id = $1
+                WHERE c.created_by_user_id = $1
                 `,
                 userId,
             );
@@ -202,6 +203,41 @@ export class SyncService {
         }
 
         data['users'] = [{ id: userId }];
+
+        for (const table of CREATED_BY_USER_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT *
+                FROM "${table}"
+                WHERE
+                    created_by_user_id = $1
+                `,
+                userId,
+            );
+
+            data[table] = result as any[];
+        }
+
+        for (const table of COMPETITION_RUNTIME_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT t.*
+                FROM "${table}" t
+                INNER JOIN athlete_registrations ar
+                    ON ar.id = t.athlete_registration_id
+                INNER JOIN competitions c
+                    ON c.id = ar.competition_id
+                WHERE c.created_by_user_id = $1
+                `,
+                userId,
+            );
+
+            data[table] = result as any[];
+        }
+
+
 
 
 

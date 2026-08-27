@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "global_state" (
     "id" UUID NOT NULL,
-    "user_id" UUID NOT NULL,
+    "created_by_user_id" UUID NOT NULL,
     "competition_id" UUID,
     "competition_session_id" UUID,
     "groups_in_session_id" UUID,
@@ -24,7 +24,7 @@ CREATE INDEX "global_state_competition_session_id_idx" ON "global_state"("compet
 CREATE INDEX "global_state_groups_in_session_id_idx" ON "global_state"("groups_in_session_id");
 
 -- AddForeignKey
-ALTER TABLE "global_state" ADD CONSTRAINT "global_state_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "global_state" ADD CONSTRAINT "global_state_created_by_user_id_fkey" FOREIGN KEY ("created_by_user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "global_state" ADD CONSTRAINT "global_state_competition_id_fkey" FOREIGN KEY ("competition_id") REFERENCES "competitions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
