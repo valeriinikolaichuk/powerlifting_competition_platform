@@ -23,6 +23,7 @@
 - [age_groups](#age_groups)
 - [weight_classes](#weight_classes)
 - [federation_categories](#federation_categories)
+- [user_federations](#user_federations)
 - [referee_categories](#referee_categories)
 - [referee_roles](#referee_roles)
 - [Static Reference ER Diagram](#static-reference-er-diagram)
@@ -207,6 +208,29 @@ Separates:
 
 ---
 
+### user_federations
+Defines which federations are accessible to each user.
+This table maps users to the federations they are allowed to work with.
+
+**Fields**
+- `id` UUID
+- `user_id` UUID
+- `federation_id` UUID
+- `updated_at`DateTime
+- `created_at` DateTime
+
+#### Relations
+- related with ➡ [**federations**](#federations) by `federation_id`
+- related with ➡ [**user**](user.md#users) by `created_by_user_id`
+
+#### Business Rules
+- A `USER` may have access to one or more federations.
+- Access to federations is assigned by `ADMIN` users.
+- Users can work only with federations assigned to them.
+- The combination of `user_id` and `federation_id` must be `unique`.
+
+---
+
 ### referee_categories
 Stores the list of referee qualification categories.  
 This is a reference table used by referee-related entities.
@@ -268,7 +292,6 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 - [sport_officials](#sport_officials)
   - [DataScope enum](#datascope-enum)
   - [Language Enum](#language-enum)
-- [user_federations](#user_federations)
 - [User Reference ER Diagram](#user-reference-er-diagram)
 
 </details>  
@@ -509,29 +532,6 @@ Defines the user interface language.
 | EN | English |
 | UK | Ukrainian |
 | PL | Polish |
-
----
-
-### user_federations
-Defines which federations are accessible to each user.
-This table maps users to the federations they are allowed to work with.
-
-**Fields**
-- `id` UUID
-- `user_id` UUID
-- `federation_id` UUID
-- `updated_at`DateTime
-- `created_at` DateTime
-
-#### Relations
-- related with ➡ [**federations**](#federations) by `federation_id`
-- related with ➡ [**user**](user.md#users) by `created_by_user_id`
-
-#### Business Rules
-- A `USER` may have access to one or more federations.
-- Access to federations is assigned by `ADMIN` users.
-- Users can work only with federations assigned to them.
-- The combination of `user_id` and `federation_id` must be `unique`.
 
 ---
 
