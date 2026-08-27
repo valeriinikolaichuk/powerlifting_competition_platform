@@ -4,9 +4,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { 
-  STATIC_REFERENCE_TABLES,
+  STATIC_REFERENCE_TABLES, 
+  REFERENCE_TABLES, 
   USER_REFERENCE_TABLES, 
-  USER_REFERENCE_FEDERATIONS,
+  USER_REFERENCE_FEDERATIONS, 
+  COMPETITION_TABLES, 
+  SESSION_TABLES, 
+  GROUP_TABLES, 
+  TABLE_USERS, 
   USER_TABLES,  
 } from '#shared-sql';
 
@@ -23,8 +28,13 @@ export class SyncService {
 
   private tables = [
     ...STATIC_REFERENCE_TABLES, 
+    ...REFERENCE_TABLES, 
     ...USER_REFERENCE_TABLES, 
     ...USER_REFERENCE_FEDERATIONS, 
+    ...COMPETITION_TABLES, 
+    ...SESSION_TABLES, 
+    ...GROUP_TABLES, 
+    ...TABLE_USERS, 
     ...USER_TABLES, 
   ];
 

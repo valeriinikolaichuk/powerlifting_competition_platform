@@ -4,10 +4,14 @@ import { PrismaService } from '../prisma/prisma.service';
 import { SyncChange } from './dto/sync-change.dto';
 
 import { 
-    STATIC_REFERENCE_TABLES,
+    STATIC_REFERENCE_TABLES, 
+    REFERENCE_TABLES, 
     USER_REFERENCE_TABLES, 
-    USER_REFERENCE_FEDERATIONS,
-    USER_TABLES,  
+    USER_REFERENCE_FEDERATIONS, 
+    COMPETITION_TABLES, 
+    SESSION_TABLES, 
+    GROUP_TABLES, 
+    USER_TABLES, 
 } from '#shared-sql';
 
 @Injectable()
@@ -71,6 +75,136 @@ export class SyncService {
 
             data[table] = result as any[];
         }
+
+
+        for (const table of REFERENCE_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT *
+                FROM "${table}"
+                WHERE
+                    user_id = $1
+                `,
+                userId,
+            );
+
+            data[table] = result as any[];
+        }
+
+        for (const table of USER_REFERENCE_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT *
+                FROM "${table}"
+                WHERE
+                    (
+                        scope = 'GLOBAL'
+                        OR (
+                            scope = 'USER'
+                            AND created_by_user_id = $1
+                        )
+                    )
+                    AND language = $2
+                `,
+                userId,
+                language,
+            );
+
+            data[table] = result as any[];
+        }
+
+        for (const table of USER_REFERENCE_FEDERATIONS) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT t.*
+                FROM "${table}" t
+                WHERE
+                    t.language = $2
+                    AND (
+                        (
+                            t.scope = 'GLOBAL'
+                            AND EXISTS (
+                                SELECT 1
+                                FROM user_federations uf
+                                WHERE uf.user_id = $1
+                                AND uf.federation_id = t.federation_id
+                            )
+                        )
+                        OR
+                        (
+                            t.scope = 'USER'
+                            AND t.created_by_user_id = $1
+                        )
+                    )
+                `,
+                userId,
+                language,
+            );
+
+            data[table] = result as any[];
+        }
+        
+        for (const table of COMPETITION_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT t.*
+                FROM "${table}" t
+                INNER JOIN competitions c
+                    ON c.id = t.competition_id
+                WHERE c.user_id = $1
+                `,
+                userId,
+            );
+
+            data[table] = result as any[];
+        }
+
+        for (const table of SESSION_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT t.*
+                FROM "${table}" t
+                INNER JOIN competition_sessions cs
+                    ON cs.id = t.competition_session_id
+                INNER JOIN competitions c
+                    ON c.id = cs.competition_id
+                WHERE c.user_id = $1
+                `,
+                userId,
+            );
+
+            data[table] = result as any[];
+        }
+
+        for (const table of GROUP_TABLES) {
+
+            const result = await this.prisma.$queryRawUnsafe(
+                `
+                SELECT t.*
+                FROM "${table}" t
+                INNER JOIN groups_in_session gis
+                    ON gis.id = t.groups_in_session_id
+                INNER JOIN competition_sessions cs
+                    ON cs.id = gis.competition_session_id
+                INNER JOIN competitions c
+                    ON c.id = cs.competition_id
+                WHERE c.user_id = $1
+                `,
+                userId,
+            );
+
+            data[table] = result as any[];
+        }
+
+        data['users'] = [{ id: userId }];
+
+
+
 
 
 

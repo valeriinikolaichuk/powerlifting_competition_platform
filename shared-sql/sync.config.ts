@@ -9,6 +9,10 @@ export const STATIC_REFERENCE_TABLES = [
     'referee_roles',
 ];
 
+export const REFERENCE_TABLES = [
+    'user_federations',
+];
+
 export const USER_REFERENCE_TABLES = [
     'countries',
     'regions',
@@ -21,18 +25,39 @@ export const USER_REFERENCE_FEDERATIONS = [
     'sport_officials',
 ];
 
+export const COMPETITION_TABLES = [
+    'competition_age_groups', 
+    'nomination_status', 
+    'competition_sessions', 
+    'referee_competition', 
+    'referee_nominations', 
+];
+
+export const SESSION_TABLES = [
+    'groups_in_session', 
+    'referee_competition_roles',
+];
+
+export const GROUP_TABLES = [
+    'weight_classes_in_group',
+];
+
+export const TABLE_USERS = [
+    'users'
+];
+
+
+
 export const USER_TABLES = [
-    'users',
-    'user_federations',
+    
+    
+    
+
+
+    
     'participants',
     'competitions',
-    'competition_age_groups',
-    'referee_competition',
-    'nomination_status',
-    'competition_sessions',
-    'groups_in_session',
-    'weight_classes_in_group',
-    'referee_competition_roles',
+    
     'athlete_registrations',
     'competition_organizations',
     'athlete_lifts',
@@ -40,6 +65,6 @@ export const USER_TABLES = [
     'organization_results',
     'device_status',
     'global_state',
-    'referee_nominations',
+    
     'athlete_nominations',
 ];
