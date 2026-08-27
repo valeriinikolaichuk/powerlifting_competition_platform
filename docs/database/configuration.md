@@ -3,13 +3,16 @@
 <summary>Contents</summary>  
 
 - [competition_age_groups](#competition_age_groups)
-- [user_federations](#user_federations)
+  - [TeamScoringMethod enum](#teamscoringmethod-enum)
 - [nomination_status](#nomination_status)
+  - [NominationStatusType enum](#nominationstatustype-enum)
 - [competition_sessions](#competition_sessions)
+  - [CompetitionSessionStatus enum](#competitionsessionstatus-enum)
 - [groups_in_session](#groups_in_session)
 - [weight_classes_in_group](#weight_classes_in_group)
 - [referee_competition](#referee_competition)
 - [referee_nominations](#referee_nominations)
+  - [VerificationStatus enum](#verificationstatus)
 - [referee_competition_roles](#referee_competition_roles)
 
 </details>
@@ -34,8 +37,11 @@ Each record references a federation category and contains competition-specific t
 
 #### Relations
 
-- related with ➡ [competitions](competition.md) by `competition_id`
-- related with **federation_categories** by `federation_category_id`
+- related with ➡ [competitions](competition.md#competitions) by `competition_id`
+- related with ➡ [federation_categories](reference.md#federation_categories) by `federation_category_id`
+- related with ➡ [athlete_registrations](competition.md#athlete_registrations)
+- related with ➡ [athlete_nominations](competition.md#athlete_nominations)
+- related with ➡ [organization_results](calculated.md)
 
 #### TeamScoringMethod enum
 Defines how team scores are calculated.
@@ -57,22 +63,6 @@ Defines how team scores are calculated.
 
 ---
 
-### user_federations
-Defines which federations are accessible to each user.
-This table maps users to the federations they are allowed to work with.
-
-#### Relations
-- related with ➡ [**federations**](reference.md) by `federation_id`
-- related with ➡ [**user**](business.md) by `created_by_user_id`
-
-#### Business Rules
-- A `USER` may have access to one or more federations.
-- Access to federations is assigned by `ADMIN` users.
-- Users can work only with federations assigned to them.
-- The combination of `user_id` and `federation_id` must be `unique`.
-
----
-
 ### nomination_status
 Stores the current nomination stage of a competition.  
 Each competition has a single nomination status record that is updated as the nomination process progresses.
@@ -83,13 +73,18 @@ Each competition has a single nomination status record that is updated as the no
 | competition_id | Competition |
 | preliminary_date | Preliminary nomination date |
 | final_date | Final nomination date |
-| status | Nomination stage (`NominationStatusType` enum) |
+| status | Nomination stage ([NominationStatusType enum](#nominationstatustype-enum)) |
 | created_at | Record creation timestamp |
 | updated_at | Record update timestamp |
 
 #### Relations
 
-- related with ➡ [**competitions**](competition.md) by `competition_id`
+- related with ➡ [**competitions**](competition.md#competitions) by `competition_id`
+
+#### NominationStatusType enum
+- `PRELIMINARY`
+- `FINAL`
+- `CLOSED`
 
 #### Business Rules
 - Each competition has exactly one nomination status record.
@@ -113,13 +108,19 @@ Each session belongs to a competition and represents a group of weight classes p
 | name | Session name |
 | start_date | Session start date and time |
 | end_of_weighing_in | End of the weigh-in period |
-| status | Session status (`CompetitionSessionStatus` enum) |
+| status | Session status ([CompetitionSessionStatus enum](#competitionsessionstatus-enum)) |
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
 
 #### Relations
-- related with ➡ [**competitions**](competition.md) by `competition_id`
+- related with ➡ [**competitions**](competition.md#competitions) by `competition_id`
+- related with [groups_in_session](#groups_in_session)
 - related with [referee_competition_roles](#referee_competition_roles)
+- related with [global_state](system_runtime.md#global_state)
+
+#### CompetitionSessionStatus enum
+- `CREATED`
+- `READY`
 
 #### Business Rules
 - Stores the list of competition sessions.
@@ -146,7 +147,10 @@ Each group belongs to a single competition session and defines the order in whic
 
 #### Relations
 
-- related with - [competition_sessions](#competition_sessions) by `competition_session_id`
+- related with [competition_sessions](#competition_sessions) by `competition_session_id`
+- related with [weight_classes](reference.md#weight_classes)
+- related with [athlete_registrations](competition.md#athlete_registrations)
+- related with [global_state](system_runtime.md#global_state)
 
 #### Business Rules
 - Stores the list of groups within a competition session.
@@ -170,7 +174,7 @@ This table links `GroupsInSession` with `WeightClasses`.
 
 #### Relations
 - related with [groups_in_session](#groups_in_session) by `groups_in_session_id`
-- related with **weight_classes** by `weight_class_id`
+- related with [weight_classes](reference.md#weight_classes) by `weight_class_id`
 
 #### Business Rules
 - Stores the list of weight classes assigned to a group.
@@ -199,13 +203,13 @@ Each record links a sport official to a competition, specifies the referee categ
 
 ### Relations
 
-- related with ➡ [**competitions**](competition.md) by `competition_id`
-- related with **sport_officials** by `referee_id`
+- related with ➡ [**competitions**](competition.md#competitions) by `competition_id`
+- related with ➡ [**sport_officials**](reference.md#sport_officials) by `referee_id`
 - related with ➡ [**referee_categories**](reference.md#referee_categories) by `referee_category_id`
 - related with ➡ [**countries**](reference.md#countries) by `country_id`
 - related with ➡ [**regions**](reference.md#regions) by `region_id`
 - related with ➡ [**cities**](reference.md#cities) by `city_id`
-- related with **referee_competition_roles**
+- related with ➡ [**referee_competition_roles**](#referee_competition_roles)
 
 #### Business Rules
 - A referee may be assigned to multiple competitions.
@@ -236,7 +240,7 @@ New assignments are created with the `PENDING` verification status by default.
 | region_name	|TEXT	|Yes	|Region name submitted in the nomination|
 | city_id	|UUID	|Yes	|Existing city identifier|
 | city_name	|TEXT	|Yes	|City name submitted in the nomination|
-| verification_status	|VerificationStatus	|No	|Nomination verification status|
+| verification_status	|[VerificationStatus](#verificationstatus)	|No	|Nomination verification status|
 | created_by_participant_id	|UUID	|No	|Participant who submitted the nomination|
 | created_at	|TIMESTAMP	|No	|Creation timestamp|
 | updated_at	|TIMESTAMP	|No	|Last update timestamp|
