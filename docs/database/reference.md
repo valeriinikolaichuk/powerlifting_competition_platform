@@ -26,7 +26,8 @@
 - [user_federations](#user_federations)
 - [referee_categories](#referee_categories)
 - [referee_roles](#referee_roles)
-- [Static Reference ER Diagram](#static-reference-er-diagram)
+
+[Static Reference ER Diagram](#static-reference-er-diagram)
 
 </details>  
 
@@ -293,7 +294,8 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 - [sport_officials](#sport_officials)
   - [DataScope enum](#datascope-enum)
   - [Language Enum](#language-enum)
-- [User Reference ER Diagram](#user-reference-er-diagram)
+
+[User Reference ER Diagram](#user-reference-er-diagram)
 
 </details>  
 
