@@ -7,6 +7,7 @@
   - [AttemptStatus enum](#attemptstatus-enum)
 - [competition_results](#competition_results)
 
+[ER Diagram](#er-diagram)  
 [Competition Result Calculation Flow](#competition-result-calculation-flow)
 </details>
 
@@ -114,6 +115,14 @@ This table extends `athlete_registrations` by storing the final and predicted ov
 - Predicted values are calculated while the competition is in progress.
 - Final values are calculated after all competition lifts have been completed.
 - This table stores dynamic competition data, while `athlete_registrations` stores the static registration data.
+
+---
+
+### ER Diagram
+- athlete_lifts
+- competition_results
+
+![ER Diagram](competition_runtime.png)
 
 ---
 
