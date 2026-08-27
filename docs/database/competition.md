@@ -17,6 +17,8 @@
 - [competition_organizations](#competition_organizations)
   - [CompetitionOrganizationType enum](#competitionorganizationtype-enum)
 
+[ER Diagram](#er-diagram)
+
 </details>
 
 ---
@@ -324,5 +326,15 @@ Defines the type of competition organization record.
 - All unused reference fields must be `NULL`.
 - The table stores only unique records within a competition.
 - The table is rebuilt using the `DELETE + INSERT INTO` strategy.
+
+---
+
+### ER Diagram
+- competitions
+- athlete_registrations
+- athlete_nominations
+- competition_organizations
+
+![ER Diagram](competition.png)
 
 ---
