@@ -271,6 +271,7 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 - age_groups
 - weight_classes
 - federation_categories
+- user_federations
 - referee_categories
 - referee_roles
 
@@ -542,7 +543,6 @@ Defines the user interface language.
 - organizations
 - athletes
 - sport_officials
-- user_federations
 
 ![ER Diagram](reference_tables_user.png)
 
