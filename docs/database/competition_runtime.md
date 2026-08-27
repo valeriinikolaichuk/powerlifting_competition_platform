@@ -3,6 +3,8 @@
 <summary>Contents</summary>
 
 - [athlete_lifts](#athlete_lifts)
+  - [LiftType enum](#lifttype-enum)
+  - [AttemptStatus enum](#attemptstatus-enum)
 - [competition_results](#competition_results)
 
 [Competition Result Calculation Flow](#competition-result-calculation-flow)
@@ -46,7 +48,7 @@ This table extends `athlete_registrations` by storing lift attempts, competition
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
 
-#### LiftType (enum)
+#### LiftType enum
 Defines the competition lift.
 
 | Value | Description |
@@ -55,7 +57,7 @@ Defines the competition lift.
 | BENCH_PRESS | Bench press. |
 | DEADLIFT | Deadlift. |
 
-#### AttemptStatus
+#### AttemptStatus enum
 Defines the status of a competition attempt.
 
 | Value | Description |
@@ -65,7 +67,7 @@ Defines the status of a competition attempt.
 | NO_LIFT | The attempt was unsuccessful. |
 
 #### Relations
-- related with **athlete_registrations** by `athlete_registration_id`
+- related with [**athlete_registrations**](competition.md#athlete_registrations) by `athlete_registration_id`
 
 #### Business Rules
 - Each record represents one competition lift (`SQUAT`, `BENCH_PRESS`, or `DEADLIFT`).
@@ -104,7 +106,7 @@ This table extends `athlete_registrations` by storing the final and predicted ov
 
 #### Relations
 
-- related with **athlete_registrations** by `athlete_registration_id`
+- related with [**athlete_registrations**](competition.md#athlete_registrations) by `athlete_registration_id`
 
 #### Business Rules
 - One record exists for each athlete registration.

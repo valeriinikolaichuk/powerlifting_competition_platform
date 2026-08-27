@@ -5,9 +5,17 @@
 <summary>Contents</summary>  
 
 - [competitions](#competitions)
+  - [CompetitionLevel enum](#competitionlevel-enum)
+  - [CompetitionType enum](#competitiontype-enum)
+  - [CompetitionDivision enum](#competitiondivision-enum)
+  - [CompetitionStatus enum](#competitionstatus-enum)
 - [athlete_registrations](#athlete_registrations)
+  - [AthleteRegistrationStatus enum](#athleteregistrationstatus)
+  - [AthleteQualification enum](#athletequalification)
 - [athlete_nominations](#athlete_nominations)
+  - [VerificationStatus enum](#verificationstatus)
 - [competition_organizations](#competition_organizations)
+  - [CompetitionOrganizationType enum](#competitionorganizationtype-enum)
 
 </details>
 
@@ -21,7 +29,7 @@ The competition configuration defines the competition level, discipline, divisio
 | Field | Description |
 |------|-------------|
 | id | Unique competition identifier |
-| user_id | User who created and manages the competition |
+| created_by_user_id | User who created and manages the competition |
 | name | Competition name |
 | city_id | Competition location |
 | start_date | Competition start date |
@@ -72,9 +80,17 @@ Defines the current competition status.
 | ARCHIVED | Competition has been archived and is no longer active. |
 
 #### Relations
-- related with ➡ [**users**](user.md) by `user_id`
-- related with **cities** by `city_id`
-- related with  ➡ [сompetition_age_groups](configuration.md) (not directly)
+* related with ➡ [**users**](user.md) by `created_by_user_id`
+* related with ➡ [**cities**](reference.md#cities) by `city_id`
+* related with [сompetition_age_groups](configuration.md№сompetition_age_groups)
+* related with [referee_competition](configuration.md#referee_competition)
+* related with [referee_nominations](configuration.md#referee_nominations)
+* related with [nomination_status](configuration.md#nomination_status)
+* related with [competition_sessions](configuration.md#competition_sessions)
+* related with [athlete_registrations](#athlete_registrations)
+* related with [athlete_nominations](#athlete_nominations)
+* related with [competition_organizations](#competition_organizations)
+* related with [global_state](system_runtime.md#global_state)
 
 #### Business Rules
 - Each competition is created and managed by a single `USER`.
@@ -151,22 +167,22 @@ Defines the athlete's qualification status during the competition.
 
 
 #### Relations
-- related with **athletes** by `athlete_id`
-- related with [competitions](#competitions) by `competition_id`
-- related with **countries** by `country_id`
-- related with **regions**) by `region_id`
-- related with **cities** by `city_id`
-- related with **organizations** by `sport_society_id`
+- related with [**athletes**](reference.md#athletes) by `athlete_id`
+- related with [**competitions**](#competitions) by `competition_id`
+- related with [**countries**](reference.md#countries) by `country_id`
+- related with [**regions**](reference.md#regions) by `region_id`
+- related with [**cities**](reference.md#cities) by `city_id`
+- related with [**organizations**](reference.md#organizations) by `sport_society_id`
 - related with **organizations** by `club_id`
 - related with **organizations** by `sport_school_id`
 - related with **organizations** by `university_id`
-- related with ➡ [competition_age_groups](configuration.md) by `competition_age_group_id`
-- related with **sport_officials** by `trainer_1_id`
+- related with [**competition_age_groups**](configuration.md#competition_age_groups) by `competition_age_group_id`
+- related with [**sport_officials**](reference.md#sport_officials) by `trainer_1_id`
 - related with **sport_officials** by `trainer_2_id`
 - related with **sport_officials** by `trainer_3_id`
 - related with **sport_officials** by `trainer_4_id`
-- related with **weight_classes** by `weight_class_id`
-- related with **groups_in_session** by `group_in_session_id`
+- related with [**weight_classes**](reference.md#weight_classes) by `weight_class_id`
+- related with [**groups_in_session**](configuration.md#groups_in_session) by `group_in_session_id`
 
 #### Business Rules
 - An athlete may be registered for the same competition only once within the same competition age group.
@@ -234,27 +250,16 @@ After approval, the nomination can be used to create an athlete_registrations re
 
 ### Relations
 
-* related with ➡ [**competitions**](#competition) by `competition_id`
-* related with ➡ **athletes** by `athlete_id`
+* related with ➡ [**competitions**](#competitions) by `competition_id`
+* related with ➡ [**athletes**](reference.md#athletes) by `athlete_id`
 * related with ➡ [**countries**](reference.md#countries) by `country_id`
 * related with ➡ [**regions**](reference.md#regions) by `region_id`
 * related with ➡ [**cities**](reference.md#cities) by `city_id`
 * related with ➡ [**organizations**](reference.md#organizations) by `sport_society_id`, `club_id`, `sport_school_id`, `university_id`
-* related with ➡ **competition_age_groups** by `competition_age_group_id`
+* related with ➡ [**competition_age_groups**](configuration.md#competition_age_groups) by `competition_age_group_id`
 * related with ➡ [**sport_officials**](reference.md#sport_officials) by `trainer_1_id`,`trainer_2_id`, `trainer_3_id`, `trainer_4_id`
-* related with ➡ **weight_classes** by `weight_class_id`
+* related with ➡ [**weight_classes**](reference.md#weight_classes) by `weight_class_id`
 * related with ➡ [**participants**](user.md#participants) by `created_by_participant_id`
-
-
-#### AthleteQualification
-Defines the athlete's qualification status during the competition.
-
-| Value          | Description                                                                                                   |
-| -------------- | ------------------------------------------------------------------------------------------------------------- |
-| QUALIFIED      | The athlete is qualified to continue participating in the competition.                                        |
-| WITHDRAWN      | The athlete has withdrawn from the competition, for example due to a medical decision.                        |
-| DISQUALIFIED   | The athlete has been disqualified from the competition due to a rule violation or other disqualifying reason. |
-
 
 #### VerificationStatus
 Defines the verification status of a referee assignment.
@@ -285,7 +290,7 @@ This table is generated automatically from `AthleteRegistrations` and contains u
 | is_deleted | Soft delete flag |
 
 
-#### CompetitionOrganizationType (enum)
+#### CompetitionOrganizationType enum
 Defines the type of competition organization record.
 
 | Value | Populated field |
@@ -297,6 +302,15 @@ Defines the type of competition organization record.
 | CLUB | `organization_id` (Club) |
 | UNIVERSITY | `organization_id` (University) |
 | SPORT_SOCIETY | `organization_id` (Sport Society) |
+
+#### Relations
+* related with [**competitions**](#competitions) by `competition_id`
+* related with [**countries**](reference.md#countries) by `country_id`
+* related with [**regions**](reference.md#regions) by `region_id`
+* related with [**cities**](reference.md#cities) by `city_id`
+* related with [**organizations**](reference.md#organizations) by `organization_id`
+* related with [**organization_results**](calculated.md)
+
 
 #### Business Rules
 - Generated automatically from `AthleteRegistrations`.
