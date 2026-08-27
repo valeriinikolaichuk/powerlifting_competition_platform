@@ -5,7 +5,11 @@
 <summary>Contents</summary>  
 
 - [users](#users)
+  - [UserRole enum](#userrole-enum)
+  - [UserStatus enum](#userstatus-enum)
 - [participants](#participants)
+  - [RegistrationScope enum](#registrationscope-enum)
+- [ER Diagram](#er-diagram)
 
 </details>
 
@@ -134,5 +138,13 @@ If no participant account exists for the specified `email`, the system automatic
 - Sends the account credentials to the participant by `email`.
 
 If an account already exists for the specified `email`, the existing participant account is used.
+
+---
+
+### ER Diagram
+- users
+- participants
+
+![ER Diagram](user.png)
 
 ---
