@@ -14,7 +14,8 @@
 - [referee_nominations](#referee_nominations)
   - [VerificationStatus enum](#verificationstatus)
 - [referee_competition_roles](#referee_competition_roles)
-- [ER Diagram](#er-diagram)
+
+[ER Diagram](#er-diagram)
 
 </details>
 
