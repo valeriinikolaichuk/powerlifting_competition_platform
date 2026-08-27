@@ -14,6 +14,7 @@ Database migrations are managed by `Prisma` Migrate.
   - age_groups
   - weight_classes
   - federation_categories
+  - user_federations
   - referee_categories
   - referee_roles  
 - User Reference Tables
@@ -23,7 +24,6 @@ Database migrations are managed by `Prisma` Migrate.
   - organizations
   - athletes
   - sport_officials
-  - user_federations
 
 ➡ [Configuration Tables](database/configuration.md)  
 - competition_age_groups
