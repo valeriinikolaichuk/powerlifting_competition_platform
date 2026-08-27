@@ -13,7 +13,7 @@ import {
     COMPETITION_GROUP_TABLES, 
     CREATED_BY_USER_TABLES, 
     COMPETITION_RUNTIME_TABLES, 
-    USER_TABLES, 
+    ORGANIZATION_RESULT_TABLES, 
 } from '#shared-sql';
 
 @Injectable()
@@ -237,20 +237,19 @@ export class SyncService {
             data[table] = result as any[];
         }
 
-
-
-
-
-
-
-
-
-
-
-        for (const table of USER_TABLES) {
+        for (const table of ORGANIZATION_RESULT_TABLES) {
 
             const result = await this.prisma.$queryRawUnsafe(
-                `SELECT * FROM ${table}`
+                `
+                SELECT orr.*
+                FROM "${table}" orr
+                INNER JOIN competition_organizations co
+                    ON co.id = orr.competition_organization_id
+                INNER JOIN competitions c
+                    ON c.id = co.competition_id
+                WHERE c.user_id = $1
+                `,
+                userId,
             );
 
             data[table] = result as any[];

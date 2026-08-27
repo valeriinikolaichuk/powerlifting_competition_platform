@@ -9,7 +9,7 @@ import {
     TABLE_USERS, 
     CREATED_BY_USER_TABLES, 
     COMPETITION_RUNTIME_TABLES, 
-    USER_TABLES, 
+    ORGANIZATION_RESULT_TABLES, 
 } from './sync.config.js';
 
 export { 
@@ -23,5 +23,5 @@ export {
     TABLE_USERS, 
     CREATED_BY_USER_TABLES, 
     COMPETITION_RUNTIME_TABLES, 
-    USER_TABLES, 
+    ORGANIZATION_RESULT_TABLES, 
 };

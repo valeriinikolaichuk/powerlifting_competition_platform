@@ -14,7 +14,7 @@ import {
   TABLE_USERS, 
   CREATED_BY_USER_TABLES, 
   COMPETITION_RUNTIME_TABLES, 
-  USER_TABLES,  
+  ORGANIZATION_RESULT_TABLES, 
 } from '#shared-sql';
 
 import { PgliteService } from '../../database/services/pglite.service';
@@ -39,7 +39,7 @@ export class SyncService {
     ...TABLE_USERS, 
     ...CREATED_BY_USER_TABLES, 
     ...COMPETITION_RUNTIME_TABLES, 
-    ...USER_TABLES, 
+    ...ORGANIZATION_RESULT_TABLES,
   ];
 
   constructor(

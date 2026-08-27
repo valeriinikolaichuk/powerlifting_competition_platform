@@ -62,13 +62,6 @@ export const COMPETITION_RUNTIME_TABLES = [
 ];
 
 
-export const USER_TABLES = [
-
-    
-
-
-
-    
+export const ORGANIZATION_RESULT_TABLES = [
     'organization_results',
-    
 ];
