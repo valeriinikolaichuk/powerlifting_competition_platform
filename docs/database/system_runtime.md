@@ -4,7 +4,11 @@
 <summary>Contents</summary>  
 
 - [device_status](#device_status)
+  - [DeviceMode enum](#devicemode-enum)
+  - [DeviceRole enum](#devicerole-enum)
+  - [Language enum](#language-enum)
 - [global_state](#global_state)
+  - [LiftType enum](#lifttype-enum)
 
 </details>
 
@@ -28,7 +32,7 @@ The table is used for device coordination, localization, and real-time communica
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
 
-#### DeviceMode (enum)
+#### DeviceMode enum
 Defines the mode in which a device operates:
 
 | Value | Description |
@@ -36,7 +40,7 @@ Defines the mode in which a device operates:
 | LAN | local network mode|
 | ONLINE | online mode|
 
-#### DeviceRole (enum)
+#### DeviceRole enum
 Defines the purpose of a connected device.
 
 | Value | Description |
@@ -49,7 +53,7 @@ Defines the purpose of a connected device.
 | TIMER | Competition timer |
 | WEIGHING_IN | Weigh-in workstation |
 
-#### Language (enum)
+#### Language enum
 Defines the user interface language.
 
 | Value | Description |
@@ -60,7 +64,7 @@ Defines the user interface language.
 
 #### Relations
 
-- related with ➡ [**users**](user.md) by `created_by_user_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
 
 #### Business Rules
 - One record represents one active device session.
@@ -87,7 +91,7 @@ The table is used for real-time synchronization between competition workstations
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
 
-#### LiftType (enum)
+#### LiftType enum
 Defines the competition lift.
 
 | Value | Description |
@@ -97,10 +101,10 @@ Defines the competition lift.
 | DEADLIFT | Deadlift. |
 
 #### Relations
-- related with ➡ [**users**](user.md) by `created_by_user_id`
-- related with ➡ [competitions](competition.md) by `competition_id`
-- related with **competition_sessions** by `competition_session_id`
-- related with **groups_in_session** by `groups_in_session_id`
+- related with ➡ [**users**](user.md#users) by `created_by_user_id`
+- related with ➡ [**competitions**](competition.md#competitions) by `competition_id`
+- related with ➡ [**competition_sessions**](configuration.md#competition_sessions) by `competition_session_id`
+- related with ➡ [**groups_in_session**](configuration.md#groups_in_session) by `groups_in_session_id`
 
 #### Business Rules
 - The table contains the current competition state shared by all connected devices.
