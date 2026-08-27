@@ -18,8 +18,8 @@ The table is generated from `athlete_registrations`, `competition_organizations`
 | is_deleted | Soft delete flag |
 
 #### Relations
-- related with **competition_organizations** by `competition_organization_id`
-- related with **competition_age_groups** by `competition_age_group_id`
+- related with [**competition_organizations**](competition.md#competition_organizations) by `competition_organization_id`
+- related with [**competition_age_groups**](configuration.md#competition_age_groups) by `competition_age_group_id`
 
 #### Constraints
 - `UNIQUE (competition_organization_id, competition_age_group_id)`
