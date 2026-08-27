@@ -91,14 +91,14 @@ The registration scope determines which athlete records the participant is allow
 
 | **Column**           | **Type**          | **Description**                                                        |
 | -------------------- | ----------------- | ---------------------------------------------------------------------- |
-| `id`                 | UUID              | Unique identifier of the participant.                                  |
-| `user_id`            | UUID              | Unique identifier of the user account associated with the participant. |
-| `created_by_user_id` | UUID              | Identifier of the user who created the participant record.             |
+| `id`                 | UUID              | Unique identifier.                                                     |
+| `user_id`            | UUID              | Unique identifier of the `user` account associated with the participant.|
+| `created_by_user_id` | UUID              | Identifier of the `user` who created the participant record.           |
 | `country_id`         | UUID              | Optional identifier of the participant's country.                      |
 | `region_id`          | UUID              | Optional identifier of the participant's region.                       |
 | `city_id`            | UUID              | Optional identifier of the participant's city.                         |
 | `registration_scope` | RegistrationScope | Defines the geographic scope of participant registration.              |
-| `email`              | String            | Participant's email address.                                           |
+| `email`              | String            | Participant's `email` address.                                         |
 | `created_at`         | DateTime          | Timestamp when the participant record was created.                     |
 | `updated_at`         | DateTime          | Timestamp of the last update to the participant record.                |
 
