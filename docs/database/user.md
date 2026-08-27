@@ -9,7 +9,8 @@
   - [UserStatus enum](#userstatus-enum)
 - [participants](#participants)
   - [RegistrationScope enum](#registrationscope-enum)
-- [ER Diagram](#er-diagram)
+
+[ER Diagram](#er-diagram)
 
 </details>
 
