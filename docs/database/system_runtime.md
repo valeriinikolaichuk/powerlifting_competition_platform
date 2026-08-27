@@ -17,7 +17,7 @@ The table is used for device coordination, localization, and real-time communica
 | Column | Description |
 |--------|-------------|
 | id | Unique record identifier |
-| user_id | Logged-in user |
+| created_by_user_id | Logged-in user |
 | device_id | Unique device identifier |
 | mode | Device operating mode (`DeviceMode` enum) |
 | device_role | Assigned device role (`DeviceRole` enum) |
@@ -60,7 +60,7 @@ Defines the user interface language.
 
 #### Relations
 
-- related with ➡ [**users**](user.md) by `user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 
 #### Business Rules
 - One record represents one active device session.
@@ -77,7 +77,7 @@ The table is used for real-time synchronization between competition workstations
 | Column | Description |
 |--------|-------------|
 | id | Unique record identifier |
-| user_id | User associated with the state |
+| created_by_user_id | User associated with the state |
 | competition_id | Current competition |
 | competition_session_id | Current competition session |
 | groups_in_session_id | Current competition group |
@@ -97,7 +97,7 @@ Defines the competition lift.
 | DEADLIFT | Deadlift. |
 
 #### Relations
-- related with ➡ [**users**](user.md) by `user_id`
+- related with ➡ [**users**](user.md) by `created_by_user_id`
 - related with ➡ [competitions](competition.md) by `competition_id`
 - related with **competition_sessions** by `competition_session_id`
 - related with **groups_in_session** by `groups_in_session_id`
