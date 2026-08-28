@@ -13,8 +13,7 @@ The synchronization system groups database tables according to their ownership, 
 These groups are defined in [sync.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/sync.config.ts) and are used by the snapshot pipeline to determine which tables must be synchronized and which selection rules must be applied.
 
 #### STATIC_REFERENCE_TABLES
-Contains system-wide reference data that does not belong to a specific
-user or competition.
+Contains system-wide reference data that does not belong to a specific user or competition.
 - `federations`
 - `coefficients`
 - `federation_coefficients`
@@ -40,7 +39,7 @@ Contains reference data that may be either global or created by a user.
 `GLOBAL` records are available according to the applicable visibility rules, while `USER` records are selected by `created_by_user_id` and `language`.  
 
 #### USER_REFERENCE_FEDERATIONS
-Contains user-related records whose visibility is additionally determined by the federations accessible to the current user.
+Contains `USER`-related records whose visibility is additionally determined by the federations accessible to the current user.
 - `athletes`
 - `sport_officials`
 
