@@ -1,17 +1,19 @@
 ## Database Synchronization
 
 ### SyncService
-Is responsible for synchronizing the `local browser database` with the server when the `Runtime` **starts** in online mode.
+Is responsible for managing offline-first data capabilities and bi-directional synchronization between the local `PGlite` (in-browser `PostgreSQL`) database and the remote backend server (or `localhost` DB) when the `Runtime` **starts**.
 
 The initialization flow is:  
 1. Initializes the local `PGlite` database.
-2. Checks the local `sync_queue` for pending changes.
-3. Sends pending changes to the backend.
-4. Removes the successfully synchronized changes from the `local queue`.
-5. Requests the current database snapshot from the backend.
-6. Clears the local `USER_TABLES`.
-7. Inserts the data received from the server into the local database.
-8. Logs the synchronization progress and reports synchronization errors.
+2. Automatically detects network status via `navigator.onLine`.
+3. If offline, it bypasses network requests and relies entirely on the local `PGlite` database copy.
+4. Checks the local `sync_queue` table for pending changes.
+6. Sends pending changes to the backend via a `POST` request.
+7. Removes the successfully synchronized changes from the `local queue`.
+8. Requests the current database snapshot from the backend.
+9. Clears the local `USER_TABLES`.
+10. Inserts the data received from the server into the local database.
+11. Logs the synchronization progress and reports synchronization errors.
 
 The synchronization uses the shared `USER_TABLES` definition to process all user-related tables without maintaining a separate list of tables in the Runtime.
 
@@ -19,7 +21,7 @@ If the Runtime is offline, synchronization is skipped and the existing local dat
 
 ### Synchronization Flow
 <pre>
-  PGlite Initialization
+PGlite Initialization
         ↓
 Check Online Status
         ↓
