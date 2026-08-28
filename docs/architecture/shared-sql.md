@@ -12,13 +12,9 @@ The synchronization system groups database tables according to their ownership, 
 
 These groups are defined in [sync.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/sync.config.ts) and are used by the snapshot pipeline to determine which tables must be synchronized and which selection rules must be applied.
 
-#### Static Reference Tables
-
-`STATIC_REFERENCE_TABLES`
-
+#### STATIC_REFERENCE_TABLES
 Contains system-wide reference data that does not belong to a specific
 user or competition.
-
 - `federations`
 - `coefficients`
 - `federation_coefficients`
@@ -28,42 +24,27 @@ user or competition.
 - `referee_categories`
 - `referee_roles`
 
-These records are available independently of the current user.
-
-#### Admin Reference Tables
-
-`ADMIN_REFERENCE_TABLES`
-
+#### ADMIN_REFERENCE_TABLES
 Contains configuration data managed by administrators.
-
 - `user_federations`
 
-These records define which federations are accessible to a user.
+Relationship: `record → user_id`
 
-#### User Reference Tables
-
-`USER_REFERENCE_TABLES`
-
+#### USER_REFERENCE_TABLES
 Contains reference data that may be either global or created by a user.
-
 - `countries`
 - `regions`
 - `cities`
 - `organizations`
 
-Global records are available according to the applicable visibility
-rules, while user records are selected by `created_by_user_id` and
-language.
+`GLOBAL` records are available according to the applicable visibility rules, while `USER` records are selected by `created_by_user_id` and `language`.  
 
-#### User Reference Federation Tables
-
-`USER_REFERENCE_FEDERATIONS`
-
-Contains user-related records whose visibility is additionally
-determined by the federations accessible to the current user.
-
+#### USER_REFERENCE_FEDERATIONS
+Contains user-related records whose visibility is additionally determined by the federations accessible to the current user.
 - `athletes`
 - `sport_officials`
+
+Relationship: `record → federation_id → user_federations → user_id`
 
 #### Competition Tables
 
