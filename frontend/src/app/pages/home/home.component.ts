@@ -25,10 +25,12 @@ import { PowerliftingChatService } from '../../chat/services/powerlifting-chat.s
 export class HomeComponent implements OnInit {
 
   isMobile = window.innerWidth < 768;
+  isLandscape = window.innerHeight < 568;
 
   @HostListener('window:resize')
   onResize(): void {
     this.isMobile = window.innerWidth < 768;
+    this.isLandscape = window.innerHeight < 568;
   }
   
   AboutContentComponent: Type<any> = AboutContentComponent;

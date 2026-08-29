@@ -1,12 +1,12 @@
 {
   "ABOUT": "ABOUT",
-  "CLIENTS": "CLIENTS",
   "SETUP": "SETUP",
+  "DATA": "DATA",
 
   "ASSISTANT": "AI ASSISTANT",
 
-  "DATA": "DATA",
-  "RUN": "RUN",
+  "TRY": "TRY",
+  "UPDATES": "UPDATES",
   "EXTRAS": "EXTRAS",
 
   "head": "Online Platform for Managing Powerlifting Competitions",

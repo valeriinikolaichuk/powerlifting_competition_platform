@@ -32,6 +32,7 @@
                 flex 
                 justify-center 
                 md:justify-end 
+                [@media(max-height:430px)]:justify-end 
                 p-[15px] 
                 z-[50]">
             <div class="flex 
@@ -69,7 +70,7 @@
         </div>
 
         <div class="w-[44%] 
-                h-[460px] 
+                h-[clamp(300px,100vh,460px)] 
                 relative 
                 z-[2] 
                 flex 
@@ -80,7 +81,7 @@
                 pb-[50px]">
 
             <button class="w-[80%] 
-                        h-[60px] 
+                        h-[clamp(40px,6vh,70px)]
                         border 
                         border-black 
                         text-black 
@@ -93,20 +94,7 @@
             >{{ 'ABOUT' | t:'pages/home' }}</button>
 
             <button class="w-[80%] 
-                        h-[60px] 
-                        border 
-                        border-black 
-                        text-black 
-                        text-lg 
-                        font-bold 
-                        bg-[rgba(0,0,135,0.2)] 
-                        hover:bg-blue-600" 
-                    type="button" 
-                    (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'CLIENTS' | t:'pages/home' }}</button>
-
-            <button class="w-[80%] 
-                        h-[60px] 
+                        h-[clamp(40px,6vh,70px)]
                         border 
                         border-black 
                         text-black 
@@ -117,6 +105,19 @@
                     type="button" 
                     (click)="openInfoPopup(AboutContentComponent)"
             >{{ 'SETUP' | t:'pages/home' }}</button>
+
+            <button class="w-[80%] 
+                        h-[clamp(40px,6vh,70px)]
+                        border 
+                        border-black 
+                        text-black 
+                        text-lg 
+                        font-bold 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600" 
+                    type="button" 
+                    (click)="openInfoPopup(AboutContentComponent)"
+            >{{ 'DATA' | t:'pages/home' }}</button>
         </div>
 
     @if (!isMobile) {
@@ -132,6 +133,7 @@
             </div>
 
             <br/><br/><br/>
+    
             <button
                 class="flex 
                     items-center 
@@ -162,8 +164,21 @@
     
     } @else {
 
-        <div class="relative z-10 flex h-full items-center justify-center">
+        <div class="relative 
+                z-10 
+                flex 
+                h-full 
+                flex-col 
+                items-center 
+                justify-center">
 
+            <div class="relative z-10">
+                <app-login-form></app-login-form>
+            </div>
+
+        @if (!isLandscape) {
+
+            <br/>
             <button
                 class="flex 
                     items-center 
@@ -191,22 +206,23 @@
                         transition">
 
             </button>
+        }
+
         </div>
     }
-
         <div class="w-[44%] 
-                h-[460px] 
+                h-[clamp(300px,100vh,460px)]
                 relative 
                 z-[2] 
                 flex 
                 flex-col 
-                justify-between 
+                justify-between
                 items-center 
                 pt-[100px] 
                 pb-[50px]">
 
             <button class="w-[80%] 
-                        h-[60px] 
+                        h-[clamp(40px,6vh,70px)] 
                         border 
                         border-black 
                         text-black 
@@ -216,10 +232,10 @@
                         hover:bg-blue-600" 
                     type="button" 
                     (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'DATA' | t:'pages/home' }}</button>
+            >{{ 'TRY' | t:'pages/home' }}</button>
 
             <button class="w-[80%] 
-                        h-[60px] 
+                        h-[clamp(40px,6vh,70px)] 
                         border 
                         border-black 
                         text-black 
@@ -229,10 +245,10 @@
                         hover:bg-blue-600" 
                     type="button" 
                     (click)="openInfoPopup(AboutContentComponent)"
-            >{{ 'RUN' | t:'pages/home' }}</button>
+            >{{ 'UPDATES' | t:'pages/home' }}</button>
 
             <button class="w-[80%] 
-                        h-[60px] 
+                        h-[clamp(40px,6vh,80px)]
                         border 
                         border-black 
                         text-black 
@@ -244,21 +260,22 @@
                     (click)="openInfoPopup(AboutContentComponent)"
             >{{ 'EXTRAS' | t:'pages/home' }}</button>
         </div>
+
     </div>
 
     <div class="text-center">
+        @if (!isLandscape) {
+            @if (!isMobile) {
+                <p><b>{{ 'head' | t:'pages/home' }}</b></p>
+                <p>{{ 'lineOne' | t:'pages/home' }}</p>
+                <p>{{ 'lineTwo' | t:'pages/home' }}</p>
+                <p>{{ 'access' | t:'pages/home' }}</p>
+            } @else {
+                <p><b>{{ 'head' | t:'pages/home' }}</b></p>
 
-        @if (!isMobile) {
-            <p><b>{{ 'head' | t:'pages/home' }}</b></p>
-            <p>{{ 'lineOne' | t:'pages/home' }}</p>
-            <p>{{ 'lineTwo' | t:'pages/home' }}</p>
-            <p>{{ 'access' | t:'pages/home' }}</p>
-        } @else {
-
-            <p><b>{{ 'head' | t:'pages/home' }}</b></p>
+            }
         }
     </div>
-
 
 </div>
 

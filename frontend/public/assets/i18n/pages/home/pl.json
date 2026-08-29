@@ -1,12 +1,12 @@
 {
   "ABOUT": "INFO",
-  "CLIENTS": "CLIENTY",
   "SETUP": "KONFIG",
+  "DATA": "DANE",
   
   "ASSISTANT": "ASYSTENT AI",
 
-  "DATA": "DANE",
-  "RUN": "BIEG",
+  "TRY": "TEST",
+  "UPDATES": "AKTUAL",
   "EXTRAS": "EXTRAS",
 
   "head": "System online do przeprowadzania zawodów w trójboju siłowym",
