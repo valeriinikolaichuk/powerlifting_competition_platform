@@ -87,6 +87,7 @@ tService.lang()
 The component detects whether the current viewport is mobile-sized:
 ```
 isMobile = window.innerWidth < 768;
+isLandscape = window.innerHeight < 568;
 ```
 
 The `@HostListener('window:resize')` listener updates this value whenever the browser window is resized.
