@@ -12,17 +12,19 @@
 ---
 
 ### SyncService
-Is responsible for managing offline-first data capabilities and bi-directional synchronization between the local `PGlite` (in-browser `PostgreSQL`) database and the remote backend server (or `localhost` DB) when the `Runtime` **starts**.
+Is responsible for managing offline-first data capabilities and bi-directional synchronization between the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) (in-browser `PostgreSQL`) database and the remote backend server (or `localhost`) [database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database.md) when the `Runtime` **starts**.
+
+Related with backend [Synchronization system](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md)
 
 - #### handleQueueSync()
   - Processes the local synchronization `queue`.
   - Fetches all pending offline changes (where `processed_at IS NULL`).
-  - Sends them to the `/api/sync` backend endpoint, receives [QueueSyncResult](#queuesyncresult)
+  - Sends them to the [/api/sync](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#synccontroller) backend endpoint, receives [QueueSyncResult](#queuesyncresult)
   - Clears the local queue once the server acknowledges a successful sync.
   - Includes built-in network error handling.
 
 - #### getSnapshot()
-  - Fetches a complete data snapshot from the remote server (`/api/sync/snapshot`).
+  - Fetches a complete data snapshot from the remote server ([/api/sync/snapshot](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#synccontroller)).
   - Automatically detects the user's current UI `language` from the `URL` query parameters (`?lang=...`) and forwards it to the `API` to receive localized database records.
 
 - #### refreshDatabase()
