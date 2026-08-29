@@ -65,6 +65,8 @@ AI Assistant repository:
 
 ➡ [backend documentation](docs/architecture/backend_architecture.md)
 
+➡ [shared-sql module](docs/architecture/shared-sql.md)
+
 ---
 
 ## Live Deployment

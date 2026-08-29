@@ -10,6 +10,7 @@
 - [global_state](#global_state)
   - [LiftType enum](#lifttype-enum)
 
+[ER Diagram](#er-diagram)
 </details>
 
 ---
@@ -111,3 +112,13 @@ Defines the competition lift.
 - The active discipline and attempt determine the current stage of the competition.
 - All competition displays read their current state from this table.
 - The table is cleared automatically when users sign out or the competition session ends.
+
+---
+
+### ER Diagram
+- device_status
+- global_state
+
+![ER Diagram](system_runtime.png)
+
+---

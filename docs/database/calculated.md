@@ -35,3 +35,11 @@ The table is generated from `athlete_registrations`, `competition_organizations`
 - `place` stores the final team placing.
 - The table is recalculated when team results are requested by the UI.
 - The table is recalculated again during competition finalization to store the final official standings.
+
+---
+
+### ER Diagram
+
+![ER Diagram](calculated.png)
+
+---
