@@ -342,6 +342,8 @@ This ensures that the `Runtime` works with the updated connection state.
 **Navigation**  
 
 Determines the next route based on `adminExists`.
+
+- Initializes and synchronizes the local `PGlite` database using [SyncService](runtime//systems/sync-system.md#syncservice);
 - If no administrator exists navigates to [/admin](runtime/pages.md#admincomponent);
 - Otherwise navigates to [/role](runtime/pages.md#rolecomponent);
 
@@ -432,10 +434,12 @@ Determines the next route based on `adminExists`.
                     ▼                                         |                 |
                 navigate()                                    ▼                 |
                     │                                     deleteMany()          |
-          ┌─────────┴─────────┐                               |                 |
-          │                   │                               ▼                 |
-   adminExists=false   adminExists=true                Device connections       |
+         syncService.initialize()                             |                 |
+                    |                                         ▼                 |
+          ┌─────────┴─────────┐                        Device connections       |
           │                   │                           are deleted           |
-          ▼                   ▼                                |________________|
+   adminExists=false   adminExists=true                        |________________|
+          │                   │                           
+          ▼                   ▼                               
        /admin               /role                              
 </pre>
