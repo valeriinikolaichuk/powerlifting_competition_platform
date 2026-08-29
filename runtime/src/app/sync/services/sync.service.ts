@@ -60,17 +60,7 @@ export class SyncService {
 
     await this.handleQueueSync();
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const language = urlParams.get('lang')?.toUpperCase() ?? '';
-
-    const params = new HttpParams().set('language', language);
-
-    const snapshot = await firstValueFrom(
-      this.http.get<SnapshotDto>(
-        '/api/sync/snapshot',
-        { params }
-      )
-    );
+    const snapshot = await this.getSnapshot();
 
     if (snapshot){
       await this.refreshDatabase(snapshot);
@@ -119,6 +109,21 @@ export class SyncService {
     } catch (err) {
       console.error('Network error while syncing:', err);
     }
+  }
+
+  private async getSnapshot(): Promise<SnapshotDto> {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const language = urlParams.get('lang')?.toUpperCase() ?? '';
+
+    const params = new HttpParams().set('language', language);
+
+    return await firstValueFrom(
+        this.http.get<SnapshotDto>(
+            '/api/sync/snapshot',
+            { params }
+        )
+    );
   }
 
   private async refreshDatabase(
