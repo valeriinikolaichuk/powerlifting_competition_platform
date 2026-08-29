@@ -110,9 +110,7 @@ Each step:
 * stores the resulting records in `context.data`;
 * can use `Prisma` for database access.
 
-For example, `AdminReferenceStep` retrieves reference data from the tables defined in `ADMIN_REFERENCE_TABLES` and filters the records by the authenticated user's ID.
-
-Individual snapshot steps are not documented separately because they follow the same pipeline contract and are independently responsible for their corresponding data set.
+[snapshot steps](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/backend/api/src/modules/sync/snapshot-pipeline)
 
 ---
 
