@@ -418,7 +418,9 @@ Determines the next route based on `adminExists`.
       0 │              │ > 0          0 │              │ > 0                    |
         |              ▼                |              │                        |
         |          Open popup           ▼              ▼                        |
-        |              │             navigate()     check(dto)                  |
+        |              │          synchronize()     check(dto)                  |
+        |              |    syncService.initialize()                            |
+        |              |                                                        |
         |      ┌───────┴───────┐                                                |
         |      │               │                                                |
         |  no deletion       delete ──────────────> ConnectionsController       |
@@ -432,7 +434,7 @@ Determines the next route based on `adminExists`.
         |      |               │                              ▼                 |
         └──────┴────┬──────────┘                           device_id            |
                     ▼                                         |                 |
-                navigate()                                    ▼                 |
+              synchronize()                                   ▼                 |
                     │                                     deleteMany()          |
          syncService.initialize()                             |                 |
                     |                                         ▼                 |
