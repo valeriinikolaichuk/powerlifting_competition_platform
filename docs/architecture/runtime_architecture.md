@@ -321,7 +321,7 @@ The `device_status` table therefore acts as the **central connection registry**,
 **5. After receiving `ConnectionsResultDto`, the `EntryComponent`** stores the `adminExists` value.  
 The value determines which application flow will be used after the connection check.
 
-- If `connections` is empty, the `EntryComponent` calls [navigate()](runtime/entry.md#navigate) directly without displaying the connections popup.
+- If `connections` is empty, the `EntryComponent` [navigates](#navigation) directly without displaying the connections popup.
 - If existing connections are returned the [EntryComponent](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
   - The popup receives the existing connections through `POPUP_DATA` and passes them to the dynamically loaded `ConnectionsPopupComponent`.
   - [ConnectionsPopupComponent](runtime/delete_connections.md) provides the user interface for selecting and deleting device connections.
@@ -339,7 +339,7 @@ await this.check(dto);
 ```
 This ensures that the `Runtime` works with the updated connection state.
 
-**Navigation**  
+#### Navigation
 
 Determines the next route based on `adminExists`.
 

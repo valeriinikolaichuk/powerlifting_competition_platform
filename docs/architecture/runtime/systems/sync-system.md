@@ -9,6 +9,28 @@
 
 </details>
 
+The application synchronizes the local `PGlite` database with the server when the application starts and an online connection is available.  
+
+The synchronization process is handled by [SyncService](#syncservice).
+
+### Synchronization flow
+1. The local `PGlite` database is initialized.
+2. Pending changes from `sync_queue` are sent to the server.
+3. The server provides a database snapshot.
+4. Local tables are refreshed from the snapshot.
+5. The synchronization popup is closed after successful completion.
+
+While synchronization is running, the application displays `SynchronizingDatabaseComponent` inside `SystemPopupComponent`. This prevents the user from interacting with the application until the initial synchronization is completed.
+
+If synchronization fails, the synchronization popup is closed and `DecisionPopupComponent` displays `SynchronizationErrorComponent`.
+
+The user can choose:
+
+- **RETRY** — starts the synchronization process again.
+- **CONTINUE** — continues using the existing local database copy.
+
+The local database is not replaced when synchronization fails, so the user can continue working with the previously synchronized data.
+
 ---
 
 ### SyncService
