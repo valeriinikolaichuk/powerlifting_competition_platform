@@ -8,10 +8,22 @@ The entry point of the `Runtime` application responsible for checking the curren
 - Opens the [connections popup](delete_connections.md) when existing connections are found.
 - Waits for the popup result using [PopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#popupservice).
 - Re-checks connections after a deletion.
-- [Navigates](#navigation) to the appropriate route based on the administrator state.
+- Navigates to the appropriate route based on the administrator state.
 
 #### Initialization
 When the component is initialized, it creates the device parameters and starts the connection check  
+
+#### Navigation
+  - Determines the next route based on `adminExists`.  
+  - Acts as the entry decision point between the administrator setup and the role-selection flow.
+
+```
+@if (adminExists) {
+  <app-role></app-role>
+} @else {
+  <app-admin></app-admin>
+}
+```
 
 ---
 
@@ -22,8 +34,18 @@ The returned ConnectionsResultDto provides:
 `adminExists` — whether an administrator connection exists.  
 `connections` — existing device connections.  
 
-- If no connections exist, the component proceeds directly to [navigation](#navigation).  
-- If connections exist, the component opens `ConnectionsPopupComponent`.
+- If no connections exist, the component proceeds directly to database [synchronization](#synchronize).  
+- If connections exist, the component opens [ConnectionsPopupComponent](delete_connections.md#connectionspopupcomponent).
+
+---
+
+- ### synchronize()
+Opens a blocking system popup showing `SynchronizingDatabaseComponent` and initializes the local `pgLite` database via [SyncService](systems/sync-system.md#syncservice).
+
+If synchronization succeeds, the popup closes, and the component proceeds to navigation.
+If synchronization fails, the component catches the error, closes the loader, and opens `DecisionPopupComponent` with `SynchronizationErrorComponent`. 
+
+If the user chooses to retry, the component calls `synchronize()` again to re-attempt the database initialization.
 
 ---
 
@@ -39,29 +61,7 @@ return this.popup.open<string[]>(
 ```
 The returned `string[]` contains the IDs of devices deleted by the user.
 
-If the user closes the popup without deleting anything, the component proceeds to [navigation](#navigation).  
-After devices are deleted, the component calls `check(dto)` again to obtain the updated connection state.
+If the user closes the popup without deleting anything, the component proceeds to database [synchronization](#synchronize).
+After devices are deleted, the component calls check(dto) again to obtain the updated connection state.
 
 ---
-
-- ### navigation()
-  - Determines the next route based on `adminExists`.  
-  - Acts as the entry decision point between the administrator setup and the role-selection flow.
-
-If no administrator exists:
-```
-await this.router.navigate(['/admin']);
-```
-Otherwise:
-```
-await this.router.navigate(['/role']);
-```
-
-#### Template
-```
-@if (adminExists) {
-  <app-role></app-role>
-} @else {
-  <app-admin></app-admin>
-}
-```
