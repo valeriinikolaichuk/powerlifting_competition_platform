@@ -1,8 +1,11 @@
+import { Injectable } from '@nestjs/common';
+
 import { SnapshotStepInterface } from "./snapshot-pipeline.interface";
 import { SnapshotContext } from "../dto/snapshot-context.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { STATIC_REFERENCE_TABLES } from '#shared-sql';
 
+@Injectable()
 export class StaticReferenceStep implements SnapshotStepInterface {
 
     constructor(
@@ -18,6 +21,8 @@ export class StaticReferenceStep implements SnapshotStepInterface {
             );
         
             context.data[table] = result as any[];
+
+            console.log(`Processing table: ${table}`);
         }
     }
 }

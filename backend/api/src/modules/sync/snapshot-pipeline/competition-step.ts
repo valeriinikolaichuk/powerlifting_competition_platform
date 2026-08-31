@@ -1,8 +1,11 @@
+import { Injectable } from '@nestjs/common';
+
 import { SnapshotStepInterface } from "./snapshot-pipeline.interface";
 import { SnapshotContext } from "../dto/snapshot-context.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { COMPETITION_TABLES } from '#shared-sql';
 
+@Injectable()
 export class CompetitionStep implements SnapshotStepInterface {
 
     constructor(
@@ -19,12 +22,14 @@ export class CompetitionStep implements SnapshotStepInterface {
                 FROM "${table}" t
                 INNER JOIN competitions c
                     ON c.id = t.competition_id
-                WHERE c.created_by_user_id = $1
+                WHERE c.created_by_user_id = $1::uuid
                 `,
                 context.userId,
             );
         
             context.data[table] = result as any[];
+
+            console.log(`Processing table: ${table}`);
         }
     }
 }

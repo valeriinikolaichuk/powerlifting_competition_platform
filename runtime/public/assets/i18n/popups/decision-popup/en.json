@@ -1,0 +1,5 @@
+{
+    "RETRY": "RETRY",
+    "CONTINUE": "CONTINUE",
+    "FAILED": "Database synchronization failed"
+}

@@ -22,6 +22,21 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "pglite.data",
+                "input": "node_modules/@electric-sql/pglite/dist",
+                "output": "/"
+              },
+              {
+                "glob": "pglite.wasm",
+                "input": "node_modules/@electric-sql/pglite/dist",
+                "output": "/"
+              },
+              {
+                "glob": "initdb.wasm",
+                "input": "node_modules/@electric-sql/pglite/dist",
+                "output": "/"
               }
             ],
             "styles": [

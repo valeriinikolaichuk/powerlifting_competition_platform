@@ -1,8 +1,11 @@
+import { Injectable } from '@nestjs/common';
+
 import { SnapshotStepInterface } from "./snapshot-pipeline.interface";
 import { SnapshotContext } from "../dto/snapshot-context.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { USER_REFERENCE_TABLES } from '#shared-sql';
 
+@Injectable()
 export class UserReferenceStep implements SnapshotStepInterface {
 
     constructor(
@@ -22,16 +25,18 @@ export class UserReferenceStep implements SnapshotStepInterface {
                         scope = 'GLOBAL'
                         OR (
                             scope = 'USER'
-                            AND created_by_user_id = $1
+                            AND created_by_user_id = $1::uuid
                         )
                     )
-                    AND language = $2
+                    AND language = $2::"Language"
                 `,
                 context.userId,
                 context.language,
             );
 
             context.data[table] = result as any[];
+
+            console.log(`Processing table: ${table}`);
         }
     }
 }

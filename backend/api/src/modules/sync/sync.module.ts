@@ -3,6 +3,7 @@ import { SyncController } from './sync.controller';
 import { SyncService } from './sync.service';
 import { SyncGateway } from './sync.gateway';
 
+import { PrismaService } from '../prisma/prisma.service';
 import { SNAPSHOT_PIPELINE } from './sync.tokens';
 
 import { SnapshotPipelineService } from './snapshot-pipeline/snapshot-pipeline.service';
@@ -21,6 +22,7 @@ import { OrganizationResultStep } from './snapshot-pipeline/organization-result-
 @Module({
   controllers: [SyncController],
   providers: [
+    PrismaService,
 
   // iterable<SnapshotStepInterface>
     StaticReferenceStep, 

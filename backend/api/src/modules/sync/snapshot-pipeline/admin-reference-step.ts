@@ -1,8 +1,11 @@
+import { Injectable } from '@nestjs/common';
+
 import { SnapshotStepInterface } from "./snapshot-pipeline.interface";
 import { SnapshotContext } from "../dto/snapshot-context.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { ADMIN_REFERENCE_TABLES } from '#shared-sql';
 
+@Injectable()
 export class AdminReferenceStep implements SnapshotStepInterface {
 
     constructor(
@@ -10,7 +13,7 @@ export class AdminReferenceStep implements SnapshotStepInterface {
     ) {}
 
     async handle(context: SnapshotContext): Promise<void> {
-        
+
         for (const table of ADMIN_REFERENCE_TABLES) {
     
             const result = await this.prisma.$queryRawUnsafe(
@@ -18,12 +21,14 @@ export class AdminReferenceStep implements SnapshotStepInterface {
                 SELECT *
                 FROM "${table}"
                 WHERE
-                user_id = $1
+                user_id = $1::uuid
                 `,
                 context.userId,
             );
     
             context.data[table] = result as any[];
+
+            console.log(`Processing table: ${table}`);
         }
     }
 }

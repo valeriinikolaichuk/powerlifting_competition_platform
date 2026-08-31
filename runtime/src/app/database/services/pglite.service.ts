@@ -17,7 +17,19 @@ export class PgliteService {
     if (this.initialized) return;
 
     try {
-      this.pg = await PGlite.create('idb://bombingout');
+      const [pgliteWasmModule, initdbWasmModule, fsBundle] =
+        await Promise.all([
+          WebAssembly.compileStreaming(fetch('/runtime/pglite.wasm')),
+          WebAssembly.compileStreaming(fetch('/runtime/initdb.wasm')),
+          fetch('/runtime/pglite.data').then(response => response.blob()),
+        ]);
+
+      this.pg = await PGlite.create({
+        dataDir: 'idb://bombingout',
+        pgliteWasmModule,
+        initdbWasmModule,
+        fsBundle,
+      });
 
       await this.pg.exec(`
         CREATE TABLE IF NOT EXISTS "__migrations" (

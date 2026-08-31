@@ -1,5 +1,4 @@
 import { Component, OnInit, Type } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ConnectionsService } from '../../connections/services/connections.service';
 import { DeviceParameters } from '../../connections/dto/device-parameters';
@@ -9,6 +8,10 @@ import { PopupService } from '../../popup/services/popup.service';
 import { ConnectionsPopupComponent } from '../../popup/components/connections-popup/connections-popup.component';
 
 import { SyncService } from '../../sync/services/sync.service';
+import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
+import { SynchronizingDatabaseComponent } from '../../popup/components/system-popups/synchronizing-database/synchronizing-database.component';
+import { DecisionPopupComponent } from '../../popup/components/decision-popup/decision-popup.component';
+import { SynchronizationErrorComponent } from '../../popup/components/decision-popup/synchronization-error/synchronization-error.component';
 
 import { RoleComponent } from '../../pages/role/role.component';
 import { AdminComponent } from '../../pages/admin/admin.component';
@@ -30,7 +33,6 @@ export class EntryComponent implements OnInit {
     private readonly connectionsService: ConnectionsService,
     public popup: PopupService,
     private readonly syncService: SyncService,
-    private readonly router: Router,
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -41,7 +43,7 @@ export class EntryComponent implements OnInit {
       
       this.adminExists = false;
 
-      await this.navigate();
+      await this.synchronize();
 
       return;
     }
@@ -65,7 +67,7 @@ export class EntryComponent implements OnInit {
 
     if (result.connections.length === 0) {
 
-      await this.navigate();
+      await this.synchronize();
 
       return;
     }
@@ -75,7 +77,7 @@ export class EntryComponent implements OnInit {
     // user closed the popup.
     if (deletedDeviceIds.length === 0) {
 
-      await this.navigate();
+      await this.synchronize();
 
       return;
     }
@@ -84,19 +86,35 @@ export class EntryComponent implements OnInit {
     await this.check(dto);
   }
 
-  private async navigate(): Promise<void> {
+  private async synchronize(): Promise<void> {
 
+    this.popup.open(SystemPopupComponent, {
+      content: SynchronizingDatabaseComponent
+    });
+    
     // pgLite synchronization
-    await this.syncService.initialize();
+    try {
 
-    if (this.adminExists === false) {
+      await this.syncService.initialize();
 
-      await this.router.navigate(['/admin'],);
+      this.popup.close();
 
-      return;
+    } catch (error) {
+
+      this.popup.close();
+
+      const retry = await this.popup.open<boolean>(
+        DecisionPopupComponent, 
+        {   
+          content: SynchronizationErrorComponent  
+        }
+      );
+
+      if (retry) {
+        await this.synchronize();
+        return;
+      }
     }
-
-    await this.router.navigate(['/role'],);
   }
 
   private async openConnectionsPopup(

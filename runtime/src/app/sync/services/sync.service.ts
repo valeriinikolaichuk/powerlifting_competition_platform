@@ -53,11 +53,6 @@ export class SyncService {
 
     this.pg = this.pgliteService.database;
 
-    if (!navigator.onLine) {
-      console.log('Offline mode. Working with the current copy of the database in the browser.');
-      return;
-    }
-
     await this.handleQueueSync();
 
     const snapshot = await this.getSnapshot();
@@ -130,8 +125,11 @@ export class SyncService {
     dto: SnapshotDto
   ): Promise<void> {
 
+    console.log('Database synchronization started...');
+
     try {
-      console.log('Database synchronization started...');
+
+      await this.pg.query('BEGIN');
 
       for (const table of this.tables) {
 
@@ -142,13 +140,17 @@ export class SyncService {
 
       await this.syncWithServer(dto);
 
+      await this.pg.query('COMMIT');
+
       console.log('Database synchronization completed successfully.');
 
     } catch (error) {
 
-      console.error('Database synchronization failed:', error);
+        await this.pg.query('ROLLBACK');
 
-      throw error;
+        console.error('Database synchronization failed:', error);
+
+        throw error;
     }
   }
 
@@ -158,7 +160,7 @@ export class SyncService {
 
     for (const table of this.tables) {
 
-      const rows = dto.data[table];
+      const rows = dto[table];
 
       if (!rows || rows.length === 0) {
         continue;

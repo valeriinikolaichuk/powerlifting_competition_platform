@@ -4,7 +4,6 @@ import { SNAPSHOT_PIPELINE } from '../sync.tokens';
 import { SnapshotStepInterface } from './snapshot-pipeline.interface';
 import { SnapshotContext } from '../dto/snapshot-context.dto';
 
-
 @Injectable()
 export class SnapshotPipelineService {
     

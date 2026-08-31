@@ -29,7 +29,7 @@
     ],
 
     "paths": {
-      "#shared-sql": ["../../shared-sql/index.ts"],
+      "#shared-sql": ["../../shared-sql/index.js"],
       "#shared-sql/*": ["../../shared-sql/*"]
     }
   }

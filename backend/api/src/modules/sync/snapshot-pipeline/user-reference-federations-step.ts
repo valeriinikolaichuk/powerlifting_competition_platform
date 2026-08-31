@@ -1,8 +1,11 @@
+import { Injectable } from '@nestjs/common';
+
 import { SnapshotStepInterface } from "./snapshot-pipeline.interface";
 import { SnapshotContext } from "../dto/snapshot-context.dto";
 import { PrismaService } from "../../prisma/prisma.service";
 import { USER_REFERENCE_FEDERATIONS } from '#shared-sql';
 
+@Injectable()
 export class UserReferenceFederationsStep implements SnapshotStepInterface {
 
     constructor(
@@ -18,21 +21,21 @@ export class UserReferenceFederationsStep implements SnapshotStepInterface {
                 SELECT t.*
                 FROM "${table}" t
                 WHERE
-                    t.language = $2
+                    t.language = $2::"Language"
                     AND (
                         (
                             t.scope = 'GLOBAL'
                             AND EXISTS (
                                 SELECT 1
                                 FROM user_federations uf
-                                WHERE uf.user_id = $1
+                                WHERE uf.user_id = $1::uuid
                                 AND uf.federation_id = t.federation_id
                             )
                         )
                         OR
                         (
                             t.scope = 'USER'
-                            AND t.created_by_user_id = $1
+                            AND t.created_by_user_id = $1::uuid
                         )
                     )
                 `,
@@ -41,6 +44,8 @@ export class UserReferenceFederationsStep implements SnapshotStepInterface {
             );
         
             context.data[table] = result as any[];
+
+            console.log(`Processing table: ${table}`);
         }
     }
 }

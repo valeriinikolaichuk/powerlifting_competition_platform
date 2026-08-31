@@ -39,15 +39,14 @@ Related with backend [Synchronization system](https://github.com/valeriinikolaic
 
 ### Synchronization Flow 
 1. [Initializes](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#pgliteservice) the local `PGlite` database.
-2. Automatically detects network status via `navigator.onLine`.
-3. If offline, it bypasses network requests and relies entirely on the local `PGlite` database copy.
-4. Checks the local `sync_queue` table for pending changes.
-6. Sends pending changes to the backend via a `POST` request.
-7. Removes the successfully synchronized changes from the `local queue`.
-8. Requests the current database snapshot from the backend.
-9. Clears the local [USER_TABLES](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration).
-10. Inserts the data received from the server into the local database.
-11. Logs the synchronization progress and reports synchronization errors.
+2. If offline, it bypasses network requests and relies entirely on the local `PGlite` database copy.
+3. Checks the local `sync_queue` table for pending changes.
+4. Sends pending changes to the backend via a `POST` request.
+5. Removes the successfully synchronized changes from the `local queue`.
+6. Requests the current database snapshot from the backend.
+7. Clears the local [USER_TABLES](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration).
+8. Inserts the data received from the server into the local database.
+9. Logs the synchronization progress and reports synchronization errors.
 
 The synchronization uses the shared [USER_TABLES](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration) definition to process all user-related tables without maintaining a separate list of tables in the Runtime.
 

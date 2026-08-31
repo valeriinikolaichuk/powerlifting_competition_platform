@@ -1,0 +1,5 @@
+{
+    "RETRY": "PONÓW",
+    "CONTINUE": "KONTYNUUJ",
+    "FAILED": "Błąd synchronizacji bazy danych"
+}

@@ -6,5 +6,7 @@ export class UserStep implements SnapshotStepInterface {
     async handle(context: SnapshotContext): Promise<void> {
 
         context.data['users'] = [{ id: context.userId }];
+
+        console.log("Processing table: users");
     }
 }
