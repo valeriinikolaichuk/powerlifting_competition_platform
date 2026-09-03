@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
@@ -13,6 +14,7 @@ import { ExitService } from '../services/exit.service';
 export class AdminComponent {
 
   constructor(
+    private readonly router: Router,
     public tService: TranslationService,
     public exitService: ExitService,
   ){}
@@ -21,5 +23,10 @@ export class AdminComponent {
     console.log('admin');
 
     this.tService.load('pages/entry');
+  }
+
+  async openMainPage(){
+
+    await this.router.navigate(['/main'])
   }
 }

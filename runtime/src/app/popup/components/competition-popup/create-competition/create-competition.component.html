@@ -1,0 +1,305 @@
+<button
+    type="button"
+    class="absolute
+        right-[5px]
+        top-[5px]
+        w-[35px]
+        h-[35px]
+        flex
+        items-center
+        justify-center
+        pb-[6px]
+        bg-white
+        text-black
+        font-extrabold
+        text-2xl
+        border-black-400
+        rounded-full
+        cursor-pointer"
+    (click)="close()">
+
+    &times;
+</button>
+
+<h3 class="text-center 
+        text-xl 
+        font-bold 
+        mb-5">
+    {{ 'CREATE' | t:'popups/competition-popup' }}
+</h3>
+
+<form [formGroup]="form">
+
+    <table class="w-full 
+            border-collapse 
+            mb-4">
+        <tbody>
+
+            <tr>
+                <td class="p-2">
+                    {{ 'NAME' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+
+                    <input
+                        type="text"
+                        name="competition_name"
+                        formControlName="competitionName"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <!-- COUNTRY / CITY / DATES -->
+    <table class="w-full border-collapse mb-4">
+        <tbody>
+
+            <tr>
+                <td class="p-2">
+                    {{ 'COUNTRY' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'CITY' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'START_DATE' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'END_DATE' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+
+                    <input
+                        type="text"
+                        name="country"
+                        formControlName="country"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+                </td>
+
+                <td class="p-2">
+
+                    <input
+                        type="text"
+                        name="city"
+                        formControlName="city"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+                </td>
+
+                <td class="p-2">
+
+                    <input
+                        type="date"
+                        name="start_date"
+                        formControlName="startDate"
+                        class="border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+                </td>
+
+                <td class="p-2">
+
+                    <input
+                        type="date"
+                        name="end_date"
+                        formControlName="endDate"
+                        class="border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <!-- DIVISION / SEX / AGE / TYPE -->
+    <table class="w-full border-collapse mb-4">
+        <tbody>
+
+            <tr>
+                <td class="p-2">
+                    {{ 'DIVISION' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'SEX' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'AGE_GROUP' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'TYPE' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+
+                    <select
+                        name="division"
+                        formControlName="division"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+
+                        <!-- options -->
+                    </select>
+
+                </td>
+
+                <td class="p-2">
+
+                    <select
+                        name="sex"
+                        formControlName="sex"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+
+                        <!-- options -->
+                    </select>
+
+                </td>
+
+                <td class="p-2">
+
+                    <select
+                        name="age_group"
+                        formControlName="ageGroup"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+
+                        <!-- options -->
+                    </select>
+
+                </td>
+
+                <td class="p-2">
+
+                    <select
+                        name="type"
+                        formControlName="type"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+
+                        <!-- options -->
+                    </select>
+
+                </td>
+            </tr>
+
+            <!-- FEDERATION -->
+            <tr>
+                <td class="p-2">
+                    {{ 'FEDERATION' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+
+                    <select
+                        name="federation"
+                        formControlName="federation"
+                        class="border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+
+                        <!-- options -->
+                    </select>
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
+    <!-- BUTTONS -->
+    <div class="flex justify-end mt-5">
+
+        <button
+            type="button"
+            class="w-[100px]
+                px-4
+                py-2
+                mr-2
+                rounded-md
+                border-2
+                border-black
+                cursor-pointer
+                bg-green-600
+                text-white
+                font-bold
+                hover:opacity-85"
+            (click)="create()">
+            OK
+        </button>
+
+        <button
+            type="button"
+            class="w-[100px]
+                px-4
+                py-2
+                rounded-md
+                border-2
+                border-black
+                cursor-pointer
+                bg-gray-500
+                text-white
+                font-bold
+                hover:opacity-85"
+            (click)="close()">
+            {{ 'CANCEL' | t:'popups/competition-popup' }}
+        </button>
+
+    </div>
+
+</form>

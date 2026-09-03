@@ -1,0 +1,15 @@
+{
+    "CREATE": "UTWÓRZ ZAWODY",
+    "EDIT": "EDYTUJ ZAWODY",
+    "NAME": "nazwa zawodów",
+    "COUNTRY": "państwo",
+    "CITY": "miasto",
+    "START_DATE": "data rozpoczęcia",
+    "END_DATE": "data zakończenia",
+    "DIVISION": "kategoria",
+    "SEX": "płeć",
+    "AGE_GROUP": "kategoria wiekowa",
+    "TYPE": "rodzaj zawodów",
+    "FEDERATION": "federacja",
+    "CANCEL": "ANULUJ"
+}

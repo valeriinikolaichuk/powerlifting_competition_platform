@@ -87,8 +87,8 @@ model AgeGroups {
   name        String
   sex         Sex
 
-  age_from    Int
-  age_to      Int
+  age_from    Int?
+  age_to      Int?
 
   updated_at  DateTime @updatedAt
   created_at  DateTime @default(now())
@@ -128,7 +128,7 @@ model FederationCategories {
 
   sort_order                  Int
 
-  default_team_scoring_limit  Int
+  default_team_scoring_limit  Int?
 
   created_at                  DateTime @default(now())
   updated_at                  DateTime @updatedAt

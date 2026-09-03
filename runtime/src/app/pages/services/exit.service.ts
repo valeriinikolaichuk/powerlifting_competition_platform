@@ -18,7 +18,7 @@ export class ExitService {
 
   async backToMode(): Promise<void> {
   
-    const dto = this.connectionsService.exitParameters();
+    const dto = await this.connectionsService.exitParameters();
 
     let deviceId = dto.device_id;
     const mode = dto.mode;

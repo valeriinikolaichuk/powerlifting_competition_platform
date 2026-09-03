@@ -6,8 +6,8 @@ CREATE TABLE "age_groups" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "sex" "Sex" NOT NULL,
-    "age_from" INTEGER NOT NULL,
-    "age_to" INTEGER NOT NULL,
+    "age_from" INTEGER,
+    "age_to" INTEGER,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

@@ -12,6 +12,6 @@ export class SynchronizationErrorComponent {
   constructor(
     public tService: TranslationService,    
   ) {
-    this.tService.load('popups/decision-popup');
+    this.tService.load('popups/retry-popup');
   }
 }

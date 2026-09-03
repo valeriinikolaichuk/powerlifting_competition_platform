@@ -1,0 +1,1 @@
+export const DELETE_COMPETITION_SQL = 'sql';

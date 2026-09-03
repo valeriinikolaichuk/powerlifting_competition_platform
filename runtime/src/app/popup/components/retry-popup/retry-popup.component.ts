@@ -6,15 +6,15 @@ import { TranslationService } from '../../../i18n/services/translation.service';
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-decision-popup',
+  selector: 'app-retry-popup',
   standalone: true,
   imports: [
     NgComponentOutlet,
     TranslatePipe,
   ],
-  templateUrl: './decision-popup.component.html',
+  templateUrl: './retry-popup.component.html',
 })
-export class DecisionPopupComponent {
+export class RetryPopupComponent {
 
   popup = inject(PopupService);
 
@@ -25,14 +25,10 @@ export class DecisionPopupComponent {
   constructor(
     public tService: TranslationService,    
   ) {
-    this.tService.load('popups/decision-popup');
+    this.tService.load('popups/retry-popup');
   }
 
   retry(): void {
     this.popup.close(true);
-  }
-
-  continue(): void {
-    this.popup.close(false);
   }
 }

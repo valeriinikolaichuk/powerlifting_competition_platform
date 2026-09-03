@@ -1,0 +1,72 @@
+<div class="flex 
+        flex-col 
+        w-full 
+        h-full">
+
+    <header class="w-full 
+                h-[30px]
+                bg-red-500">
+        <div class="flex 
+                items-start">
+
+            <button
+                type="button"
+                class="sticky left-0 
+                    w-[100px] 
+                    h-[30px]
+                    p-[5px]
+                    bg-[rgb(180,180,255)]
+                    border
+                    border-black
+                    cursor-pointer"
+                (click)="openCreateCompetition()">
+                {{ 'CREATE' | t:'pages/main' }}
+            </button>
+<!--
+            <button
+                type="button"
+                class="sticky left-[100px]
+                    w-[100px] 
+                    h-[30px]
+                    p-[5px]
+                    bg-[rgb(180,180,255)]
+                    border
+                    border-black
+                    cursor-pointer"
+                (click)="openOpenCompetition()">
+                {{ 'OPEN' | t:'pages/main' }}
+            </button>-->
+<!--
+            <button
+                type="button"
+                class="w-[100px] 
+                        h-[30px]
+                        p-[5px]
+                        bg-[rgb(180,180,255)]
+                        border
+                        border-black
+                        cursor-pointer"
+                (click)="openNominations()">
+                NOMINATIONS
+            </button>
+-->
+            <button
+                type="button"
+                class="sticky left-[200px] 
+                    w-[100px] 
+                    h-[30px]
+                    p-[5px]
+                    bg-[rgb(180,180,255)]
+                    border
+                    border-black
+                    cursor-pointer"
+                (click)="backToAdmin()">
+                {{ 'RETURN' | t:'pages/main' }}
+            </button>
+
+        </div>
+    </header>
+
+    <main class="flex-1"></main>
+
+</div>

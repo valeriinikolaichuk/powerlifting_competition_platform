@@ -10,8 +10,8 @@ import { ConnectionsPopupComponent } from '../../popup/components/connections-po
 import { SyncService } from '../../sync/services/sync.service';
 import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
 import { SynchronizingDatabaseComponent } from '../../popup/components/system-popups/synchronizing-database/synchronizing-database.component';
-import { DecisionPopupComponent } from '../../popup/components/decision-popup/decision-popup.component';
-import { SynchronizationErrorComponent } from '../../popup/components/decision-popup/synchronization-error/synchronization-error.component';
+import { RetryPopupComponent } from '../../popup/components/retry-popup/retry-popup.component';
+import { SynchronizationErrorComponent } from '../../popup/components/retry-popup/synchronization-error/synchronization-error.component';
 
 import { RoleComponent } from '../../pages/role/role.component';
 import { AdminComponent } from '../../pages/admin/admin.component';
@@ -74,7 +74,7 @@ export class EntryComponent implements OnInit {
 
     const deletedDeviceIds = await this.openConnectionsPopup(result.connections);
 
-    // user closed the popup.
+    // user closed the popup
     if (deletedDeviceIds.length === 0) {
 
       await this.synchronize();
@@ -104,7 +104,7 @@ export class EntryComponent implements OnInit {
       this.popup.close();
 
       const retry = await this.popup.open<boolean>(
-        DecisionPopupComponent, 
+        RetryPopupComponent, 
         {   
           content: SynchronizationErrorComponent  
         }

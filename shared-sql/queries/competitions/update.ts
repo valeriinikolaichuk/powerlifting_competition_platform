@@ -1,0 +1,1 @@
+export const UPDATE_COMPETITION_SQL = 'sql';

@@ -174,7 +174,7 @@ Popup Content
 - `SystemPopupComponent` (The code is duplicated in both apps)
   - `SecondTabContentComponent` (The code is duplicated in both apps)
   - `SynchronizingDatabaseComponent`
-- `DecisionPopupComponent`
+- `RetryPopupComponent`
   - `SynchronizationErrorComponent`
 
 ---

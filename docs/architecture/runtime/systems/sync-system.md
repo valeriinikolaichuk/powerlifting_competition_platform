@@ -22,14 +22,13 @@ The synchronization process is handled by [SyncService](#syncservice).
 
 While synchronization is running, the application displays `SynchronizingDatabaseComponent` inside `SystemPopupComponent`. This prevents the user from interacting with the application until the initial synchronization is completed.
 
-If synchronization fails, the synchronization popup is closed and `DecisionPopupComponent` displays `SynchronizationErrorComponent`.
+If synchronization fails, the synchronization popup is closed and `RetryPopupComponent` displays `SynchronizationErrorComponent`.
 
 The user can choose:
 
 - **RETRY** — starts the synchronization process again.
-- **CONTINUE** — continues using the existing local database copy.
 
-The local database is not replaced when synchronization fails, so the user can continue working with the previously synchronized data.
+The local database is not replaced when synchronization fails.
 
 ---
 

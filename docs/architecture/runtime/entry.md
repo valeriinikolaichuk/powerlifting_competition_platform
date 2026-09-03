@@ -43,9 +43,9 @@ The returned ConnectionsResultDto provides:
 Opens a blocking system popup showing `SynchronizingDatabaseComponent` and initializes the local `pgLite` database via [SyncService](systems/sync-system.md#syncservice).
 
 If synchronization succeeds, the popup closes, and the component proceeds to navigation.
-If synchronization fails, the component catches the error, closes the loader, and opens `DecisionPopupComponent` with `SynchronizationErrorComponent`. 
+If synchronization fails, the component catches the error, closes the loader, and opens `RetryPopupComponent` with `SynchronizationErrorComponent`. 
 
-If the user chooses to retry, the component calls `synchronize()` again to re-attempt the database initialization.
+If the user clicks to retry, the component calls `synchronize()` again to re-attempt the database initialization.
 
 ---
 

@@ -113,6 +113,15 @@ The method retrieves the information required by the exit flow:
 * `mode` — determines how the Runtime should be closed or where the user should be redirected.
 * `user_agent` — set to null because browser information is not required during the exit flow.
 
+When a user enters the runtime through `EntryComponent`, the device parameters are available in the `URL`.
+
+When the user exits from `AdminComponent` or `RoleComponent`, the application restores the required device parameters from the local `PGlite` database.  
+The application retrieves the following values from `device_status` table:
+- `language`
+- `mode`
+
+The returned [PgliteDeviceParameters](pglitedeviceparameters) object uses lowercase values required by the [DeviceParameters](#deviceparameters) DTO.
+
 The returned parameters are consumed by the [Runtime exit logic] rather than being sent directly to the backend.
 
 ---
@@ -146,6 +155,11 @@ Defines the device and application parameters sent by the frontend when checking
 * `language` — current application language.
 * `mode` — current application mode (`ONLINE` or `LAN`).
 * `user_agent` — browser/device user-agent string; `null` when not required.
+
+### PgliteDeviceParameters  
+Вefines the device parameters retrieved from the local PGlite `device_status` table when `URL` parameters are unavailable.
+* `language`
+* `mode`
 
 ### ConnectionDto
 

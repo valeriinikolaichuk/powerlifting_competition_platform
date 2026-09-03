@@ -1,0 +1,1 @@
+export const CREATE_COMPETITION_SQL = 'sql';

@@ -5,7 +5,7 @@ CREATE TABLE "federation_categories" (
     "age_group_id" UUID NOT NULL,
     "weight_class_group" INTEGER NOT NULL,
     "sort_order" INTEGER NOT NULL,
-    "default_team_scoring_limit" INTEGER NOT NULL,
+    "default_team_scoring_limit" INTEGER,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 

@@ -1,0 +1,18 @@
+{
+    "CREATE": "CREATE A COMPETITION",
+    "EDIT": "EDIT THE COMPETITION",
+    "NAME": "competition name",
+    "COUNTRY": "country",
+    "CITY": "city",
+    "START_DATE": "start date",
+    "END_DATE": "end date",
+    "DIVISION": "division",
+    "SEX": "sex",
+    "AGE_GROUP": "age group",
+    "TYPE": "type",
+    "FEDERATION": "federation",
+    "CANCEL": "CANCEL"
+}
+    
+
+    

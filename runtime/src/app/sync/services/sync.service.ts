@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { 
+  TABLE_USERS, 
   STATIC_REFERENCE_TABLES, 
   ADMIN_REFERENCE_TABLES, 
   USER_REFERENCE_TABLES, 
@@ -11,7 +12,6 @@ import {
   COMPETITION_TABLES, 
   COMPETITION_SESSION_TABLES, 
   COMPETITION_GROUP_TABLES, 
-  TABLE_USERS, 
   CREATED_BY_USER_TABLES, 
   COMPETITION_RUNTIME_TABLES, 
   ORGANIZATION_RESULT_TABLES, 
@@ -29,6 +29,7 @@ export class SyncService {
   private pg!: PGlite;
 
   private tables = [
+    ...TABLE_USERS, 
     ...STATIC_REFERENCE_TABLES, 
     ...ADMIN_REFERENCE_TABLES, 
     ...USER_REFERENCE_TABLES, 
@@ -36,7 +37,6 @@ export class SyncService {
     ...COMPETITION_TABLES, 
     ...COMPETITION_SESSION_TABLES, 
     ...COMPETITION_GROUP_TABLES, 
-    ...TABLE_USERS, 
     ...CREATED_BY_USER_TABLES, 
     ...COMPETITION_RUNTIME_TABLES, 
     ...ORGANIZATION_RESULT_TABLES,
