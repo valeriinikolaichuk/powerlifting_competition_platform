@@ -51,7 +51,7 @@ Stores powerlifting federation information.
 - related with [**federation_categories**](#federation_categories)
 - related with [**athletes**](#athletes)
 - related with [**sport_officials**](#sport_officials)
-- related with [**user_federations**](configuration.md#user_federations)
+- related with [**user_federations**](#user_federations)
 
 ---
 
@@ -198,7 +198,7 @@ Separates:
 | age_group_id | UUID | Reference to `age_groups` |
 | weight_class_group | Integer | [weight_classes](#weight_classes) group **identifier** |
 | sort_order | Integer | Display order |
-| default_team_scoring | Integer | Default team scoring configuration |
+| default_team_scoring_limit | Integer | Default team scoring configuration |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
 
