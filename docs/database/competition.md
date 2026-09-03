@@ -103,7 +103,7 @@ Defines the current competition status.
 #### Competition Creation Workflow
 - The `USER` selects one federation.
 - The `USER` selects one or more federation age groups. These are required fields.
-- The application looks up the corresponding record in `federation_categories` table
+- The application looks up the corresponding record in [federation_categories](reference.md#federation_categories) table
 - When a competition is created, the system creates a record in `сompetitions` and one or more corresponding records in [сompetition_age_groups](configuration.md#сompetition_age_groups).
 - Each `сompetition_age_groups` record defines a competition category and stores its team scoring settings (`team_scoring_limit` and `team_scoring_method`).
 
