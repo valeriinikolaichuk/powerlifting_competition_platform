@@ -84,7 +84,7 @@ Defines the current competition status.
 #### Relations
 * related with ➡ [**users**](user.md) by `created_by_user_id`
 * related with ➡ [**cities**](reference.md#cities) by `city_id`
-* related with [сompetition_age_groups](configuration.md№сompetition_age_groups)
+* related with [сompetition_age_groups](configuration.md#сompetition_age_groups)
 * related with [referee_competition](configuration.md#referee_competition)
 * related with [referee_nominations](configuration.md#referee_nominations)
 * related with [nomination_status](configuration.md#nomination_status)
@@ -104,7 +104,7 @@ Defines the current competition status.
 - The `USER` selects one federation.
 - The `USER` selects one or more federation age groups. These are required fields.
 - The application looks up the corresponding record in `federation_categories` table
-- When a competition is created, the system creates a record in `сompetitions` and one or more corresponding records in `сompetition_age_groups`.
+- When a competition is created, the system creates a record in `сompetitions` and one or more corresponding records in [сompetition_age_groups](configuration.md#сompetition_age_groups).
 - Each `сompetition_age_groups` record defines a competition category and stores its team scoring settings (`team_scoring_limit` and `team_scoring_method`).
 
 ---
