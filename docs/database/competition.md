@@ -70,8 +70,10 @@ Defines the equipment division.
 
 | Value | Description |
 |--------|-------------|
-| CLASSIC | Classic (raw) division. |
+| RAW | Classic (RAW) division. |
+| CLASSIC | Classic (RAW_WRAPS) division. |
 | EQUIPPED | Equipped division. |
+| MULTI_PLY | Multi-ply equipped division. |
 
 #### CompetitionStatus enum
 Defines the current competition status.
