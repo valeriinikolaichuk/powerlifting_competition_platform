@@ -22,6 +22,7 @@ model Federations {
   coefficients         FederationCoefficients[]
 
   categories           FederationCategories[]
+  divisions            FederationDivisions[]
 
   athletes             Athletes[]
   sportOfficials       SportOfficials[]
@@ -37,8 +38,10 @@ enum Sex {
 }
 
 enum CoefficientDivision {
+  RAW
   CLASSIC
   EQUIPPED
+  MULTI_PLY
   ANY
 }
 
@@ -142,6 +145,29 @@ model FederationCategories {
   @@unique([federation_id, age_group_id])
 
   @@map("federation_categories")
+}
+
+enum CompetitionDivision {
+  RAW
+  CLASSIC
+  EQUIPPED
+  MULTI_PLY
+}
+
+model FederationDivisions {
+  id              String @id @default(uuid()) @db.Uuid
+
+  federation_id   String @db.Uuid
+  division        CompetitionDivision
+
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
+
+  federation      Federations @relation(fields: [federation_id], references: [id])
+
+  @@unique([federation_id, division])
+
+  @@map("federation_divisions")
 }
 
 model RefereeCategories {
@@ -811,11 +837,6 @@ enum CompetitionLevel {
 enum CompetitionType {
   POWERLIFT
   BENCH_PRESS
-}
-
-enum CompetitionDivision {
-  CLASSIC
-  EQUIPPED
 }
 
 enum CompetitionStatus {
