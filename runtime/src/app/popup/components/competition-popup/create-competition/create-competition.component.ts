@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, } from '@angular/forms';
 
 import { TranslationService } from '../../../../i18n/services/translation.service';
@@ -6,6 +6,13 @@ import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 import { PopupService } from '../../../services/popup.service';
 import { CompetitionPopupService } from '../services/competition-popup.service';
+import { CompetitionOptionsService } from '../services/competition-options.service';
+
+import { 
+  FederationOption, 
+  COMPETITION_LEVELS, 
+  COMPETITION_TYPES, 
+} from '../dto/competition-options.dtos';
 
 @Component({
   selector: 'app-create-competition',
@@ -18,12 +25,14 @@ import { CompetitionPopupService } from '../services/competition-popup.service';
 export class CreateCompetitionComponent {
 
   form;
+  federations: FederationOption[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
     public tService: TranslationService,  
     private readonly popup: PopupService, 
     private readonly competitionPopupService: CompetitionPopupService, 
+    private readonly competitionOptionsService: CompetitionOptionsService,
   ) {
     this.form = this.fb.group({
       competitionName: [''],
@@ -31,14 +40,34 @@ export class CreateCompetitionComponent {
       city: [''],
       startDate: [''],
       endDate: [''],
+      federation: [''],
+      level: [''],
+      type: [''],
       division: [''],
       sex: [''],
       ageGroup: [''],
-      type: [''],
-      federation: [''],
     });
 
     this.tService.load('popups/competition-popup');
+  }
+
+  readonly levels = computed(() => {
+    const lang = this.tService.lang();
+
+    if (lang === 'en') {
+      return COMPETITION_LEVELS;
+    }
+
+    return COMPETITION_LEVELS.filter(
+      level => level !== 'INTERNATIONAL'
+    );
+  });
+
+  readonly types = COMPETITION_TYPES;
+
+  async ngOnInit(): Promise<void> {
+
+    this.federations = await this.competitionOptionsService.getFederations();
   }
 
   async create(): Promise<void> {
@@ -54,11 +83,12 @@ export class CreateCompetitionComponent {
       city: value.city ?? '',
       startDate: value.startDate ?? '',
       endDate: value.endDate ?? '',
-      division: value.division ?? '',
-      ageGroup: value.ageGroup ?? '',
-      sex: value.sex ?? '',
-      type: value.type ?? '',
       federation: value.federation ?? '',
+      level: value.level ?? '',
+      type: value.type ?? '',
+      division: value.division ?? '',
+      sex: value.sex ?? '',
+      ageGroup: value.ageGroup ?? '',
     });
   }
 

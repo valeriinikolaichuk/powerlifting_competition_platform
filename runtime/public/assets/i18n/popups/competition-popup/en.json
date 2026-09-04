@@ -6,13 +6,20 @@
     "CITY": "city",
     "START_DATE": "start date",
     "END_DATE": "end date",
+    "FEDERATION": "federation",
+    "LEVEL": "level",
+        "INTERNATIONAL": "international",
+        "NATIONAL": "national",
+        "REGIONAL_OPEN": "regional open",
+        "REGIONAL_ONLY": "regional only",
+        "LOCAL_OPEN": "local open",
+        "LOCAL_ONLY": "local only",
+    "TYPE": "type",
+        "POWERLIFT": "powerlifting",
+        "BENCH_PRESS": "bench press",
     "DIVISION": "division",
     "SEX": "sex",
     "AGE_GROUP": "age group",
-    "TYPE": "type",
-    "FEDERATION": "federation",
     "CANCEL": "CANCEL"
 }
-    
-
     

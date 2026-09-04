@@ -6,9 +6,10 @@ export interface CompetitionData {
     city: string;
     startDate: string;
     endDate: string;
-    division: string;
-    ageGroup: string;
-    sex: string;
-    type: string;
     federation: string;
+    level: string;
+    type: string;
+    division: string;
+    sex: string;
+    ageGroup: string;
 }

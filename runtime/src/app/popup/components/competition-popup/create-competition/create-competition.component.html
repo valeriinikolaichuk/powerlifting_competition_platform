@@ -141,30 +141,100 @@
         </tbody>
     </table>
 
-    <!-- DIVISION / SEX / AGE / TYPE -->
+    <!-- FEDERATION / LEVEL / TYPE / DIVISION -->
     <table class="w-full border-collapse mb-4">
         <tbody>
 
             <tr>
                 <td class="p-2">
-                    {{ 'DIVISION' | t:'popups/competition-popup' }}
+                    {{ 'FEDERATION' | t:'popups/competition-popup' }}
                 </td>
 
                 <td class="p-2">
-                    {{ 'SEX' | t:'popups/competition-popup' }}
-                </td>
-
-                <td class="p-2">
-                    {{ 'AGE_GROUP' | t:'popups/competition-popup' }}
+                    {{ 'LEVEL' | t:'popups/competition-popup' }}
                 </td>
 
                 <td class="p-2">
                     {{ 'TYPE' | t:'popups/competition-popup' }}
                 </td>
+
+                <td class="p-2">
+                    {{ 'DIVISION' | t:'popups/competition-popup' }}
+                </td>
             </tr>
 
             <tr>
-                <td class="p-2">
+                <td class="p-2 w-1/4">
+
+                    <select
+                        name="federation"
+                        formControlName="federation"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+
+                    @for (federation of federations; track federation.id) {
+
+                        <option [value]="federation.id">
+                            {{ federation.code }}
+                        </option>
+
+                    }
+
+                    </select>
+
+                </td>
+
+                <td class="p-2 w-1/4">
+
+                    <select
+                        name="level"
+                        formControlName="level"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+
+                    @for (level of levels(); track level) {
+
+                        <option [value]="level">
+                            {{ level | t:'popups/competition-popup' }}
+                        </option>
+
+                    }
+
+                    </select>
+
+                </td>
+
+                <td class="p-2 w-1/4">
+
+                    <select
+                        name="type"
+                        formControlName="type"
+                        class="w-full
+                            border
+                            border-black
+                            rounded
+                            px-2
+                            py-1">
+               
+                    @for (type of types; track type) {
+                        <option [value]="type">
+                            {{ type | t:'popups/competition-popup' }}
+                        </option>
+                    }
+
+                    </select>
+
+                </td>
+
+                <td class="p-2 w-1/4">
 
                     <select
                         name="division"
@@ -180,7 +250,19 @@
                     </select>
 
                 </td>
+            </tr>
 
+            <tr>
+                <td class="p-2">
+                    {{ 'SEX' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'AGE_GROUP' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
                 <td class="p-2">
 
                     <select
@@ -205,48 +287,6 @@
                         formControlName="ageGroup"
                         class="w-full
                             border
-                            border-black
-                            rounded
-                            px-2
-                            py-1">
-
-                        <!-- options -->
-                    </select>
-
-                </td>
-
-                <td class="p-2">
-
-                    <select
-                        name="type"
-                        formControlName="type"
-                        class="w-full
-                            border
-                            border-black
-                            rounded
-                            px-2
-                            py-1">
-
-                        <!-- options -->
-                    </select>
-
-                </td>
-            </tr>
-
-            <!-- FEDERATION -->
-            <tr>
-                <td class="p-2">
-                    {{ 'FEDERATION' | t:'popups/competition-popup' }}
-                </td>
-            </tr>
-
-            <tr>
-                <td class="p-2">
-
-                    <select
-                        name="federation"
-                        formControlName="federation"
-                        class="border
                             border-black
                             rounded
                             px-2
