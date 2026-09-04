@@ -23,6 +23,8 @@
 - [age_groups](#age_groups)
 - [weight_classes](#weight_classes)
 - [federation_categories](#federation_categories)
+- [federation_divisions](#federation_divisions)
+  - [CompetitionDivision enum](#competitiondivision-enum)
 - [user_federations](#user_federations)
 - [referee_categories](#referee_categories)
 - [referee_roles](#referee_roles)
@@ -49,6 +51,7 @@ Stores powerlifting federation information.
 #### Relations
 - related with [**federation_coefficients**](#federation_coefficients)
 - related with [**federation_categories**](#federation_categories)
+- related with [**federation_divisions**](#federation_divisions)
 - related with [**athletes**](#athletes)
 - related with [**sport_officials**](#sport_officials)
 - related with [**user_federations**](#user_federations)
@@ -80,8 +83,10 @@ Specifies the lifting equipment category rules. This is critical for some system
 
 | Value | Description |
 |--------|-------------|
-| CLASSIC | Classic (raw) division. |
+| RAW | Classic (RAW) division. |
+| CLASSIC | Classic (RAW_WRAPS) division. |
 | EQUIPPED | Equipped division. |
+| MULTI_PLY | Multi-ply equipped division. |
 | ANY | Used for universal formulas where the equipment type does not alter the mathematical equation. |
 
 #### CoefficientDiscipline enum
@@ -202,10 +207,39 @@ Separates:
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
 
-### Relations
+#### Relations
 - related with - [federations](#federations) by `federation_id`
 - related with - [age_groups](#age_groups) by `age_group_id`
 - related with ➡ [**competition_age_groups**](configuration.md#competition_age_groups)
+
+---
+
+### federation_divisions
+Defines which competition divisions are available for each federation.
+
+| Field | Type | Description |
+| ----- | ---- | ----------- |
+| id | UUID | Primary key generated automatically |
+| federation_id | UUID | Reference to `federations` |
+| division | CompetitionDivision enum | Equipment division available for the federation |
+| created_at | DateTime | Automatically created timestamp |
+| updated_at | DateTime | Automatically updated timestamp |
+
+The combination of `federation_id` and `division` must be **unique**.
+
+#### CompetitionDivision enum
+Defines the equipment division.
+
+| Value | Description |
+|--------|-------------|
+| RAW | Classic (RAW) division. |
+| CLASSIC | Classic (RAW_WRAPS) division. |
+| EQUIPPED | Equipped division. |
+| MULTI_PLY | Multi-ply equipped division. |
+
+#### Relations
+- related with - [federations](#federations) by `federation_id`
+- related with - [competitions](competition.md#competitions) (not directly)
 
 ---
 
@@ -272,6 +306,7 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 - age_groups
 - weight_classes
 - federation_categories
+- federation_divisions
 - user_federations
 - referee_categories
 - referee_roles
