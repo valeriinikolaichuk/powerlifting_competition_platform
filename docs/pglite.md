@@ -2,8 +2,7 @@
 The browser database is a local `PGlite` database used by the offline competition runtime.  
 The database is managed by [PgliteService](#pgliteservice), which handles database initialization, migrations, and `SQL` query execution.
 
-#### ER Diagram
-![ER Diagram](database/pglite.png)
+---
 
 #### Tables
 **Some tables differ from the server database. Browser-specific differences are described in the corresponding table documentation.**  
