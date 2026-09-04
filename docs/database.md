@@ -14,6 +14,7 @@ Database migrations are managed by `Prisma` Migrate.
   - age_groups
   - weight_classes
   - federation_categories
+  - federation_divisions
   - user_federations
   - referee_categories
   - referee_roles  
