@@ -246,7 +246,12 @@
                             px-2
                             py-1">
 
-                        <!-- options -->
+                    @for (division of divisions; track division.division) {
+                        <option [value]="division.division">
+                            {{ division.division | t:'popups/competition-popup' }}
+                        </option>
+                    }
+                    
                     </select>
 
                 </td>

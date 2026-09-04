@@ -5,7 +5,7 @@ CREATE TYPE "CompetitionLevel" AS ENUM ('INTERNATIONAL', 'NATIONAL', 'REGIONAL_O
 CREATE TYPE "CompetitionType" AS ENUM ('POWERLIFT', 'BENCH_PRESS');
 
 -- CreateEnum
-CREATE TYPE "CompetitionDivision" AS ENUM ('CLASSIC', 'EQUIPPED');
+CREATE TYPE "CompetitionDivision" AS ENUM ('RAW', 'RAW_WRAPS', 'SINGLE_PLY', 'MULTI_PLY');
 
 -- CreateEnum
 CREATE TYPE "CompetitionStatus" AS ENUM ('ACTIVE', 'ARCHIVED');

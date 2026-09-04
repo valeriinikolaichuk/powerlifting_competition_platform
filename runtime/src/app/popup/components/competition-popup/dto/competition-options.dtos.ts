@@ -20,3 +20,7 @@ export const COMPETITION_TYPES = [
 ] as const;
 
 export type CompetitionType = typeof COMPETITION_TYPES[number];
+
+export interface DivisionOption {
+  division: string;
+}

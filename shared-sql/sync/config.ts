@@ -5,6 +5,7 @@ export const STATIC_REFERENCE_TABLES = [
     'age_groups',
     'weight_classes',
     'federation_categories',
+    'federation_divisions',
     'referee_categories',
     'referee_roles',
 ];

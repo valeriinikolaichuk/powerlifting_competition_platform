@@ -39,8 +39,8 @@ enum Sex {
 
 enum CoefficientDivision {
   RAW
-  CLASSIC
-  EQUIPPED
+  RAW_WRAPS
+  SINGLE_PLY
   MULTI_PLY
   ANY
 }
@@ -149,8 +149,8 @@ model FederationCategories {
 
 enum CompetitionDivision {
   RAW
-  CLASSIC
-  EQUIPPED
+  RAW_WRAPS
+  SINGLE_PLY
   MULTI_PLY
 }
 
@@ -159,6 +159,8 @@ model FederationDivisions {
 
   federation_id   String @db.Uuid
   division        CompetitionDivision
+  name            String?
+  sort_order      Int
 
   created_at      DateTime @default(now())
   updated_at      DateTime @updatedAt

@@ -12,6 +12,7 @@ import {
   FederationOption, 
   COMPETITION_LEVELS, 
   COMPETITION_TYPES, 
+  DivisionOption, 
 } from '../dto/competition-options.dtos';
 
 @Component({
@@ -26,6 +27,7 @@ export class CreateCompetitionComponent {
 
   form;
   federations: FederationOption[] = [];
+  divisions: DivisionOption[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
@@ -68,6 +70,7 @@ export class CreateCompetitionComponent {
   async ngOnInit(): Promise<void> {
 
     this.federations = await this.competitionOptionsService.getFederations();
+    this.divisions = await this.competitionOptionsService.getDivisions();
   }
 
   async create(): Promise<void> {

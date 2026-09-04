@@ -83,8 +83,8 @@ Specifies the lifting equipment category rules. This is critical for some system
 
 | Value | Description |
 |--------|-------------|
-| RAW | Classic (RAW) division. |
-| CLASSIC | Classic (RAW_WRAPS) division. |
+| RAW | Classic division. |
+| RAW_WRAPS | Classic (RAW with wraps) division. |
 | EQUIPPED | Equipped division. |
 | MULTI_PLY | Multi-ply equipped division. |
 | ANY | Used for universal formulas where the equipment type does not alter the mathematical equation. |
@@ -232,8 +232,8 @@ Defines the equipment division.
 
 | Value | Description |
 |--------|-------------|
-| RAW | Classic (RAW) division. |
-| CLASSIC | Classic (RAW_WRAPS) division. |
+| RAW | Classic division. |
+| RAW_WRAPS | Classic (RAW with wraps) division. |
 | EQUIPPED | Equipped division. |
 | MULTI_PLY | Multi-ply equipped division. |
 

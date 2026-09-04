@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "CoefficientDivision" AS ENUM ('CLASSIC', 'EQUIPPED', 'ANY');
+CREATE TYPE "CoefficientDivision" AS ENUM ('RAW', 'RAW_WRAPS', 'SINGLE_PLY', 'MULTI_PLY', 'ANY');
 
 -- CreateEnum
 CREATE TYPE "CoefficientDiscipline" AS ENUM ('POWERLIFT', 'BENCH_PRESS', 'ANY');
