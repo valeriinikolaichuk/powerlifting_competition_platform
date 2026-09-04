@@ -222,6 +222,7 @@ Defines which competition divisions are available for each federation.
 | id | UUID | Primary key generated automatically |
 | federation_id | UUID | Reference to `federations` |
 | division | CompetitionDivision enum | Equipment division available for the federation |
+| sort_order | Integer | Display order |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
 
