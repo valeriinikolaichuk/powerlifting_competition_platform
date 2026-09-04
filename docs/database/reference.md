@@ -85,7 +85,7 @@ Specifies the lifting equipment category rules. This is critical for some system
 |--------|-------------|
 | RAW | Classic division. |
 | RAW_WRAPS | Classic (RAW with wraps) division. |
-| EQUIPPED | Equipped division. |
+| SINGLE_PLY | Equipped division. |
 | MULTI_PLY | Multi-ply equipped division. |
 | ANY | Used for universal formulas where the equipment type does not alter the mathematical equation. |
 
@@ -201,6 +201,7 @@ Separates:
 | id | UUID | Primary key |
 | federation_id | UUID | Reference to `federations` |
 | age_group_id | UUID | Reference to `age_groups` |
+| code | String | Age group identifier |
 | weight_class_group | Integer | [weight_classes](#weight_classes) group **identifier** |
 | sort_order | Integer | Display order |
 | default_team_scoring_limit | Integer | Default team scoring configuration |
@@ -222,6 +223,7 @@ Defines which competition divisions are available for each federation.
 | id | UUID | Primary key generated automatically |
 | federation_id | UUID | Reference to `federations` |
 | division | CompetitionDivision enum | Equipment division available for the federation |
+| name | String | Official name |
 | sort_order | Integer | Display order |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
@@ -235,7 +237,7 @@ Defines the equipment division.
 |--------|-------------|
 | RAW | Classic division. |
 | RAW_WRAPS | Classic (RAW with wraps) division. |
-| EQUIPPED | Equipped division. |
+| SINGLE_PLY | Equipped division. |
 | MULTI_PLY | Multi-ply equipped division. |
 
 #### Relations
