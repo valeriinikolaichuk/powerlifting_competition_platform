@@ -24,6 +24,7 @@
 - [weight_classes](#weight_classes)
 - [federation_categories](#federation_categories)
   - [TestingStatus enum](#testingstatus-enum)
+- [federation_age_subgroups](#federation_age_subgroups)
 - [federation_divisions](#federation_divisions)
   - [CompetitionDivision enum](#competitiondivision-enum)
 - [user_federations](#user_federations)
