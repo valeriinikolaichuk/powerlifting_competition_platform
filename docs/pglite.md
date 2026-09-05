@@ -19,6 +19,7 @@ The following tables are available in the browser database:
     - [federation_categories](database/reference.md#federation_categories)
     - [federation_age_subgroups](database/reference.md#federation_age_subgroups)
     - [federation_divisions](database/reference.md#federation_divisions)
+    - [user_federations](database/reference.md#user_federations)
     - [referee_categories](database/reference.md#referee_categories)
     - [referee_roles](database/reference.md#referee_roles)
   - User Reference Tables
@@ -28,7 +29,6 @@ The following tables are available in the browser database:
     - [organizations](database/reference.md#organizations)
     - [athletes](database/reference.md#athletes)
     - [sport_officials](database/reference.md#sport_officials)
-    - [user_federations](database/reference.md#user_federations)
 
 - **Configuration Tables**
   - [competition_age_groups](database/configuration.md#competition_age_groups)
