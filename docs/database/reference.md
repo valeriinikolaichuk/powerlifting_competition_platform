@@ -23,6 +23,8 @@
 - [age_groups](#age_groups)
 - [weight_classes](#weight_classes)
 - [federation_categories](#federation_categories)
+  - [TestingStatus enum](#testingstatus-enum)
+- [federation_age_subgroups](#federation_age_subgroups)
 - [federation_divisions](#federation_divisions)
   - [CompetitionDivision enum](#competitiondivision-enum)
 - [user_federations](#user_federations)
@@ -85,7 +87,7 @@ Specifies the lifting equipment category rules. This is critical for some system
 |--------|-------------|
 | RAW | Classic division. |
 | RAW_WRAPS | Classic (RAW with wraps) division. |
-| EQUIPPED | Equipped division. |
+| SINGLE_PLY | Equipped division. |
 | MULTI_PLY | Multi-ply equipped division. |
 | ANY | Used for universal formulas where the equipment type does not alter the mathematical equation. |
 
@@ -130,24 +132,32 @@ Contains a list of available age groups defined by `name` and `sex`.
 | id | UUID | Primary key generated automatically |
 | name | String | Age group display name |
 | sex | Enum | Gender category |
+| age_group_code | String | Age group identifier |
 | age_from | Integer | Minimum allowed age |
 | age_to | Integer | Maximum allowed age |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
+
+`age_group_code` defines federations age group categories 
+- includes `O`, `SJ`, `J`, `SJ`, `M` identifiers for main (big) age groups (if any),
+- can include extra identifiers like `M1`, `M2`, `M3`, `M4` ets. identifiers.
 
 The `sex` field supports:
 - `MEN`
 - `WOMEN`
 
 #### Example
-| name | sex |
-|------|------|
-| open | MEN |
-| open | WOMEN |
-| junior | MEN |
+| name | sex | age_group_code |
+|------|------|------|
+| OPEN | MEN | O |
+| OPEN | WOMEN | O |
+| JUNIOR | MEN | J |
+| MASTER | WOMEN | M |
+| MASTER_1 | MEN | M1 |
 
 #### Relations
-- related with [**federation_categories**](#federation_categories)
+- related with [federation_categories](#federation_categories)
+- related with - [federation_age_subgroups](#federation_age_subgroups)
 
 ---
 
@@ -201,16 +211,72 @@ Separates:
 | id | UUID | Primary key |
 | federation_id | UUID | Reference to `federations` |
 | age_group_id | UUID | Reference to `age_groups` |
+| code | `TestingStatus` enum {optional) | Defines the competition category `league` |
 | weight_class_group | Integer | [weight_classes](#weight_classes) group **identifier** |
 | sort_order | Integer | Display order |
 | default_team_scoring_limit | Integer | Default team scoring configuration |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
 
+**Note:** The field `code` is optional (`?`) to maintain backward compatibility with federations or historic records that do not strictly separate lifters by testing status.
+
+#### TestingStatus enum
+Defines the competition category `league` based on `drug-testing` rules.
+*   **`AM` (Amateur / Tested):** Represents the drug-tested division. Athletes in this category are subject to strict anti-doping controls (e.g., WADA rules in IPF or AWPC divisions). 
+*   **`PRO` (Professional / Untested):** Represents the non-tested (or money-prize) division. It is used for elite or open status where drug testing is not enforced, and athletes often compete for cash benches and absolute totals.
+
 #### Relations
 - related with - [federations](#federations) by `federation_id`
 - related with - [age_groups](#age_groups) by `age_group_id`
+- related with - [federation_age_subgroups](#federation_age_subgroups)
 - related with ➡ [**competition_age_groups**](configuration.md#competition_age_groups)
+
+---
+
+### federation_age_subgroups
+Stores optional age subgroups defined for federation categories.  
+Some federation age categories may be divided into smaller age subgroups, while others remain as a single category.
+
+Each subgroup belongs to a specific `federation_category`.
+
+| **Field**              | **Type** | **Description**                      |
+| ---------------------- | -------- | ------------------------------------ |
+| id                     | UUID     | Primary key generated automatically  |
+| federation_category_id | UUID     | Reference to `federation_categories` |
+| age_group_id           | UUID     | Reference to `age_groups`            |
+| sort_order             | Integer  | Display order of the subgroup        |
+| created_at             | DateTime | Automatically created timestamp      |
+| updated_at             | DateTime | Automatically updated timestamp      |
+
+If a `federation_category` has no related records in `federation_age_subgroups`, the main age group from [federation_categories](#federation_categories) is used directly.
+
+If subgroups exist, they replace the main age group when displaying available competition categories.
+
+#### Example
+
+```text
+MASTER
+```
+
+Without subgroups:
+
+```text
+MASTER
+```
+
+With subgroups:
+
+```text
+MASTER
+├── MASTER_1
+├── MASTER_2
+├── MASTER_3
+└── MASTER_4
+```
+
+### Relations
+* related with → [federation_categories](#federation_categories) by `federation_category_id`
+* related with → [age_groups](#age_groups) by `age_group_id`
 
 ---
 
@@ -222,6 +288,7 @@ Defines which competition divisions are available for each federation.
 | id | UUID | Primary key generated automatically |
 | federation_id | UUID | Reference to `federations` |
 | division | CompetitionDivision enum | Equipment division available for the federation |
+| name | String | Official name |
 | sort_order | Integer | Display order |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
@@ -235,7 +302,7 @@ Defines the equipment division.
 |--------|-------------|
 | RAW | Classic division. |
 | RAW_WRAPS | Classic (RAW with wraps) division. |
-| EQUIPPED | Equipped division. |
+| SINGLE_PLY | Equipped division. |
 | MULTI_PLY | Multi-ply equipped division. |
 
 #### Relations
@@ -307,6 +374,7 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 - age_groups
 - weight_classes
 - federation_categories
+- federation_age_subgroups
 - federation_divisions
 - user_federations
 - referee_categories

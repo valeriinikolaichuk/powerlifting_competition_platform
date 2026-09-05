@@ -2,8 +2,7 @@
 The browser database is a local `PGlite` database used by the offline competition runtime.  
 The database is managed by [PgliteService](#pgliteservice), which handles database initialization, migrations, and `SQL` query execution.
 
-#### ER Diagram
-![ER Diagram](database/pglite.png)
+---
 
 #### Tables
 **Some tables differ from the server database. Browser-specific differences are described in the corresponding table documentation.**  
@@ -18,7 +17,9 @@ The following tables are available in the browser database:
     - [age_groups](database/reference.md#age_groups)
     - [weight_classes](database/reference.md#weight_classes)
     - [federation_categories](database/reference.md#federation_categories)
+    - [federation_age_subgroups](database/reference.md#federation_age_subgroups)
     - [federation_divisions](database/reference.md#federation_divisions)
+    - [user_federations](database/reference.md#user_federations)
     - [referee_categories](database/reference.md#referee_categories)
     - [referee_roles](database/reference.md#referee_roles)
   - User Reference Tables
@@ -28,7 +29,6 @@ The following tables are available in the browser database:
     - [organizations](database/reference.md#organizations)
     - [athletes](database/reference.md#athletes)
     - [sport_officials](database/reference.md#sport_officials)
-    - [user_federations](database/reference.md#user_federations)
 
 - **Configuration Tables**
   - [competition_age_groups](database/configuration.md#competition_age_groups)
