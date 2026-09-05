@@ -142,9 +142,10 @@ The `sex` field supports:
 #### Example
 | name | sex |
 |------|------|
-| open | MEN |
-| open | WOMEN |
-| junior | MEN |
+| OPEN | MEN |
+| OPEN | WOMEN |
+| JUNIOR | MEN |
+| MASTER | WOMEN |
 
 #### Relations
 - related with [**federation_categories**](#federation_categories)
@@ -207,6 +208,10 @@ Separates:
 | default_team_scoring_limit | Integer | Default team scoring configuration |
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
+
+`code` defines federations age group categories 
+- includes `O`, `SJ`, `J`, `M` identifiers for main (big) age groups (if any),
+- can include sum extra like `M1`, `M2`, `M3`, `M4` ets. identifiers.
 
 #### Relations
 - related with - [federations](#federations) by `federation_id`
