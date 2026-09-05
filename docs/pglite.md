@@ -17,6 +17,7 @@ The following tables are available in the browser database:
     - [age_groups](database/reference.md#age_groups)
     - [weight_classes](database/reference.md#weight_classes)
     - [federation_categories](database/reference.md#federation_categories)
+    - [federation_age_subgroups](database/reference.md#federation_age_subgroups)
     - [federation_divisions](database/reference.md#federation_divisions)
     - [referee_categories](database/reference.md#referee_categories)
     - [referee_roles](database/reference.md#referee_roles)
