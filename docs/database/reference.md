@@ -374,6 +374,7 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
 - age_groups
 - weight_classes
 - federation_categories
+- federation_age_subgroups
 - federation_divisions
 - user_federations
 - referee_categories
