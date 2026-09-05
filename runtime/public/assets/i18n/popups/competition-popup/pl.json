@@ -18,7 +18,10 @@
         "POWERLIFT": "trójbój siłowy",
         "BENCH_PRESS": "wyciskanie leżąc",
     "DIVISION": "kategoria",
+        "CLASSIC": "klasyczny",
     "SEX": "płeć",
+        "MEN": "mężczyźni",
+        "WOMEN": "kobiety",
     "AGE_GROUP": "kategoria wiekowa",
     "CANCEL": "ANULUJ"
 }

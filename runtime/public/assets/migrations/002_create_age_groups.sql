@@ -6,6 +6,7 @@ CREATE TABLE "age_groups" (
     "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "sex" "Sex" NOT NULL,
+    "age_group_code" TEXT,
     "age_from" INTEGER,
     "age_to" INTEGER,
     "updated_at" TIMESTAMP(3) NOT NULL,

@@ -5,6 +5,7 @@ export const STATIC_REFERENCE_TABLES = [
     'age_groups',
     'weight_classes',
     'federation_categories',
+    'federation_age_subgroups',
     'federation_divisions',
     'referee_categories',
     'referee_roles',
@@ -61,7 +62,6 @@ export const COMPETITION_RUNTIME_TABLES = [
     'athlete_lifts', 
     'competition_results',
 ];
-
 
 export const ORGANIZATION_RESULT_TABLES = [
     'organization_results',

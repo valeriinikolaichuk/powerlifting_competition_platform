@@ -85,18 +85,20 @@ model FederationCoefficients {
 }
 
 model AgeGroups {
-  id          String   @id @default(uuid()) @db.Uuid
+  id              String   @id @default(uuid()) @db.Uuid
 
-  name        String
-  sex         Sex
+  name            String
+  sex             Sex
+  age_group_code  String?
 
-  age_from    Int?
-  age_to      Int?
+  age_from        Int?
+  age_to          Int?
 
-  updated_at  DateTime @updatedAt
-  created_at  DateTime @default(now())
+  updated_at      DateTime @updatedAt
+  created_at      DateTime @default(now())
 
-  categories FederationCategories[]
+  categories      FederationCategories[]
+  age_subgroups   FederationAgeSubgroups[]
 
   @@map("age_groups")
 }
@@ -121,11 +123,18 @@ model WeightClasses {
   @@map("weight_classes")
 }
 
+enum TestingStatus {
+  AM
+  PRO
+}
+
 model FederationCategories {
   id                          String @id @default(uuid()) @db.Uuid
 
   federation_id               String @db.Uuid
   age_group_id                String @db.Uuid
+
+  code                        TestingStatus?
 
   weight_class_group          Int
 
@@ -136,15 +145,33 @@ model FederationCategories {
   created_at                  DateTime @default(now())
   updated_at                  DateTime @updatedAt
 
-  federation Federations @relation(fields: [federation_id], references: [id])
+  federation            Federations @relation(fields: [federation_id], references: [id])
+  age_group             AgeGroups @relation(fields: [age_group_id], references: [id])
 
-  age_group AgeGroups @relation(fields: [age_group_id], references: [id])
+  competitionAgeGroups  CompetitionAgeGroups[]
+  age_subgroups         FederationAgeSubgroups[]
 
-  competitionAgeGroups CompetitionAgeGroups[]
-
-  @@unique([federation_id, age_group_id])
+  @@unique([federation_id, age_group_id, code])
 
   @@map("federation_categories")
+}
+
+model FederationAgeSubgroups {
+  id                      String @id @default(uuid()) @db.Uuid
+
+  federation_category_id  String @db.Uuid
+  age_group_id            String @db.Uuid
+  sort_order              Int
+
+  created_at              DateTime @default(now())
+  updated_at              DateTime @updatedAt
+
+  federation_category     FederationCategories @relation(fields: [federation_category_id], references: [id])
+  age_group               AgeGroups @relation(fields: [age_group_id], references: [id])
+
+  @@unique([federation_category_id, age_group_id])
+
+  @@map("federation_age_subgroups")
 }
 
 enum CompetitionDivision {

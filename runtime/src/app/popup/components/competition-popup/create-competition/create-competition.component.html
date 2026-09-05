@@ -248,10 +248,10 @@
 
                     @for (division of divisions; track division.division) {
                         <option [value]="division.division">
-                            {{ division.division | t:'popups/competition-popup' }}
+                            {{ division.name | t:'popups/competition-popup' }}
                         </option>
                     }
-                    
+
                     </select>
 
                 </td>
@@ -280,7 +280,12 @@
                             px-2
                             py-1">
 
-                        <!-- options -->
+                    @for (sex of sexes; track sex) {
+                        <option [value]="sex">
+                            {{ sex | t:'popups/competition-popup' }}
+                        </option>
+                    }
+
                     </select>
 
                 </td>

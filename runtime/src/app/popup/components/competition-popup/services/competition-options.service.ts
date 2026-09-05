@@ -41,7 +41,8 @@ export class CompetitionOptionsService {
     const result = await this.pg.query<DivisionOption>(
       `
         SELECT DISTINCT
-          fd.division
+          fd.division,
+          fd.name
         FROM user_federations uf
         JOIN federation_divisions fd
           ON fd.federation_id = uf.federation_id

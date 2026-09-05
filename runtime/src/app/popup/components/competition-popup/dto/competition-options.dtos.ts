@@ -23,4 +23,12 @@ export type CompetitionType = typeof COMPETITION_TYPES[number];
 
 export interface DivisionOption {
   division: string;
+  name: string;
 }
+
+export const SEXES = [
+  'MEN',
+  'WOMEN',
+] as const;
+
+export type Sex = typeof SEXES[number];

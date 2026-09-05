@@ -18,7 +18,10 @@
         "POWERLIFT": "powerlifting",
         "BENCH_PRESS": "bench press",
     "DIVISION": "division",
+        "CLASSIC": "classic",
     "SEX": "sex",
+        "MEN": "men",
+        "WOMEN": "women",
     "AGE_GROUP": "age group",
     "CANCEL": "CANCEL"
 }

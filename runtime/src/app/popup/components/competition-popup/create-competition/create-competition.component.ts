@@ -13,6 +13,7 @@ import {
   COMPETITION_LEVELS, 
   COMPETITION_TYPES, 
   DivisionOption, 
+  SEXES, 
 } from '../dto/competition-options.dtos';
 
 @Component({
@@ -66,6 +67,7 @@ export class CreateCompetitionComponent {
   });
 
   readonly types = COMPETITION_TYPES;
+  readonly sexes = SEXES;
 
   async ngOnInit(): Promise<void> {
 
