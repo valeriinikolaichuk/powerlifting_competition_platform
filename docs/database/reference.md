@@ -425,6 +425,7 @@ Defines the language context used for record lookup and data entry using the [**
 #### Relations
 - related with ➡ [**users**](user.md#users) by `created_by_user_id`
 - related with [regions](#regions)
+- related with [cities](#cities)
 - related with [participants](user.md#participants)
 - related with [referee_competition](configuration.md#referee_competition)
 - related with [referee_nominations](configuration.md#referee_nominations)
@@ -476,7 +477,8 @@ Defines the language context used for record lookup and data entry using the [**
 
 **Fields**
 - `id` UUID
-- `region_id` String
+- `country_id` String
+- `region_id` String?
 - `name` String
 - `scope` ENUM [DataScope](#datascope-enum)
 - `language` ENUM [Language](#language-enum)
@@ -486,6 +488,7 @@ Defines the language context used for record lookup and data entry using the [**
 - `is_deleted` Boolean
 
 #### Relations
+- related with [**countries**](#countries)
 - related with [**regions**](#regions)
 - related with ➡ [**users**](user.md#users) by `created_by_user_id`
 - related with [participants](user.md#participants)
