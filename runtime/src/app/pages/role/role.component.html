@@ -4,70 +4,102 @@
         <source src="/runtime/videos/barVideo.mp4" type="video/mp4">
     </video>
 
-<div class="min-h-screen w-full 
-            grid grid-rows-[200px_200px_200px] 
-            gap-[25px] justify-items-center items-center pt-[50px]">
-    <div class="flex gap-[25px] justify-center">
-        <button class="w-[200px] h-[200px] 
-                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                    rounded-[10px] 
-                    text-2xl leading-[2]"
-                    type="button">
-            {{ 'WEIGHING_IN' | t:'pages/role' }}
-        </button>
+@if (isLoading) {
+
+    <div class="w-[150px] font-bold">
+            Loading...
     </div>
 
-    <div class="flex gap-[25px] justify-center">
-        <button class="w-[200px] h-[200px] 
-                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                    rounded-[10px] 
-                    text-2xl leading-[2]"
-                    type="button">
-            {{ 'SCOREBOARD' | t:'pages/role' }}
-        </button>
+} @else {
 
-        <button class="w-[200px] h-[200px] 
-                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                    rounded-[10px] 
-                    text-2xl leading-[2]"
-                    type="button">
-            {{ 'LIFTING_ORDER' | t:'pages/role' }}
-        </button>
+    <div class="min-h-screen w-full 
+                grid grid-rows-[200px_200px_200px] 
+                gap-[25px] justify-items-center items-center pt-[50px]">
+        <div class="flex gap-[25px] justify-center">
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600 
+                        rounded-[10px] 
+                        text-2xl 
+                        font-bold
+                        leading-[2]"
+                        type="button">
+                {{ 'WEIGHING_IN' | t:'pages/entry' }}
+            </button>
+        </div>
 
-        <button class="w-[200px] h-[200px] 
-                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                    rounded-[10px] 
-                    text-2xl leading-[2]"
-                    type="button">
-            {{ 'DISCS_SEQUENCE' | t:'pages/role' }}
-        </button>
+        <div class="flex gap-[25px] justify-center">
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600 
+                        rounded-[10px] 
+                        text-2xl 
+                        font-bold
+                        leading-[2]"
+                        type="button">
+                {{ 'SCOREBOARD' | t:'pages/entry' }}
+            </button>
 
-        <button class="w-[200px] h-[200px] 
-                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                    rounded-[10px] 
-                    text-2xl leading-[2]"
-                    type="button">
-            {{ 'INFORMATION' | t:'pages/role' }}
-        </button>
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600 
+                        rounded-[10px] 
+                        text-2xl 
+                        font-bold
+                        leading-[2]"
+                        type="button">
+                {{ 'LIFTING_ORDER' | t:'pages/entry' }}
+            </button>
 
-        <button class="w-[200px] h-[200px] 
-                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                    rounded-[10px] 
-                    text-2xl leading-[2]"
-                    type="button">
-            {{ 'TIMER' | t:'pages/role' }}
-        </button>
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600 
+                        rounded-[10px] 
+                        text-2xl 
+                        font-bold
+                        leading-[2]"
+                        type="button">
+                {{ 'DISCS_SEQUENCE' | t:'pages/entry' }}
+            </button>
+
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600 
+                        rounded-[10px] 
+                        text-2xl 
+                        font-bold
+                        leading-[2]"
+                        type="button">
+                {{ 'INFORMATION' | t:'pages/entry' }}
+            </button>
+
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600 
+                        rounded-[10px] 
+                        text-2xl 
+                        font-bold
+                        leading-[2]"
+                        type="button">
+                {{ 'TIMER' | t:'pages/entry' }}
+            </button>
+        </div>
+
+        <div class="row-start-3">
+            <button class="w-[200px] h-[200px] 
+                        bg-[rgba(0,0,135,0.2)] 
+                        hover:bg-blue-600 
+                        rounded-[10px] 
+                        text-2xl 
+                        font-bold
+                        leading-[2]"
+                        type="button"
+                    (click)="exitService.backToMode()">
+                {{ 'EXIT' | t:'pages/entry' }}
+            </button>
+        </div>
     </div>
 
-    <div class="row-start-3">
-        <button class="w-[200px] h-[200px] 
-                    bg-[rgba(0,0,135,0.2)] hover:bg-blue-600 
-                    rounded-[10px] 
-                    text-2xl leading-[2]"
-                    type="button"
-                (click)="exitService.backToMode()">
-            {{ 'EXIT' | t:'pages/role' }}
-        </button>
-    </div>
-</div>
+}
+
 </div>

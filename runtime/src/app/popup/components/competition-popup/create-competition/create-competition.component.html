@@ -292,18 +292,22 @@
 
                 <td class="p-2">
 
-                    <select
-                        name="age_group"
-                        formControlName="ageGroup"
-                        class="w-full
-                            border
-                            border-black
-                            rounded
-                            px-2
-                            py-1">
+                    @for (ageGroup of ageGroups; track ageGroup.id) {
 
-                        <!-- options -->
-                    </select>
+                        <label class="flex items-center gap-2">
+
+                            <input
+                                type="checkbox"
+                                [checked]="isAgeGroupSelected(ageGroup.id)"
+                                (change)="onAgeGroupChange(ageGroup.id, $event)">
+
+                            <span>
+                                {{ getAgeGroupLabel(ageGroup) | t:'popups/competition-popup' }}
+                            </span>
+
+                        </label>
+
+                    }
 
                 </td>
             </tr>
@@ -315,9 +319,16 @@
     <!-- BUTTONS -->
     <div class="flex justify-end mt-5">
 
+    @if (isLoading) {
+
+        <div class="w-[150px] font-bold">
+            Loading...
+        </div>
+
+    } @else {
         <button
             type="button"
-            class="w-[100px]
+            class="w-[150px]
                 px-4
                 py-2
                 mr-2
@@ -330,12 +341,13 @@
                 font-bold
                 hover:opacity-85"
             (click)="create()">
-            OK
+            {{ 'CREATE_BUTTON' | t:'popups/competition-popup' }}
         </button>
+    }
 
         <button
             type="button"
-            class="w-[100px]
+            class="w-[150px]
                 px-4
                 py-2
                 rounded-md

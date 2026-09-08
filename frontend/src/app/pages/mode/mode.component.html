@@ -1,7 +1,23 @@
 @if (tService.hasScope()('pages/mode')) {
-    <div class="min-h-screen w-full 
-            bg-bisque flex flex-col 
-            items-center justify-between p-10">
+    <div class="min-h-screen 
+            w-full 
+            bg-bisque 
+            flex flex-col 
+            items-center 
+            justify-between 
+            p-10">
+
+        <video autoplay muted loop playsinline preload="auto"
+            class="absolute 
+                inset-0 
+                w-full 
+                h-full 
+                object-cover 
+                opacity-50 
+                -z-10">
+            <source src="/videos/barVideo.mp4" type="video/mp4">
+        </video>
+
         <div class="max-w-3xl text-center">
             <h2 class="text-3xl font-bold mb-5">
                 {{ 'TITLE' | t:'pages/mode' }}
@@ -15,20 +31,32 @@
         <div class="flex gap-20 items-center">
             <button
             type="button"
-            class="w-[220px] h-[220px] 
-                rounded-lg bg-blue-500 
-                text-white text-3xl 
-                hover:scale-105 transition"
+            class="w-[220px] 
+                h-[220px] 
+                bg-[rgba(0,0,135,0.3)]
+                rounded-lg 
+                hover:bg-blue-600  
+                text-black 
+                text-3xl 
+                font-bold
+                hover:scale-105 
+                transition"
             (click)="openLan()"
             >LAN
             </button>
 
             <button
             type="button"
-            class="w-[220px] h-[220px] 
-                rounded-lg bg-blue-500 
-                text-white text-3xl 
-                hover:scale-105 transition"
+            class="w-[220px] 
+                h-[220px] 
+                bg-[rgba(0,0,135,0.3)]
+                rounded-lg 
+                hover:bg-blue-600 
+                text-black 
+                text-3xl 
+                font-bold
+                hover:scale-105 
+                transition"
             (click)="openOnline()"
             >ONLINE
             </button>
@@ -36,9 +64,13 @@
 
         <button
             type="button"
-            class="w-[220px] h-[60px] 
-                rounded-lg bg-red-600 
-                text-white text-2xl"
+            class="w-[220px] 
+                h-[60px] 
+                rounded-lg 
+                bg-red-500 
+                text-black 
+                text-2xl
+                font-bold"
             (click)="logout()"
             >{{ 'LOGOUT' | t:'pages/mode' }}
         </button>

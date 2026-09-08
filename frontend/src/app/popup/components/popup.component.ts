@@ -10,6 +10,7 @@ import { POPUP_DATA } from '../tokens/popup-data.token';
   templateUrl: './popup.component.html',
 })
 export class PopupComponent {
+
   popup = inject(PopupService);
 
   @ViewChild('dialog') dialogRef!: ElementRef<HTMLDialogElement>;
@@ -17,27 +18,32 @@ export class PopupComponent {
   component = this.popup.component;
   data = this.popup.data;
 
-  
+  customInjector!: Injector;
+
   dialogEffect = effect(() => {
-      const cmp = this.component();
 
-      if (!this.dialogRef) return;
+    const cmp = this.component();
+    const data = this.data();
 
-      if (cmp) {
-        this.dialogRef.nativeElement.showModal();
-      } else {
-        this.dialogRef.nativeElement.close();
-      }
-    });
-  
+    if (!this.dialogRef) return;
 
-  customInjector = () =>
-    Injector.create({
-      providers: [
-        {
-          provide: POPUP_DATA,
-          useValue: this.popup.data(),
-        },
-      ],
-    });
+    if (cmp) {
+
+      this.customInjector = Injector.create({
+        providers: [
+          {
+            provide: POPUP_DATA,
+            useValue: data,
+          },
+        ],
+      });
+
+      this.dialogRef.nativeElement.showModal();
+
+    } else {
+
+      this.dialogRef.nativeElement.close();
+
+    }
+  });
 }

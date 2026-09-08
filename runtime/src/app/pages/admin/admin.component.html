@@ -13,6 +13,14 @@
         <source src="/runtime/videos/barVideo.mp4" type="video/mp4">
     </video>
 
+@if (isLoading) {
+
+    <div class="w-[150px] font-bold">
+            Loading...
+    </div>
+
+} @else {
+
     <div class="flex 
             flex-col 
             gap-[25px] 
@@ -26,10 +34,11 @@
                     hover:bg-blue-600 
                     rounded-[10px] 
                     text-2xl 
+                    font-bold
                     leading-[2]"
                     type="button"
                 (click)="openMainPage()">
-                {{ 'ADMIN' | t:'pages/role' }}
+                {{ 'ADMIN' | t:'pages/entry' }}
         </button>
 
         <button class="w-[200px] 
@@ -38,12 +47,16 @@
                     bg-[rgba(0,0,135,0.2)] 
                     hover:bg-blue-600 
                     rounded-[10px] 
-                    text-2xl leading-[2]"
+                    text-2xl 
+                    font-bold
+                    leading-[2]"
                     type="button"
                 (click)="exitService.backToMode()">
-                {{ 'EXIT' | t:'pages/role' }}
+                {{ 'EXIT' | t:'pages/entry' }}
         </button>
 
     </div>
+
+}
 
 </div>

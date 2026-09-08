@@ -4,12 +4,12 @@ export interface CompetitionData {
     name: string;
     country: string;
     city: string;
+    language: string;
     startDate: string;
     endDate: string;
-    federation: string;
     level: string;
     type: string;
     division: string;
-    sex: string;
-    ageGroup: string;
+    federationCategoryIds: string[];
+    updated_at: string;
 }

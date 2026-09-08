@@ -1,7 +1,8 @@
 -- CreateTable
 CREATE TABLE "cities" (
     "id" UUID NOT NULL,
-    "region_id" UUID NOT NULL,
+    "country_id" UUID NOT NULL,
+    "region_id" UUID,
     "name" TEXT NOT NULL,
     "language" "Language" NOT NULL,
     "scope" "DataScope" NOT NULL,
@@ -20,7 +21,10 @@ CREATE INDEX "cities_region_id_idx" ON "cities"("region_id");
 CREATE UNIQUE INDEX "cities_region_id_name_key" ON "cities"("region_id", "name");
 
 -- AddForeignKey
-ALTER TABLE "cities" ADD CONSTRAINT "cities_region_id_fkey" FOREIGN KEY ("region_id") REFERENCES "regions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "cities" ADD CONSTRAINT "cities_country_id_fkey" FOREIGN KEY ("country_id") REFERENCES "countries"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "cities" ADD CONSTRAINT "cities_region_id_fkey" FOREIGN KEY ("region_id") REFERENCES "regions"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "cities" ADD CONSTRAINT "cities_created_by_user_id_fkey" FOREIGN KEY ("created_by_user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

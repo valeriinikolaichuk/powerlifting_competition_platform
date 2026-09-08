@@ -7,7 +7,19 @@ type Lang = 'en' | 'uk' | 'pl';
   providedIn: 'root',
 })
 export class TranslationService {
-  constructor(private http: HttpClient) {}
+
+  constructor(private http: HttpClient) {
+    
+    const savedLang = localStorage.getItem('lang');
+
+    if (
+      savedLang === 'en' ||
+      savedLang === 'uk' ||
+      savedLang === 'pl'
+    ) {
+      this.lang.set(savedLang);
+    }
+  }
   
   lang = signal<Lang>('en');
   loadedScopes = signal<string[]>([]);
@@ -28,6 +40,8 @@ export class TranslationService {
   setLang(lang: Lang) {
     this.lang.set(lang);
   
+    localStorage.setItem('lang', lang);
+
     const scopes = this.loadedScopes();
 
     scopes.forEach(scope => {

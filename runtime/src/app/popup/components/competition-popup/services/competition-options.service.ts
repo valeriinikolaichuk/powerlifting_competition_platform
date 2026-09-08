@@ -4,7 +4,8 @@ import { PgliteService } from '../../../../database/services/pglite.service';
 
 import { 
   FederationOption, 
-  DivisionOption,  
+  DivisionOption, 
+  AgeGroupOption,  
 } from '../dto/competition-options.dtos';
 
 @Injectable({
@@ -36,18 +37,51 @@ export class CompetitionOptionsService {
     return result.rows;
   }
 
-  async getDivisions(): Promise<DivisionOption[]> {
+  async getDivisions(
+    federationId: string,
+  ): Promise<DivisionOption[]> {
 
     const result = await this.pg.query<DivisionOption>(
       `
-        SELECT DISTINCT
-          fd.division,
-          fd.name
-        FROM user_federations uf
-        JOIN federation_divisions fd
-          ON fd.federation_id = uf.federation_id
-        ORDER BY fd.sort_order
+        SELECT
+          division,
+          name
+        FROM federation_divisions
+        WHERE federation_id = $1
+        ORDER BY sort_order
+      `,
+      [federationId],
+    );
+
+    return result.rows;
+  }
+
+  async getAgeGroups(
+    federationId: string,
+    sex: string,
+  ): Promise<AgeGroupOption[]> {
+
+    const result = await this.pg.query<AgeGroupOption>(
       `
+        SELECT
+          fc.id,
+          ag.name,
+          ag.sex,
+          f.federation_code
+        FROM federation_categories fc
+        JOIN age_groups ag
+          ON ag.id = fc.age_group_id
+        JOIN federations f
+          ON f.id = fc.federation_id
+        WHERE
+          fc.federation_id = $1
+          AND ag.sex = $2
+        ORDER BY fc.sort_order
+      `,
+      [
+        federationId,
+        sex,
+      ],
     );
 
     return result.rows;

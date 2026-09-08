@@ -34,7 +34,18 @@ export class TranslationService {
     const lang = params.get('lang');
 
     if (lang === 'en' || lang === 'uk' || lang === 'pl') {
+      localStorage.setItem('lang', lang);
       this.lang.set(lang);
+    }
+
+    const savedLang = localStorage.getItem('lang');
+
+    if (
+      savedLang === 'en' ||
+      savedLang === 'uk' ||
+      savedLang === 'pl'
+    ) {
+      this.lang.set(savedLang);
     }
   }
 

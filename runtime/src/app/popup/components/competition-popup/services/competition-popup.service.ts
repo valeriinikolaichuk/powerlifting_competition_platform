@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
+import { SYNC_OPERATIONS } from '#shared-sql';
+
 import { PgliteService } from '../../../../database/services/pglite.service';
 import { CompetitionData } from '../dto/competitionData';
+import { UserService } from '../../../../shared/services/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,6 +15,7 @@ export class CompetitionPopupService {
 
   constructor(
     private readonly pgliteService: PgliteService,
+    private readonly userService: UserService,
   ) {}
 
   async initialize(): Promise<void> {
@@ -20,60 +24,57 @@ export class CompetitionPopupService {
 
   async create(data: CompetitionData): Promise<void> {
 
+    const userId = await this.userService.getUserId();
+
+    let deviceId = localStorage.getItem('device_id');
+
+    if (!deviceId) {
+      throw new Error('Device ID not found.');
+    }
+
+    const operationId = crypto.randomUUID();
+    const payload = JSON.stringify(data);
+
     await this.pg.transaction(async (tx) => {
 
       await tx.query(
-        `
-        INSERT INTO competitions (
-          id,
-          name,
-          country,
-          city,
-          start_date,
-          end_date,
-          division,
-          age_group,
-          sex,
-          type,
-          version
-        )
-        VALUES (
-          $1, $2, $3, $4, $5,
-          $6, $7, $8, $9, $10, $11
-        )
-        `,
+        SYNC_OPERATIONS.CREATE_COMPETITION,
         [
           data.id,
+          userId,
           data.name,
           data.country,
           data.city,
+          data.language,
           data.startDate,
           data.endDate,
-          data.division,
-          data.ageGroup,
-          data.sex,
+          data.level,
           data.type,
-          data.federation,
+          data.division,
+          data.federationCategoryIds,
+          data.updated_at,
         ],
       );
 
       await tx.query(
         `
         INSERT INTO sync_queue (
+          id,
           source_id,
           operation_id,
           record_id,
           payload,
           created_at
         )
-        VALUES ($1, $2, $3, $4, NOW())
+        VALUES ($1, $2, $3, $4, $5, $6)
         `,
         [
-          /* source_id */,
-          /* operation_id */,
-          JSON.stringify({
-            ...data,
-          }),
+          operationId,
+          deviceId,
+          'CREATE_COMPETITION',
+          data.id,
+          payload,
+          data.updated_at
         ],
       );
       

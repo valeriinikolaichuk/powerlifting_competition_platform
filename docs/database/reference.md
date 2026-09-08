@@ -138,8 +138,9 @@ Contains a list of available age groups defined by `name` and `sex`.
 | created_at | DateTime | Automatically created timestamp |
 | updated_at | DateTime | Automatically updated timestamp |
 
+`name` name of age group category: `OPEN`, `SUB_JUNIOR`, `JUNIOR`, `SUB_MASTER`, `MASTER` ets.   
 `age_group_code` defines federations age group categories 
-- includes `O`, `SJ`, `J`, `SJ`, `M` identifiers for main (big) age groups (if any),
+- includes `O`, `SJ`, `J`, `SM`, `M` identifiers for main (big) age groups (if any),
 - can include extra identifiers like `M1`, `M2`, `M3`, `M4` ets. identifiers.
 
 The `sex` field supports:

@@ -32,3 +32,10 @@ export const SEXES = [
 ] as const;
 
 export type Sex = typeof SEXES[number];
+
+export interface AgeGroupOption {
+  id: string;
+  name: string;
+  sex: string;
+  federation_code: string;
+}
