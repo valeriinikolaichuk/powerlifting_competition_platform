@@ -1,5 +1,6 @@
 ### EntryComponent
-The entry point of the `Runtime` application responsible for checking the current device connection state before allowing the user to continue to the appropriate application flow.
+**Runtime bootstrap/orchestration component**  
+The entry point of the `Runtime` application responsible for determining the current application flow, checking device connections, and initializing the local database synchronization.
 
 #### Responsibilities
 - Creates the current device parameters using [ConnectionsService](connection_service.md).
@@ -8,15 +9,29 @@ The entry point of the `Runtime` application responsible for checking the curren
 - Opens the [connections popup](delete_connections.md) when existing connections are found.
 - Waits for the popup result using [PopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#popupservice).
 - Re-checks connections after a deletion.
-- Navigates to the appropriate route based on the administrator state.
+- Initializes the local database [synchronization](systems/sync-system.md#syncservice).
+- Displays a blocking [synchronization popup](systems/popup-system.md#components) while the [database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) is being initialized.
+- Handles synchronization errors and allows the user to retry.
+- Selects the appropriate application flow between [AdminComponent](pages.md#admincomponent) and [RoleComponent](pages.md#rolecomponent).
 
 #### Initialization
-When the component is initialized, it creates the device parameters and starts the connection check  
+When the component is initialized, it first checks whether a device role already exists in `sessionStorage`.
+
+#### Administrator Session
+If the current device role is `ADMIN`, the component:
+1. Sets `adminExists` to false.  
+2. Starts the local database synchronization.  
+3. Skips the connection check.
+
+This allows the administrator device to proceed directly to the administrator flow after synchronization.
+
+#### Other Devices
+If the device does not already have the `ADMIN` role, the component:
+- Creates the current device parameters using [ConnectionsService.createParameters()](connection_service.md#createparameters).
+- Calls [check()](#check) to retrieve the current connection state from the backend.
 
 #### Navigation
-  - Determines the next route based on `adminExists`.  
-  - Acts as the entry decision point between the administrator setup and the role-selection flow.
-
+The component selects the application flow using the `adminExists` state.
 ```
 @if (adminExists) {
   <app-role></app-role>
@@ -24,6 +39,11 @@ When the component is initialized, it creates the device parameters and starts t
   <app-admin></app-admin>
 }
 ```
+- `adminExists` === true — displays [RoleComponent](pages.md#rolecomponent).
+- `adminExists` === false — displays [AdminComponent](pages.md#admincomponent).
+
+**Notes:**  
+For a detailed description of the process, see ➡ [Runtime Entry Flow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime_architecture.md#runtime-entry-flow).
 
 ---
 
