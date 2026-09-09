@@ -125,9 +125,9 @@ The application retrieves the following values from `device_status` table:
 - `language`
 - `mode`
 
-The returned [PgliteDeviceParameters](pglitedeviceparameters) object uses lowercase values required by the [DeviceParameters](#deviceparameters) DTO.
+The returned [PgliteDeviceParameters](#pglitedeviceparameters) object uses lowercase values required by the [DeviceParameters](#deviceparameters) DTO.
 
-The returned parameters are consumed by the [Runtime exit logic] rather than being sent directly to the backend.
+The returned parameters are consumed by the [Runtime exit logic](pages.md#exitservice) rather than being sent directly to the backend.
 
 ---
 
