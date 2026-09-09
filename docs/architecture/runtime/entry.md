@@ -5,7 +5,7 @@ The entry point of the `Runtime` application responsible for checking the curren
 - Creates the current device parameters using [ConnectionsService](connection_service.md).
 - Checks existing device connections through the [backend](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md).
 - Determines whether an administrator connection already exists.
-- Opens the [connections popup](delete_connections.md) when existing connections are found.
+- Opens the [connections popup](connection_service.md#connectionspopupcomponent) when existing connections are found.
 - Waits for the popup result using [PopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#popupservice).
 - Re-checks connections after a deletion.
 - Navigates to the appropriate route based on the administrator state.
@@ -35,7 +35,7 @@ The returned ConnectionsResultDto provides:
 `connections` — existing device connections.  
 
 - If no connections exist, the component proceeds directly to database [synchronization](#synchronize).  
-- If connections exist, the component opens [ConnectionsPopupComponent](delete_connections.md#connectionspopupcomponent).
+- If connections exist, the component opens [ConnectionsPopupComponent](connection_service.md#connectionspopupcomponent).
 
 ---
 

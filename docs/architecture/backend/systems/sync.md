@@ -44,7 +44,7 @@ Contains the main synchronization logic.
 - #### processQueueSync()
 Processes synchronization changes received from the `Runtime`.
 * Returns a successful empty result when no changes are provided.
-* Maps incoming [SyncChange](#syncchange) objects to `sync_inbox` records.
+* Maps incoming [SyncQueueDto](#syncqueuedto) objects to `sync_inbox` records.
 * Stores changes using Prisma `createMany()`.
 * Uses `skipDuplicates` to prevent duplicate synchronization records.
 * Returns the number of received changes.
@@ -116,8 +116,8 @@ Each step:
 
 ### DTOs
 
-#### SyncChange
-Represents a single synchronization change received from the Runtime.  
+#### SyncQueueDto
+Represents a single synchronization change received from the `Runtime`.  
 Contains the identifiers and payload required to store the change in the backend synchronization inbox.
 
 Fields:

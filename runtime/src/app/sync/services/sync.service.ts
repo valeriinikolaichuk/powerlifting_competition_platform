@@ -77,7 +77,7 @@ export class SyncService {
           created_at
         FROM sync_queue
         WHERE processed_at IS NULL
-        ORDER BY created_at
+        ORDER BY created_at ASC
       `);
 
       if (result.rows.length > 0) {

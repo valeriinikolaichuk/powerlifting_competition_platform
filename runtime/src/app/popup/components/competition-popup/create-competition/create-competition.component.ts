@@ -45,7 +45,6 @@ export class CreateCompetitionComponent {
   federations: FederationOption[] = [];
   divisions: DivisionOption[] = [];
   ageGroups: AgeGroupOption[] = [];
-  selectedAgeGroups: string[] = [];
 
   constructor(
     private readonly fb: FormBuilder,

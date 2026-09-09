@@ -2,7 +2,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { SnapshotPipelineService } from './snapshot-pipeline/snapshot-pipeline.service';
-import { SyncChange } from './dto/sync-change.dto';
+import { SyncQueueDto } from './dto/sync-queue.dto';
 import { SnapshotContext } from './dto/snapshot-context.dto';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class SyncService {
     ) {}
 
     async processQueueSync(
-        changes: SyncChange[],
+        changes: SyncQueueDto[],
     ) {
 
         if (!changes || changes.length === 0) {

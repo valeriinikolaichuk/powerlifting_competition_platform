@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
+
 import { SYNC_OPERATIONS } from '#shared-sql';
+import { SyncQueueService } from '../../../../sync/services/sync-queue.service';
 
 import { PgliteService } from '../../../../database/services/pglite.service';
+import { UserService } from '../../../../database/services/user.service';
 import { CompetitionData } from '../dto/competitionData';
-import { UserService } from '../../../../shared/services/user.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,7 @@ export class CompetitionPopupService {
   constructor(
     private readonly pgliteService: PgliteService,
     private readonly userService: UserService,
+    private readonly syncQueueService: SyncQueueService,
   ) {}
 
   async initialize(): Promise<void> {
@@ -56,26 +59,13 @@ export class CompetitionPopupService {
         ],
       );
 
-      await tx.query(
-        `
-        INSERT INTO sync_queue (
-          id,
-          source_id,
-          operation_id,
-          record_id,
-          payload,
-          created_at
-        )
-        VALUES ($1, $2, $3, $4, $5, $6)
-        `,
-        [
-          operationId,
-          deviceId,
-          'CREATE_COMPETITION',
-          data.id,
-          payload,
-          data.updated_at
-        ],
+      await this.syncQueueService.addQueue(
+        tx,
+        deviceId,
+        'CREATE_COMPETITION',
+        data.id,
+        data,
+        data.updated_at,
       );
       
     });

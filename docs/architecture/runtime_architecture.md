@@ -324,7 +324,7 @@ The value determines which application flow will be used after the connection ch
 - If `connections` is empty, the `EntryComponent` [navigates](#navigation) directly without displaying the connections popup.
 - If existing connections are returned the [EntryComponent](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
   - The popup receives the existing connections through `POPUP_DATA` and passes them to the dynamically loaded `ConnectionsPopupComponent`.
-  - [ConnectionsPopupComponent](runtime/delete_connections.md) provides the user interface for selecting and deleting device connections.
+  - [ConnectionsPopupComponent](runtime/connection_service.md#connectionspopupcomponent) provides the user interface for selecting and deleting device connections.
   - The component:
     - Displays the existing connections.
     - Allows the user to select individual devices.

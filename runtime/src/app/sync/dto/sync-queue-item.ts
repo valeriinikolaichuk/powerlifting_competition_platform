@@ -1,9 +1,9 @@
-export interface SyncChange {
+export interface SyncQueueItem {
 
     id: string;
     source_id: string;
     operation_id: string;
     record_id: string;
-    payload: any;
+    payload: string;
     created_at: string;
 }

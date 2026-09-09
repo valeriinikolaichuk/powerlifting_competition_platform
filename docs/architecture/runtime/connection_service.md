@@ -1,18 +1,23 @@
+<details open="open">
+<summary>Contents</summary>  
+
+- [ConnectionsService](#connectionsservice)
+  - [createParameters()](#createparameters)
+  - [check()](#check)
+  - [exitParameters()](#exitparameters)
+  - [deleteDevices()](#deletedevices)
+- [DTOs](#dtos)
+  - [DeviceParameters](#deviceparameters)
+  - [ConnectionDto](#connectiondto)
+- [ConnectionsPopupComponent](#connectionspopupcomponent)
+  - [ConnectionsPopupService](#connectionspopupservice)
+
+</details>
+
 ## ConnectionsService
 Manages the identification and registration of the current device and communicates with the backend [ConnectionsModule](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#dtos).  
 The frontend uses `ConnectionsService` as the communication layer between the Angular application and the backend connections `API`.  
 It uses Angular `HttpClient` for HTTP communication.
-
-<details open="open">
-<summary>Contents</summary>  
-
-- [createParameters()](#createparameters)
-- [check()](#check)
-- [exitParameters()](#exitparameters)
-- [deleteDevices()](#deletedevices)
-- [DTOs](#dtos)
-
-</details>
 
 ### Responsibilities
 * Creates device identification parameters.
@@ -141,7 +146,7 @@ DELETE /api/connections/entry
 ```
 
 The method is used by: 
-- [ConnectionsPopupComponent](delete_connections.md) after the user confirms the deletion.
+- [ConnectionsPopupComponent](connection_service.md#connectionspopupcomponent) after the user confirms the deletion.
 
 ---
 
@@ -188,3 +193,72 @@ Defines the result returned by the backend after checking the current device con
 * `adminExists` — indicates whether an administrator connection already exists.
 * `connections` — list of existing device connections represented by `ConnectionDto`.
 
+---
+
+### ConnectionsPopupComponent
+Contains the actual connection deletion functionality.
+
+Responsibilities:
+* Displays the available device connections.
+* Displays browser information for each connection.
+* Allows the user to select devices.
+* Tracks selected device IDs.
+* Confirms the deletion operation.
+* Deletes selected devices through `ConnectionsService`.
+* Displays translated messages.
+* Returns deleted device IDs through `PopupService`.
+
+#### Popup Flow
+<pre>
+EntryComponent
+      │
+      │ result.connections
+      ▼
+PopupService.open(...) ----------------.
+      │                                |
+      ▼                                |
+PopupComponent                         |            
+      │                                |
+      ▼                                |
+ConnectionsPopupComponent              |
+      │                                |
+      │ POPUP_DATA                     |
+      ├───────────────┐                |
+      │               │                |
+      ▼               ▼                |
+   content       connections           |
+      │                                |
+      │                                |
+      ├── ConnectionsPopupService      |
+      ├── ConnectionsService           |
+      ├── TranslationService           |
+      └── PopupService                 |
+      │                                |
+      ▼                                |
+selectedDeviceIds                      |
+      │                                |
+      ▼                                |
+PopupService.close(result) ------------'
+      │                                
+      ▼
+EntryComponent
+</pre>
+
+
+---
+
+### ConnectionsPopupService
+Provides popup-specific helper functionality.
+
+Currently, it converts the raw browser user_agent string into a readable browser name:
+```
+getBrowserName(userAgent: string): string
+```
+For example:
+```
+Mozilla/5.0 ... Chrome/...
+        ↓
+     Chrome
+```
+
+---

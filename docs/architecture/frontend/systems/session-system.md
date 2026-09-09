@@ -210,7 +210,8 @@ heartbeat = NOW()
 ---
 
 ## Session Guard
-Protects routes that require ownership of the current frontend session.
+Protects routes that require ownership of the current frontend session.  
+Prevents opening multiple tabs in the same browser.  
 
 It is implemented as an Angular `CanActivateFn`.
 

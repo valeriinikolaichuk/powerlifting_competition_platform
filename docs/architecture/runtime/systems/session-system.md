@@ -72,7 +72,7 @@ RuntimeSessionService
       ▼
 Is this the current tab?
       |
-      ├── No → System popup → Block navigation
+      ├── No → SecondTabContentComponent → Block navigation
       └── Yes → Allow navigation
 </pre>
 
