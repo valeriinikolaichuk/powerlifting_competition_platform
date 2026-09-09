@@ -167,9 +167,9 @@ LoginErrorComponent
 - `InfoPopupComponent`
   - `AboutContentComponent`
 - `MessagePopupComponent`
-  - `LoginErrorComponent`
+  - `LoginErrorComponent` - Login error massage
 - `SystemPopupComponent` (The code is duplicated in both apps)
-  - `SecondTabContentComponent` (The code is duplicated in both apps)
+  - `SecondTabContentComponent` (The code is duplicated in both apps) - Blocks navigation. Prevents opening multiple tabs in the same browser.
 
 ---
 
