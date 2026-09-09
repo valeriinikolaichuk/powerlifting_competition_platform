@@ -1,4 +1,4 @@
-## Admin app system pages
+## Admin app pages
 
 <details open="open">
 <summary>Contents</summary>  
