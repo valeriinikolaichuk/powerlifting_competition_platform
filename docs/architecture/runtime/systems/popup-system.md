@@ -169,7 +169,7 @@ Popup Content
 
 ### Components
 
-- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md) Displays the available device connections.
+- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupcomponent) Displays the available device connections.
   - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupservice)  Provides popup-specific helper functionality.
 - `SystemPopupComponent` (The code is duplicated in both apps)
   - `SecondTabContentComponent` Blocks navigation. Prevents opening multiple tabs in the same browser (The code is duplicated in both apps).
