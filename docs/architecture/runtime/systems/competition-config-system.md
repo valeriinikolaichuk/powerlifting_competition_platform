@@ -11,6 +11,12 @@ It is responsible for defining and maintaining the fundamental competition param
   - [CompetitionOptionsService](#competitionoptionsservice)
   - [CompetitionPopupService](#competitionpopupservice)
 - [DTO / configuration models](#dto-and-configuration-models)
+  - [CompetitionData](#competitiondata)
+  - [FederationOption](#federationoption)
+  - [DivisionOption](#divisionoption)
+  - [AgeGroupOption](#agegroupoption)
+  - [Competition Options](#competition-options)
+- [Creation Flow](#creation-flow)
 
 </details>
 
@@ -97,7 +103,7 @@ This guarantees:
 startDate ≤ endDate
 ```
 
-Available competition levels are determined dynamically based on the current application language.
+Available competition levels are determined dynamically based on the current application `language`.
 
 ```ts
 readonly levels = computed(() => {
@@ -142,7 +148,7 @@ The first available federation is automatically selected.
 Selecting a federation triggers the dependent federation and age group loading workflows.  
 
 - ### loadAgeGroups()
-Loads available age groups using `CompetitionOptionsService`.
+Loads available age groups using [CompetitionOptionsService](#getagegroups).
 
 The method requires both:
 * a federation ID;
@@ -183,13 +189,6 @@ const key = `${ageGroup.federation_code}_${ageGroup.name}_${ageGroup.sex}`;
 The component attempts to translate the generated key using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md).  
 If no translation exists, the original age group name is returned.
 
-
-
-
-
-
----
-
 - ### create()
 Creates a new competition.
 
@@ -200,16 +199,9 @@ The method performs the following steps:
 4. Retrieves the current application `language`.
 5. Generates the current `timestamp`.
 
-The competition is created through:
-
-```ts
-await this.competitionPopupService.create({
-  ...
-});
-```
+The competition is created through [competitionPopupService.create](#async-create)
 
 The component does not directly persist the competition data.
-
 
 - ### validateForm()
 Validates the required competition fields before creation.
@@ -222,19 +214,13 @@ The following fields are required:
 
 If validation fails, the component displays a localized validation message and stops the creation process.
 
----
-
 - ### close()
-
 Closes the current competition popup.
-
 ```ts
 this.popup.close();
 ```
 
-The component delegates popup management to the generic `PopupService`.
-
-For a detailed description of the popup architecture, see [Popup System](../../../systems/popup-system.md).
+The component delegates popup management to the generic [PopupService](popup-system.md#popupservice).
 
 ---
 
@@ -254,142 +240,30 @@ The service uses [PgliteService](https://github.com/valeriinikolaichuk/powerlift
 - ### getFederations()
   - Returns the federations available to the current user.  
   - The query retrieves federations associated with the synchronized user through the [user_federations](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/reference.md#user_federations) table.  
-  - The result is returned as an array of `FederationOption`.  
+  - The result is returned as an array of [FederationOption](#federationoption).  
 
+- ### getDivisions()
+  - Returns the divisions available for a selected federation.  
+  - The divisions are retrieved from the [federation_divisions](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/reference.md#federation_divisions) table and ordered by `sort_order`.  
+  - The result is returned as an array of [DivisionOption](#divisionoption).
 
+- ### getAgeGroups()
+Returns the `age groups` available for the selected `federation` and `sex`.  
+The query retrieves federation categories associated with:
+* the selected `federation`;
+* the selected `sex`.
 
+The results are ordered according to `federation_categories.sort_order`.  
+Each result is represented by [AgeGroupOption](#agegroupoption).
 
 ---
 
 ### CompetitionPopupService
-
----
-
-## DTO and configuration models
-
----
-
-
-
-
-
-
-
-
-```text
-CompetitionPopupComponent
-        │
-        ▼
-CreateCompetitionComponent
-        │
-        ├── CompetitionOptionsService
-        │       │
-        │       ▼
-        │    PGlite Database
-        │
-        └── CompetitionPopupService
-                │
-                ├── PGlite Database
-                │
-                └── SyncQueueService
-```
-
----
-
-# CompetitionOptionsService
-
-
-
----
-
-
-
-
-
----
-
-## getDivisions()
-
-Returns the divisions available for a selected federation.
-
-```ts
-getDivisions(
-  federationId: string,
-): Promise<DivisionOption[]>
-```
-
-The divisions are retrieved from the `federation_divisions` table and ordered by `sort_order`.
-
-```sql
-SELECT
-  division,
-  name
-FROM federation_divisions
-WHERE federation_id = $1
-ORDER BY sort_order
-```
-
-The result is returned as an array of `DivisionOption`.
-
-```ts
-interface DivisionOption {
-  division: string;
-  name: string;
-}
-```
-
----
-
-## getAgeGroups()
-
-Returns the age groups available for the selected federation and sex.
-
-```ts
-getAgeGroups(
-  federationId: string,
-  sex: string,
-): Promise<AgeGroupOption[]>
-```
-
-The query retrieves federation categories associated with:
-
-* the selected federation;
-* the selected sex.
-
-```text
-Federation
-     │
-     ├── Federation Categories
-     │         │
-     │         ▼
-     │     Age Groups
-     │
-     └── Federation Code
-```
-
-The results are ordered according to `federation_categories.sort_order`.
-
-Each result is represented by `AgeGroupOption`.
-
-```ts
-interface AgeGroupOption {
-  id: string;
-  name: string;
-  sex: string;
-  federation_code: string;
-}
-```
-
----
-
-# CompetitionPopupService
-
 `CompetitionPopupService` is responsible for creating a competition in the local database and registering the operation for synchronization.
 
 The service ensures that the local database update and synchronization queue entry are created within the same database transaction.
 
 #### Responsibilities
-
 * Provides access to the local `PGlite` database.
 * Retrieves the current user identifier.
 * Retrieves the current device identifier.
@@ -397,55 +271,20 @@ The service ensures that the local database update and synchronization queue ent
 * Registers the competition creation operation in the synchronization queue.
 * Ensures both operations are executed atomically.
 
----
+- ### initialize()
+Initializes access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database using [pgliteService.database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#database-access).  
+The database must already be initialized by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice).
 
-## initialize()
-
-Initializes access to the local `PGlite` database.
-
-```ts
-this.pg = this.pgliteService.database;
-```
-
-The database must already be initialized by `PgliteService`.
-
----
-
-## create()
-
+- ### async create()
 Creates a new competition and adds the corresponding synchronization operation to the local queue.
 
-```ts
-create(
-  data: CompetitionData,
-): Promise<void>
-```
-
-### User and Device Context
-
+#### User and Device Context
 Before creating the competition, the service retrieves:
+* the current `user ID` through [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#userservice);
+* the current `device ID` from `localStorage`.
 
-* the current user ID through `UserService`;
-* the current device ID from `localStorage`.
-
-```ts
-const userId = await this.userService.getUserId();
-
-const deviceId = localStorage.getItem('device_id');
-```
-
-If no device ID exists, the operation cannot continue.
-
-```text
-Device ID not found.
-```
-
----
-
-### Local Database Transaction
-
+#### Local Database Transaction
 Competition creation and queue registration are executed inside a single `PGlite` transaction.
-
 ```text
 Transaction
      │
@@ -465,50 +304,16 @@ This ensures that the competition cannot be created locally without registering 
 
 If either operation fails, the transaction is rolled back.
 
----
-
-### Competition Creation
-
+#### Competition Creation
 The competition is created using the shared SQL operation:
-
 ```ts
 SYNC_OPERATIONS.CREATE_COMPETITION
 ```
 
-The operation receives the competition data together with the current user ID.
+The operation receives the [competition data](#competitiondata) together with the current user ID.
 
-The created competition contains:
-
-* Competition ID.
-* User ID.
-* Name.
-* Country.
-* City.
-* Language.
-* Start date.
-* End date.
-* Competition level.
-* Competition type.
-* Division.
-* Selected federation category IDs.
-* Update timestamp.
-
----
-
-### Synchronization Queue
-
+#### Synchronization Queue
 After the competition is created locally, the service registers a synchronization operation through `SyncQueueService`.
-
-```ts
-await this.syncQueueService.addQueue(
-  tx,
-  deviceId,
-  'CREATE_COMPETITION',
-  data.id,
-  data,
-  data.updated_at,
-);
-```
 
 The queued operation contains:
 
@@ -520,41 +325,46 @@ The queued operation contains:
 
 The operation remains in the local synchronization queue until it is processed by the synchronization system.
 
-For a detailed description of the synchronization queue, see [Sync System](../../systems/sync-system.md).
-
 ---
 
-# CompetitionData
+## DTO and configuration models
 
-`CompetitionData` represents the data required to create a competition.
+### CompetitionData
+Represents the data required to create a competition.
 
-```ts
-interface CompetitionData {
-  id: string;
-  name: string;
-  country: string;
-  city: string;
-  language: string;
-  startDate: string;
-  endDate: string;
-  level: string;
-  type: string;
-  division: string;
-  federationCategoryIds: string[];
-  updated_at: string;
-}
-```
+* id
+* name
+* country
+* city
+* language
+* startDate
+* endDate
+* level
+* type
+* division
+* federationCategoryIds
+* updated_at
 
 The object is created by `CreateCompetitionComponent` and passed to `CompetitionPopupService.create()`.
 
----
+### FederationOption
+* id
+* code
 
-# Competition Options
+### DivisionOption
+* division
+* name
 
+### AgeGroupOption
+* id
+* name
+* sex
+* federation_code
+
+### Competition Options
 The competition creation workflow uses predefined option constants for levels, types, and sexes.
 
-## Competition Levels
-
+#### Competition Levels
 ```text
 INTERNATIONAL
 NATIONAL
@@ -566,19 +376,13 @@ LOCAL_ONLY
 
 The available levels may be filtered by `CreateCompetitionComponent` depending on the current application language.
 
----
-
-## Competition Types
-
+#### Competition Types
 ```text
 POWERLIFT
 BENCH_PRESS
 ```
 
----
-
-## Sexes
-
+#### Sexes
 ```text
 MEN
 WOMEN
@@ -586,102 +390,43 @@ WOMEN
 
 ---
 
-# Complete Creation Flow
+### Creation Flow
 
-```text
-User
- │
- ▼
+<pre>
 CreateCompetitionComponent
- │
- ├── Load Federations
- │       │
- │       ▼
- │ CompetitionOptionsService
- │
- ├── Select Federation
- │       │
- │       ├── Load Divisions
- │       │
- │       └── Load Age Groups
- │
- ├── Select Sex
- │       │
- │       ▼
- │ Load Age Groups
- │
- ├── Validate Form
- │
- ▼
+         │
+         ├── Load Federations
+         │         │
+         │         ▼
+         │   CompetitionOptionsService
+         │
+         ├── Select Federation
+         │         │
+         │         ├── Load Divisions
+         │         │
+         │         └── Load Age Groups
+         │
+         ├── Select Sex
+         │       │
+         │       ▼
+         │ Load Age Groups
+         │
+         ├── Validate Form
+         │
+         ▼
 CompetitionPopupService.create()
- │
- ├── UserService.getUserId()
- │
- ├── Get device_id
- │
- ▼
-PGlite Transaction
- │
- ├── CREATE_COMPETITION
- │
- └── SyncQueueService.addQueue()
-        │
-        ▼
-   Synchronization Queue
-```
-
----
-
-## Важливий архітектурний момент
-
-Оце місце дуже добре виглядає для документації:
-
-```ts
-await this.pg.transaction(async (tx) => {
-
-  await tx.query(
-    SYNC_OPERATIONS.CREATE_COMPETITION,
-    [...]
-  );
-
-  await this.syncQueueService.addQueue(
-    tx,
-    deviceId,
-    'CREATE_COMPETITION',
-    ...
-  );
-
-});
-```
-
-Бо це фактично **local-first + transactional outbox pattern**.
-
-Тобто:
-
-```text
-Database State Change
-        +
-Synchronization Event
-        │
-        ▼
-Single Transaction
-```
-
-Я б навіть у документації Sync System потім окремо описав цей принцип як:
-
-## Local Transaction and Synchronization Queue
-
-> All local data modifications that require server synchronization should create the corresponding synchronization queue entry within the same database transaction.
-
-Це буде важливим архітектурним правилом для всіх майбутніх операцій:
-
-* `CREATE_COMPETITION`
-* `UPDATE_COMPETITION`
-* `DELETE_COMPETITION`
-* create athlete
-* update athlete
-* create result
-
-і так далі.
-
-Так документація пояснюватиме не просто конкретний код, а загальний принцип Runtime architecture.
+         │
+         ├── UserService.getUserId()
+         │
+         ├── Get device_id
+         │
+         ▼
+  PGlite Transaction
+         │
+         ├── CREATE_COMPETITION
+         │
+         └── SyncQueueService.addQueue()
+                        │
+                        ▼
+               Synchronization Queue
+</pre>
