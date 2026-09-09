@@ -13,8 +13,8 @@ The popup system is divided into three architectural levels.
   - [PopupService](#popupservice)
   - [PopupComponent](#popupcomponent)
   - [POPUP_DATA](#popup_data)
-- [Level 2 - Popup Templates)](#level-2-popup-templates)
-- [Level 3 - Popup Content)](#level-3-popup-content)
+- [Level 2 - Popup Templates](#level-2-popup-templates)
+- [Level 3 - Popup Content](#level-3-popup-content)
 - [Popup Flow](#popup-flow)
 - [Components](#components)
 - [Design Notes](#design-notes)
@@ -169,13 +169,19 @@ Popup Content
 
 ### Components
 
-- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupcomponent) Displays the available device connections.
-  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupservice)  Provides popup-specific helper functionality.
+- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupcomponent) — displays the available device connections.
+  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupservice)  — provides popup-specific helper functionality.
 - `SystemPopupComponent` (The code is duplicated in both apps)
-  - `SecondTabContentComponent` Blocks navigation. Prevents opening multiple tabs in the same browser (The code is duplicated in both apps).
-  - `SynchronizingDatabaseComponent` Disables the page while synchronizing the database.
+  - `SecondTabContentComponent` — blocks navigation. Prevents opening multiple tabs in the same browser (The code is duplicated in both apps).
+  - `SynchronizingDatabaseComponent` — disables the page while synchronizing the database.
 - `RetryPopupComponent`
-  - `SynchronizationErrorComponent` Database synchronization error massage.
+  - `SynchronizationErrorComponent` — database synchronization error massage.
+- `CompetitionPopupComponent`— popup container.
+  - Components:
+    - CreateCompetitionComponent — competition creation form.
+  - Services:
+    - CompetitionOptionsService — loads available competition options from the local database.
+    - CompetitionPopupService — creates the competition and registers the synchronization operation.
 
 ---
 
