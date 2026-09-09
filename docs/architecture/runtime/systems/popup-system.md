@@ -169,13 +169,13 @@ Popup Content
 
 ### Components
 
-- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md)
-  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md#connectionspopupservice)
+- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md) Displays the available device connections.
+  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md#connectionspopupservice)  Provides popup-specific helper functionality.
 - `SystemPopupComponent` (The code is duplicated in both apps)
-  - `SecondTabContentComponent` (The code is duplicated in both apps)
-  - `SynchronizingDatabaseComponent`
+  - `SecondTabContentComponent` (The code is duplicated in both apps) Blocks navigation. Prevents opening multiple tabs in the same browser.
+  - `SynchronizingDatabaseComponent` Disables the page while synchronizing the database.
 - `RetryPopupComponent`
-  - `SynchronizationErrorComponent`
+  - `SynchronizationErrorComponent` Database synchronization error massage.
 
 ---
 
