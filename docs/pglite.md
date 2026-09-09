@@ -1,6 +1,6 @@
 ### Browser Database
 The browser database is a local `PGlite` database used by the offline competition runtime.  
-The database is managed by [PgliteService](#pgliteservice), which handles database initialization, migrations, and `SQL` query execution.
+The database is managed by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice), which handles database initialization, migrations, and `SQL` query execution.
 
 ---
 
@@ -117,15 +117,3 @@ PostgreSQL
 </pre>
 
 ---
-
-### PgliteService
-Manages the local `PGlite` database lifecycle and provides a centralized interface for database access.
-* initializes the `PGlite` database in `IndexedDB`;
-* creates and maintains the `__migrations` table;
-* executes pending `SQL` migrations;
-* tracks applied migrations;
-* exposes the database instance through the `database` getter;
-* provides a generic `query()` method for executing SQL statements.
-
-The service is located in the `database/` directory and is used by `Runtime` services that work directly with the local database.  
-The database migrations are defined in [pglite.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/database/services/pglite.config.ts) and executed by `PgliteService` during database initialization.
