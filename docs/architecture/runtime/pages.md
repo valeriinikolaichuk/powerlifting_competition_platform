@@ -1,3 +1,17 @@
+## Admin app system pages
+
+<details open="open">
+<summary>Contents</summary>  
+
+- [AdminComponent](#admincomponent)
+- [RoleComponent](#rolecomponent)
+  - [ExitService](#exitservice)
+- [MainComponent](#maincomponent)
+
+</details>
+
+---
+
 ### AdminComponent
 The administrator entry page of the `Runtime` application.
 
@@ -32,10 +46,6 @@ await this.router.navigate(['/main']);
 
 ---
 
-### MainComponent
-
----
-
 ### ExitService
 
 - #### backToMode()
@@ -52,3 +62,17 @@ Provides the centralized exit workflow for the `Runtime` application.
 
 - #### clearCookies()
 Sends a request to the backend `${environment.apiUrl}/api/logout` to clear the  'LAN' authentication token cookies.
+
+---
+
+### MainComponent
+The component provides access to administrator actions and serves as the entry point for competition management.
+
+#### Responsibilities
+
+- Loads the translations required by the main page using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md).
+- Opens the competition creation workflow.
+- Navigates back to the [administrator page](#admincomponent).
+
+---
+
