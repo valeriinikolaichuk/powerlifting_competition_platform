@@ -29,6 +29,9 @@ Controls the frontend session across browser tabs and maintain a consistent appl
 ### [i18n](frontend/systems/i18n.md) Translation Module  
 Based on Angular signals and lazy-loaded `JSON` files, supporting multi-language switching
 
+### [competition configuration](runtime/systems/competition-config-system.md)
+Manages the general information and configuration of competitions
+
 ### [sync](runtime/systems/sync-system.md)
 Syncs the browser's `PGlite` with the `PostgreSQL` server, exchanging changes to keep data consistent.
 
