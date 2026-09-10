@@ -101,7 +101,7 @@ Manages locally queued synchronization operations and sends pending operations t
 `SyncQueueService` stops the synchronization loop when an operation fails.
 
 - ### addQueue()
-Adds a synchronization operation to the local `sync_queue` table.
+Adds a synchronization operation to the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) table.
 
 The queue item contains:
 - `id` — unique queue item identifier.
@@ -115,9 +115,9 @@ The queue item is inserted using the transaction provided by the caller.
 This allows the data change and its corresponding synchronization operation to be committed atomically.
 
 - ### sync()
-  - Retrieves all unprocessed synchronization queue items.  
+  - Retrieves all unprocessed synchronization queue items from the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) table.  
   - Operations are processed in ascending creation order.  
-  - Each queued item is passed to [send()](#send).   
+  - Each queued item[#syncqueueitem] is passed to [send()](#send).   
   - If synchronization of an operation fails, the process stops and the remaining operations remain in the queue for a later synchronization attempt.
 
 - ### send()
@@ -152,4 +152,12 @@ Structure of the backend response after pushing local changes.
 The data transfer object used for complete database hydration.
   * `data`: A key-value object where each key represents a `tableName` (string) and the value is an array of objects representing database rows (`Record<string, any>[]`).
 
+### SyncQueueItem
+⚠️
+    id: string;
+    source_id: string;
+    operation_id: string;
+    record_id: string;
+    payload: string;
+    created_at
 ---
