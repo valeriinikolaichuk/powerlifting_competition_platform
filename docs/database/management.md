@@ -1,5 +1,17 @@
 ### Management Tables
 
+<details open="open">
+<summary>Contents</summary>  
+
+- [sync_inbox](#sync_inbox)
+- [sync_outbox](#sync_outbox)
+- [installations](#installations)
+- [runtime_versions](#runtime_versions)
+
+</details>
+
+---
+
 ### sync_inbox
 Stores synchronization operations received by the backend before they are processed.
 * `id` — unique identifier of the synchronization operation.
@@ -33,6 +45,41 @@ shared SQL
    │
    ▼
 PostgreSQL
+</pre>
+
+---
+
+### sync_outbox
+Stores changes that the server must deliver to specific client devices.  
+Each record represents one `synchronization message` addressed to a specific `device_id` taken from [device_status](system_runtime.md#device_status) table.  
+`sync_outbox` provides reliable server-to-client delivery with retry support.  
+A message remains pending until the target device receives it and sends an acknowledgment.
+
+| Field | Description |
+|---|---|
+| `id` | Unique identifier of the queue item. |
+| `device_id` | Target device that must receive the change. |
+| `operation_id` | Synchronization operation identifier. |
+| `record_id` | ID of the affected record. |
+| `payload` | Operation data stored as JSONB. |
+| `created_at` | Time when the message was created. |
+| `processed_at` | Time when the target device acknowledged the message. `NULL` means pending. |
+
+#### Delivery flow
+<pre>
+      sync_inbox
+          ↓
+create sync_outbox records
+          ↓
+Sync Outbox Delivery Service
+          ↓
+      Socket.IO
+          ↓
+      target device
+          ↓
+         ACK
+          ↓
+      processed_at
 </pre>
 
 ---
