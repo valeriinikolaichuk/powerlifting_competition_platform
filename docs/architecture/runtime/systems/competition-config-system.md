@@ -199,7 +199,7 @@ The method performs the following steps:
 4. Retrieves the current application `language`.
 5. Generates the current `timestamp`.
 
-The competition is created through [competitionPopupService.create](#async-create)
+The competition is created through `CompetitionPopupService` [create()](#async-create)
 
 The component does not directly persist the competition data.
 
@@ -312,7 +312,7 @@ SYNC_OPERATIONS.CREATE_COMPETITION
 The operation receives the [competition data](#competitiondata) together with the current user ID.
 
 #### Synchronization Queue
-After the competition is created locally, the service registers a synchronization operation through `SyncQueueService`.
+After the competition is created locally, the service registers a synchronization operation through [syncQueueService.addQueue](sync-system.md#addqueue).
 
 The queued operation contains:
 
@@ -324,7 +324,7 @@ The queued operation contains:
 
 The operation remains in the local `synchronization queue` until it is processed by the `synchronization system`.  
 
-After the `transaction` is successfully committed, the service starts `synchronization`.
+After the `transaction` is successfully committed, the service starts [synchronization](sync-system.md#sync).
 ```
 await this.syncQueueService.sync();
 ```
@@ -349,7 +349,7 @@ Represents the data required to create a competition.
 * federationCategoryIds
 * updated_at
 
-The object is created by `CreateCompetitionComponent` and passed to `CompetitionPopupService.create()`.
+The object is created by `CreateCompetitionComponent` and passed to `CompetitionPopupService` [create()](#async-create).
 
 ### FederationOption
 * id
