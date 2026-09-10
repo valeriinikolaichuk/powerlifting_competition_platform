@@ -259,24 +259,23 @@ Each result is represented by [AgeGroupOption](#agegroupoption).
 ---
 
 ### CompetitionPopupService
-`CompetitionPopupService` is responsible for creating a competition in the local database and registering the operation for synchronization.
-
+Handles persistence and synchronization of competition configuration changes.  
 The service ensures that the local database update and synchronization queue entry are created within the same database transaction.
 
 #### Responsibilities
-* Provides access to the local `PGlite` database.
+* Provides access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
 * Retrieves the current user identifier.
 * Retrieves the current device identifier.
 * Creates a competition in the local database.
-* Registers the competition creation operation in the synchronization queue.
-* Ensures both operations are executed atomically.
+* Adds competition changes to the `synchronization queue`.
+* Starts `synchronization` after a successful local `transaction`.
 
 - ### initialize()
 Initializes access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database using [pgliteService.database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#database-access).  
 The database must already be initialized by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice).
 
 - ### async create()
-Creates a new competition and adds the corresponding synchronization operation to the local queue.
+Creates a new competition and adds the corresponding synchronization operation to the local `queue` and starts `synchronization`.  
 
 #### User and Device Context
 Before creating the competition, the service retrieves:
@@ -323,7 +322,12 @@ The queued operation contains:
 * Competition data payload.
 * Update timestamp.
 
-The operation remains in the local synchronization queue until it is processed by the synchronization system.
+The operation remains in the local `synchronization queue` until it is processed by the `synchronization system`.  
+
+After the `transaction` is successfully committed, the service starts `synchronization`.
+```
+await this.syncQueueService.sync();
+```
 
 ---
 
