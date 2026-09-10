@@ -64,9 +64,7 @@ The following tables are available in the browser database:
 - **Management Tables**
   - [sync_queue](#sync_queue)
 
-> Note: The following server tables are not included in the browser database:
-> - `installations`
-> - `runtime_versions`
+> Note: Management server tables are not included in the browser database.
 
 ---
 
