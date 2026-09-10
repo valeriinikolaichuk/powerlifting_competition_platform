@@ -13,8 +13,8 @@ The popup system is divided into three architectural levels.
   - [PopupService](#popupservice)
   - [PopupComponent](#popupcomponent)
   - [POPUP_DATA](#popup_data)
-- [Level 2 - Popup Templates)](#level-2-popup-templates)
-- [Level 3 - Popup Content)](#level-3-popup-content)
+- [Level 2 - Popup Templates](#level-2-popup-templates)
+- [Level 3 - Popup Content](#level-3-popup-content)
 - [Popup Flow](#popup-flow)
 - [Components](#components)
 - [Design Notes](#design-notes)
@@ -169,18 +169,19 @@ Popup Content
 
 ### Components
 
-<<<<<<< HEAD
-- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupcomponent)
-  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupservice)
-=======
-- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md) Displays the available device connections.
-  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/delete_connections.md#connectionspopupservice)  Provides popup-specific helper functionality.
->>>>>>> c0ba6fb5ad57d581ecb1e6ccbdcb6d4defd3eeb5
+- [ConnectionsPopupComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupcomponent) — displays the available device connections.
+  - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/connection_service.md#connectionspopupservice)  — provides popup-specific helper functionality.
 - `SystemPopupComponent` (The code is duplicated in both apps)
-  - `SecondTabContentComponent` (The code is duplicated in both apps) Blocks navigation. Prevents opening multiple tabs in the same browser.
-  - `SynchronizingDatabaseComponent` Disables the page while synchronizing the database.
+  - `SecondTabContentComponent` — blocks navigation. Prevents opening multiple tabs in the same browser (The code is duplicated in both apps).
+  - `SynchronizingDatabaseComponent` — disables the page while synchronizing the database.
 - `RetryPopupComponent`
-  - `SynchronizationErrorComponent` Database synchronization error massage.
+  - `SynchronizationErrorComponent` — database synchronization error massage.
+- `CompetitionPopupComponent`— popup container.
+  - Components:
+    - CreateCompetitionComponent — competition creation form.
+  - Services:
+    - CompetitionOptionsService — loads available competition options from the local database.
+    - CompetitionPopupService — creates the competition and registers the synchronization operation.
 
 ---
 

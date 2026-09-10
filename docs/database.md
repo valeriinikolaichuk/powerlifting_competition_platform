@@ -60,5 +60,6 @@ Database migrations are managed by `Prisma` Migrate.
 
 ➡ [Management Tables](database/management.md)
 - sync_inbox
+- sync_outbox
 - installations
 - runtime_versions
