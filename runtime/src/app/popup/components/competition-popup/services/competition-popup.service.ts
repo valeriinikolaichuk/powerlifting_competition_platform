@@ -69,5 +69,7 @@ export class CompetitionPopupService {
       );
       
     });
+
+    await this.syncQueueService.sync();
   }
 }

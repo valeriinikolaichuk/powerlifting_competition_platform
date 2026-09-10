@@ -18,7 +18,7 @@ import {
 } from '#shared-sql';
 
 import { PgliteService } from '../../database/services/pglite.service';
-import { QueueSyncResult } from '../dto/queue-sync-result';
+import { SyncQueueService } from './sync-queue.service';
 import { SnapshotDto } from '../dto/snapshot.dto';
 
 @Injectable({
@@ -44,6 +44,7 @@ export class SyncService {
 
   constructor(
     private readonly pgliteService: PgliteService,
+    private readonly syncQueueService: SyncQueueService,
     private readonly http: HttpClient,
   ){}
 
@@ -66,8 +67,11 @@ export class SyncService {
     try {
       console.log('Queue synchronization started...');
 
-      // Pushing local change queue (if any)
-      const result = await this.pg.query(`
+      await this.syncQueueService.sync();
+
+
+
+/*      const result = await this.pg.query(`
         SELECT
           id,
           source_id,
@@ -99,7 +103,7 @@ export class SyncService {
           `);
         }
       }
-
+*/
       console.log('Queue synchronizated');
     } catch (err) {
       console.error('Network error while syncing:', err);

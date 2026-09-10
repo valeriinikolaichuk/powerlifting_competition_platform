@@ -50,6 +50,8 @@ export class SyncQueueService {
 
   async sync(): Promise<void> {
 
+    await this.socketService.waitForConnection();
+
     const result = await this.pgliteService.query<SyncQueueItem>(
       `
       SELECT

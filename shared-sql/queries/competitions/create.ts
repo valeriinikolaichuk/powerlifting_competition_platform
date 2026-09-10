@@ -6,7 +6,7 @@ WITH existing_country AS (
     WHERE
         LOWER(name) = LOWER($4) 
         AND language = $6
-
+        AND is_deleted = false
     LIMIT 1
 ),
 
@@ -54,7 +54,7 @@ existing_city AS (
             SELECT id FROM country
         )
         AND c.language = $6
-
+        AND c.is_deleted = false
     LIMIT 1
 ),
 

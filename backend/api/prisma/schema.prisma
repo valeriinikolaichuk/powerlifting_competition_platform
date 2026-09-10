@@ -1371,6 +1371,24 @@ model SyncInbox {
   @@map("sync_inbox")
 }
 
+model SyncOutbox {
+  id              String    @id @default(uuid()) @db.Uuid
+
+  device_id       String    @db.Uuid
+  operation_id    String
+  record_id       String    @db.Uuid
+  payload         Json      @db.JsonB
+
+  created_at      DateTime  @default(now())
+  processed_at    DateTime?
+
+  @@index([device_id])
+  @@index([processed_at])
+  @@index([device_id, processed_at])
+
+  @@map("sync_outbox")
+}
+
 model Installation {
   id                  String   @id @default(uuid()) @db.Uuid
   

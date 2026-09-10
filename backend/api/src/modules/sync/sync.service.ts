@@ -12,7 +12,7 @@ export class SyncService {
         private readonly prisma: PrismaService, 
         private readonly pipeline: SnapshotPipelineService,
     ) {}
-
+/*
     async processQueueSync(
         changes: SyncQueueDto[],
     ) {
@@ -51,7 +51,7 @@ export class SyncService {
             throw new InternalServerErrorException(`Sync failed: ${message}`,);
         }
     }
-
+*/
     async getDatabaseSnapshot(
         userId: string,
         language: string,

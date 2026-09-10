@@ -12,4 +12,17 @@ export class SocketService {
   constructor() {
     this.socket = io(environment.apiUrl);
   }
+
+  waitForConnection(): Promise<void> {
+
+    if (this.socket.connected) {
+      return Promise.resolve();
+    }
+
+    return new Promise((resolve) => {
+      this.socket.once('connect', () => {
+        resolve();
+      });
+    });
+  }
 }

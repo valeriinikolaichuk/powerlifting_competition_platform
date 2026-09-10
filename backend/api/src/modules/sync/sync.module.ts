@@ -19,6 +19,7 @@ import { CreatedByUserStep } from './snapshot-pipeline/created-by-user-step';
 import { CompetitionRuntimeStep } from './snapshot-pipeline/competition-runtime-step';
 import { OrganizationResultStep } from './snapshot-pipeline/organization-result-step';
 import { SyncInboxService } from './sync-inbox.service';
+import { SyncOutboxService } from './sync-outbox.service';
 
 @Module({
   controllers: [SyncController],
@@ -84,7 +85,8 @@ import { SyncInboxService } from './sync-inbox.service';
 
     SyncService, 
     SyncGateway, 
-    SyncInboxService,
+    SyncInboxService, 
+    SyncOutboxService,
   ],
 })
 export class SyncModule {}
