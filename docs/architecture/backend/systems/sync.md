@@ -14,6 +14,8 @@ Contents
 - [SnapshotPipelineService](#snapshotpipelineservice)
   - [Snapshot Steps](#snapshot-steps)
 - [SyncGateway](#syncgateway)
+- [SyncOutboxDeliveryService](syncoutboxdeliveryservice)
+  - [Delivery Flow](#delivery-flow)
 - [SyncInboxService](#syncinboxservice)
 - [SyncOutboxService](#syncoutboxservice)
   - [Communication Flow](#communication-flow)
@@ -46,7 +48,7 @@ The endpoint is intended to receive synchronization changes and persist them for
 ### SyncService
 Contains the main synchronization logic.
 
-- #### processQueueSync()
+- ### processQueueSync()
 Processes synchronization changes received from the `Runtime`.
 * Returns a successful empty result when no changes are provided.
 * Maps incoming [SyncQueueDto](#syncqueuedto) objects to `sync_inbox` records.
@@ -57,7 +59,7 @@ Processes synchronization changes received from the `Runtime`.
 
 The actual processing of queued changes is intentionally separated from receiving and storing them.
 
-- #### getDatabaseSnapshot()
+- ### getDatabaseSnapshot()
 Creates a [SnapshotContext](#snapshotcontext) containing:
 * authenticated `userId`;
 * requested `language`.
@@ -147,7 +149,6 @@ This allows synchronization messages to be addressed to a specific device.
 
 ### Receiving Synchronization Operations
 The `sync` event receives synchronization data from a Runtime client:
-
 ```ts
 @SubscribeMessage('sync')
 async handleSync(@MessageBody() data: SyncQueueDto)
@@ -165,9 +166,9 @@ After successful reception, the gateway returns:
 The response is used by the client to determine whether the synchronization operation was successfully received by the backend.
 
 - ### sendToDevice()
-Sends synchronization data to a specific device using its `Socket.IO room`.
+Sends synchronization data to a specific device using its `Socket.IO room`.  
 
-The message is emitted with a `5-second` acknowledgement `timeout`.
+The message is emitted with a `5-second` acknowledgement `timeout`.  
 
 The method returns:
 * `true` when the target device acknowledges the message;
@@ -175,14 +176,72 @@ The method returns:
 
 ---
 
+### SyncOutboxDeliveryService
+Delivers pending synchronization operations from the backend `syncOutbox` to `Runtime` devices.
+
+#### Responsibilities
+- Periodically check for pending synchronization operations.
+- Group pending operations by target device.
+- Deliver operations to the target device through [SyncGateway](#syncgateway).
+- Process pending operations in creation order for each device.
+- Mark successfully delivered operations as processed.
+- Retry operations that have not been successfully delivered.
+
+### retryPending()
+`retryPending()` runs automatically every second using the `@Interval(1000)` decorator.
+
+It finds all devices with unprocessed records in `syncOutbox` and starts delivery for each device:
+```ts
+@Interval(1000)
+async retryPending(): Promise<void>
+```
+
+Only distinct device `IDs` are selected to avoid processing the same device multiple times during one interval.
+
+- ### deliver()
+Retrieves all unprocessed synchronization records for the specified device and orders them by `created_at`.
+
+The service reads pending synchronization records from the [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) table, which contains operations created by `SyncOutboxService` for target devices. Target device information is derived from the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table when the outbox records are created.
+
+Each operation is sent through `SyncGateway` [sendToDevice()](#sendtodevice).
+
+If the gateway confirms successful delivery, the corresponding syncOutbox record is marked as processed by setting `processed_at`.
+
+If delivery fails, the record remains unprocessed and will be retried during a subsequent execution of [retryPending()](retrypending).
+
+---
+
+### Delivery Flow
+<pre>
+  syncOutbox
+    │
+    │ pending records
+    ▼
+SyncOutboxDeliveryService
+    │
+    │ deliver()
+    ▼
+SyncGateway
+    │
+    │ WebSocket
+    ▼
+Target Runtime Device
+    │
+    │ success
+    ▼
+syncOutbox.processed_at
+</pre>
+
+---
+
 ### SyncInboxService 
 Receives synchronization operations from `SyncGateway` and stores them in the backend synchronization inbox.
 
 - ### receive()
-- Receive synchronization data from connected `Runtime` devices.
-- Persist received synchronization operations in the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table.
-- Preserve the `operation ID`, source `device ID`,`record ID`, and `payload` for further processing.
-- Store the received synchronization operation using [PrismaService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/modules.md#prismaservice).
+  - Receive synchronization data from connected `Runtime` devices.
+  - Persist received synchronization operations in the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table.
+  - Preserve the `operation ID`, source `device ID`,`record ID`, and `payload` for further processing.
+  - Store the received synchronization operation using [PrismaService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/modules.md#prismaservice).
 
 The following data is persisted ([SyncQueueDto](#syncqueuedto)):
 * `id` — unique synchronization operation ID;
@@ -191,7 +250,7 @@ The following data is persisted ([SyncQueueDto](#syncqueuedto)):
 * `record_id` — ID of the affected record;
 * `payload` — operation data.
 
-After the `inbox` record is successfully created, `receive()` calls [SyncOutboxService.createForDevices()](#createForDevices) to create outgoing records for other active devices.
+After the `inbox` record is successfully created, `receive()` calls [SyncOutboxService.createForDevices()](#createfordevices) to create outgoing records for other active devices.
 
 ---
 
@@ -199,11 +258,11 @@ After the `inbox` record is successfully created, `receive()` calls [SyncOutboxS
 Creates outgoing synchronization records for all active devices except the device that originated the operation.
 
 - ### createForDevices()
-* Finds all active devices registered in [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status).
-* Excludes the source device from synchronization.
-* Creates a separate [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) record for each target device.
-* Stores the `operation ID`, `record ID`, and payload required for synchronization.
-* Does nothing when there are no available target devices.
+  - Finds all active devices registered in [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status).
+  - Excludes the source device from synchronization.
+  - Creates a separate [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) record for each target device.
+  - Stores the `operation ID`, `record ID`, and payload required for synchronization.
+  - Does nothing when there are no available target devices.
 
 Creates synchronization tasks for every active device except `data.source_id`.
 The method uses distinct `device_id` values, so a device receives only one outbox record even if it has multiple [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) records.
