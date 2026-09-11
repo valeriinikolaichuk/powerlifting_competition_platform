@@ -111,7 +111,8 @@ This allows the data change and its corresponding synchronization operation to b
   - If synchronization of an operation fails, the process stops and the remaining operations remain in the queue for a later synchronization attempt.
 
 - ### send()
-Sends a synchronization operation to the backend through `SocketService`.
+The method accepts the [SyncQueueItem](#syncqueueitem) parameter.  
+Sends a synchronization operation to the backend through [SocketService](#socketservice).
 
 The operation is emitted using the sync socket event and contains:
 * id
@@ -179,12 +180,11 @@ If the socket is already connected, the method resolves immediately. Otherwise, 
 The data transfer object used for complete database hydration.
   * `data`: A key-value object where each key represents a `tableName` (string) and the value is an array of objects representing database rows (`Record<string, any>[]`).
 
-### SyncQueueItem
-⚠️
-    id: string;
-    source_id: string;
-    operation_id: string;
-    record_id: string;
-    payload: string;
-    created_at
+#### SyncQueueItem
+* id
+* source_id
+* operation_id
+* record_id
+* payload
+* created_at
 ---
