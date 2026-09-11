@@ -168,7 +168,7 @@ this.socket = io(environment.apiUrl, {
 
 This allows the backend to associate the `Socket.IO` connection with the current `Runtime` device.
 
-#### waitForConnection()
+- ### waitForConnection()
 Ensures that the socket connection is established before communication is attempted.   
 If the socket is already connected, the method resolves immediately. Otherwise, it waits for the next `connect` event.
 
