@@ -14,6 +14,9 @@ Contents
 - [SnapshotPipelineService](#snapshotpipelineservice)
   - [Snapshot Steps](#snapshot-steps)
 - [SyncGateway](#syncgateway)
+- [SyncInboxService](#syncinboxservice)
+- [SyncOutboxService](#syncoutboxservice)
+  - [Communication Flow](#communication-flow)
 - [DTOs](#dtos)
 
 ---
@@ -117,8 +120,7 @@ Each step:
 ---
 
 ### SyncGateway
-Provides the `WebSocket` communication layer for synchronization between `Runtime` devices and the `Backend`.   
-`SyncGateway` is responsible only for `WebSocket` communication.
+Provides the `WebSocket` communication layer for synchronization between `Runtime` devices and the `Backend`.
 
 #### Responsibilities
 - Accept `Socket.IO` connections from `Runtime` devices.
@@ -129,8 +131,10 @@ Provides the `WebSocket` communication layer for synchronization between `Runtim
 - Send synchronization data from the backend to a `specific device`.
 - Report whether delivery to the target device was successful.
 
-#### Connection Handling
-When a client connects, `handleConnection()` retrieves the `deviceId` from the `Socket.IO` handshake query.
+`SyncGateway` is responsible only for `WebSocket` communication.
+
+- ### handleConnection()
+Retrieves the `deviceId` from the `Socket.IO` handshake query.
 
 If the `device ID` is missing or is not a string, the connection is immediately disconnected.
 
@@ -141,8 +145,7 @@ client.join(deviceId);
 
 This allows synchronization messages to be addressed to a specific device.
 
-#### Receiving Synchronization Operations
-
+### Receiving Synchronization Operations
 The `sync` event receives synchronization data from a Runtime client:
 
 ```ts
@@ -150,7 +153,7 @@ The `sync` event receives synchronization data from a Runtime client:
 async handleSync(@MessageBody() data: SyncQueueDto)
 ```
 
-The received operation is passed to [SyncInboxService]() for processing.
+The received operation is passed to [SyncInboxService](#syncinboxservice) for processing.
 
 After successful reception, the gateway returns:
 ```ts
@@ -161,92 +164,78 @@ After successful reception, the gateway returns:
 
 The response is used by the client to determine whether the synchronization operation was successfully received by the backend.
 
-#### Sending Data to a Device
-[sendToDevice()]() sends synchronization data to a specific device using its `Socket.IO room`:
+- ### sendToDevice()
+Sends synchronization data to a specific device using its `Socket.IO room`.
 
-The message is emitted with a 5-second acknowledgement timeout.
+The message is emitted with a `5-second` acknowledgement `timeout`.
 
 The method returns:
 * `true` when the target device acknowledges the message;
 * `false` when delivery times out or fails.
-
-#### Communication Flow
-
-```text
-Runtime Device
-      │
-      │ sync
-      ▼
-SyncGateway
-      │
-      ▼
-SyncInboxService
-      │
-      ▼
-Backend Sync Processing
-
-
-Backend Sync Processing
-      │
-      ▼
-SyncGateway
-      │
-      │ sync
-      ▼
-Target Runtime Device
-```
 
 ---
 
 ### SyncInboxService 
 Receives synchronization operations from `SyncGateway` and stores them in the backend synchronization inbox.
 
-#### Responsibilities
+- ### receive()
+- Receive synchronization data from connected `Runtime` devices.
+- Persist received synchronization operations in the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table.
+- Preserve the `operation ID`, source `device ID`,`record ID`, and `payload` for further processing.
+- Store the received synchronization operation using [PrismaService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/modules.md#prismaservice).
 
-- Receive synchronization data from connected Runtime devices.
-- Persist received synchronization operations in the `syncInbox` table.
-- Preserve the operation ID, source device ID, record ID, and payload for further processing.
-
-#### receive()
-
-`receive()` stores the received synchronization operation using `PrismaService`:
-
-```ts
-async receive(data: SyncQueueDto): Promise<void>
-````
-
-The following data is persisted:
-
+The following data is persisted ([SyncQueueDto](#syncqueuedto)):
 * `id` — unique synchronization operation ID;
 * `source_id` — ID of the device that created the operation;
 * `operation_id` — synchronization operation type;
 * `record_id` — ID of the affected record;
 * `payload` — operation data.
 
-The service only receives and persists the operation. Further synchronization processing is handled separately.
+After the `inbox` record is successfully created, `receive()` calls [SyncOutboxService.createForDevices()](#createForDevices) to create outgoing records for other active devices.
 
-#### Communication Flow
+---
 
-```text id="n4h7sk"
-Runtime Device
-      │
-      │ sync
-      ▼
-SyncGateway
-      │
-      ▼
-SyncInboxService
-      │
-      ▼
-syncInbox
+### SyncOutboxService
+Creates outgoing synchronization records for all active devices except the device that originated the operation.
+
+- ### createForDevices()
+* Finds all active devices registered in [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status).
+* Excludes the source device from synchronization.
+* Creates a separate [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) record for each target device.
+* Stores the `operation ID`, `record ID`, and payload required for synchronization.
+* Does nothing when there are no available target devices.
+
+Creates synchronization tasks for every active device except `data.source_id`.
+The method uses distinct `device_id` values, so a device receives only one outbox record even if it has multiple [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) records.
+
+For each target device, an entry is created in the syncOutbox table containing:
+* device_id — target device;
+* operation_id — synchronization operation type;
+* record_id — affected record;
+* payload — operation data.
+
+---
+
+### Communication Flow
+```text
+       SyncGateway
+       handleSync()
+            |
+      SyncInboxService
+            |
+        SyncQueueDto
+            |
+        receive()
+            |
+            ├──► sync_inbox table
+            │
+     SyncOutboxService
+     createForDevices()
+            │
+            ├──► Device B → syncOutbox
+            ├──► Device C → syncOutbox      
+            ├──► ...
 ```
-
-
-
-
-
-
-
 
 ---
 
