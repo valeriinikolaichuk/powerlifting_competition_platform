@@ -7,6 +7,7 @@ A real-time state synchronization system that accepts updates, persists them to 
 - [SyncService](#syncservice)
   - [Synchronization Flow](#synchronization-flow)
 - [SyncQueueService](#syncqueueservice)
+- [SocketService](#socketservice)
 - [DTOs](#dtos)
 
 </details>
@@ -138,6 +139,48 @@ If the server reports failure, the operation is rejected and remains unprocessed
 - ### markAsProcessed()
 Marks a successfully synchronized queue item by setting its `processed_at` timestamp.  
 Only successfully `acknowledged` operations are marked as `processed`.
+
+---
+
+### SocketService
+Provides the `Socket.IO` connection between the Runtime application and the backend synchronization server.
+```text
+SyncQueueService
+       │
+       ▼
+SocketService
+       │
+       │ Socket.IO
+       ▼
+Backend Sync Gateway
+```
+
+`SocketService` does not implement synchronization logic itself. It only provides the communication channel used by the synchronization services.
+
+#### Responsibilities
+- Establish a `Socket.IO` connection to the backend `API`.
+- Send the current device `ID` during connection initialization.
+- Expose the active socket instance to other services.
+- Provide a method for waiting until the socket connection is established.
+
+#### Initialization
+When the service is created, it retrieves the device ID from `localStorage` and establishes a `Socket.IO` connection using the backend API URL from the application environment.
+
+The device ID is sent as a connection query parameter:
+```ts
+const deviceId = localStorage.getItem('device_id');
+this.socket = io(environment.apiUrl, {
+  query: {
+    deviceId,
+  },
+});
+````
+
+This allows the backend to associate the `Socket.IO` connection with the current `Runtime` device.
+
+#### waitForConnection()
+Ensures that the socket connection is established before communication is attempted.   
+If the socket is already connected, the method resolves immediately. Otherwise, it waits for the next `connect` event.
 
 ---
 
