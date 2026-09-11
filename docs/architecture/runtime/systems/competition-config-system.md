@@ -10,13 +10,13 @@ It is responsible for defining and maintaining the fundamental competition param
 - [Services](#services)
   - [CompetitionOptionsService](#competitionoptionsservice)
   - [CompetitionPopupService](#competitionpopupservice)
+- [Creation Flow](#creation-flow)
 - [DTO / configuration models](#dto-and-configuration-models)
   - [CompetitionData](#competitiondata)
   - [FederationOption](#federationoption)
   - [DivisionOption](#divisionoption)
   - [AgeGroupOption](#agegroupoption)
   - [Competition Options](#competition-options)
-- [Creation Flow](#creation-flow)
 
 </details>
 
@@ -305,9 +305,8 @@ If either operation fails, the transaction is rolled back.
 
 #### Competition Creation
 The competition is created using the shared SQL operation:
-```ts
-SYNC_OPERATIONS.CREATE_COMPETITION
-```
+
+[SYNC_OPERATIONS.CREATE_COMPETITION](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations)
 
 The operation receives the [competition data](#competitiondata) together with the current user ID.
 
@@ -328,6 +327,49 @@ After the `transaction` is successfully committed, the service starts [synchroni
 ```
 await this.syncQueueService.sync();
 ```
+
+---
+
+### Creation Flow
+
+<pre>
+CreateCompetitionComponent
+         │
+         ├── Load Federations
+         │         │
+         │         ▼
+         │   CompetitionOptionsService
+         │
+         ├── Select Federation
+         │         │
+         │         ├── Load Divisions
+         │         │
+         │         └── Load Age Groups
+         │
+         ├── Select Sex
+         │       │
+         │       ▼
+         │ Load Age Groups
+         │
+         ├── Validate Form
+         │
+         ▼
+CompetitionPopupService.create()
+         │
+         ├── UserService.getUserId()
+         │
+         ├── Get device_id
+         │
+         ▼
+  PGlite Transaction
+         │
+         ├── CREATE_COMPETITION
+         │
+         └── SyncQueueService.addQueue()
+                        │
+                        ▼
+               Synchronization Queue
+</pre>
 
 ---
 
@@ -393,44 +435,3 @@ WOMEN
 ```
 
 ---
-
-### Creation Flow
-
-<pre>
-CreateCompetitionComponent
-         │
-         ├── Load Federations
-         │         │
-         │         ▼
-         │   CompetitionOptionsService
-         │
-         ├── Select Federation
-         │         │
-         │         ├── Load Divisions
-         │         │
-         │         └── Load Age Groups
-         │
-         ├── Select Sex
-         │       │
-         │       ▼
-         │ Load Age Groups
-         │
-         ├── Validate Form
-         │
-         ▼
-CompetitionPopupService.create()
-         │
-         ├── UserService.getUserId()
-         │
-         ├── Get device_id
-         │
-         ▼
-  PGlite Transaction
-         │
-         ├── CREATE_COMPETITION
-         │
-         └── SyncQueueService.addQueue()
-                        │
-                        ▼
-               Synchronization Queue
-</pre>
