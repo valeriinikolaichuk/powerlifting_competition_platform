@@ -20,13 +20,11 @@ Is responsible for managing offline-first data capabilities and bi-directional s
 Related with backend [Synchronization system](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md)
 
 The `SyncService`  
-1. [Initializes](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#pgliteservice) the local `PGlite` database.
-2. Checks the local `sync_queue` table for pending changes.
-3. Sends pending changes to to the backend through `SocketService`.
-- ⚠️ ?? 4. Removes the successfully synchronized changes from the `local queue`.
-5. Requests the current database snapshot from the backend.
-6. Clears the local [USER_TABLES](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration).
-7. Inserts the data received from the server into the local database.
+1. [Initializes](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#pgliteservice) the local `PGlite` database.  
+2. Sends pending changes to to the backend through [SyncQueueService](#sync).   
+3. Requests the current database snapshot from the backend.  
+4. Clears the local [USER_TABLES](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration).
+5. Inserts the data received from the server into the local database.
 
 The synchronization uses the shared [USER_TABLES](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration) definition to process all user-related tables without maintaining a separate list of tables in the `Runtime`.
 
@@ -39,30 +37,21 @@ The user can choose:
 
 The local database is not replaced when synchronization fails.
 
-- #### ⚠️??? handleQueueSync()
-  - Processes the local synchronization `queue`.
-  - Fetches all pending offline changes (where `processed_at IS NULL`).
-  - Sends them to the [/api/sync](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#synccontroller) backend endpoint, receives [QueueSyncResult](#queuesyncresult)
-  - Clears the local queue once the server acknowledges a successful sync.
-  - Includes built-in network error handling.
-
-- #### ⚠️??? getSnapshot()
+- ### getSnapshot()
   - Fetches a complete data snapshot from the remote server ([/api/sync/snapshot](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#synccontroller)).
   - Automatically detects the user's current UI `language` from the `URL` query parameters (`?lang=...`) and forwards it to the `API` to receive localized database records.
 
-- #### refreshDatabase()
+- ### refreshDatabase()
   - Clears all local application tables using a cascading truncate strategy (`TRUNCATE ... CASCADE`)
   - Refills them with the fresh server data provided in the [SnapshotDto](#snapshotdto).
 
-- #### syncWithServer()
+- ### syncWithServer()
   - Populates local database tables with incoming snapshot data.
   - Dynamically maps object keys and values into secure, SQL-injection-proof parameterized queries (`$1, $2, ...`) and executes sequential insertions for each record.
 
 ---
 
 #### Synchronization Flow 
-
-
 <pre>
 PGlite Initialization
         ↓
@@ -185,11 +174,6 @@ If the socket is already connected, the method resolves immediately. Otherwise, 
 ---
 
 ### DTOs
-
-#### ⚠️???  QueueSyncResult
-Structure of the backend response after pushing local changes.
-  * `success`: Boolean flag indicating if the synchronization was successful.
-  * `received`: The exact number of offline operations successfully processed by the server.
 
 #### SnapshotDto
 The data transfer object used for complete database hydration.
