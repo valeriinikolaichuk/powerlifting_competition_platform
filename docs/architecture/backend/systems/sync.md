@@ -26,16 +26,6 @@ Contents
 ### SyncController
 Provides `HTTP` endpoints for synchronization operations.
 
-⚠️
-#### `POST /api/sync` endpoint
-* Receives changes produced by the Runtime `synchronization queue`.
-* Delegates processing to `SyncService.processQueueSync()`.
-* Returns the number of received changes.
-* Stores received changes in the `PostgreSQL` [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table.
-* Uses duplicate protection when inserting synchronization records.
-
-The endpoint is intended to receive synchronization changes and persist them for subsequent processing.
-
 #### `GET /api/sync/snapshot` endpoint
 * Requires `JWT` authentication.
 * Receives the requested `language` through the query string.
