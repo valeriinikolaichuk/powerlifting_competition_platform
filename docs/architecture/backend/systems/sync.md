@@ -9,17 +9,19 @@ The synchronization system keeps the local [browser database](https://github.com
 
 Contents
 
-* [SyncController](#synccontroller)
-* [SyncService](#syncservice)
-* [SnapshotPipelineService](#snapshotpipelineservice)
-* [Snapshot Steps](#snapshot-steps)
-* [DTOs](#dtos)
+- [SyncController](#synccontroller)
+- [SyncService](#syncservice)
+- [SnapshotPipelineService](#snapshotpipelineservice)
+  - [Snapshot Steps](#snapshot-steps)
+- [SyncGateway](#syncgateway)
+- [DTOs](#dtos)
 
 ---
 
 ### SyncController
 Provides `HTTP` endpoints for synchronization operations.
 
+⚠️
 #### `POST /api/sync` endpoint
 * Receives changes produced by the Runtime `synchronization queue`.
 * Delegates processing to `SyncService.processQueueSync()`.
@@ -111,6 +113,140 @@ Each step:
 * can use `Prisma` for database access.
 
 [snapshot steps](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/backend/api/src/modules/sync/snapshot-pipeline)
+
+---
+
+### SyncGateway
+Provides the `WebSocket` communication layer for synchronization between `Runtime` devices and the `Backend`.   
+`SyncGateway` is responsible only for `WebSocket` communication.
+
+#### Responsibilities
+- Accept `Socket.IO` connections from `Runtime` devices.
+- Validate the `device ID` provided during connection.
+- Associate each connected client with its `device ID`.
+- Receive synchronization operations from `Runtime clients`.
+- Pass received operations to [SyncInboxService](#syncinboxservice).
+- Send synchronization data from the backend to a `specific device`.
+- Report whether delivery to the target device was successful.
+
+#### Connection Handling
+When a client connects, `handleConnection()` retrieves the `deviceId` from the `Socket.IO` handshake query.
+
+If the `device ID` is missing or is not a string, the connection is immediately disconnected.
+
+Valid clients join a `Socket.IO room` identified by their `device ID`:
+```ts
+client.join(deviceId);
+````
+
+This allows synchronization messages to be addressed to a specific device.
+
+#### Receiving Synchronization Operations
+
+The `sync` event receives synchronization data from a Runtime client:
+
+```ts
+@SubscribeMessage('sync')
+async handleSync(@MessageBody() data: SyncQueueDto)
+```
+
+The received operation is passed to [SyncInboxService]() for processing.
+
+After successful reception, the gateway returns:
+```ts
+{
+  success: true,
+}
+```
+
+The response is used by the client to determine whether the synchronization operation was successfully received by the backend.
+
+#### Sending Data to a Device
+[sendToDevice()]() sends synchronization data to a specific device using its `Socket.IO room`:
+
+The message is emitted with a 5-second acknowledgement timeout.
+
+The method returns:
+* `true` when the target device acknowledges the message;
+* `false` when delivery times out or fails.
+
+#### Communication Flow
+
+```text
+Runtime Device
+      │
+      │ sync
+      ▼
+SyncGateway
+      │
+      ▼
+SyncInboxService
+      │
+      ▼
+Backend Sync Processing
+
+
+Backend Sync Processing
+      │
+      ▼
+SyncGateway
+      │
+      │ sync
+      ▼
+Target Runtime Device
+```
+
+---
+
+### SyncInboxService 
+Receives synchronization operations from `SyncGateway` and stores them in the backend synchronization inbox.
+
+#### Responsibilities
+
+- Receive synchronization data from connected Runtime devices.
+- Persist received synchronization operations in the `syncInbox` table.
+- Preserve the operation ID, source device ID, record ID, and payload for further processing.
+
+#### receive()
+
+`receive()` stores the received synchronization operation using `PrismaService`:
+
+```ts
+async receive(data: SyncQueueDto): Promise<void>
+````
+
+The following data is persisted:
+
+* `id` — unique synchronization operation ID;
+* `source_id` — ID of the device that created the operation;
+* `operation_id` — synchronization operation type;
+* `record_id` — ID of the affected record;
+* `payload` — operation data.
+
+The service only receives and persists the operation. Further synchronization processing is handled separately.
+
+#### Communication Flow
+
+```text id="n4h7sk"
+Runtime Device
+      │
+      │ sync
+      ▼
+SyncGateway
+      │
+      ▼
+SyncInboxService
+      │
+      ▼
+syncInbox
+```
+
+
+
+
+
+
+
 
 ---
 
