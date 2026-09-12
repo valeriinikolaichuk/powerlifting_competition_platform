@@ -7,8 +7,14 @@ A real-time state synchronization system that accepts updates, persists them to 
 - [SyncService](#syncservice)
   - [Synchronization Flow](#synchronization-flow)
 - [SyncQueueService](#syncqueueservice)
+  - [SyncQueue Flow](#syncqueue-flow)
 - [SocketService](#socketservice)
+- SyncReceiverService
+  - SyncOperationFactory
+  - Synchronization Operations
 - [DTOs](#dtos)
+  - [SnapshotDto](#snapshotdto)
+  - [SyncQueueItem](#syncqueueitem)
 
 </details>
 
@@ -129,6 +135,61 @@ If the server reports failure, the operation is rejected and remains unprocessed
 - ### markAsProcessed()
 Marks a successfully synchronized queue item by setting its `processed_at` timestamp.  
 Only successfully `acknowledged` operations are marked as `processed`.
+
+---
+
+#### SyncQueue Flow
+<pre>
+      SyncQueueService
+          sync()
+            |
+            |<--- sync_queue table
+            |        
+        SyncQueueItem
+            |
+            ▼
+          send()
+            |
+socketService.socket.emit()
+            |
+            ▼
+        [backend]
+       SyncGateway
+       handleSync()
+            |
+      SyncInboxService
+            |
+        SyncQueueDto
+            |
+        receive()
+            |
+            ├──► INSERT → sync_inbox table
+            │
+     SyncOutboxService
+     createForDevices()
+            │
+          INSERT
+            ↓
+    sync_outbox table
+            ├──► Device B → syncOutbox
+            ├──► Device C → syncOutbox      
+            ├──► ...
+
+            │
+            ▼
+    return { success: true }
+            │
+            │ Socket.IO ACK
+            ▼
+    frontend callback()
+            │
+            ▼
+        resolve()
+            │
+            ▼
+markAsProcessed(item.id) ──► sync_queue
+                             processed_at = NOW()
+</pre>
 
 ---
 
