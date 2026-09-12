@@ -10,13 +10,13 @@ It is responsible for defining and maintaining the fundamental competition param
 - [Services](#services)
   - [CompetitionOptionsService](#competitionoptionsservice)
   - [CompetitionPopupService](#competitionpopupservice)
+- [Creation Flow](#creation-flow)
 - [DTO / configuration models](#dto-and-configuration-models)
   - [CompetitionData](#competitiondata)
   - [FederationOption](#federationoption)
   - [DivisionOption](#divisionoption)
   - [AgeGroupOption](#agegroupoption)
   - [Competition Options](#competition-options)
-- [Creation Flow](#creation-flow)
 
 </details>
 
@@ -199,7 +199,7 @@ The method performs the following steps:
 4. Retrieves the current application `language`.
 5. Generates the current `timestamp`.
 
-The competition is created through [competitionPopupService.create](#async-create)
+The competition is created through `CompetitionPopupService` [create()](#async-create)
 
 The component does not directly persist the competition data.
 
@@ -305,14 +305,13 @@ If either operation fails, the transaction is rolled back.
 
 #### Competition Creation
 The competition is created using the shared SQL operation:
-```ts
-SYNC_OPERATIONS.CREATE_COMPETITION
-```
+
+[SYNC_OPERATIONS.CREATE_COMPETITION](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations)
 
 The operation receives the [competition data](#competitiondata) together with the current user ID.
 
 #### Synchronization Queue
-After the competition is created locally, the service registers a synchronization operation through `SyncQueueService`.
+After the competition is created locally, the service registers a synchronization operation through [syncQueueService.addQueue](sync-system.md#addqueue).
 
 The queued operation contains:
 
@@ -324,72 +323,9 @@ The queued operation contains:
 
 The operation remains in the local `synchronization queue` until it is processed by the `synchronization system`.  
 
-After the `transaction` is successfully committed, the service starts `synchronization`.
+After the `transaction` is successfully committed, the service starts [synchronization](sync-system.md#sync).
 ```
 await this.syncQueueService.sync();
-```
-
----
-
-## DTO and configuration models
-
-### CompetitionData
-Represents the data required to create a competition.
-
-* id
-* name
-* country
-* city
-* language
-* startDate
-* endDate
-* level
-* type
-* division
-* federationCategoryIds
-* updated_at
-
-The object is created by `CreateCompetitionComponent` and passed to `CompetitionPopupService.create()`.
-
-### FederationOption
-* id
-* code
-
-### DivisionOption
-* division
-* name
-
-### AgeGroupOption
-* id
-* name
-* sex
-* federation_code
-
-### Competition Options
-The competition creation workflow uses predefined option constants for levels, types, and sexes.
-
-#### Competition Levels
-```text
-INTERNATIONAL
-NATIONAL
-REGIONAL_OPEN
-REGIONAL_ONLY
-LOCAL_OPEN
-LOCAL_ONLY
-```
-
-The available levels may be filtered by `CreateCompetitionComponent` depending on the current application language.
-
-#### Competition Types
-```text
-POWERLIFT
-BENCH_PRESS
-```
-
-#### Sexes
-```text
-MEN
-WOMEN
 ```
 
 ---
@@ -434,3 +370,68 @@ CompetitionPopupService.create()
                         ▼
                Synchronization Queue
 </pre>
+
+---
+
+## DTO and configuration models
+
+### CompetitionData
+Represents the data required to create a competition.
+
+* id
+* name
+* country
+* city
+* language
+* startDate
+* endDate
+* level
+* type
+* division
+* federationCategoryIds
+* updated_at
+
+The object is created by `CreateCompetitionComponent` and passed to `CompetitionPopupService` [create()](#async-create).
+
+### FederationOption
+* id
+* code
+
+### DivisionOption
+* division
+* name
+
+### AgeGroupOption
+* id
+* name
+* sex
+* federation_code
+
+### Competition Options
+The competition creation workflow uses predefined option constants for levels, types, and sexes.
+
+#### Competition Levels
+```text
+INTERNATIONAL
+NATIONAL
+REGIONAL_OPEN
+REGIONAL_ONLY
+LOCAL_OPEN
+LOCAL_ONLY
+```
+
+The available levels may be filtered by `CreateCompetitionComponent` depending on the current application language.
+
+#### Competition Types
+```text
+POWERLIFT
+BENCH_PRESS
+```
+
+#### Sexes
+```text
+MEN
+WOMEN
+```
+
+---

@@ -33,7 +33,7 @@ Based on Angular signals and lazy-loaded `JSON` files, supporting multi-language
 Manages the general information and configuration of competitions
 
 ### [sync](runtime/systems/sync-system.md)
-Syncs the browser's `PGlite` with the `PostgreSQL` server, exchanging changes to keep data consistent.
+A real-time state synchronization system that accepts updates and instantly broadcasts them to all other connected clients.
 
 ---
 

@@ -1,9 +1,31 @@
 ## Shared SQL
+Provides a centralized interface for synchronization operations and can be extended as new operations are introduced.  
 
 The `shared-sql` module contains shared database definitions, synchronization configuration, and reusable `SQL` queries used by both
 the backend and browser runtime.
 
 It provides a single source of truth for database-related constants and `SQL` logic shared between `PostgreSQL` and `PGlite`.
+
+---
+
+### index.ts
+[index.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/index.ts) provides a centralized definition and `export point` for data structures and operations used by the synchronization system.
+
+It exports:
+- table groups used by different synchronization stages;
+- competition-related database tables;
+- `SQL queries` for synchronization operations;
+- shared synchronization constants used by both synchronization services and processing logic.
+
+#### Synchronization Operations
+SQL queries for synchronization operations are exposed through the `SYNC_OPERATIONS` object:
+```ts
+export const SYNC_OPERATIONS = {
+  CREATE_COMPETITION: CREATE_COMPETITION_SQL,
+  UPDATE_COMPETITION: UPDATE_COMPETITION_SQL,
+  DELETE_COMPETITION: DELETE_COMPETITION_SQL,
+} as const;
+```
 
 ---
 

@@ -178,10 +178,10 @@ Popup Content
   - `SynchronizationErrorComponent` — database synchronization error massage.
 - `CompetitionPopupComponent`— popup container.
   - Components:
-    - CreateCompetitionComponent — competition creation form.
+    - [CreateCompetitionComponent](competition-config-system.md#createcompetitioncomponent) — competition creation form. Manages competition data input and delegates competition creation to `CompetitionPopupService`.
   - Services:
-    - CompetitionOptionsService — loads available competition options from the local database.
-    - CompetitionPopupService — creates the competition and registers the synchronization operation.
+    - [CompetitionOptionsService](competition-config-system.md#competitionoptionsservice) — loads available competition options from the local database.
+    - [CompetitionPopupService](competition-config-system.md#competitionpopupservice) — creates the competition and registers the synchronization operation.
 
 ---
 
