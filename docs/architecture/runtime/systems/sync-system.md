@@ -15,6 +15,7 @@ A real-time state synchronization system that accepts updates, persists them to 
 - [DTOs](#dtos)
   - [SnapshotDto](#snapshotdto)
   - [SyncQueueItem](#syncqueueitem)
+  - SyncOutboxDto
 
 </details>
 
