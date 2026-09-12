@@ -7,6 +7,7 @@ import {
   MessageBody,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import type { SyncOutbox } from '@prisma/client';
 
 import { SyncInboxService } from './sync-inbox.service';
 import type { SyncQueueDto } from './dto/sync-queue.dto';
@@ -23,6 +24,17 @@ export class SyncGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleConnection(client: Socket) {
     console.log(`Socket connected: ${client.id}`);
+
+    const deviceId = client.handshake.query.deviceId;
+
+    if (typeof deviceId !== 'string') {
+      client.disconnect();
+      return;
+    }
+
+    client.join(deviceId);
+
+    console.log(`Device ${deviceId} connected: ${client.id}`);
   }
 
   handleDisconnect(client: Socket) {
@@ -34,8 +46,33 @@ export class SyncGateway implements OnGatewayConnection, OnGatewayDisconnect {
     
     await this.syncInboxService.receive(data);
 
-    return {
-      success: true,
-    };
+    return { success: true, };
+  }
+
+  sendToDevice(
+    deviceId: string,
+    data: SyncOutbox,
+  ): Promise<boolean> {
+
+    return new Promise((resolve) => {
+
+      this.server.to(deviceId).timeout(5000)
+        .emit('sync', {
+          id: data.id,
+          operationId: data.operation_id,
+          recordId: data.record_id,
+          payload: data.payload,
+        },
+        (error: Error | null) => {
+
+          if (error) {
+            resolve(false);
+            return;
+          }
+
+          resolve(true);
+        },
+      );
+    });
   }
 }

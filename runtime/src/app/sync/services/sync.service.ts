@@ -54,59 +54,16 @@ export class SyncService {
 
     this.pg = this.pgliteService.database;
 
-    await this.handleQueueSync();
+    console.log('Queue synchronization started...');
+
+    await this.syncQueueService.sync();
+
+    console.log('Queue synchronizated');
 
     const snapshot = await this.getSnapshot();
 
     if (snapshot){
       await this.refreshDatabase(snapshot);
-    }
-  }
-
-  private async handleQueueSync(): Promise<void> {
-    try {
-      console.log('Queue synchronization started...');
-
-      await this.syncQueueService.sync();
-
-
-
-/*      const result = await this.pg.query(`
-        SELECT
-          id,
-          source_id,
-          operation_id,
-          record_id,
-          payload,
-          created_at
-        FROM sync_queue
-        WHERE processed_at IS NULL
-        ORDER BY created_at ASC
-      `);
-
-      if (result.rows.length > 0) {
-        const response = await firstValueFrom(
-          this.http.post<QueueSyncResult>(
-            '/api/sync',
-            {
-                changes: result.rows,
-            },
-          )
-        );
-
-        if (response.success) {
-          console.log(`Queue synchronized. Received: ${response.received}`);
-
-          await this.pg.query(`
-            DELETE FROM sync_queue
-            WHERE processed_at IS NULL
-          `);
-        }
-      }
-*/
-      console.log('Queue synchronizated');
-    } catch (err) {
-      console.error('Network error while syncing:', err);
     }
   }
 

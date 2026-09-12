@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
+import { SyncOutboxService } from './sync-outbox.service';
 import type { SyncQueueDto } from './dto/sync-queue.dto';
 
 @Injectable()
@@ -8,6 +9,7 @@ export class SyncInboxService {
 
     constructor(
         private readonly prisma: PrismaService,
+        private readonly syncOutboxService: SyncOutboxService,
     ) {}
 
     async receive(data: SyncQueueDto): Promise<void> {
@@ -21,5 +23,7 @@ export class SyncInboxService {
                 payload: data.payload,
             },
         });
+
+        await this.syncOutboxService.createForDevices(data);
     }
 }

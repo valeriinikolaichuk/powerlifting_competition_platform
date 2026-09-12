@@ -16,6 +16,8 @@ import { CREATE_COMPETITION_SQL } from './queries/competitions/create.js';
 import { UPDATE_COMPETITION_SQL } from './queries/competitions/update.js';
 import { DELETE_COMPETITION_SQL } from './queries/competitions/delete.js';
 
+import { CompetitionData } from './dto/competitionData.js';
+
 export { 
     TABLE_USERS, 
     STATIC_REFERENCE_TABLES,
@@ -37,3 +39,7 @@ export const SYNC_OPERATIONS = {
   DELETE_COMPETITION: DELETE_COMPETITION_SQL,
 
 } as const;
+
+export type { 
+    CompetitionData 
+};

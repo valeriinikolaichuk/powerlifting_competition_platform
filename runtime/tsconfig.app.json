@@ -7,7 +7,7 @@
   },
   "include": [
     "src/**/*.ts"
-  ],
+, "../shared-sql/dto/competitionData.ts"  ],
   "exclude": [
     "src/**/*.spec.ts"
   ]

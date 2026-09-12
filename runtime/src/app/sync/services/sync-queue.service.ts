@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { PGlite } from '@electric-sql/pglite';
 
 import { PgliteService } from '../../database/services/pglite.service';
 import { SocketService } from './socket.service';
@@ -9,9 +8,7 @@ import { SyncQueueItem } from '../dto/sync-queue-item';
   providedIn: 'root',
 })
 export class SyncQueueService {
-  
-  private pg!: PGlite;
-  
+   
   constructor(
     private readonly pgliteService: PgliteService,
     private readonly socketService: SocketService,
@@ -114,7 +111,8 @@ export class SyncQueueService {
   }
 
   private async markAsProcessed(id: string): Promise<void> {
-    await this.pg.query(
+
+    await this.pgliteService.query(
       `
         UPDATE sync_queue
         SET processed_at = NOW()

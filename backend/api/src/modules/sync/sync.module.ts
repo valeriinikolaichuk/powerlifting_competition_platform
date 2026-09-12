@@ -4,8 +4,10 @@ import { SyncService } from './sync.service';
 import { SyncGateway } from './sync.gateway';
 
 import { PrismaService } from '../prisma/prisma.service';
-import { SNAPSHOT_PIPELINE } from './sync.tokens';
+import { SyncOutboxDeliveryService } from './sync-outbox-delivery.service';
+import { SyncProcessorService } from './sync-processor.service';
 
+import { SNAPSHOT_PIPELINE } from './sync.tokens';
 import { SnapshotPipelineService } from './snapshot-pipeline/snapshot-pipeline.service';
 import { StaticReferenceStep } from './snapshot-pipeline/static-reference-step';
 import { AdminReferenceStep } from './snapshot-pipeline/admin-reference-step';
@@ -21,10 +23,15 @@ import { OrganizationResultStep } from './snapshot-pipeline/organization-result-
 import { SyncInboxService } from './sync-inbox.service';
 import { SyncOutboxService } from './sync-outbox.service';
 
+import { SYNC_OPERATIONS } from './sync.tokens';
+import { SyncOperationFactoryService } from './sync-operations/sync-operation-factory.service';
+
 @Module({
   controllers: [SyncController],
   providers: [
-    PrismaService,
+    PrismaService, 
+    SyncOutboxDeliveryService, 
+    SyncProcessorService, 
 
   // iterable<SnapshotStepInterface>
     StaticReferenceStep, 
@@ -39,6 +46,7 @@ import { SyncOutboxService } from './sync-outbox.service';
     CompetitionRuntimeStep, 
     OrganizationResultStep, 
 
+    SnapshotPipelineService,
     {
       provide: SNAPSHOT_PIPELINE,
       useFactory: (
@@ -81,7 +89,29 @@ import { SyncOutboxService } from './sync-outbox.service';
       ],
     },
 
-    SnapshotPipelineService,
+  // iterable<SyncOperationInterface>
+//    CreateCompetitionOperation,
+//    UpdateCompetitionOperation,
+//    DeleteCompetitionOperation,
+
+    SyncOperationFactoryService,
+    {
+      provide: SYNC_OPERATIONS,
+      useFactory: (
+//        createCompetition: CreateCompetitionOperation,
+//        updateCompetition: UpdateCompetitionOperation,
+//        deleteCompetition: DeleteCompetitionOperation,
+      ) => [
+//        createCompetition,
+//        updateCompetition,
+//        deleteCompetition,
+      ],
+      inject: [
+//        CreateCompetitionOperation,
+//        UpdateCompetitionOperation,
+//        DeleteCompetitionOperation,
+      ],
+    },
 
     SyncService, 
     SyncGateway, 

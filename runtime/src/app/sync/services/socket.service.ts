@@ -10,7 +10,13 @@ export class SocketService {
   public socket: Socket;
 
   constructor() {
-    this.socket = io(environment.apiUrl);
+    const deviceId = localStorage.getItem('device_id');
+
+    this.socket = io(environment.apiUrl, {
+      query: {
+        deviceId,
+      },
+    });
   }
 
   waitForConnection(): Promise<void> {

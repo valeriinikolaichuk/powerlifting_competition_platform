@@ -1,1 +1,3 @@
 export const SNAPSHOT_PIPELINE = 'SNAPSHOT_PIPELINE';
+
+export const SYNC_OPERATIONS = Symbol('SYNC_OPERATIONS');
