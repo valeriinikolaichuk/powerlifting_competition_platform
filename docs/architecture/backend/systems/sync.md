@@ -11,7 +11,7 @@ Contents
 
 - [SyncController](#synccontroller)
 - [SyncService](#syncservice)
-- [SnapshotPipelineService](#snapshotpipelineservice)
+  - [SnapshotPipelineService](#snapshotpipelineservice)
   - [Snapshot Steps](#snapshot-steps)
 - [SyncGateway](#syncgateway)
 - [SyncOutboxDeliveryService](#syncoutboxdeliveryservice)
@@ -19,7 +19,14 @@ Contents
 - [SyncInboxService](#syncinboxservice)
 - [SyncOutboxService](#syncoutboxservice)
   - [Communication Flow](#communication-flow)
+- SyncProcessorService
+  - SyncOperationFactoryService
+  - Synchronization Operations
+  - UserService
 - [DTOs](#dtos)
+  - [SyncQueueDto](#syncqueuedto)
+  - [SnapshotContext](#snapshotcontext)
+  - SyncInboxItem
 
 ---
 
