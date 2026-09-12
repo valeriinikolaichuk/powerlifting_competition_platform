@@ -14,7 +14,7 @@ Contents
 - [SnapshotPipelineService](#snapshotpipelineservice)
   - [Snapshot Steps](#snapshot-steps)
 - [SyncGateway](#syncgateway)
-- [SyncOutboxDeliveryService](syncoutboxdeliveryservice)
+- [SyncOutboxDeliveryService](#syncoutboxdeliveryservice)
   - [Delivery Flow](#delivery-flow)
 - [SyncInboxService](#syncinboxservice)
 - [SyncOutboxService](#syncoutboxservice)
