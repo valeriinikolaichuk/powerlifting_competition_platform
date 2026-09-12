@@ -36,18 +36,7 @@ Provides `HTTP` endpoints for synchronization operations.
 ---
 
 ### SyncService
-Contains the main synchronization logic.
-
-- ### processQueueSync()
-Processes synchronization changes received from the `Runtime`.
-* Returns a successful empty result when no changes are provided.
-* Maps incoming [SyncQueueDto](#syncqueuedto) objects to `sync_inbox` records.
-* Stores changes using Prisma `createMany()`.
-* Uses `skipDuplicates` to prevent duplicate synchronization records.
-* Returns the number of received changes.
-* Converts database errors into an `InternalServerErrorException`.
-
-The actual processing of queued changes is intentionally separated from receiving and storing them.
+Contains the database synchronization logic when the `Runtime` **starts**.
 
 - ### getDatabaseSnapshot()
 Creates a [SnapshotContext](#snapshotcontext) containing:
