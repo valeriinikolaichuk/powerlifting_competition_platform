@@ -197,7 +197,7 @@ Each operation is sent through `SyncGateway` [sendToDevice()](#sendtodevice).
 
 If the gateway confirms successful delivery, the corresponding syncOutbox record is marked as processed by setting `processed_at`.
 
-If delivery fails, the record remains unprocessed and will be retried during a subsequent execution of [retryPending()](retrypending).
+If delivery fails, the record remains unprocessed and will be retried during a subsequent execution of [retryPending()](#retrypending).
 
 ---
 
