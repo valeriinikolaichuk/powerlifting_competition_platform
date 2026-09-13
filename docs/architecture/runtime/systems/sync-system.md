@@ -6,16 +6,16 @@ A real-time state synchronization system that accepts updates, persists them to 
 
 - [SyncService](#syncservice)
   - [Synchronization Flow](#synchronization-flow)
+- [SocketService](#socketservice)
 - [SyncQueueService](#syncqueueservice)
   - [SyncQueue Flow](#syncqueue-flow)
-- [SocketService](#socketservice)
-- SyncReceiverService
-  - SyncOperationFactory
-  - Synchronization Operations
+- [SyncReceiverService](#syncreceiverservice)
+  - [SyncOperationFactory](#syncoperationfactory)
+  - [Synchronization Operations](#synchronization-operations)
 - [DTOs](#dtos)
   - [SnapshotDto](#snapshotdto)
   - [SyncQueueItem](#syncqueueitem)
-  - SyncOutboxDto
+  - [SyncOutboxDto](#syncoutboxdto)
 
 </details>
 
@@ -82,6 +82,48 @@ Insert Server Data
         ↓
 Synchronization Completed
 </pre>
+
+### SocketService
+Provides the `Socket.IO` connection between the Runtime application and the backend synchronization server.
+```text
+SyncQueueService
+       │
+       ▼
+SocketService
+       │
+       │ Socket.IO
+       ▼
+Backend Sync Gateway
+```
+
+---
+
+`SocketService` does not implement synchronization logic itself. It only provides the communication channel used by the synchronization services.
+
+#### Responsibilities
+- Establish a `Socket.IO` connection to the backend `API`.
+- Send the current device `ID` during connection initialization.
+- Expose the active socket instance to other services.
+- Provide a method for waiting until the socket connection is established.
+
+#### Initialization
+When the service is created, it retrieves the device ID from `localStorage` and establishes a `Socket.IO` connection using the backend API URL from the application environment.
+
+The device ID is sent as a connection query parameter:
+```ts
+const deviceId = localStorage.getItem('device_id');
+this.socket = io(environment.apiUrl, {
+  query: {
+    deviceId,
+  },
+});
+````
+
+This allows the backend to associate the `Socket.IO` connection with the current `Runtime` device.
+
+- ### waitForConnection()
+Ensures that the socket connection is established before communication is attempted.   
+If the socket is already connected, the method resolves immediately. Otherwise, it waits for the next `connect` event.
 
 ---
 
@@ -194,59 +236,36 @@ markAsProcessed(item.id) ──► sync_queue
 
 ---
 
-### SocketService
-Provides the `Socket.IO` connection between the Runtime application and the backend synchronization server.
-```text
-SyncQueueService
-       │
-       ▼
-SocketService
-       │
-       │ Socket.IO
-       ▼
-Backend Sync Gateway
-```
 
-`SocketService` does not implement synchronization logic itself. It only provides the communication channel used by the synchronization services.
 
-#### Responsibilities
-- Establish a `Socket.IO` connection to the backend `API`.
-- Send the current device `ID` during connection initialization.
-- Expose the active socket instance to other services.
-- Provide a method for waiting until the socket connection is established.
+### SyncReceiverService
 
-#### Initialization
-When the service is created, it retrieves the device ID from `localStorage` and establishes a `Socket.IO` connection using the backend API URL from the application environment.
+---
 
-The device ID is sent as a connection query parameter:
-```ts
-const deviceId = localStorage.getItem('device_id');
-this.socket = io(environment.apiUrl, {
-  query: {
-    deviceId,
-  },
-});
-````
+### SyncOperationFactory
 
-This allows the backend to associate the `Socket.IO` connection with the current `Runtime` device.
+---
 
-- ### waitForConnection()
-Ensures that the socket connection is established before communication is attempted.   
-If the socket is already connected, the method resolves immediately. Otherwise, it waits for the next `connect` event.
+### Synchronization Operations
 
 ---
 
 ### DTOs
 
-#### SnapshotDto
+### SnapshotDto
 The data transfer object used for complete database hydration.
   * `data`: A key-value object where each key represents a `tableName` (string) and the value is an array of objects representing database rows (`Record<string, any>[]`).
 
-#### SyncQueueItem
+### SyncQueueItem
 * id
 * source_id
 * operation_id
 * record_id
 * payload
 * created_at
+
+---
+
+### SyncOutboxDto
+
 ---
