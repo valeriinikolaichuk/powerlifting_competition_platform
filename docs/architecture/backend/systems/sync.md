@@ -103,6 +103,8 @@ Each step:
 * retrieves the data required by its responsibility;
 * stores the resulting records in `context.data`;
 * can use `Prisma` for database access.
+* uses the shared [#shared-sql](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md) package to keep synchronization logic consistent between the frontend and backend.
+* uses [Synchronization Table Configuration](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration) to determine which tables must be synchronized and which selection rules must be applied
 
 [snapshot steps](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/backend/api/src/modules/sync/snapshot-pipeline)
 
@@ -351,11 +353,11 @@ Each concrete operation contains only the logic required for its specific synchr
 
 Its `execute()` method contains the database-specific logic required to apply that operation.
 
-Concrete synchronization operations use the shared `#shared-sql` package to keep synchronization logic consistent between the frontend and backend.
+Concrete synchronization operations use the shared [#shared-sql](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md) package to keep synchronization logic consistent between the frontend and backend.
 
 The package provides:
-* **Shared SQL queries** for synchronization operations such as create, update, and delete.
-* **Shared DTOs/types** describing the data exchanged between the frontend and backend.
+* [Shared SQL queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations) for synchronization operations such as create, update, and delete.
+* [Shared DTOs/types](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#shared-dtos) describing the data exchanged between the frontend and backend.
 * **Shared operation definitions** through `SYNC_OPERATIONS`.
 
 This ensures that the **same data structures and SQL operations are used on both sides**, avoiding duplicated `SQL` and `DTO` definitions between the `Angular` frontend and `NestJS` backend.
