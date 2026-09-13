@@ -83,6 +83,8 @@ Insert Server Data
 Synchronization Completed
 </pre>
 
+---
+
 ### SocketService
 Provides the `Socket.IO` connection between the Runtime application and the backend synchronization server.
 ```text
@@ -95,8 +97,6 @@ SocketService
        ▼
 Backend Sync Gateway
 ```
-
----
 
 `SocketService` does not implement synchronization logic itself. It only provides the communication channel used by the synchronization services.
 
