@@ -6,6 +6,16 @@ the backend and browser runtime.
 
 It provides a single source of truth for database-related constants and `SQL` logic shared between `PostgreSQL` and `PGlite`.
 
+<details open="open">
+<summary>Contents</summary>  
+
+- [index](#indexts)
+- [Synchronization Operations](#synchronization-operations)
+- [Shared DTOs](#shared-dtos)
+- [Synchronization Table Configuration](#synchronization-table-configuration)
+
+</details>
+
 ---
 
 ### index.ts
