@@ -58,6 +58,7 @@ A message remains pending until the target device receives it and sends an ackno
 | Field | Description |
 |---|---|
 | `id` | Unique identifier of the queue item. |
+| `sync_id` | identifier of the synchronization operation. Matches `sync_inbox.id` and the original `sync_queue.id`. |
 | `device_id` | Target device that must receive the change. |
 | `operation_id` | Synchronization operation identifier. |
 | `record_id` | ID of the affected record. |
