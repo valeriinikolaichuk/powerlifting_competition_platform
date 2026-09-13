@@ -28,7 +28,14 @@ export const SYNC_OPERATIONS = {
   DELETE_COMPETITION: DELETE_COMPETITION_SQL,
 } as const;
 ```
-These `SQL queries` are defined in [/queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/queries) and are used for the [synchronization-operations](backend/systems/sync.md#synchronization-operations)
+These `SQL queries` are defined in [/queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/queries) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/systems/sync-system.md#synchronization-operations)  and corresponding individual operations on the frontend.
+
+---
+
+### Shared DTOs
+Shared data transfer types define the data structures used by synchronization operations on both the frontend and backend. They provide a common contract for data exchanged between the two sides and prevent duplicate DTO definitions.
+
+These `Shared DTOs` are defined in [/dto](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/dto) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/systems/sync-system.md#synchronization-operations)  and corresponding individual operations on the frontend.
 
 ---
 
