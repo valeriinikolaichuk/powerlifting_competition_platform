@@ -236,17 +236,54 @@ markAsProcessed(item.id) ──► sync_queue
 
 ---
 
-
-
 ### SyncReceiverService
+Listens for incoming `sync` events through `SocketService` and processes each synchronization item.  
+Receives synchronization operations delivered by the backend [SyncOutboxDeliveryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#syncoutboxdeliveryservice) through [SyncGateway](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#syncgateway) over `Socket.IO`.
+
+When a synchronization message is received, the service:  
+1. Uses `SyncOperationFactory` to select the operation implementation based on `operationId`.
+2. Executes the selected operation with the received data.
+3. Returns a success acknowledgement to the backend if the operation completes successfully.
+4. Returns a failure acknowledgement if an error occurs.
 
 ---
 
 ### SyncOperationFactory
+Resolves the appropriate synchronization operation based on its `operationId`.
+
+All available operations are injected through the `SYNC_OPERATIONS` `InjectionToken`. This allows individual operation implementations to be registered independently without modifying the factory.
+
+#### SyncOperationInterface
+Uses [SyncOutboxDto]([#syncoutbodDto) DTO which contains the operation metadata.  
+Defines the common contract for all frontend synchronization operations:
+```ts
+export interface SyncOperationInterface {
+    supports(operationId: string): boolean;
+    execute(data: SyncOutboxDto): Promise<void>;
+}
+```
+
+Each implementation identifies the operation it supports and contains the logic for applying that operation to the local PGlite database.
+
+#### SYNC_OPERATIONS InjectionToken
+Provides the collection of registered synchronization operation implementations to `SyncOperationFactory`.
+```ts
+export const SYNC_OPERATIONS = new InjectionToken<SyncOperationInterface[]>('SYNC_OPERATIONS');
+```
 
 ---
 
 ### Synchronization Operations
+Individual operations implement `SyncOperationInterface` and apply received synchronization data to the local database.
+
+They use the shared [#shared-sql](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md) package for both the operation-specific data type and the corresponding `SQL query`. This ensures that the same SQL and data structures are used consistently across the **frontend** and **backend**.
+
+The package provides:
+* [Shared SQL queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations) for synchronization operations such as create, update, and delete.
+* [Shared DTOs/types](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#shared-dtos) describing the data exchanged between the frontend and backend.
+* **Shared operation definitions** through `SYNC_OPERATIONS`.
+
+Operation implementations can use additional services when required, such as [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#userservice) for resolving the local `user ID`.
 
 ---
 
@@ -264,8 +301,10 @@ The data transfer object used for complete database hydration.
 * payload
 * created_at
 
----
-
 ### SyncOutboxDto
+* id
+* operationId
+* recordId
+* payload
 
 ---
