@@ -19,7 +19,7 @@ Contents
   - [Communication Flow](#communication-flow)
 - [SyncOutboxDeliveryService](#syncoutboxdeliveryservice)
   - [Delivery Flow](#delivery-flow)
-- [SyncProcessorService](syncprocessorservice)
+- [SyncProcessorService](#syncprocessorservice)
   - [SyncOperationFactoryService](#syncoperationfactoryservice)
   - [Synchronization Operations](#synchronization-operations)
   - [UserService](#userservice)
