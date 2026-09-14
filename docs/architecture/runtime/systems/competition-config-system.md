@@ -12,7 +12,6 @@ It is responsible for defining and maintaining the fundamental competition param
   - [CompetitionPopupService](#competitionpopupservice)
 - [Creation Flow](#creation-flow)
 - [DTO / configuration models](#dto-and-configuration-models)
-  - [CompetitionData](#competitiondata)
   - [FederationOption](#federationoption)
   - [DivisionOption](#divisionoption)
   - [AgeGroupOption](#agegroupoption)
@@ -264,13 +263,10 @@ The service ensures that the local database update and synchronization queue ent
 
 #### Responsibilities
 * Provides access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
-* Retrieves the current user identifier.
-* Retrieves the current device identifier.
 * Creates a competition in the local database.
 * Adds competition changes to the `synchronization queue`.
 * Starts `synchronization` after a successful local `transaction`.
 
-- ### initialize()
 Initializes access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database using [pgliteService.database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#database-access).  
 The database must already be initialized by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice).
 
@@ -304,11 +300,11 @@ This ensures that the competition cannot be created locally without registering 
 If either operation fails, the transaction is rolled back.
 
 #### Competition Creation
-The competition is created using the shared SQL operation:
+The competition is created using the `#shared-sql` operation:
 
 [SYNC_OPERATIONS.CREATE_COMPETITION](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations)
 
-The operation receives the [competition data](#competitiondata) together with the current user ID.
+The operation receives the `#shared-sql` DTO [competition data](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#competitiondata) together with the current user ID.
 
 #### Synchronization Queue
 After the competition is created locally, the service registers a synchronization operation through [syncQueueService.addQueue](sync-system.md#addqueue).
@@ -374,24 +370,6 @@ CompetitionPopupService.create()
 ---
 
 ## DTO and configuration models
-
-### CompetitionData
-Represents the data required to create a competition.
-
-* id
-* name
-* country
-* city
-* language
-* startDate
-* endDate
-* level
-* type
-* division
-* federationCategoryIds
-* updated_at
-
-The object is created by `CreateCompetitionComponent` and passed to `CompetitionPopupService` [create()](#async-create).
 
 ### FederationOption
 * id
