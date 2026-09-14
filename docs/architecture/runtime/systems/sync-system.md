@@ -128,16 +128,23 @@ If the socket is already connected, the method resolves immediately. Otherwise, 
 ---
 
 ### SyncQueueService
-Manages locally queued synchronization operations and sends pending operations to the backend through `SocketService`.
+Manages locally queued synchronization operations and periodically sends pending operations to the backend through [SocketService](#socketservice).
 
 #### Responsibilities
 - Adds local data changes to the synchronization queue.
+- Starts a periodic synchronization process.
 - Retrieves unprocessed synchronization operations.
+- Waits for an active socket connection before synchronization.
 - Sends queued operations through the synchronization socket.
 - Processes queued operations in creation order.
 - Marks successfully synchronized operations as processed.
 
-`SyncQueueService` stops the synchronization loop when an operation fails.
+`SyncQueueService` stops the current synchronization attempt when an operation fails, leaving the remaining operations in the queue for a later attempt.
+
+- ### start()
+Starts the synchronization loop.
+
+The method ensures that the synchronization loop is started only once and periodically calls [sync()](#sync) **every second**.
 
 - ### addQueue()
 Adds a synchronization operation to the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) table.
