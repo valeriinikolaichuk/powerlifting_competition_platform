@@ -12,6 +12,7 @@ It provides a single source of truth for database-related constants and `SQL` lo
 - [index](#indexts)
 - [Synchronization Operations](#synchronization-operations)
 - [Shared DTOs](#shared-dtos)
+  - [CompetitionData](#competitiondata)
 - [Synchronization Table Configuration](#synchronization-table-configuration)
 
 </details>
@@ -46,6 +47,22 @@ These `SQL queries` are defined in [/queries](https://github.com/valeriinikolaic
 Shared data transfer types define the data structures used by synchronization operations on both the frontend and backend. They provide a common contract for data exchanged between the two sides and prevent duplicate DTO definitions.
 
 These `Shared DTOs` are defined in [/dto](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/dto) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/systems/sync-system.md#synchronization-operations)  and corresponding individual operations on the frontend.
+
+### CompetitionData
+Represents the data required to create a competition.
+
+- id
+- name
+- country
+- city
+- language
+- startDate
+- endDate
+- level
+- type
+- division
+- federationCategoryIds
+- updated_at
 
 ---
 
