@@ -319,10 +319,7 @@ The queued operation contains:
 
 The operation remains in the local `synchronization queue` until it is processed by the `synchronization system`.  
 
-After the `transaction` is successfully committed, the service starts [synchronization](sync-system.md#sync).
-```
-await this.syncQueueService.sync();
-```
+After the `transaction` is successfully committed, the [SyncQueueService](sync-system.md#sync) automatically detects the pending operation and sends it to the backend.
 
 ---
 
@@ -362,9 +359,6 @@ CompetitionPopupService.create()
          ├── CREATE_COMPETITION
          │
          └── SyncQueueService.addQueue()
-                        │
-                        ▼
-               Synchronization Queue
 </pre>
 
 ---
