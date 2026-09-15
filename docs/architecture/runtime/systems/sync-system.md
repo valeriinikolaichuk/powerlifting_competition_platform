@@ -278,6 +278,23 @@ When a synchronization message is received, the service:
 3. Returns a success acknowledgement to the backend if the operation completes successfully.
 4. Returns a failure acknowledgement if an error occurs.
 
+<pre>
+          SyncReceiverService
+                |
+        SyncOperationFactory
+                │
+                ▼
+      SyncOperationInterface
+                │
+                ├──► CreateCompetitionOperation
+                ├──► UpdateCompetitionOperation
+                ├──► DeleteCompetitionOperation
+                └──► ...
+                │
+                ▼
+              PGlite
+</pre>
+
 ---
 
 ### SyncOperationFactory
