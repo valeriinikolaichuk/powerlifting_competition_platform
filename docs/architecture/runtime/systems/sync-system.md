@@ -202,8 +202,21 @@ Only successfully `acknowledged` operations are marked as `processed`.
 
 #### SyncQueue Flow
 <pre>
-      SyncQueueService
-          sync()
+             SyncQueueService
+                    |
+                  start()
+                    |
+              every 1 second
+                    |
+                    ▼
+                  sync()
+            sync already running?
+             /              \
+           no               yes
+            |                |
+      processQueue()    return existing
+            |              Promise
+   waitForConnection()
             |
             |<--- sync_queue table
             |        
