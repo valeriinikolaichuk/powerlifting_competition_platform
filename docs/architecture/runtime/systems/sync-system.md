@@ -133,6 +133,8 @@ Manages locally queued synchronization operations and periodically sends pending
 #### Responsibilities
 - Adds local data changes to the synchronization queue.
 - Starts a periodic synchronization process.
+- Prevents multiple queue synchronization processes from running simultaneously.
+- Waits for an active socket connection before processing the queue.
 - Retrieves unprocessed synchronization operations.
 - Waits for an active socket connection before synchronization.
 - Sends queued operations through the synchronization socket.
@@ -142,7 +144,7 @@ Manages locally queued synchronization operations and periodically sends pending
 `SyncQueueService` stops the current synchronization attempt when an operation fails, leaving the remaining operations in the queue for a later attempt.
 
 - ### start()
-Starts the synchronization loop.
+Starts the periodic synchronization process.
 
 The method ensures that the synchronization loop is started only once and periodically calls [sync()](#sync) **every second**.
 
@@ -161,7 +163,17 @@ The queue item is inserted using the transaction provided by the caller.
 This allows the data change and its corresponding synchronization operation to be committed atomically.
 
 - ### sync()
-  - Retrieves all unprocessed synchronization queue items from the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) table.  
+Controls synchronization execution and prevents concurrent queue processing.
+
+If synchronization is already running, the method returns the existing `syncPromise` instead of starting another process.
+
+Otherwise, it creates a new promise for `processQueue()`, waits for its completion, and clears the promise when processing finishes.
+
+- ### processQueue()
+  - Processes the pending synchronization queue.
+  - Waits for the socket connection.
+  - Retrieves all unprocessed items from [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue).
+  - Processes items in ascending `created_at` order.
   - Operations are processed in ascending creation order.  
   - Each queued item[#syncqueueitem] is passed to [send()](#send).   
   - If synchronization of an operation fails, the process stops and the remaining operations remain in the queue for a later synchronization attempt.
