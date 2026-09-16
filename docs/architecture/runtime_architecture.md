@@ -216,7 +216,6 @@ This allows the Angular `Runtime` to be executed directly from the same backend 
 
 **3. The [Runtime](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/app.ts):**
 - initializes the local [PGlite database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) through [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice);
-- starts the [SyncQueueService](runtime/systems/sync-system.md#syncqueueservice), which continuously checks the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) and automatically sends pending synchronization operations to the backend;
 - initializes the [RuntimeSessionService](runtime/systems/session-system.md), which executes the following startup sequence:
   - **Database Check.** The service verifies the existence of the [runtime_session](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/indexed.md#database-bombingoutruntime) table.
   - **Session Expiration Check.** It checks if the local runtime session has expired using the following logic:
