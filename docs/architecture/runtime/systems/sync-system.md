@@ -6,9 +6,16 @@ A real-time state synchronization system that accepts updates, persists them to 
 
 - [SyncService](#syncservice)
   - [Synchronization Flow](#synchronization-flow)
-- [SyncQueueService](#syncqueueservice)
 - [SocketService](#socketservice)
+- [SyncQueueService](#syncqueueservice)
+  - [SyncQueue Flow](#syncqueue-flow)
+- [SyncReceiverService](#syncreceiverservice)
+  - [SyncOperationFactory](#syncoperationfactory)
+  - [Synchronization Operations](#synchronization-operations)
 - [DTOs](#dtos)
+  - [SnapshotDto](#snapshotdto)
+  - [SyncQueueItem](#syncqueueitem)
+  - [SyncOutboxDto](#syncoutboxdto)
 
 </details>
 
@@ -78,60 +85,6 @@ Synchronization Completed
 
 ---
 
-### SyncQueueService
-Manages locally queued synchronization operations and sends pending operations to the backend through `SocketService`.
-
-#### Responsibilities
-- Adds local data changes to the synchronization queue.
-- Retrieves unprocessed synchronization operations.
-- Sends queued operations through the synchronization socket.
-- Processes queued operations in creation order.
-- Marks successfully synchronized operations as processed.
-
-`SyncQueueService` stops the synchronization loop when an operation fails.
-
-- ### addQueue()
-Adds a synchronization operation to the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) table.
-
-The queue item contains:
-- `id` — unique queue item identifier.
-- `sourceId` — device identifier that produced the operation.
-- `operationId` — operation type.
-- `recordId` — identifier of the affected record.
-- `payload` — serialized operation data.
-- `createdAt` — operation creation timestamp.
-
-The queue item is inserted using the transaction provided by the caller.  
-This allows the data change and its corresponding synchronization operation to be committed atomically.
-
-- ### sync()
-  - Retrieves all unprocessed synchronization queue items from the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) table.  
-  - Operations are processed in ascending creation order.  
-  - Each queued item[#syncqueueitem] is passed to [send()](#send).   
-  - If synchronization of an operation fails, the process stops and the remaining operations remain in the queue for a later synchronization attempt.
-
-- ### send()
-The method accepts the [SyncQueueItem](#syncqueueitem) parameter.  
-Sends a synchronization operation to the backend through [SocketService](#socketservice).
-
-The operation is emitted using the sync socket event and contains:
-* id
-* sourceId
-* operationId
-* recordId
-* payload
-* createdAt
-
-The method waits for the server `acknowledgement`.  
-If the server confirms successful processing, the queue item is [marked](#markasprocessed) as `processed`.  
-If the server reports failure, the operation is rejected and remains unprocessed.
-
-- ### markAsProcessed()
-Marks a successfully synchronized queue item by setting its `processed_at` timestamp.  
-Only successfully `acknowledged` operations are marked as `processed`.
-
----
-
 ### SocketService
 Provides the `Socket.IO` connection between the Runtime application and the backend synchronization server.
 ```text
@@ -174,17 +127,233 @@ If the socket is already connected, the method resolves immediately. Otherwise, 
 
 ---
 
+### SyncQueueService
+Manages locally queued synchronization operations and periodically sends pending operations to the backend through [SocketService](#socketservice).
+
+#### Responsibilities
+- Adds local data changes to the synchronization queue.
+- Starts a periodic synchronization process.
+- Prevents multiple queue synchronization processes from running simultaneously.
+- Waits for an active socket connection before processing the queue.
+- Retrieves unprocessed synchronization operations.
+- Waits for an active socket connection before synchronization.
+- Sends queued operations through the synchronization socket.
+- Processes queued operations in creation order.
+- Marks successfully synchronized operations as processed.
+
+`SyncQueueService` stops the current synchronization attempt when an operation fails, leaving the remaining operations in the queue for a later attempt.
+
+- ### start()
+Starts the periodic synchronization process.
+
+The method ensures that the synchronization loop is started only once and periodically calls [sync()](#sync) **every second**.
+
+- ### addQueue()
+Adds a synchronization operation to the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) table.
+
+The queue item contains:
+- `id` — unique queue item identifier.
+- `sourceId` — device identifier that produced the operation.
+- `operationId` — operation type.
+- `recordId` — identifier of the affected record.
+- `payload` — serialized operation data.
+- `createdAt` — operation creation timestamp.
+
+The queue item is inserted using the transaction provided by the caller.  
+This allows the data change and its corresponding synchronization operation to be committed atomically.
+
+- ### sync()
+Controls synchronization execution and prevents concurrent queue processing.
+
+If synchronization is already running, the method returns the existing `syncPromise` instead of starting another process.
+
+Otherwise, it creates a new promise for `processQueue()`, waits for its completion, and clears the promise when processing finishes.
+
+- ### processQueue()
+  - Processes the pending synchronization queue.
+  - Waits for the socket connection.
+  - Retrieves all unprocessed items from [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue).
+  - Processes items in ascending `created_at` order.
+  - Operations are processed in ascending creation order.  
+  - Each queued item[#syncqueueitem] is passed to [send()](#send).   
+  - If synchronization of an operation fails, the process stops and the remaining operations remain in the queue for a later synchronization attempt.
+
+- ### send()
+The method accepts the [SyncQueueItem](#syncqueueitem) parameter.  
+Sends a synchronization operation to the backend through [SocketService](#socketservice).
+
+The operation is emitted using the sync socket event and contains:
+* id
+* sourceId
+* operationId
+* recordId
+* payload
+* createdAt
+
+The method waits for the server `acknowledgement`.  
+If the server confirms successful processing, the queue item is [marked](#markasprocessed) as `processed`.  
+If the server reports failure, the operation is rejected and remains unprocessed.
+
+- ### markAsProcessed()
+Marks a successfully synchronized queue item by setting its `processed_at` timestamp.  
+Only successfully `acknowledged` operations are marked as `processed`.
+
+---
+
+#### SyncQueue Flow
+<pre>
+             SyncQueueService
+                    |
+                  start()
+                    |
+              every 1 second
+                    |
+                    ▼
+                  sync()
+            sync already running?
+             /              \
+           no               yes
+            |                |
+      processQueue()    return existing
+            |              Promise
+   waitForConnection()
+            |
+            |<--- sync_queue table
+            |        
+        SyncQueueItem
+            |
+            ▼
+          send()
+            |
+socketService.socket.emit()
+            |
+            ▼
+        [backend]
+       SyncGateway
+       handleSync()
+            |
+      SyncInboxService
+            |
+        SyncQueueDto
+            |
+        receive()
+            |
+            ├──► INSERT → sync_inbox table
+            │
+     SyncOutboxService
+     createForDevices()
+            │
+          INSERT
+            ↓
+    sync_outbox table
+            ├──► Device B → syncOutbox
+            ├──► Device C → syncOutbox      
+            ├──► ...
+
+            │
+            ▼
+    return { success: true }
+            │
+            │ Socket.IO ACK
+            ▼
+    frontend callback()
+            │
+            ▼
+        resolve()
+            │
+            ▼
+markAsProcessed(item.id) ──► sync_queue
+                             processed_at = NOW()
+</pre>
+
+---
+
+### SyncReceiverService
+Listens for incoming `sync` events through `SocketService` and processes each synchronization item.  
+Receives synchronization operations delivered by the backend [SyncOutboxDeliveryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#syncoutboxdeliveryservice) through [SyncGateway](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#syncgateway) over `Socket.IO`.
+
+When a synchronization message is received, the service:  
+1. Uses `SyncOperationFactory` to select the operation implementation based on `operationId`.
+2. Executes the selected operation with the received data.
+3. Returns a success acknowledgement to the backend if the operation completes successfully.
+4. Returns a failure acknowledgement if an error occurs.
+
+<pre>
+          SyncReceiverService
+                |
+        SyncOperationFactory
+                │
+                ▼
+      SyncOperationInterface
+                │
+                ├──► CreateCompetitionOperation
+                ├──► UpdateCompetitionOperation
+                ├──► DeleteCompetitionOperation
+                └──► ...
+                │
+                ▼
+              PGlite
+</pre>
+
+---
+
+### SyncOperationFactory
+Resolves the appropriate synchronization operation based on its `operationId`.
+
+All available operations are injected through the `SYNC_OPERATIONS` `InjectionToken`. This allows individual operation implementations to be registered independently without modifying the factory.
+
+#### SyncOperationInterface
+Uses [SyncOutboxDto]([#syncoutbodDto) DTO which contains the operation metadata.  
+Defines the common contract for all frontend synchronization operations:
+```ts
+export interface SyncOperationInterface {
+    supports(operationId: string): boolean;
+    execute(data: SyncOutboxDto): Promise<void>;
+}
+```
+
+Each implementation identifies the operation it supports and contains the logic for applying that operation to the local PGlite database.
+
+#### SYNC_OPERATIONS InjectionToken
+Provides the collection of registered synchronization operation implementations to `SyncOperationFactory`.
+```ts
+export const SYNC_OPERATIONS = new InjectionToken<SyncOperationInterface[]>('SYNC_OPERATIONS');
+```
+
+---
+
+### Synchronization Operations
+Individual operations implement `SyncOperationInterface` and apply received synchronization data to the local database.
+
+They use the shared [#shared-sql](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md) package for both the operation-specific data type and the corresponding `SQL query`. This ensures that the same SQL and data structures are used consistently across the **frontend** and **backend**.
+
+The package provides:
+* [Shared SQL queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations) for synchronization operations such as create, update, and delete.
+* [Shared DTOs/types](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#shared-dtos) describing the data exchanged between the frontend and backend.
+* **Shared operation definitions** through `SYNC_OPERATIONS`.
+
+Operation implementations can use additional services when required, such as [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#userservice) for resolving the local `user ID`.
+
+---
+
 ### DTOs
 
-#### SnapshotDto
+### SnapshotDto
 The data transfer object used for complete database hydration.
   * `data`: A key-value object where each key represents a `tableName` (string) and the value is an array of objects representing database rows (`Record<string, any>[]`).
 
-#### SyncQueueItem
+### SyncQueueItem
 * id
 * source_id
 * operation_id
 * record_id
 * payload
 * created_at
+
+### SyncOutboxDto
+* id
+* operationId
+* recordId
+* payload
+
 ---

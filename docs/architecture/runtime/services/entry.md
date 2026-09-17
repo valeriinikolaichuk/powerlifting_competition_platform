@@ -1,6 +1,6 @@
 ### EntryService
 **Runtime bootstrap/orchestration component**  
-The entry point of the `Runtime` application responsible for determining the current application flow, checking device connections, and initializing the local database synchronization.
+The entry point of the `Runtime` application responsible for determining the current application flow, checking device connections.
 
 #### Responsibilities
 - Creates the current device parameters using [ConnectionsService](connection_service.md).
@@ -9,7 +9,7 @@ The entry point of the `Runtime` application responsible for determining the cur
 - Opens the [connections popup](connection_service.md#connectionspopupcomponent) when existing connections are found.
 - Waits for the popup result using [PopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#popupservice).
 - Re-checks connections after a deletion.
-- Initializes the local database [synchronization](systems/sync-system.md#syncservice).
+- Triggers the initial database synchronization through [SyncService](systems/sync-system.md#syncservice).
 - Displays a blocking [synchronization popup](systems/popup-system.md#components) while the [database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) is being initialized.
 - Handles synchronization errors and allows the user to retry.
 - Selects the appropriate application flow between [AdminComponent](pages.md#admincomponent) and [RoleComponent](pages.md#rolecomponent).
@@ -60,12 +60,12 @@ The returned ConnectionsResultDto provides:
 ---
 
 - ### synchronize()
-Opens a blocking system popup showing `SynchronizingDatabaseComponent` and initializes the local `pgLite` database via [SyncService](systems/sync-system.md#syncservice).
+Opens a blocking system popup showing `SynchronizingDatabaseComponent` and performs the local `pgLite` database synchronization via [SyncService](systems/sync-system.md#syncservice).
 
 If synchronization succeeds, the popup closes, and the component proceeds to navigation.
 If synchronization fails, the component catches the error, closes the loader, and opens `RetryPopupComponent` with `SynchronizationErrorComponent`. 
 
-If the user clicks to retry, the component calls `synchronize()` again to re-attempt the database initialization.
+If the user clicks to retry, the component calls `synchronize()` again to re-attempt the database synchronization.
 
 ---
 

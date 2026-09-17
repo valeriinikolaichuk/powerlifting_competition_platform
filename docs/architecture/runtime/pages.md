@@ -24,7 +24,11 @@ The page uses a full-screen background video and provides two actions:
 
 #### Responsibilities
 
+<<<<<<< HEAD
 - [Initializes](services/database_service.md#pgliteservice) the local [pgLite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
+=======
+- starts the [SyncQueueService](systems/sync-system.md#syncqueueservice), which continuously checks the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) and automatically sends pending synchronization operations to the backend.
+>>>>>>> 011baa7469846befa8404fa7713eccdb33997fd7
 - Loads the translations required by the administrator entry page.
 - Displays a loading state while the local database is being initialized.
 - Navigates to the administrator [main](#maincomponent) page.

@@ -15,8 +15,8 @@
   - [createSession()](#createsession)
   - [clearSession()](#clearsession)
   - [ngOnDestroy()](#ngondestroy)
-- [Session Guard](#session-guard)
 - [Entry Guard](#entry-guard)
+- [Session Guard](#session-guard)
 - [Session Lifecycle](#session-lifecycle)
 - [Design Notes](#design-notes)
 
@@ -184,12 +184,19 @@ This prevents unnecessary background timers and memory leaks.
 
 ---
 
+## Entry Guard
+Controls access to the `/admin` and `/client` routes.
+
+If the `runtime_session` record does not exist, the guard creates a new runtime session.
+
+---
+
 ## Session Guard
 Protects routes that require ownership of the current frontend session.
 
 It is implemented as an Angular `CanActivateFn`.
 
-Before navigation, it calls: `sessionService.isCurrentTab()`
+Before navigation, it calls: [sessionService.isCurrentTab()](#iscurrenttab)
 
 If the current tab does not own the session:  
 1. Navigation is blocked.  
@@ -197,15 +204,6 @@ If the current tab does not own the session:
 3. The user remains outside the protected route.  
 
 If the current tab owns the session, navigation is allowed.
-
----
-
-## Entry Guard
-Controls access to the `/entry` route.
-
-- If the `runtime_session` record does not exist, the guard creates a new runtime session.  
-- If the record already exists, the guard verifies that the current browser tab is the active session tab.  
-- If the current tab is not the active tab, the guard opens the second-tab system popup and blocks navigation.  
 
 ---
 

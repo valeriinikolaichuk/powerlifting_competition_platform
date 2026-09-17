@@ -11,15 +11,23 @@ Contents
 
 - [SyncController](#synccontroller)
 - [SyncService](#syncservice)
-- [SnapshotPipelineService](#snapshotpipelineservice)
+  - [SnapshotPipelineService](#snapshotpipelineservice)
   - [Snapshot Steps](#snapshot-steps)
 - [SyncGateway](#syncgateway)
-- [SyncOutboxDeliveryService](#syncoutboxdeliveryservice)
-  - [Delivery Flow](#delivery-flow)
 - [SyncInboxService](#syncinboxservice)
 - [SyncOutboxService](#syncoutboxservice)
   - [Communication Flow](#communication-flow)
+- [SyncOutboxDeliveryService](#syncoutboxdeliveryservice)
+  - [Delivery Flow](#delivery-flow)
+- [SyncProcessorService](#syncprocessorservice)
+  - [SyncOperationFactoryService](#syncoperationfactoryservice)
+  - [Synchronization Operations](#synchronization-operations)
+  - [UserService](#userservice)
+- [Notes (**processed_at** handling)](#notes)
 - [DTOs](#dtos)
+  - [SyncQueueDto](#syncqueuedto)
+  - [SnapshotContext](#snapshotcontext)
+  - [SyncInboxItem](#syncinboxitem)
 
 ---
 
@@ -27,10 +35,10 @@ Contents
 Provides `HTTP` endpoints for synchronization operations.
 
 #### `GET /api/sync/snapshot` endpoint
-* Requires `JWT` authentication.
+* Requires [JWT](authentication.md#jwt-authentication) authentication.
 * Receives the requested `language` through the query string.
 * Obtains the authenticated user's `ID` from the `JWT` context.
-* Delegates snapshot generation to `SyncService.getDatabaseSnapshot()`.
+* Delegates snapshot generation to [SyncService.getDatabaseSnapshot()](#getdatabasesnapshot).
 * Returns the generated database snapshot to the `Runtime`.
 
 ---
@@ -95,6 +103,8 @@ Each step:
 * retrieves the data required by its responsibility;
 * stores the resulting records in `context.data`;
 * can use `Prisma` for database access.
+* uses the shared [#shared-sql](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md) package to keep synchronization logic consistent between the frontend and backend.
+* uses [Synchronization Table Configuration](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-table-configuration) to determine which tables must be synchronized and which selection rules must be applied
 
 [snapshot steps](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/backend/api/src/modules/sync/snapshot-pipeline)
 
@@ -152,64 +162,6 @@ The message is emitted with a `5-second` acknowledgement `timeout`.
 The method returns:
 * `true` when the target device acknowledges the message;
 * `false` when delivery times out or fails.
-
----
-
-### SyncOutboxDeliveryService
-Delivers pending synchronization operations from the backend `syncOutbox` to `Runtime` devices.
-
-#### Responsibilities
-- Periodically check for pending synchronization operations.
-- Group pending operations by target device.
-- Deliver operations to the target device through [SyncGateway](#syncgateway).
-- Process pending operations in creation order for each device.
-- Mark successfully delivered operations as processed.
-- Retry operations that have not been successfully delivered.
-
-### retryPending()
-`retryPending()` runs automatically every second using the `@Interval(1000)` decorator.
-
-It finds all devices with unprocessed records in `syncOutbox` and starts delivery for each device:
-```ts
-@Interval(1000)
-async retryPending(): Promise<void>
-```
-
-Only distinct device `IDs` are selected to avoid processing the same device multiple times during one interval.
-
-- ### deliver()
-Retrieves all unprocessed synchronization records for the specified device and orders them by `created_at`.
-
-The service reads pending synchronization records from the [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) table, which contains operations created by `SyncOutboxService` for target devices. Target device information is derived from the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table when the outbox records are created.
-
-Each operation is sent through `SyncGateway` [sendToDevice()](#sendtodevice).
-
-If the gateway confirms successful delivery, the corresponding syncOutbox record is marked as processed by setting `processed_at`.
-
-If delivery fails, the record remains unprocessed and will be retried during a subsequent execution of [retryPending()](#retrypending).
-
----
-
-### Delivery Flow
-<pre>
-  syncOutbox
-    │
-    │ pending records
-    ▼
-SyncOutboxDeliveryService
-    │
-    │ deliver()
-    ▼
-SyncGateway
-    │
-    │ WebSocket
-    ▼
-Target Runtime Device
-    │
-    │ success
-    ▼
-syncOutbox.processed_at
-</pre>
 
 ---
 
@@ -277,9 +229,185 @@ For each target device, an entry is created in the syncOutbox table containing:
 
 ---
 
+### SyncOutboxDeliveryService
+Delivers pending synchronization operations from the backend `syncOutbox` to `Runtime` devices.
+
+#### Responsibilities
+- Periodically check for pending synchronization operations.
+- Group pending operations by target device.
+- Deliver operations to the target device through [SyncGateway](#syncgateway).
+- Process pending operations in creation order for each device.
+- Mark successfully delivered operations as processed.
+- Retry operations that have not been successfully delivered.
+
+### retryPending()
+Runs automatically every second using the **`@Interval(1000)`** decorator.
+
+It finds all devices with unprocessed records in [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) and starts delivery for each device:
+```ts
+@Interval(1000)
+async retryPending(): Promise<void>
+```
+
+Only distinct device `IDs` are selected to avoid processing the same device multiple times during one interval.
+
+- ### deliver()
+Retrieves all unprocessed synchronization records for the specified device and orders them by `created_at`.
+
+The service reads pending synchronization records from the [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) table, which contains operations created by [SyncOutboxService](#syncoutboxservice) for target devices. Target device information is derived from the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table when the outbox records are created.
+
+Each operation is sent through `SyncGateway` [sendToDevice()](#sendtodevice).
+
+If the gateway confirms successful **delivery**, the corresponding [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) record is marked as processed by setting `processed_at`.
+
+If delivery fails, the record remains unprocessed and will be retried during a subsequent execution of [retryPending()](#retrypending).
+
+---
+
+### Delivery Flow
+<pre>
+SyncOutboxDeliveryService
+            |
+            ├── @Interval(1000)
+            |   retryPending() ──► sync_outbox ──► device_id ?
+            |
+            └── deliver()
+                   |
+        syncGateway.sendToDevice()
+                    | 
+                    └── Socket.IO
+
+        Server                    Client
+
+        emit('sync', data)
+        ────────────────────────>
+                                 apply(data)
+                                 callback({ success: true })
+        <────────────────────────
+               ACK
+
+        ↓
+    sync_outbox
+processed_at: new Date()
+</pre>
+
+---
+
+### SyncProcessorService
+Processes pending synchronization operations stored in the backend [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox).
+
+#### Responsibilities
+- Periodically check for unprocessed synchronization operations.
+- Process operations in the order they were received.
+- Create the corresponding synchronization operation through [SyncOperationFactoryService](#syncoperationfactoryservice).
+- Execute the selected operation.
+- Mark successfully processed inbox records as `processed`.
+- Keep failed operations unprocessed for subsequent processing attempts.
+
+#### Data Source
+`SyncProcessorService` processes pending records from the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table. The records contain the source device, operation type, affected record, and operation payload received from [SyncGateway](#syncgateway).
+
+- ### processPending()
+Runs automatically every second using the **`@Interval(1000)`** decorator.
+
+It retrieves records from [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) where `processed_at` is `null`, ordered by `received_at`:
+```ts
+@Interval(1000)
+async processPending(): Promise<void>
+```
+
+For each record, the service:  
+1. Creates the appropriate synchronization operation using [SyncOperationFactoryService](#syncoperationfactoryservice).  
+2. Executes the operation with the data received from [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox).  
+3. Sets `processed_at` after successful execution.  
+
+If processing fails, the error is logged and the inbox record remains unprocessed, allowing it to be retried during a subsequent execution.
+
+---
+
+### SyncOperationFactoryService
+Provides an extensible mechanism for executing different types of synchronization operations.
+
+Each synchronization operation implements [SyncOperationInterface](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/backend/api/src/modules/sync/sync-operations/sync-operation.interface.ts) and is responsible for handling one specific operation type. `SyncOperationFactoryService` selects the appropriate implementation based on the `operation ID`.
+
+If no implementation supports the requested operation, an error is thrown.
+
+#### SyncOperationInterface
+Defines the common contract for all synchronization operations.  
+Uses [SyncInboxItem]([#syncinboxitem) DTO which contains the operation metadata.  
+```ts
+interface SyncOperationInterface {
+  supports(operationId: string): boolean;
+  execute(data: SyncInboxItem): Promise<void>;
+}
+```
+- `supports()` determines whether the operation handles a specific `operation ID`.
+- `execute()` performs the actual synchronization logic for the received data.
+
+This allows new synchronization operations to be added independently without modifying the synchronization processor.
+
+---
+
+### Synchronization Operations
+Each concrete operation contains only the logic required for its specific synchronization operation.
+
+Its `execute()` method contains the database-specific logic required to apply that operation.
+
+Concrete synchronization operations use the shared [#shared-sql](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md) package to keep synchronization logic consistent between the frontend and backend.
+
+The package provides:
+* [Shared SQL queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations) for synchronization operations such as create, update, and delete.
+* [Shared DTOs/types](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#shared-dtos) describing the data exchanged between the frontend and backend.
+* **Shared operation definitions** through `SYNC_OPERATIONS`.
+
+This ensures that the **same data structures and SQL operations are used on both sides**, avoiding duplicated `SQL` and `DTO` definitions between the `Angular` frontend and `NestJS` backend.
+
+New synchronization operations can therefore be added by creating another `SyncOperationInterface` implementation and registering it in `SYNC_OPERATIONS`.
+
+```text
+SyncProcessorService
+        │
+        │ operationId
+        ▼
+SyncOperationFactoryService
+        │
+        │ create()
+        ▼
+SyncOperationInterface
+        │
+        ├──► CreateCompetitionOperation
+        ├──► UpdateCompetitionOperation
+        ├──► DeleteCompetitionOperation
+        └──► ...
+```
+
+---
+
+### UserService
+
+`UserService` is a supporting service used only by synchronization operations that need to resolve the user associated with the source device.
+
+`getUserId()` looks up the active [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) record using the source device ID and returns its `created_by_user_id`.
+
+This service is used only by operations that require the source user's ID and is not required by every synchronization operation.
+
+---
+
+### Notes
+
+- `syncInbox.processed_at` is set after a synchronization operation is successfully processed by [SyncProcessorService](syncprocessorservice).
+- `syncOutbox.processed_at` is set after a synchronization operation is successfully delivered to the target device by [SyncOutboxDeliveryService](#syncoutboxdeliveryservice).
+
+If processing or delivery fails, `processed_at` remains `NULL`, allowing the operation to be retried.
+
+
+
+
+---
+
 ### DTOs
 
-#### SyncQueueDto
+### SyncQueueDto
 Represents a single synchronization change received from the `Runtime`.  
 Contains the identifiers and payload required to store the change in the backend synchronization inbox.
 
@@ -291,7 +419,7 @@ Fields:
 * `payload` — serialized change data.
 * `created_at`
 
-#### SnapshotContext
+### SnapshotContext
 Represents the shared context used during database snapshot generation.
 
 Contains:
@@ -300,3 +428,15 @@ Contains:
 * `data` — accumulated snapshot data produced by the pipeline.
 
 The context is passed through all registered snapshot steps and returned as the final database snapshot.
+
+### SyncInboxItem
+Represents a normalized synchronization item used internally by the synchronization process. It contains the operation metadata and payload required to execute the corresponding sync operation.
+
+Fields:
+* id
+* sourceId
+* operationId
+* recordId
+* payload
+
+---
