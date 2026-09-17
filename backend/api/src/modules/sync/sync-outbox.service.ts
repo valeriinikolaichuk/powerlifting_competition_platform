@@ -31,11 +31,13 @@ export class SyncOutboxService {
 
         await this.prisma.syncOutbox.createMany({
             data: devices.map((device) => ({
+                sync_id: data.id,
                 device_id: device.device_id,
                 operation_id: data.operation_id,
                 record_id: data.record_id,
                 payload: data.payload,
             })),
+            skipDuplicates: true,
         });
     }
 }

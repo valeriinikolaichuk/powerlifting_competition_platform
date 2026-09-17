@@ -1,4 +1,4 @@
-### EntryComponent
+### EntryService
 **Runtime bootstrap/orchestration component**  
 The entry point of the `Runtime` application responsible for determining the current application flow, checking device connections, and initializing the local database synchronization.
 

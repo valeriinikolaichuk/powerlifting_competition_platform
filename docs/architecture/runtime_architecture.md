@@ -39,7 +39,7 @@ A real-time state synchronization system that accepts updates and instantly broa
 
 ### Components
 
-### [entry](runtime/entry.md)   
+### [entry](runtime/services/entry.md)   
 Starts the `Runtime` initialization process.
 
 ### [pages](runtime/pages.md)   
@@ -49,10 +49,10 @@ Contains `route-level components` representing the main views of the application
 
 ### Services
 
-### [connections](runtime/connection_service.md)
+### [connections](runtime/services/connection_service.md)
 The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
 
-### [cookies](runtime/cookies.md)
+### [cookies](runtime/services/cookies.md)
 Ensures that the `LAN` runtime has an authentication session before performing connection checks.
 
 ---
@@ -225,16 +225,16 @@ If the session is indeed expired, a new valid record is created inside the runti
   - **Heartbeat Activation.** The service triggers the `startHeartbeat()` method to regularly ping and keep the current session active.
   - **Wake-Up Listener Activation.** The service launches the `startWakeUpListener()` method to monitor system wake-up events (e.g., when the device wakes up from sleep mode).
 
-- The [EntryComponent](runtime/entry.md)
-  - creates the current device parameters using [ConnectionsService](runtime/connection_service.md#createparameters).
+- The [EntryService](runtime/services/entry.md)
+  - creates the current device parameters using [ConnectionsService](runtime/services/connection_service.md#createparameters).
     - `language`
     - `mode`
     - `user_agent`
     - generates a new `device_id`.
     - if the `Runtime` is running in `LAN mode` on `localhost`, it uses the existing `device_id` provided in the `URL` instead.
-  - in `LAN mode`, ensures that the authentication `access_token` cookie exists before creating the device parameters. If the cookie is already present, it is not replaced by [LanTokenService](runtime/cookies.md).
+  - in `LAN mode`, ensures that the authentication `access_token` cookie exists before creating the device parameters. If the cookie is already present, it is not replaced by [LanTokenService](runtime/services/cookies.md).
   - creates a `DeviceParametersDTO`
-  - [checks](runtime/connection_service.md#check) the current device connection state through the backend:
+  - [checks](runtime/services/connection_service.md#check) the current device connection state through the backend:
 <pre>
     POST /api/connections/entry
 </pre>
@@ -321,13 +321,13 @@ The `device_status` table therefore acts as the **central connection registry**,
 
 ---
 
-**5. After receiving `ConnectionsResultDto`, the `EntryComponent`** stores the `adminExists` value.  
+**5. After receiving `ConnectionsResultDto`, the `EntryService`** stores the `adminExists` value.  
 The value determines which application flow will be used after the connection check.
 
-- If `connections` is empty, the `EntryComponent` [navigates](#navigation) directly without displaying the connections popup.
-- If existing connections are returned the [EntryComponent](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
+- If `connections` is empty, the `EntryService` [navigates](#navigation) directly without displaying the connections popup.
+- If existing connections are returned the [EntryService](runtime/services/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
   - The popup receives the existing connections through `POPUP_DATA` and passes them to the dynamically loaded `ConnectionsPopupComponent`.
-  - [ConnectionsPopupComponent](runtime/connection_service.md#connectionspopupcomponent) provides the user interface for selecting and deleting device connections.
+  - [ConnectionsPopupComponent](runtime/services/connection_service.md#connectionspopupcomponent) provides the user interface for selecting and deleting device connections.
   - The component:
     - Displays the existing connections.
     - Allows the user to select individual devices.
@@ -336,7 +336,7 @@ The value determines which application flow will be used after the connection ch
     - Calls [ConnectionsService.deleteDevices()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#deletedevices) with the selected IDs.
     - Returns the `deletedDeviceIds` to the parent popup.
 - If the popup is closed without deleting any devices the Runtime proceeds to the next step.
-- If devices were deleted, the [EntryComponent](runtime/entry.md) performs the connection check again:
+- If devices were deleted, the [EntryService](runtime/services/entry.md) performs the connection check again:
 ```
 await this.check(dto);
 ```
@@ -353,7 +353,7 @@ Determines the next route based on `adminExists`.
 ---
 
 <pre>
- EntryComponent ──────────────> ConnectionsService
+ EntryService ──────────────> ConnectionsService
         |                               └── createParameters()
         |                                       |
      check() <───────── DeviceParameters ───────'

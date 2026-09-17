@@ -9,10 +9,22 @@ import { SyncQueueItem } from '../dto/sync-queue-item';
 })
 export class SyncQueueService {
    
+  private started = false;
+  private syncPromise: Promise<void> | null = null;
+
   constructor(
     private readonly pgliteService: PgliteService,
     private readonly socketService: SocketService,
   ) {}
+
+  start(): void {
+
+    if (this.started) { return; }
+
+    this.started = true;
+
+    setInterval(() => { this.sync(); }, 1000);
+  }
 
   async addQueue(
     tx: any,
@@ -22,6 +34,7 @@ export class SyncQueueService {
     payload: unknown,
     createdAt: string,
   ): Promise<void> {
+
     await tx.query(
       `
         INSERT INTO sync_queue (
@@ -47,7 +60,22 @@ export class SyncQueueService {
 
   async sync(): Promise<void> {
 
+    if (this.syncPromise) { return this.syncPromise }
+
+    this.syncPromise = this.processQueue();
+
+    try {
+      await this.syncPromise;
+    } finally {
+      this.syncPromise = null;
+    }
+  }
+
+  private async processQueue(): Promise<void> {
+
     await this.socketService.waitForConnection();
+
+    console.log('Queue synchronization started...');
 
     const result = await this.pgliteService.query<SyncQueueItem>(
       `
@@ -80,7 +108,7 @@ export class SyncQueueService {
       }
     }
   }
-
+  
   async send(item: SyncQueueItem): Promise<void> {
 
     await new Promise<void>((resolve, reject) => {

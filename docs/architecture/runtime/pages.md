@@ -24,7 +24,7 @@ The page uses a full-screen background video and provides two actions:
 
 #### Responsibilities
 
-- [Initializes](database_service.md#pgliteservice) the local [pgLite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
+- [Initializes](services/database_service.md#pgliteservice) the local [pgLite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
 - Loads the translations required by the administrator entry page.
 - Displays a loading state while the local database is being initialized.
 - Navigates to the administrator [main](#maincomponent) page.
@@ -51,8 +51,8 @@ await this.router.navigate(['/main']);
 - #### backToMode()
 Provides the centralized exit workflow for the `Runtime` application.
 
-- Retrieves the current `device_id`, `mode`, and `language` using [ConnectionsService.exitParameters()](connection_service.md#exitparameters)
-- If a `device_id` exists, removes the current device connection through [ConnectionsService.deleteDevices()](connection_service.md#deletedevices).
+- Retrieves the current `device_id`, `mode`, and `language` using [ConnectionsService.exitParameters()](services/connection_service.md#exitparameters)
+- If a `device_id` exists, removes the current device connection through [ConnectionsService.deleteDevices()](services/connection_service.md#deletedevices).
 - Removes the `device_id` from `localStorage`.
 - Removes the `device_role` from `sessionStorage`.
 - Clears the current local `runtime_session` using [RuntimeSessionService.clearSession()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/session-system.md#clearsession).

@@ -1,34 +1,40 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { PgliteService } from '../../database/services/pglite.service';
+import { SyncQueueService } from '../../sync/services/sync-queue.service';
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
-import { ExitService } from '../services/exit.service';
+import { ExitService } from '../../services/exit.service';
 
 @Component({
-  selector: 'app-role',
+  selector: 'app-admin',
   standalone: true,
   imports: [TranslatePipe],
-  templateUrl: './role.component.html',
+  templateUrl: './admin.component.html'
 })
-export class RoleComponent {
+export class AdminComponent {
 
   isLoading = true;
 
   constructor(
     private readonly router: Router,
-    private readonly pgliteService: PgliteService,
+    private readonly syncQueueService: SyncQueueService,
     public tService: TranslationService,
     public exitService: ExitService,
   ){}
 
   async ngOnInit(){
     
-    await this.pgliteService.initialize();
+    this.syncQueueService.start();
+    
     this.tService.load('pages/entry');
 
     this.isLoading = false;
-    console.log('role');
+    console.log('admin');
+  }
+
+  async openMainPage(){
+
+    await this.router.navigate(['/admin/main'])
   }
 }

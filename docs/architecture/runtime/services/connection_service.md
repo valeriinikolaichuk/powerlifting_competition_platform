@@ -118,7 +118,7 @@ The method retrieves the information required by the exit flow:
 * `mode` — determines how the Runtime should be closed or where the user should be redirected.
 * `user_agent` — set to null because browser information is not required during the exit flow.
 
-When a user enters the runtime through `EntryComponent`, the device parameters are available in the `URL`.
+When a user enters the runtime through `EntryService`, the device parameters are available in the `URL`.
 
 When the user exits from `AdminComponent` or `RoleComponent`, the application restores the required device parameters from the local `PGlite` database.  
 The application retrieves the following values from `device_status` table:
@@ -210,7 +210,7 @@ Responsibilities:
 
 #### Popup Flow
 <pre>
-EntryComponent
+EntryService
       │
       │ result.connections
       ▼
@@ -241,7 +241,7 @@ selectedDeviceIds                      |
 PopupService.close(result) ------------'
       │                                
       ▼
-EntryComponent
+EntryService
 </pre>
 
 

@@ -235,7 +235,7 @@ Provides competition-related reference data required by the `Competition Popup C
 * Loads age groups for the selected federation and sex.
 * Provides database-backed option data for [CreateCompetitionComponent](#createcompetitioncomponent).
 
-The service uses [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice) to access the local `Runtime` database.
+The service uses [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/database_service.md#pgliteservice) to access the local `Runtime` database.
 
 - ### getFederations()
   - Returns the federations available to the current user.  
@@ -271,15 +271,15 @@ The service ensures that the local database update and synchronization queue ent
 * Starts `synchronization` after a successful local `transaction`.
 
 - ### initialize()
-Initializes access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database using [pgliteService.database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#database-access).  
-The database must already be initialized by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice).
+Initializes access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database using [pgliteService.database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/database_service.md#database-access).  
+The database must already be initialized by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/database_service.md#pgliteservice).
 
 - ### async create()
 Creates a new competition and adds the corresponding synchronization operation to the local `queue` and starts `synchronization`.  
 
 #### User and Device Context
 Before creating the competition, the service retrieves:
-* the current `user ID` through [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#userservice);
+* the current `user ID` through [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/database_service.md#userservice);
 * the current `device ID` from `localStorage`.
 
 #### Local Database Transaction

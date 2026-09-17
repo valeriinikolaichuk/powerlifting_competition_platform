@@ -4,15 +4,15 @@ import { Router } from '@angular/router';
 import { PgliteService } from '../../database/services/pglite.service';
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
-import { ExitService } from '../services/exit.service';
+import { ExitService } from '../../services/exit.service';
 
 @Component({
-  selector: 'app-admin',
+  selector: 'app-role',
   standalone: true,
   imports: [TranslatePipe],
-  templateUrl: './admin.component.html'
+  templateUrl: './role.component.html',
 })
-export class AdminComponent {
+export class RoleComponent {
 
   isLoading = true;
 
@@ -29,11 +29,6 @@ export class AdminComponent {
     this.tService.load('pages/entry');
 
     this.isLoading = false;
-    console.log('admin');
-  }
-
-  async openMainPage(){
-
-    await this.router.navigate(['/main'])
+    console.log('role');
   }
 }

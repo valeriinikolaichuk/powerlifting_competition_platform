@@ -1374,6 +1374,8 @@ model SyncInbox {
 model SyncOutbox {
   id              String    @id @default(uuid()) @db.Uuid
 
+  sync_id         String    @db.Uuid
+
   device_id       String    @db.Uuid
   operation_id    String
   record_id       String    @db.Uuid
@@ -1382,8 +1384,7 @@ model SyncOutbox {
   created_at      DateTime  @default(now())
   processed_at    DateTime?
 
-  @@index([device_id])
-  @@index([processed_at])
+  @@unique([sync_id, device_id])
   @@index([device_id, processed_at])
 
   @@map("sync_outbox")

@@ -21,9 +21,7 @@ export class CompetitionPopupService {
     private readonly pgliteService: PgliteService,
     private readonly userService: UserService,
     private readonly syncQueueService: SyncQueueService,
-  ) {}
-
-  async initialize(): Promise<void> {
+  ) {
     this.pg = this.pgliteService.database;
   }
 
@@ -36,9 +34,6 @@ export class CompetitionPopupService {
     if (!deviceId) {
       throw new Error('Device ID not found.');
     }
-
-    const operationId = crypto.randomUUID();
-    const payload = JSON.stringify(data);
 
     await this.pg.transaction(async (tx) => {
 
@@ -71,7 +66,5 @@ export class CompetitionPopupService {
       );
       
     });
-
-    await this.syncQueueService.sync();
   }
 }

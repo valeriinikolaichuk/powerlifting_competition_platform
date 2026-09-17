@@ -1,6 +1,6 @@
 ### Browser Database
 The browser database is a local `PGlite` database used by the offline competition runtime.  
-The database is managed by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#pgliteservice), which handles database initialization, migrations, and `SQL` query execution.
+The database is managed by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/database_service.md#pgliteservice), which handles database initialization, migrations, and `SQL` query execution.
 
 ---
 

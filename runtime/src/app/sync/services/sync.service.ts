@@ -50,11 +50,7 @@ export class SyncService {
 
   async initialize(): Promise<void> {
 
-    await this.pgliteService.initialize();
-
     this.pg = this.pgliteService.database;
-
-    console.log('Queue synchronization started...');
 
     await this.syncQueueService.sync();
 
@@ -75,10 +71,10 @@ export class SyncService {
     const params = new HttpParams().set('language', language);
 
     return await firstValueFrom(
-        this.http.get<SnapshotDto>(
-            '/api/sync/snapshot',
-            { params }
-        )
+      this.http.get<SnapshotDto>(
+        '/api/sync/snapshot',
+        { params }
+      )
     );
   }
 
