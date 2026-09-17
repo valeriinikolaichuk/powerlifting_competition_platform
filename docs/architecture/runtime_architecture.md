@@ -1,13 +1,12 @@
 ## Runtime Architecture
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The `runtime` is the operational layer where the competition is actually executed. It runs in a web browser on each workstation and provides role-specific interfaces for competition management.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Each runtime instance operates with its own local `PGlite` database and executes the same business logic and data operations independently. This allows workstations to continue operating without a permanent network connection while remaining synchronized with the rest of the system.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works entirely within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This architecture allows the competition to continue operating even when the internet connection is unavailable and synchronize changes when connectivity is restored.
+The `runtime` is the operational layer where the competition is actually executed. It runs in a web browser on each workstation and provides role-specific interfaces for competition management. It can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.
 
 <details open="open">
 <summary>Contents</summary>  
 
+- [Runtime Entry](#runtime-entry)
+- [Routes](#routes)
+- [LAN and ONLINE Operation](#lan-and-online-operation)
 - [Systems](#systems)
 - [Conponents](#components)
 - [Services](#services)
@@ -15,6 +14,61 @@
 - [Runtime Entry Flow](#runtime-entry-flow)
 
 </details>
+
+The runtime application is served by the `NestJS` backend through the [/runtime](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/modules.md#runtime-module) route. The backend returns the built runtime `index.html`, while the browser loads the runtime application and its assets from the runtime build.
+
+Each runtime instance operates with its own local `PGlite` database and executes the same business logic and data operations independently. The runtime also uses the shared [shared-sql](shared-sql.md) package, which provides common `SQL` queries, `data types` and `DTOs` shared between the runtime frontend and the backend.
+
+### Runtime Entry
+After the application starts, `App` initializes:
+* the local `PGlite` database;
+* the runtime session;
+* the session heartbeat and wake-up listener;
+* the `EntryService`.
+
+`EntryService` determines the initial application route based on the current device role and connection state.
+
+```text
+/runtime
+    |
+    ▼
+ NestJS RuntimeController
+    |
+    ▼
+ runtime/index.html
+    |
+    ▼
+ Angular App
+    |
+    ├── PGlite initialization
+    ├── Runtime session initialization
+    └── EntryService
+            |
+            ▼
+       device_role
+            |
+       ┌────┴────┐
+       │         │
+       ▼         ▼
+   /admin     /client
+```
+
+### Routes
+The runtime uses Angular `lazy-loaded` route modules for the main application areas.
+
+The main runtime routes are:
+* `/admin` — administrative interface.
+* `/client` — client role interface.
+
+The `admin` and `client` routes are loaded independently using `loadChildren`, so their components and related code are loaded only when the corresponding section is accessed.  
+This keeps the initial runtime bundle smaller and allows the **admin and client interfaces to be loaded separately**, depending on the device role and entry flow.
+
+Routes are protected by session and entry guards, ensuring that only an appropriately initialized runtime session can access the corresponding interface.
+
+### LAN and ONLINE Operation
+The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.
+
+Each workstation maintains its own local database, allowing the competition to continue operating without a permanent network connection. Synchronization is performed when required and connectivity is available.
 
 ---
 
