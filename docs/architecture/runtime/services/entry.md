@@ -1,3 +1,15 @@
+## Core  Services
+
+<details open="open">
+<summary>Contents</summary>
+
+- [EntryService](#entryservice)
+- [ExitService](#exitservice)
+
+</details>
+
+---
+
 ### EntryService
 **Runtime bootstrap/orchestration component**  
 The entry point of the `Runtime` application responsible for determining the current application flow, checking device connections.
@@ -83,5 +95,24 @@ The returned `string[]` contains the IDs of devices deleted by the user.
 
 If the user closes the popup without deleting anything, the component proceeds to database [synchronization](#synchronize).
 After devices are deleted, the component calls check(dto) again to obtain the updated connection state.
+
+---
+
+### ExitService
+
+- #### backToMode()
+Provides the centralized exit workflow for the `Runtime` application.
+
+- Retrieves the current `device_id`, `mode`, and `language` using [ConnectionsService.exitParameters()](connection_service.md#exitparameters)
+- If a `device_id` exists, removes the current device connection through [ConnectionsService.deleteDevices()](connection_service.md#deletedevices).
+- Removes the `device_id` from `localStorage`.
+- Removes the `device_role` from `sessionStorage`.
+- Clears the current local `runtime_session` using [RuntimeSessionService.clearSession()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/session-system.md#clearsession).
+- Handles the final exit according to the `mode`:
+  - `ONLINE` — redirects the user back to the [Frontend mode page](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/pages.md#modecomponent) while preserving the selected `language`.
+  - `LAN` — Clears cookies with token using `clearCookies()`. Closes the Runtime window.
+
+- #### clearCookies()
+Sends a request to the backend [${environment.apiUrl}/api/logout](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/authentication.md#authcontroller) to clear the  'LAN' authentication token cookies.
 
 ---

@@ -8,6 +8,7 @@ The login process consists of two independent stages:
 <details open="open">
 <summary>Contents</summary>  
 
+- [AuthController](#authcontroller)
 - [AuthService](#authservice)
 - [LanService](#lanservice)
   - [LAN token flow](#lan-token-flow)
@@ -23,6 +24,26 @@ The login process consists of two independent stages:
 - [Design Principles](#design-principles)
 
 </details>
+
+---
+
+### AuthController
+Exposes the authentication-related API endpoints under the `/api` route.
+
+#### Responsibilities
+
+* Handles user login and authentication.
+* Provides the authenticated user's profile.
+* Clears authentication cookies during logout.
+* Creates or retrieves a LAN authentication token for local runtime access.
+* Uses [AuthenticationCookieService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/backend/api/src/modules/auth/cookies/authentication-cookie.service.ts) to set and clear authentication cookies.
+
+#### Endpoints
+
+* `POST /api/login` — authenticates the user and sets authentication cookies when login succeeds.
+* `GET /api/profile` — returns the authenticated user's ID. Protected by `JwtAuthGuard`.
+* `POST /api/logout` — clears authentication cookies.
+* `POST /api/lan-token` — creates or retrieves a LAN authentication token and sets the corresponding authentication cookies.
 
 ---
 
@@ -45,7 +66,7 @@ Unlike the standard online authentication flow, LAN devices do not provide login
 - Generate an access token using the existing `TokenService`.
 - Return the authentication context to the controller.
 
-The service does **not** manage `HTTP` cookies directly. Cookie management remains the responsibility of `AuthenticationCookieService`.
+The service does **not** manage `HTTP` cookies directly. Cookie management remains the responsibility of [AuthenticationCookieService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/backend/api/src/modules/auth/cookies/authentication-cookie.service.ts).
 
 This keeps `LAN` authentication consistent with the standard authentication architecture while avoiding a separate token-generation mechanism.
 
