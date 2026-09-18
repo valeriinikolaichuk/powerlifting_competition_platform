@@ -45,7 +45,7 @@ export class EntryService {
     await this.check(dto);
   }
 
-    private async check(
+  private async check(
     dto: DeviceParameters,
   ): Promise<void> {
 
@@ -73,7 +73,9 @@ export class EntryService {
     // user closed the popup
     if (deletedDeviceIds.length === 0) {
 
-      await this.synchronize();
+      const success = await this.synchronize();
+
+      if (!success) { return; }
 
       return;
     }
@@ -112,7 +114,7 @@ export class EntryService {
       );
 
       if (retry) {
-        await this.synchronize();
+        return await this.synchronize();
       }
 
       return false;

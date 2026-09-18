@@ -4,9 +4,6 @@ The `runtime` is the operational layer where the competition is actually execute
 <details open="open">
 <summary>Contents</summary>  
 
-- [Runtime Entry](#runtime-entry)
-- [Routes](#routes)
-- [LAN and ONLINE Operation](#lan-and-online-operation)
 - [Systems](#systems)
 - [Conponents](#components)
 - [Services](#services)
@@ -19,14 +16,12 @@ The runtime application is served by the `NestJS` backend through the [/runtime]
 
 Each runtime instance operates with its own local `PGlite` database and executes the same business logic and data operations independently. The runtime also uses the shared [shared-sql](shared-sql.md) package, which provides common `SQL` queries, `data types` and `DTOs` shared between the runtime frontend and the backend.
 
-### Runtime Entry
-After the application starts, `App` initializes:
-* the local `PGlite` database;
-* the runtime session;
-* the session heartbeat and wake-up listener;
-* the `EntryService`.
+### LAN and ONLINE Operation
+The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.
 
-`EntryService` determines the initial application route based on the current device role and connection state.
+Each workstation maintains its own local database, allowing the competition to continue operating without a permanent network connection. Synchronization is performed when required and connectivity is available.
+
+---
 
 ```text
 /runtime
@@ -53,23 +48,6 @@ After the application starts, `App` initializes:
    /admin     /client
 ```
 
-### Routes
-The runtime uses Angular `lazy-loaded` route modules for the main application areas.
-
-The main runtime routes are:
-* `/admin` — administrative interface.
-* `/client` — client role interface.
-
-The `admin` and `client` routes are loaded independently using `loadChildren`, so their components and related code are loaded only when the corresponding section is accessed.  
-This keeps the initial runtime bundle smaller and allows the **admin and client interfaces to be loaded separately**, depending on the device role and entry flow.
-
-Routes are protected by session and entry guards, ensuring that only an appropriately initialized runtime session can access the corresponding interface.
-
-### LAN and ONLINE Operation
-The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.
-
-Each workstation maintains its own local database, allowing the competition to continue operating without a permanent network connection. Synchronization is performed when required and connectivity is available.
-
 ---
 
 ### Systems
@@ -93,15 +71,18 @@ A real-time state synchronization system that accepts updates and instantly broa
 
 ### Components
 
-### [entry](runtime/services/entry.md)   
-Starts the `Runtime` initialization process.
+### [admin](runtime/admin.md)   
+Contains `route-level components` representing the main administration interface.
 
-### [pages](runtime/pages.md)   
-Contains `route-level components` representing the main views of the application.
+### [client](runtime/client.md)   
+Contains `route-level components` representing the client interfaces.
 
 ---
 
 ### Services
+
+### [entry](runtime/services/entry.md)   
+Starts the `Runtime` initialization process.
 
 ### [connections](runtime/services/connection_service.md)
 The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
@@ -376,8 +357,7 @@ The `device_status` table therefore acts as the **central connection registry**,
 
 ---
 
-**5. After receiving `ConnectionsResultDto`, the `EntryService`** stores the `adminExists` value.  
-The value determines which application flow will be used after the connection check.
+**5. After receiving `ConnectionsResultDto`:
 
 - If `connections` is empty, the `EntryService` [navigates](#navigation) directly without displaying the connections popup.
 - If existing connections are returned the [EntryService](runtime/services/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
@@ -399,11 +379,19 @@ This ensures that the `Runtime` works with the updated connection state.
 
 #### Navigation
 
-Determines the next route based on `adminExists`.
+- Determines the next route based on `adminExists`.
+- Performs the initial database synchronization using [SyncService](runtime/systems/sync-system.md#syncservice);
 
-- Performs the initial database synchronization using [SyncService](runtime//systems/sync-system.md#syncservice);
-- If no administrator exists navigates to [/admin](runtime/pages.md#admincomponent);
-- Otherwise navigates to [/role](runtime/pages.md#rolecomponent);
+The runtime uses Angular `lazy-loaded` route modules for the main application areas.
+
+The main runtime routes are:
+* [/admin](runtime/admin.md#admincomponent) — administrative interface.
+* [/client](runtime/client.md#rolecomponent) — client role interface.
+
+The `admin` and `client` routes are loaded independently using `loadChildren`, so their components and related code are loaded only when the corresponding section is accessed.  
+This keeps the initial runtime bundle smaller and allows the **admin and client interfaces to be loaded separately**, depending on the device role and entry flow.
+
+Routes are protected by session and entry guards, ensuring that only an appropriately initialized runtime session can access the corresponding interface.
 
 ---
 

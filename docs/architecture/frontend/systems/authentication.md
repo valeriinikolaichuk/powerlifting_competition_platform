@@ -131,8 +131,8 @@ Defines all supported application roles.
 
 | Role        | Description                |
 | ----------- | -------------------------- |
-| USER        | Standard application user. |
-| ADMIN       | Competition administrator. |
+| USER        | Competition administrator. |
+| ADMIN       | System administrator.      |
 | PARTICIPANT | Competition participant.   |
 
 ---

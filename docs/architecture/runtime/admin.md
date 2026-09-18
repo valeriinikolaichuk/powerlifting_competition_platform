@@ -4,7 +4,6 @@
 <summary>Contents</summary>  
 
 - [AdminComponent](#admincomponent)
-- [RoleComponent](#rolecomponent)
 - [MainComponent](#maincomponent)
 
 </details>
@@ -38,10 +37,6 @@ Navigates the user to the administrator [main](#maincomponent) page:
 ```ts
 await this.router.navigate(['/main']);
 ```
-
----
-
-### RoleComponent
 
 ---
 

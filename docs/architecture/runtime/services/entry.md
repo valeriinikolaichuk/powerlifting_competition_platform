@@ -11,8 +11,7 @@
 ---
 
 ### EntryService
-**Runtime bootstrap/orchestration component**  
-The entry point of the `Runtime` application responsible for determining the current application flow, checking device connections.
+Сontrols the runtime entry flow and determines which interface should be opened after the application **starts**.
 
 #### Responsibilities
 - Creates the current device parameters using [ConnectionsService](connection_service.md).
@@ -21,41 +20,19 @@ The entry point of the `Runtime` application responsible for determining the cur
 - Opens the [connections popup](connection_service.md#connectionspopupcomponent) when existing connections are found.
 - Waits for the popup result using [PopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#popupservice).
 - Re-checks connections after a deletion.
-- Triggers the initial database synchronization through [SyncService](systems/sync-system.md#syncservice).
-- Displays a blocking [synchronization popup](systems/popup-system.md#components) while the [database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) is being initialized.
+- Triggers the initial database synchronization through [SyncService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/sync-system.md#syncservice).
+- Displays a blocking [synchronization popup](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#components) while the [database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) is being initialized.
 - Handles synchronization errors and allows the user to retry.
-- Selects the appropriate application flow between [AdminComponent](pages.md#admincomponent) and [RoleComponent](pages.md#rolecomponent).
+- Selects the appropriate application flow between [AdminComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/admin.md#admincomponent) and [RoleComponent](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/client.md#rolecomponent).
 
-#### Initialization
-When the component is initialized, it first checks whether a device role already exists in `sessionStorage`.
+---
 
-#### Administrator Session
-If the current device role is `ADMIN`, the component:
-1. Sets `adminExists` to false.  
-2. Starts the local database synchronization.  
-3. Skips the connection check.
+- ### entry()
+The initial entry point of the `Runtime`.
 
-This allows the administrator device to proceed directly to the administrator flow after synchronization.
-
-#### Other Devices
-If the device does not already have the `ADMIN` role, the component:
-- Creates the current device parameters using [ConnectionsService.createParameters()](connection_service.md#createparameters).
-- Calls [check()](#check) to retrieve the current connection state from the backend.
-
-#### Navigation
-The component selects the application flow using the `adminExists` state.
-```
-@if (adminExists) {
-  <app-role></app-role>
-} @else {
-  <app-admin></app-admin>
-}
-```
-- `adminExists` === true — displays [RoleComponent](pages.md#rolecomponent).
-- `adminExists` === false — displays [AdminComponent](pages.md#admincomponent).
-
-**Notes:**  
-For a detailed description of the process, see ➡ [Runtime Entry Flow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime_architecture.md#runtime-entry-flow).
+- Checks whether a device role already exists in `sessionStorage`.
+- If the device is already assigned the `ADMIN` role, the local database is synchronized and the device is redirected to [/admin](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/admin.md#admincomponent).
+- Otherwise, the service creates the device connection parameters using [ConnectionsService.createParameters()](connection_service.md#createparameters) and starts the connection check through `check()`.
 
 ---
 
@@ -68,11 +45,15 @@ The returned ConnectionsResultDto provides:
 
 - If no connections exist, the component proceeds directly to database [synchronization](#synchronize).  
 - If connections exist, the component opens [ConnectionsPopupComponent](connection_service.md#connectionspopupcomponent).
+- Then the device is redirected to [/admin](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/admin.md#admincomponent) or [/client](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/client.md#rolecomponent).
+
+**Notes:**  
+For a detailed description of the process, see ➡ [Runtime Entry Flow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime_architecture.md#runtime-entry-flow).
 
 ---
 
 - ### synchronize()
-Opens a blocking system popup showing `SynchronizingDatabaseComponent` and performs the local `pgLite` database synchronization via [SyncService](systems/sync-system.md#syncservice).
+Opens a blocking system popup showing `SynchronizingDatabaseComponent` and performs the local `pgLite` database synchronization via [SyncService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/sync-system.md#syncservice).
 
 If synchronization succeeds, the popup closes, and the component proceeds to navigation.
 If synchronization fails, the component catches the error, closes the loader, and opens `RetryPopupComponent` with `SynchronizationErrorComponent`. 
