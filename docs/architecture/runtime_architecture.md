@@ -16,7 +16,7 @@ The runtime application is served by the `NestJS` backend through the [/runtime]
 
 Each runtime instance operates with its own local `PGlite` database and executes the same business logic and data operations independently. The runtime also uses the shared [shared-sql](shared-sql.md) package, which provides common `SQL` queries, `data types` and `DTOs` shared between the runtime frontend and the backend.
 
-### LAN and ONLINE Operation
+#### LAN and ONLINE Operation
 The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.
 
 Each workstation maintains its own local database, allowing the competition to continue operating without a permanent network connection. Synchronization is performed when required and connectivity is available.
