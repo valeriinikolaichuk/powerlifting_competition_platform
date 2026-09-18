@@ -23,33 +23,6 @@ Each workstation maintains its own local database, allowing the competition to c
 
 ---
 
-```text
-/runtime
-    |
-    ▼
- NestJS RuntimeController
-    |
-    ▼
- runtime/index.html
-    |
-    ▼
- Angular App
-    |
-    ├── PGlite initialization
-    ├── Runtime session initialization
-    └── EntryService
-            |
-            ▼
-       device_role
-            |
-       ┌────┴────┐
-       │         │
-       ▼         ▼
-   /admin     /client
-```
-
----
-
 ### Systems
 
 ### [popup](runtime/systems/popup-system.md)
@@ -396,7 +369,22 @@ Routes are protected by session and entry guards, ensuring that only an appropri
 ---
 
 <pre>
- EntryService ──────────────> ConnectionsService
+ /frontend
+    |
+    ▼
+ NestJS RuntimeController
+    |
+    ▼
+ runtime/index.html
+    |
+    ▼
+ Angular App
+    |
+    ├── PGlite initialization
+    ├── Runtime session initialization
+    └── EntryService
+
+    EntryService ──────────────> ConnectionsService
         |                               └── createParameters()
         |                                       |
      check() <───────── DeviceParameters ───────'
@@ -486,8 +474,6 @@ Routes are protected by session and entry guards, ensuring that only an appropri
                     |                                         ▼                 |
           ┌─────────┴─────────┐                        Device connections       |
           │                   │                           are deleted           |
-   adminExists=false   adminExists=true                        |________________|
-          │                   │                           
-          ▼                   ▼                               
-       /admin               /role                              
+          ▼                   ▼                               |_________________|
+       /admin               /role                         
 </pre>
