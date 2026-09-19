@@ -17,37 +17,10 @@ The runtime application is served by the `NestJS` backend through the [/runtime]
 
 Each runtime instance operates with its own local `PGlite` database and executes the same business logic and data operations independently. The runtime also uses the shared [shared-sql](shared-sql.md) package, which provides common `SQL` queries, `data types` and `DTOs` shared between the runtime frontend and the backend.
 
-### LAN and ONLINE Operation
+#### LAN and ONLINE Operation
 The runtime can operate in both `LAN` and `ONLINE` environments. In `LAN` mode, it works within the local deployment, while in `ONLINE` mode it synchronizes local data with the central backend.
 
 Each workstation maintains its own local database, allowing the competition to continue operating without a permanent network connection. Synchronization is performed when required and connectivity is available.
-
----
-
-```text
-/runtime
-    |
-    ▼
- NestJS RuntimeController
-    |
-    ▼
- runtime/index.html
-    |
-    ▼
- Angular App
-    |
-    ├── PGlite initialization
-    ├── Runtime session initialization
-    └── EntryService
-            |
-            ▼
-       device_role
-            |
-       ┌────┴────┐
-       │         │
-       ▼         ▼
-   /admin     /client
-```
 
 ---
 
@@ -82,8 +55,8 @@ Contains `route-level components` representing the client interfaces.
 
 ### Services
 
-### [entry](runtime/services/entry.md)   
-Starts the `Runtime` initialization process.
+### [core services](runtime/services/entry.md)   
+Starts and ends the `Runtime` initialization process.
 
 ### [connections](runtime/services/connection_service.md)
 The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
@@ -397,7 +370,22 @@ Routes are protected by session and entry guards, ensuring that only an appropri
 ---
 
 <pre>
- EntryService ──────────────> ConnectionsService
+ /frontend
+    |
+    ▼
+ NestJS RuntimeController
+    |
+    ▼
+ runtime/index.html
+    |
+    ▼
+ Angular App
+    |
+    ├── PGlite initialization
+    ├── Runtime session initialization
+    └── EntryService
+
+    EntryService ──────────────> ConnectionsService
         |                               └── createParameters()
         |                                       |
      check() <───────── DeviceParameters ───────'
@@ -487,10 +475,8 @@ Routes are protected by session and entry guards, ensuring that only an appropri
                     |                                         ▼                 |
           ┌─────────┴─────────┐                        Device connections       |
           │                   │                           are deleted           |
-   adminExists=false   adminExists=true                        |________________|
-          │                   │                           
-          ▼                   ▼                               
-       /admin               /role                              
+          ▼                   ▼                               |_________________|
+       /admin               /role                         
 </pre>
 
 ---
