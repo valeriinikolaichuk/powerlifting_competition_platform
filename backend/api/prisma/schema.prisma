@@ -1360,13 +1360,14 @@ model GlobalState {
 }
 
 model SyncInbox {
-  id              String    @id @default(uuid()) @db.Uuid
-  source_id       String    @db.Uuid
-  operation_id    String
-  record_id       String    @db.Uuid
-  payload         Json      @db.JsonB
-  received_at     DateTime  @default(now())
-  processed_at    DateTime?
+  id                    String    @id @default(uuid()) @db.Uuid
+  source_id             String    @db.Uuid
+  operation_id          String
+  record_id             String    @db.Uuid
+  payload               Json      @db.JsonB
+  received_at           DateTime  @default(now())
+  processed_at          DateTime?
+  processed_by_browser  DateTime?
 
   @@map("sync_inbox")
 }

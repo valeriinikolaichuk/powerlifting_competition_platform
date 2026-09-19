@@ -23,7 +23,6 @@ Contents
   - [SyncOperationFactoryService](#syncoperationfactoryservice)
   - [Synchronization Operations](#synchronization-operations)
   - [UserService](#userservice)
-- [Notes (**processed_at** handling)](#notes)
 - [DTOs](#dtos)
   - [SyncQueueDto](#syncqueuedto)
   - [SnapshotContext](#snapshotcontext)
@@ -171,8 +170,13 @@ Receives synchronization operations from `SyncGateway` and stores them in the ba
 - ### receive()
   - Receive synchronization data from connected `Runtime` devices.
   - Persist received synchronization operations in the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table.
+  - Checks whether the synchronization operation has already been received.
+  - If `processed_at` is present, `SyncInboxService` marks the corresponding inbox record with `processed_by_browser`. This confirms that the browser has successfully received and processed the synchronization record.
   - Preserve the `operation ID`, source `device ID`,`record ID`, and `payload` for further processing.
   - Store the received synchronization operation using [PrismaService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/modules.md#prismaservice).
+  - Creates a `sync_inbox` record for new operations.
+  - After the `inbox` record is successfully created, `receive()` calls [SyncOutboxService.createForDevices()](#createfordevices) to create outgoing records for other active devices.
+  - Uses a `transaction` to create the inbox and outbox records atomically.
 
 The following data is persisted ([SyncQueueDto](#syncqueuedto)):
 * `id` — unique synchronization operation ID;
@@ -180,8 +184,6 @@ The following data is persisted ([SyncQueueDto](#syncqueuedto)):
 * `operation_id` — synchronization operation type;
 * `record_id` — ID of the affected record;
 * `payload` — operation data.
-
-After the `inbox` record is successfully created, `receive()` calls [SyncOutboxService.createForDevices()](#createfordevices) to create outgoing records for other active devices.
 
 ---
 
@@ -199,6 +201,7 @@ Creates synchronization tasks for every active device except `data.source_id`.
 The method uses distinct `device_id` values, so a device receives only one outbox record even if it has multiple [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) records.
 
 For each target device, an entry is created in the syncOutbox table containing:
+* sync_id — matches `sync_inbox.id` and the original `sync_queue.id`
 * device_id — target device;
 * operation_id — synchronization operation type;
 * record_id — affected record;
@@ -301,8 +304,15 @@ Processes pending synchronization operations stored in the backend [sync_inbox](
 - Process operations in the order they were received.
 - Create the corresponding synchronization operation through [SyncOperationFactoryService](#syncoperationfactoryservice).
 - Execute the selected operation.
-- Mark successfully processed inbox records as `processed`.
+- Mark successfully processed inbox records as `processed_at`.
 - Keep failed operations unprocessed for subsequent processing attempts.
+
+When both processing stages are complete:
+```
+processed_at != NULL
+processed_by_browser != NULL
+```
+the `sync_inbox` record can be removed.
 
 #### Data Source
 `SyncProcessorService` processes pending records from the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table. The records contain the source device, operation type, affected record, and operation payload received from [SyncGateway](#syncgateway).
@@ -320,6 +330,7 @@ For each record, the service:
 1. Creates the appropriate synchronization operation using [SyncOperationFactoryService](#syncoperationfactoryservice).  
 2. Executes the operation with the data received from [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox).  
 3. Sets `processed_at` after successful execution.  
+4. Requires synchronization operations to execute within the `transaction`.
 
 If processing fails, the error is logged and the inbox record remains unprocessed, allowing it to be retried during a subsequent execution.
 
@@ -333,12 +344,16 @@ Each synchronization operation implements [SyncOperationInterface](https://githu
 If no implementation supports the requested operation, an error is thrown.
 
 #### SyncOperationInterface
-Defines the common contract for all synchronization operations.  
-Uses [SyncInboxItem]([#syncinboxitem) DTO which contains the operation metadata.  
+- Defines the common contract for all synchronization operations.  
+- Uses [SyncInboxItem]([#syncinboxitem) DTO which contains the operation metadata. 
+- Requires synchronization operations to execute within the `transaction` provided by [SyncProcessorService](#syncprocessorservice). 
 ```ts
 interface SyncOperationInterface {
   supports(operationId: string): boolean;
-  execute(data: SyncInboxItem): Promise<void>;
+  execute(
+    data: SyncInboxItem,
+    tx: Prisma.TransactionClient,
+    ): Promise<void>;
 }
 ```
 - `supports()` determines whether the operation handles a specific `operation ID`.
@@ -393,18 +408,6 @@ This service is used only by operations that require the source user's ID and is
 
 ---
 
-### Notes
-
-- `syncInbox.processed_at` is set after a synchronization operation is successfully processed by [SyncProcessorService](syncprocessorservice).
-- `syncOutbox.processed_at` is set after a synchronization operation is successfully delivered to the target device by [SyncOutboxDeliveryService](#syncoutboxdeliveryservice).
-
-If processing or delivery fails, `processed_at` remains `NULL`, allowing the operation to be retried.
-
-
-
-
----
-
 ### DTOs
 
 ### SyncQueueDto
@@ -418,6 +421,7 @@ Fields:
 * `record_id` — identifier of the affected database record.
 * `payload` — serialized change data.
 * `created_at`
+* `processed_at`
 
 ### SnapshotContext
 Represents the shared context used during database snapshot generation.

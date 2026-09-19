@@ -21,6 +21,7 @@ Stores synchronization operations received by the backend before they are proces
 * `payload` — data required to execute the operation.
 * `received_at` — timestamp when the backend received the operation.
 * `processed_at` — timestamp when the operation was successfully processed.
+* `processed_by_browser` — confirms that the browser has successfully processed the synchronization record.
 
 The backend uses `operation_id` to select the corresponding SQL operation from the shared SQL layer and executes it using the provided `payload`.
 

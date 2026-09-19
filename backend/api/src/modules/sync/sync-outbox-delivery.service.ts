@@ -50,13 +50,19 @@ export class SyncOutboxDeliveryService {
             );
 
             if (success) {
-
+/*
                 await this.prisma.syncOutbox.update({
                     where: {
                         id: item.id,
                     },
                     data: {
                         processed_at: new Date(),
+                    },
+                });*/
+
+                await this.prisma.syncOutbox.delete({
+                    where: {
+                        id: item.id,
                     },
                 });
             }

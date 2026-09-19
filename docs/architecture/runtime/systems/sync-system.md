@@ -122,8 +122,9 @@ this.socket = io(environment.apiUrl, {
 This allows the backend to associate the `Socket.IO` connection with the current `Runtime` device.
 
 - ### waitForConnection()
-Ensures that the socket connection is established before communication is attempted.   
-If the socket is already connected, the method resolves immediately. Otherwise, it waits for the next `connect` event.
+Waits for the socket connection to become active. If the socket is already connected, it resolves immediately.  
+Otherwise, it waits until the `connect` event is received or the connection timeout is reached.  
+On timeout, the `promise` is rejected so the synchronization process can finish and be retried later.
 
 ---
 
@@ -140,6 +141,8 @@ Manages locally queued synchronization operations and periodically sends pending
 - Sends queued operations through the synchronization socket.
 - Processes queued operations in creation order.
 - Marks successfully synchronized operations as processed.
+- Keep the processed record for one additional synchronization cycle so the server can confirm browser processing.
+- Remove older processed records from the queue.
 
 `SyncQueueService` stops the current synchronization attempt when an operation fails, leaving the remaining operations in the queue for a later attempt.
 
@@ -189,6 +192,7 @@ The operation is emitted using the sync socket event and contains:
 * recordId
 * payload
 * createdAt
+* processedAt
 
 The method waits for the server `acknowledgement`.  
 If the server confirms successful processing, the queue item is [marked](#markasprocessed) as `processed`.  
@@ -197,6 +201,12 @@ If the server reports failure, the operation is rejected and remains unprocessed
 - ### markAsProcessed()
 Marks a successfully synchronized queue item by setting its `processed_at` timestamp.  
 Only successfully `acknowledged` operations are marked as `processed`.
+
+The payload is no longer required after the initial synchronization, so it is cleared.
+
+Previously processed records are removed when a newer record is successfully processed.
+
+The current processed record is intentionally kept for the next synchronization cycle. This allows the server to receive the `processed_at` value and mark the corresponding [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) record as `processed by the browser`.
 
 ---
 
@@ -264,6 +274,10 @@ socketService.socket.emit()
             ▼
 markAsProcessed(item.id) ──► sync_queue
                              processed_at = NOW()
+                             payload = NULL
+
+                             delete processed_at IS NOT NULL
+                                    AND id <> $1
 </pre>
 
 ---
@@ -349,6 +363,7 @@ The data transfer object used for complete database hydration.
 * record_id
 * payload
 * created_at
+* processed_at
 
 ### SyncOutboxDto
 * id

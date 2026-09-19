@@ -6,4 +6,5 @@ export interface SyncQueueItem {
     record_id: string;
     payload: string;
     created_at: string;
+    processed_at: string;
 }

@@ -85,9 +85,9 @@ export class SyncQueueService {
         operation_id,
         record_id,
         payload,
-        created_at
+        created_at, 
+        processed_at
       FROM sync_queue
-      WHERE processed_at IS NULL
       ORDER BY created_at ASC
       `,
     );
@@ -108,7 +108,7 @@ export class SyncQueueService {
       }
     }
   }
-  
+
   async send(item: SyncQueueItem): Promise<void> {
 
     await new Promise<void>((resolve, reject) => {
@@ -120,8 +120,11 @@ export class SyncQueueService {
           sourceId: item.source_id,
           operationId: item.operation_id,
           recordId: item.record_id,
-          payload: JSON.parse(item.payload),
-          createdAt: item.created_at,
+          payload: item.payload
+            ? JSON.parse(item.payload)
+            : null,
+          createdAt: item.created_at, 
+          processedAt: item.processed_at,
         },
         (response: { success: boolean }) => {
 
@@ -143,8 +146,18 @@ export class SyncQueueService {
     await this.pgliteService.query(
       `
         UPDATE sync_queue
-        SET processed_at = NOW()
+        SET processed_at = NOW(),
+            payload = NULL
         WHERE id = $1
+      `,
+      [id],
+    );
+
+    await this.pgliteService.query(
+      `
+        DELETE FROM sync_queue
+        WHERE processed_at IS NOT NULL
+          AND id <> $1
       `,
       [id],
     );

@@ -3,7 +3,7 @@ CREATE TABLE sync_queue (
     source_id UUID NOT NULL,
     operation_id TEXT NOT NULL,
     record_id UUID NOT NULL,
-    payload JSONB NOT NULL,
+    payload JSONB NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     processed_at TIMESTAMP NULL
 );

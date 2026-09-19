@@ -7,5 +7,6 @@ export interface SyncQueueDto {
     operation_id: string;
     record_id: string;
     payload: Prisma.InputJsonValue;
-    created_at: string;
+    created_at: string; 
+    processed_at: string;
 }

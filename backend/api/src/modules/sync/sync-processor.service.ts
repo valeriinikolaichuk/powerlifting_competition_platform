@@ -15,6 +15,13 @@ export class SyncProcessorService {
     @Interval(1000)
     async processPending(): Promise<void> {
 
+        await this.prisma.syncInbox.deleteMany({
+            where: {
+                processed_by_browser: { not: null },
+                processed_at: { not: null },
+            },
+        });
+
         const items = await this.prisma.syncInbox.findMany({
             where: {
                 processed_at: null,
@@ -32,21 +39,24 @@ export class SyncProcessorService {
                     item.operation_id
                 );
 
-                await operation.execute({
-                    id: item.id,
-                    sourceId: item.source_id,
-                    operationId: item.operation_id,
-                    recordId: item.record_id,
-                    payload: item.payload,
-                });
+                await this.prisma.$transaction(async (tx) => {
 
-                await this.prisma.syncInbox.update({
-                    where: {
+                    await operation.execute({
                         id: item.id,
-                    },
-                    data: {
-                        processed_at: new Date(),
-                    },
+                        sourceId: item.source_id,
+                        operationId: item.operation_id,
+                        recordId: item.record_id,
+                        payload: item.payload,
+                    }, tx);
+
+                    await tx.syncInbox.update({
+                        where: {
+                            id: item.id,
+                        },
+                        data: {
+                            processed_at: new Date(),
+                        },
+                    });
                 });
 
             } catch (error) {

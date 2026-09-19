@@ -9,6 +9,7 @@ The `runtime` is the operational layer where the competition is actually execute
 - [Services](#services)
 - [LAN Download and Installation](#lan-download-and-installation)
 - [Runtime Entry Flow](#runtime-entry-flow)
+- [Synchronization Flow](#synchronization-flow)
 
 </details>
 
@@ -490,4 +491,164 @@ Routes are protected by session and entry guards, ensuring that only an appropri
           │                   │                           
           ▼                   ▼                               
        /admin               /role                              
+</pre>
+
+---
+
+### Synchronization Flow
+
+The `Synchronization System` uses a two-stage confirmation between the browser and the server.
+
+#### 1. Queue Processing
+- [SyncQueueService](runtime/systems/sync-system.md#syncqueueservice) runs synchronization every second.
+- Only one synchronization process can run at a time. The `syncPromise` property prevents concurrent queue processing.
+- Before sending records, the service waits for an active socket connection.
+- Records are loaded in `created_at` order and sent sequentially. Processing stops when a synchronization error occurs. 
+
+After receiving a successful `ACK`, the record is marked as processed:
+```sql
+UPDATE sync_queue
+SET processed_at = NOW(),
+    payload = NULL
+WHERE id = $1
+```
+
+The payload is no longer required after the initial synchronization, so it is cleared.
+
+Previously processed records are removed when a newer record is successfully processed:
+```sql
+DELETE FROM sync_queue
+WHERE processed_at IS NOT NULL
+  AND id <> $1
+```
+
+The current processed record is intentionally kept for the next synchronization cycle. This allows the server to receive the `processed_at` value and mark the corresponding [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) record as processed by the browser.
+
+#### 2. Browser → Server
+[SyncQueueService](runtime/systems/sync-system.md#syncqueueservice) periodically reads records from [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) in `created_at` order and sends them to the server through `Socket.IO`.
+<pre>
+sync_queue
+    │
+    │ sync
+    ▼
+SyncGateway
+    │
+    ▼
+SyncInboxService
+</pre>
+
+#### 3. Server Inbox
+[SyncInboxService](backend/systems/sync.md#syncinboxservice) checks whether the synchronization record already exists.
+
+If it does not exist, the service creates a [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) record and creates the corresponding [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) records in the same database transaction.
+<pre>
+sync_inbox
+    │
+    ├── create sync_inbox
+    │
+    └── create sync_outbox records
+</pre>
+The server returns a successful `ACK` only after the `transaction` is completed.
+
+#### 4. Browser Receives ACK
+After receiving the `ACK`, [SyncQueueService](runtime/systems/sync-system.md#syncqueueservice) marks the local queue record as `processed` and removes its payload.
+<pre>
+sync_queue
+    │
+    ├── processed_at = NOW()
+    └── payload = NULL
+</pre>
+The processed queue record is intentionally retained for one more synchronization cycle.
+
+#### 5. Browser Confirmation
+During the next synchronization cycle, the processed queue record is sent again.
+
+Because its `processed_at` is not `NULL`, [SyncInboxService](backend/systems/sync.md#syncinboxservice) treats it as a browser processing confirmation.
+<pre>
+sync_queue
+    │
+    │ processed_at != NULL
+    ▼
+SyncInboxService
+    │
+    └── sync_inbox.processed_by_browser = processed_at
+</pre>
+The server then returns another successful `ACK`.
+
+#### 6. Server Processing
+[SyncProcessorService](backend/systems/sync.md#syncprocessorservice) processes pending `sync_inbox` records.
+
+The synchronization operation and the update of processed_at are executed in one database transaction.
+<pre>
+Transaction
+    │
+    ├── operation.execute(tx)
+    │
+    └── sync_inbox.processed_at = NOW()
+</pre>
+If the operation fails, the transaction is rolled back and the record remains pending for retry.
+
+#### 7. Inbox Cleanup
+When both processing stages are complete:
+<pre>
+processed_at != NULL
+processed_by_browser != NULL
+</pre>
+the sync_inbox record can be removed.
+
+#### 8. Queue Cleanup
+After a newer queue record is successfully processed, previously processed queue records are removed.
+
+The current processed record is excluded from deletion so it remains available for the next synchronization cycle.
+<pre>
+DELETE FROM sync_queue
+WHERE processed_at IS NOT NULL
+  AND id <> current_id
+</pre>
+
+#### Complete Flow
+<pre>
+Browser A
+   │
+   │ local operation
+   ▼
+Local DB + sync_queue
+   │
+   │ sync
+   ▼
+Server
+   │
+   ▼
+sync_inbox + sync_outbox
+   │
+   ├──────────────► other devices
+   │
+   ▼
+  ACK
+   │
+   ▼
+Browser A
+   │
+   ├── processed_at = NOW()
+   └── payload = NULL
+   |
+DELETE sync_queue
+   │
+   │ next synchronization cycle
+   ▼
+Server
+   │
+   └── processed_by_browser = processed_at
+   │
+   ▼
+sync_inbox
+   │
+   ├── operation.execute(tx)
+   └── processed_at = NOW()
+   │
+   ▼
+processed_at + processed_by_browser
+   │
+   ▼
+DELETE sync_inbox
 </pre>

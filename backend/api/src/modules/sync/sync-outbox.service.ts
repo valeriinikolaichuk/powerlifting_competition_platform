@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
-import { PrismaService } from '../prisma/prisma.service';
 import type { SyncQueueDto } from './dto/sync-queue.dto';
 
 @Injectable()
 export class SyncOutboxService {
 
-    constructor(
-        private readonly prisma: PrismaService,
-    ) {}
+    async createForDevices(
+        data: SyncQueueDto,
+        tx: Prisma.TransactionClient,
+    ): Promise<void> {
 
-    async createForDevices(data: SyncQueueDto): Promise<void> {
-
-        const devices = await this.prisma.deviceStatus.findMany({
+        const devices = await tx.deviceStatus.findMany({
             where: {
                 device_id: {
                     not: data.source_id,
@@ -29,7 +28,7 @@ export class SyncOutboxService {
             return;
         }
 
-        await this.prisma.syncOutbox.createMany({
+        await tx.syncOutbox.createMany({
             data: devices.map((device) => ({
                 sync_id: data.id,
                 device_id: device.device_id,

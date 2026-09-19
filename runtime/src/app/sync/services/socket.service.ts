@@ -19,16 +19,25 @@ export class SocketService {
     });
   }
 
-  waitForConnection(): Promise<void> {
+  waitForConnection(timeout = 5000): Promise<void> {
 
     if (this.socket.connected) {
       return Promise.resolve();
     }
 
-    return new Promise((resolve) => {
-      this.socket.once('connect', () => {
+    return new Promise((resolve, reject) => {
+
+      const timer = setTimeout(() => {
+        this.socket.off('connect', onConnect);
+        reject(new Error('Socket connection timeout'));
+      }, timeout);
+
+      const onConnect = () => {
+        clearTimeout(timer);
         resolve();
-      });
+      };
+
+      this.socket.once('connect', onConnect);
     });
   }
 }
