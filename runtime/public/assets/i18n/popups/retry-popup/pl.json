@@ -1,4 +1,5 @@
 {
     "RETRY": "PONÓW",
+    "CREATION_FAILED": "Błąd tworzenia bazy danych",
     "FAILED": "Błąd synchronizacji bazy danych"
 }

@@ -28,7 +28,8 @@
             items-center 
             h-full">
 
-        <button class="w-[200px] 
+        <button routerLink="main" 
+                class="w-[200px] 
                     h-[200px] 
                     bg-[rgba(0,0,135,0.2)] 
                     hover:bg-blue-600 
@@ -36,8 +37,7 @@
                     text-2xl 
                     font-bold
                     leading-[2]"
-                    type="button"
-                (click)="openMainPage()">
+                    type="button">
                 {{ 'ADMIN' | t:'pages/entry' }}
         </button>
 

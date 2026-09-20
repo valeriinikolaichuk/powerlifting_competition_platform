@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import { SyncQueueService } from '../../sync/services/sync-queue.service';
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
@@ -9,7 +9,10 @@ import { ExitService } from '../../services/exit.service';
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [
+    TranslatePipe,
+    RouterLink,
+  ],
   templateUrl: './admin.component.html'
 })
 export class AdminComponent {
@@ -17,7 +20,6 @@ export class AdminComponent {
   isLoading = true;
 
   constructor(
-    private readonly router: Router,
     private readonly syncQueueService: SyncQueueService,
     public tService: TranslationService,
     public exitService: ExitService,
@@ -31,10 +33,5 @@ export class AdminComponent {
 
     this.isLoading = false;
     console.log('admin');
-  }
-
-  async openMainPage(){
-
-    await this.router.navigate(['/admin/main'])
   }
 }

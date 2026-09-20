@@ -6,7 +6,5 @@ CREATE TABLE "sync_queue" (
     "record_id" UUID NOT NULL,
     "payload" JSONB NULL,
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "processed_at" TIMESTAMP NULL,
-
-    CONSTRAINT "sync_queue_pkey" PRIMARY KEY ("id")
+    "processed_at" TIMESTAMP NULL
 );

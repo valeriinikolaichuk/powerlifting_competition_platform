@@ -1,7 +1,5 @@
 -- CreateTable
 CREATE TABLE "sync_processed" (
     "sync_id" UUID PRIMARY KEY,
-    "processed_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "sync_processed_pkey" PRIMARY KEY ("sync_id")
+    "processed_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

@@ -1,4 +1,5 @@
 {
     "RETRY": "RETRY",
+    "CREATION_FAILED": "Database creation failed",
     "FAILED": "Database synchronization failed"
 }

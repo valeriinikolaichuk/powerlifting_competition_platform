@@ -37,6 +37,13 @@ The method:
 - Executes the migration inside a database transaction.
 - Stores the migration name in `__migrations`.
 
+While synchronization is running, the application displays `CreatingDatabaseComponent` inside `SystemPopupComponent`. This prevents the user from interacting with the application until the initial synchronization is completed.
+
+If synchronization fails, the synchronization popup is closed and `RetryPopupComponent` displays `CreatingDbErrorComponent`.
+
+The user can choose:  
+- **RETRY** — starts the synchronization process again.
+
 If the migration `SQL` execution fails, the transaction is rolled back and the migration is not recorded as completed.
 
 - ### Database Access

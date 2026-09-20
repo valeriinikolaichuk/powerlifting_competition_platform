@@ -1,4 +1,5 @@
 {
     "SYNC": "Synchronizacja bazy danych...",
+    "CREATE": "Tworzenie lokalnej bazy danych...",
     "WAIT": "Proszę czekać."
 }

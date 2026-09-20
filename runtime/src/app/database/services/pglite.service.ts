@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
 import { migrationFiles } from './pglite.config';
+import { PopupService } from '../../popup/services/popup.service';
+import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
+import { CreatingDatabaseComponent } from '../../popup/components/system-popups/creating-database/creating-database.component';
+import { RetryPopupComponent } from '../../popup/components/retry-popup/retry-popup.component';
+import { CreatingDbErrorComponent } from '../../popup/components/retry-popup/creating-db-error.component/creating-db-error.component';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +16,10 @@ export class PgliteService {
   private pg!: PGlite;
 
   private initialized = false;
+
+  constructor(
+    public popup: PopupService,
+  ) {}
 
   async initialize(): Promise<void> {
 
@@ -52,42 +61,69 @@ export class PgliteService {
 
   private async runMigrations(): Promise<void> {
 
-    const appliedResult = await this.pg.query<{ name: string }>(
-      'SELECT name FROM __migrations'
+    this.popup.open(
+      SystemPopupComponent, 
+      {
+        content: CreatingDatabaseComponent
+      }
     );
 
-    const appliedMigrations = new Set(
-      appliedResult.rows.map(r => r.name)
-    );
+    try {
 
-    for (const filePath of migrationFiles) {
+      const appliedResult = await this.pg.query<{ name: string }>(
+        'SELECT name FROM __migrations'
+      );
 
-      const fileName = filePath.split('/').pop()!;
+      const appliedMigrations = new Set(
+        appliedResult.rows.map(r => r.name)
+      );
 
-      if (appliedMigrations.has(fileName)) { continue; }
+      for (const filePath of migrationFiles) {
 
-      console.log(`Applying migration: ${fileName}`);
+        const fileName = filePath.split('/').pop()!;
 
-      const response = await fetch(filePath);
+        if (appliedMigrations.has(fileName)) { continue; }
 
-      if (!response.ok) {
-        throw new Error(`Failed to load migration "${filePath}". ` + `HTTP ${response.status}`);
+        console.log(`Applying migration: ${fileName}`);
+
+        const response = await fetch(filePath);
+
+        if (!response.ok) {
+          throw new Error(`Failed to load migration "${filePath}". ` + `HTTP ${response.status}`);
+        }
+
+        const sqlContent = await response.text();
+
+        await this.pg.transaction(async (tx) => {
+
+          await tx.exec(sqlContent);
+
+          await tx.query(
+            'INSERT INTO "__migrations" ("name") VALUES ($1)',
+            [fileName]
+          );
+
+        });
+
+        console.log(`Migration applied: ${fileName}`);
       }
 
-      const sqlContent = await response.text();
+      this.popup.close();
 
-      await this.pg.transaction(async (tx) => {
+    } catch (error) {
 
-        await tx.exec(sqlContent);
-
-        await tx.query(
-          'INSERT INTO "__migrations" ("name") VALUES ($1)',
-          [fileName]
-        );
-
-      });
-
-      console.log(`Migration applied: ${fileName}`);
+      this.popup.close();
+      
+      const retry = await this.popup.open<boolean>(
+        RetryPopupComponent, 
+        {   
+          content: CreatingDbErrorComponent  
+        }
+      );
+      
+      if (retry) {
+        return await this.runMigrations();
+      }
     }
   }
   

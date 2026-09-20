@@ -3,11 +3,11 @@ import { TranslationService } from '../../../../i18n/services/translation.servic
 import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-synchronizing-database',
+  selector: 'app-creating-database',
   imports: [TranslatePipe],
-  templateUrl: './synchronizing-database.component.html',
+  templateUrl: './creating-database.component.html',
 })
-export class SynchronizingDatabaseComponent {
+export class CreatingDatabaseComponent {
 
   constructor(
     public tService: TranslationService,    

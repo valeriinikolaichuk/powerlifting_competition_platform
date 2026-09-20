@@ -3,15 +3,15 @@ import { TranslationService } from '../../../../i18n/services/translation.servic
 import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 @Component({
-  selector: 'app-synchronizing-database',
+  selector: 'app-creating-db-error',
   imports: [TranslatePipe],
-  templateUrl: './synchronizing-database.component.html',
+  templateUrl: './creating-db-error.component.html',
 })
-export class SynchronizingDatabaseComponent {
+export class CreatingDbErrorComponent {
 
   constructor(
     public tService: TranslationService,    
   ) {
-    this.tService.load('popups/synchronizing-database');
+    this.tService.load('popups/retry-popup');
   }
 }
