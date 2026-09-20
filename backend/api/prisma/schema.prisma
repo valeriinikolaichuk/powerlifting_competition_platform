@@ -1380,7 +1380,7 @@ model SyncOutbox {
   device_id       String    @db.Uuid
   operation_id    String
   record_id       String    @db.Uuid
-  payload         Json      @db.JsonB
+  payload         Json?      @db.JsonB
 
   created_at      DateTime  @default(now())
   processed_at    DateTime?

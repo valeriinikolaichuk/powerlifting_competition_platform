@@ -6,7 +6,6 @@ import { SYNC_OPERATIONS } from '#shared-sql';
 import { SyncOperationInterface } from './sync-operation.interface';
 import { SyncOutboxDto } from '../../dto/sync-outbox.dto';
 
-import { PgliteService } from '../../../database/services/pglite.service';
 import { UserService } from '../../../database/services/user.service';
 
 @Injectable({
@@ -15,7 +14,6 @@ import { UserService } from '../../../database/services/user.service';
 export class CreateCompetitionOperation implements SyncOperationInterface {
 
   constructor(
-    private readonly pgliteService: PgliteService,
     private readonly userService: UserService,
   ){}
 
@@ -23,13 +21,16 @@ export class CreateCompetitionOperation implements SyncOperationInterface {
       return operationId === 'CREATE_COMPETITION'; 
   }
 
-  async execute(data: SyncOutboxDto): Promise<void> {
+  async execute(
+    data: SyncOutboxDto,
+    tx: any
+  ): Promise<void> {
 
     const userId = await this.userService.getUserId();
 
     const competition = data.payload as CompetitionData;
 
-    await this.pgliteService.database.query(
+    await tx.query(
       SYNC_OPERATIONS.CREATE_COMPETITION,
       [
         competition.id,

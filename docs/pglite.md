@@ -2,9 +2,19 @@
 The browser database is a local `PGlite` database used by the offline competition runtime.  
 The database is managed by [PgliteService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/database_service.md#pgliteservice), which handles database initialization, migrations, and `SQL` query execution.
 
+<details open="open">
+<summary>Contents</summary>  
+
+- [Tables](#tables)
+- [users table](#users)
+- [sync_queue table](#sync_queue)
+- [sync_processed table](#sync_processed)
+
+</details>
+
 ---
 
-#### Tables
+### Tables
 **Some tables differ from the server database. Browser-specific differences are described in the corresponding table documentation.**  
 
 The following tables are available in the browser database:
@@ -63,12 +73,13 @@ The following tables are available in the browser database:
  
 - **Management Tables**
   - [sync_queue](#sync_queue)
+  - [sync_processed](#sync_processed)
 
-> Note: Management server tables are not included in the browser database.
+**Note:** The server and browser use separate **Management** tables, each designed for its own process.
 
 ---
 
-#### users
+### users
 Only the following columns are stored locally:
 
 | Column | Type |
@@ -79,7 +90,7 @@ Server-specific authentication fields are not stored in the browser database.
 
 ---
 
-#### sync_queue
+### sync_queue
 Stores local changes that are waiting to be synchronized with the backend.
 * `id` — unique identifier of the synchronization operation.
 * `source_id` — identifier of the device that created the operation.
@@ -113,5 +124,17 @@ shared SQL
    ▼
 PostgreSQL
 </pre>
+
+---
+
+### sync_processed
+Stores synchronization records that have already been processed by the browser.
+
+It is used to prevent duplicate execution when the server retries a synchronization record because the previous `ACK` was lost.
+
+| Column | Description |
+|---|---|
+| `sync_id` | Identifier of the synchronization operation. |
+| `processed_at` | Time when the synchronization operation was processed. |
 
 ---

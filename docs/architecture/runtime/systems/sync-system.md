@@ -286,14 +286,19 @@ markAsProcessed(item.id) ──► sync_queue
 Listens for incoming `sync` events through `SocketService` and processes each synchronization item.  
 Receives synchronization operations delivered by the backend [SyncOutboxDeliveryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#syncoutboxdeliveryservice) through [SyncGateway](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#syncgateway) over `Socket.IO`.
 
-When a synchronization message is received, the service:  
-1. Uses `SyncOperationFactory` to select the operation implementation based on `operationId`.
-2. Executes the selected operation with the received data.
-3. Returns a success acknowledgement to the backend if the operation completes successfully.
-4. Returns a failure acknowledgement if an error occurs.
+When a synchronization message is received, the service: 
+- Before executing an operation, the service checks the [sync_processed](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_processed) table using `sync_id`. If the synchronization record has already been processed, the operation is not executed again and a successful `ACK` is returned.
+- Uses `SyncOperationFactory` to select the operation implementation based on `operationId`.
+- Executes the selected operation with the received data.
+- For a new synchronization record, the operation and insertion into [sync_processed](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_processed) are executed in the same `PGlite` transaction.
+- If the `transaction` fails, both changes are rolled back and the synchronization record can be safely retried.
+- When a second delivery is received with processed_at, the corresponding [sync_processed](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_processed) record is removed and a successful ACK is returned.
+- Returns a success acknowledgement to the backend if the operation completes successfully.
+- Returns a failure acknowledgement if an error occurs.
+
 
 <pre>
-          SyncReceiverService
+         SyncReceiverService
                 |
         SyncOperationFactory
                 │

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Interval } from '@nestjs/schedule';
+import { Prisma } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { SyncGateway } from './sync.gateway';
@@ -16,9 +17,6 @@ export class SyncOutboxDeliveryService {
     async retryPending(): Promise<void> {
 
         const devices = await this.prisma.syncOutbox.findMany({
-            where: {
-                processed_at: null,
-            },
             select: {
                 device_id: true,
             },
@@ -35,7 +33,6 @@ export class SyncOutboxDeliveryService {
         const items = await this.prisma.syncOutbox.findMany({
             where: {
                 device_id: deviceId,
-                processed_at: null,
             },
             orderBy: {
                 created_at: 'asc',
@@ -50,21 +47,27 @@ export class SyncOutboxDeliveryService {
             );
 
             if (success) {
-/*
-                await this.prisma.syncOutbox.update({
+
+                if (item.processed_at === null) {
+
+                    await this.prisma.syncOutbox.update({
                     where: {
                         id: item.id,
                     },
                     data: {
+                        payload: Prisma.DbNull,
                         processed_at: new Date(),
                     },
-                });*/
+                    });
 
-                await this.prisma.syncOutbox.delete({
+                } else {
+
+                    await this.prisma.syncOutbox.delete({
                     where: {
                         id: item.id,
                     },
-                });
+                    });
+                }
             }
         }
     }

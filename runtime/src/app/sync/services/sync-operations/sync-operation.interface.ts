@@ -4,5 +4,8 @@ export interface SyncOperationInterface {
 
     supports(operationId: string): boolean;
 
-    execute(data: SyncOutboxDto): Promise<void>;
+    execute(
+        data: SyncOutboxDto, 
+        tx: any
+    ): Promise<void>;
 }

@@ -33,7 +33,8 @@ export const migrationFiles = [
     'assets/migrations/032_create_athlete_nominations_table.sql',
     'assets/migrations/033_create_coefficients_table.sql',
     'assets/migrations/034_create_federation_coefficients_table.sql',
-    'assets/migrations/035_sync_queue_table.sql',
+    'assets/migrations/035_create_sync_queue_table.sql',
     'assets/migrations/036_create_federation_divisions_table.sql',
     'assets/migrations/037_create_federation_age_subgroups_table.sql',
+    'assets/migrations/038_create_sync_processed_table.sql'
 ];

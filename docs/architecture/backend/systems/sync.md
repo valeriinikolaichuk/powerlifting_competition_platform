@@ -233,7 +233,7 @@ For each target device, an entry is created in the syncOutbox table containing:
 ---
 
 ### SyncOutboxDeliveryService
-Delivers pending synchronization operations from the backend `syncOutbox` to `Runtime` devices.
+Delivers pending synchronization operations from the backend [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) to `Runtime` devices.
 
 #### Responsibilities
 - Periodically check for pending synchronization operations.
@@ -241,6 +241,7 @@ Delivers pending synchronization operations from the backend `syncOutbox` to `Ru
 - Deliver operations to the target device through [SyncGateway](#syncgateway).
 - Process pending operations in creation order for each device.
 - Mark successfully delivered operations as processed.
+- The record is kept in [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) for one additional delivery cycle. On the next successful `ACK`, the `sync_outbox` record is deleted.
 - Retry operations that have not been successfully delivered.
 
 ### retryPending()

@@ -491,7 +491,7 @@ The `Synchronization System` uses a two-stage confirmation between the browser a
 - Before sending records, the service waits for an active socket connection.
 - Records are loaded in `created_at` order and sent sequentially. Processing stops when a synchronization error occurs. 
 
-After receiving a successful `ACK`, the record is marked as processed:
+After receiving a successful `ACK`, the record is marked in [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) as processed:
 ```sql
 UPDATE sync_queue
 SET processed_at = NOW(),
@@ -592,6 +592,53 @@ WHERE processed_at IS NOT NULL
   AND id <> current_id
 </pre>
 
+#### 9. Server → Other Devices
+
+[SyncOutboxDeliveryService](backend/systems/sync.md#syncoutboxdeliveryservice) delivers each `sync_outbox` record to the target device through [SyncGateway](backend/systems/sync.md#syncgateway).
+
+Records are delivered in `created_at` order for each device.
+
+#### 10. Receiving Device
+[SyncReceiverService](runtime/systems/sync-system.md#syncreceiverservice) checks whether the sync_id has already been processed.
+
+If the record already exists in [sync_processed](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_processed), the synchronization operation is not executed again.
+
+```text
+sync_id exists?
+    │
+    ├── yes → do not execute → ACK
+    │
+    └── no
+         │
+         ▼
+      execute operation
+         │
+         └── INSERT sync_processed
+```
+
+The synchronization operation and insertion into `sync_processed` are executed in the same `PGlite` transaction.  
+If the transaction fails, both changes are rolled back.
+
+#### 11. First ACK
+After the operation is successfully committed, the receiving device returns a successful `ACK`.  
+[SyncOutboxDeliveryService](backend/systems/sync.md#syncoutboxdeliveryservice) then marks the outbox record as processed and clears its payload.
+```text
+sync_outbox
+    │
+    ├── processed_at = NOW()
+    └── payload = NULL
+```
+
+The record remains in [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) for one additional synchronization cycle.
+
+#### 12. Second Delivery
+During the next delivery cycle, the processed outbox record is sent again.  
+Because `processed_at` is present, no synchronization payload is required.  
+The receiving device finds the corresponding `sync_id` in [sync_processed](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_processed).  
+It removes the processed record and returns a successful `ACK` without executing the operation again.
+
+After receiving the second successful `ACK`, [SyncOutboxDeliveryService](backend/systems/sync.md#syncoutboxdeliveryservice) permanently deletes the corresponding [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) record.
+
 #### Complete Flow
 <pre>
 Browser A
@@ -604,37 +651,37 @@ Local DB + sync_queue
    ▼
 Server
    │
-   ▼
-sync_inbox + sync_outbox
-   │
-   ├──────────────► other devices
-   │
-   ▼
-  ACK
-   │
-   ▼
-Browser A
-   │
-   ├── processed_at = NOW()
-   └── payload = NULL
-   |
-DELETE sync_queue
-   │
-   │ next synchronization cycle
-   ▼
-Server
-   │
-   └── processed_by_browser = processed_at
-   │
-   ▼
-sync_inbox
-   │
-   ├── operation.execute(tx)
-   └── processed_at = NOW()
-   │
-   ▼
-processed_at + processed_by_browser
-   │
-   ▼
-DELETE sync_inbox
+   ├── sync_inbox
+   └── sync_outbox ──────────────────────► other devices
+   │                                            │
+   ▼                                            │ first delivery
+  ACK                                           ▼
+   │                                         Browser B  
+   ▼                                            |
+Browser A                                       ├── check sync_id
+   │                                            |
+   ├── processed_at = NOW()                     ├── operation.execute()
+   └── payload = NULL                           |
+   |                                            └── INSERT sync_processed
+DELETE sync_queue                               |
+   │                                            └── ACK
+   │ next synchronization cycle                 |
+   ▼                                            ▼
+ Server                                       Server
+   │                                            |
+   └── processed_by_browser = processed_at      ├── payload = NULL
+   │                                            └── processed_at = NOW()
+   ▼                                            |
+sync_inbox                                      │ second delivery
+   │                                            ▼
+   ├── operation.execute(tx)                 Browser B
+   └── processed_at = NOW()                     |
+   │                                            ├── find sync_id
+   ▼                                            ├── DELETE sync_processed
+processed_at + processed_by_browser             └── ACK
+   │                                            |
+   ▼                                            ▼
+DELETE sync_inbox                             Server
+                                                │
+                                                └── DELETE sync_outbox
 </pre>
