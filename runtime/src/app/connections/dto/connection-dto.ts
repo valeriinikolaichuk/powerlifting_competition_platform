@@ -7,4 +7,5 @@ export interface ConnectionDto {
   user_agent: string;
   browser?: string;
   created_at: Date;
+  created_at_formatted?: string;
 }

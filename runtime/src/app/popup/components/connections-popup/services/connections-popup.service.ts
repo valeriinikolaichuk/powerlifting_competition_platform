@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class ConnectionsPopupService {
+
   getBrowserName(userAgent: string): string {
 
     if (userAgent.includes('Edg/')) {
@@ -29,4 +30,13 @@ export class ConnectionsPopupService {
 
     return 'Unknown';
   }
+
+  formatDate(createdAt: Date): string {
+
+    const formatted = createdAt.toISOString()
+      .replace('T', ' ')
+      .replace(/\.\d{3}Z$/, '');
+      
+    return formatted;
+  }  
 }

@@ -31,23 +31,25 @@ export class EntryService {
 
     if (role === 'ADMIN') {
 
-      const success = await this.synchronize();
+      await this.synchronize();
 
-      if (success) {
-        await this.router.navigate(['/admin']);
-      }
+      await this.router.navigate(['/admin']);
 
       return;
     }
 
     const dto = await this.connectionsService.createParameters();
 
-    await this.check(dto);
+    const adminExists = await this.check(dto);
+
+    await this.router.navigate(
+      adminExists ? ['/client'] : ['/admin']
+    );
   }
 
   private async check(
     dto: DeviceParameters,
-  ): Promise<void> {
+  ): Promise<boolean> {
 
     const result = await this.connectionsService.check(dto);
 
@@ -57,15 +59,9 @@ export class EntryService {
 
     if (result.connections.length === 0) {
 
-      const success = await this.synchronize();
+      await this.synchronize();
 
-      if (success) {
-        await this.router.navigate(
-          result.adminExists ? ['/client'] : ['/admin']
-        );
-      }
-
-      return;
+      return result.adminExists;
     }
 
     const deletedDeviceIds = await this.openConnectionsPopup(result.connections);
@@ -73,18 +69,16 @@ export class EntryService {
     // user closed the popup
     if (deletedDeviceIds.length === 0) {
 
-      const success = await this.synchronize();
+      await this.synchronize();
 
-      if (!success) { return; }
-
-      return;
+      return result.adminExists;
     }
 
     // showing connections after deletion
-    await this.check(dto);
+    return await this.check(dto);
   }
 
-  private async synchronize(): Promise<boolean> {
+  private async synchronize(): Promise<void> {
 
     this.popup.open(
       SystemPopupComponent, 
@@ -100,8 +94,6 @@ export class EntryService {
 
       this.popup.close();
 
-      return true;
-
     } catch (error) {
 
       this.popup.close();
@@ -114,10 +106,8 @@ export class EntryService {
       );
 
       if (retry) {
-        return await this.synchronize();
+        await this.synchronize();
       }
-
-      return false;
     }
   }
 

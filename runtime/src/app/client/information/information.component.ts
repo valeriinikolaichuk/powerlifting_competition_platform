@@ -1,20 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+
+import { ExitService } from '../../services/exit.service';
 
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
-import { ExitService } from '../../services/exit.service';
 
 @Component({
-  selector: 'app-role',
-  standalone: true,
-  imports: [
-    TranslatePipe,
-    RouterLink,
-  ],
-  templateUrl: './role.component.html',
+  selector: 'app-information',
+  imports: [TranslatePipe],
+  templateUrl: './information.component.html',
 })
-export class RoleComponent {
+export class InformationComponent {
 
   isLoading = true;
 
@@ -25,9 +21,9 @@ export class RoleComponent {
 
   async ngOnInit(){
   
-    this.tService.load('pages/entry');
+    this.tService.load('pages/information');
 
     this.isLoading = false;
-    console.log('role');
+    console.log('information');
   }
 }

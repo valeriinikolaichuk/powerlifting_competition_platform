@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../i18n/services/translation.service';
@@ -9,11 +9,10 @@ import { CompetitionPopupComponent } from '../../popup/components/competition-po
 import { CreateCompetitionComponent } from '../../popup/components/competition-popup/create-competition/create-competition.component';
 
 @Component({
-  selector: 'app-main.component',
+  selector: 'app-main',
   standalone: true,
   imports: [
     TranslatePipe,
-    RouterLink,
   ],
   templateUrl: './main.component.html',
 })
