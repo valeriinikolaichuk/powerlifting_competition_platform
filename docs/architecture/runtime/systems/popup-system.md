@@ -173,8 +173,10 @@ Popup Content
   - [ConnectionsPopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/connection_service.md#connectionspopupservice)  — provides popup-specific helper functionality.
 - `SystemPopupComponent` (The code is duplicated in both apps)
   - `SecondTabContentComponent` — blocks navigation. Prevents opening multiple tabs in the same browser (The code is duplicated in both apps).
+  - `CreatingDatabaseComponent` — disables the page while creating the local database.
   - `SynchronizingDatabaseComponent` — disables the page while synchronizing the database.
 - `RetryPopupComponent`
+  - `CreatingDbErrorComponent` — database creation error massage.
   - `SynchronizationErrorComponent` — database synchronization error massage.
 - `CompetitionPopupComponent`— popup container.
   - Components:
