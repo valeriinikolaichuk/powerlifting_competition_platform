@@ -52,8 +52,8 @@ Contains `route-level components` representing the client interfaces.
 
 ### Services
 
-### [core services](runtime/entry.md)   
-Starts and ends the `Runtime` initialization process.
+### [core](runtime/services/core.md)   
+Contains core application services responsible for business logic and domain operations.
 
 ### [connections](runtime/services/connection_service.md)
 The communication layer between the `Angular application` and the [backend connections API](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md) which works with the [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.

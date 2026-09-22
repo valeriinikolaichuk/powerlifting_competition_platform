@@ -1,4 +1,5 @@
-## Core  Services
+## Entry/Exit  Services
+Starts and ends the `Runtime` initialization process.
 
 <details open="open">
 <summary>Contents</summary>
