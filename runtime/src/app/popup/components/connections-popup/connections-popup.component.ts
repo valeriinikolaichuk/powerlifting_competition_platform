@@ -39,7 +39,7 @@ export class ConnectionsPopupComponent {
 
     for (const connection of this.connections) {
       connection.browser = this.connectionsPopupService.getBrowserName(
-        connection.user_agent
+        connection.user_agent!
       );
 
       connection.created_at_formatted = this.connectionsPopupService.formatDate(

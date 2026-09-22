@@ -1320,6 +1320,7 @@ model DeviceStatus {
 
   created_at          DateTime @default(now())
   updated_at          DateTime @updatedAt
+  sent_at             DateTime?
 
   is_deleted          Boolean @default(false)
 

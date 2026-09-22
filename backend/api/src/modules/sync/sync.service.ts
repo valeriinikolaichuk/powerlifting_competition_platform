@@ -13,11 +13,13 @@ export class SyncService {
     async getDatabaseSnapshot(
         userId: string,
         language: string,
+        deviceId: string,
     ){
 
         const context = new SnapshotContext(
             userId,
-            language
+            language,
+            deviceId
         );
 
         return await this.pipeline.execute(context);

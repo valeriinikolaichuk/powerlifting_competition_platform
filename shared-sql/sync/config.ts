@@ -54,8 +54,11 @@ export const TABLE_USERS = [
 export const CREATED_BY_USER_TABLES = [
     'participants',
     'competitions',
-    'device_status',
     'global_state',
+];
+
+export const TABLE_DEVICE_STATUS = [
+    'device_status',
 ];
 
 export const COMPETITION_RUNTIME_TABLES = [

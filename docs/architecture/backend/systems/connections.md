@@ -8,6 +8,8 @@
 
 - [ConnectionsController](#connectionscontroller)
 - [ConnectionsService](#connectionsservice)
+- [DeviceStatusDeliveryService](#devicestatusdeliveryservice)
+- [DeviceGateway](#devicegateway)
 - [DTOs](#dtos)
 
 </details>
@@ -58,6 +60,27 @@ Returns all active device connections belonging to the user, including the `ADMI
 - #### deleteDevices()
 Performs the actual deletion of device connection records.
 The method deletes connections using only `device_id` identifier
+
+---
+
+### DeviceStatusDeliveryService
+Delivers device status changes from the server to the `ADMIN` device.
+
+It:
+- checks whether the [device status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) has changed since the last delivery;
+- sends the status to the [ADMIN device](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/connection_service.md#devicereceiverservice) via [DeviceGateway](#devicegateway);
+- updates `sent_at` only after a successful delivery acknowledgment;
+- removes soft-deleted device status records after successful delivery.
+
+---
+
+### DeviceGateway
+Handles real-time device status notifications between the server and ADMIN devices.
+
+It:
+- sends device status updates to the `ADMIN` device via `Socket.IO`;
+- waits for a delivery acknowledgment;
+- reports whether the delivery was successful.
 
 ---
 

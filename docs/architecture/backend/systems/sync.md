@@ -48,7 +48,8 @@ Contains the database synchronization logic when the `Runtime` **starts**.
 - ### getDatabaseSnapshot()
 Creates a [SnapshotContext](#snapshotcontext) containing:
 * authenticated `userId`;
-* requested `language`.
+* requested `language`;
+* current `deviceId`.
 
 The context is passed to `SnapshotPipelineService`, which executes all registered snapshot steps.
 
@@ -233,10 +234,11 @@ For each target device, an entry is created in the syncOutbox table containing:
 ---
 
 ### SyncOutboxDeliveryService
-Delivers pending synchronization operations from the backend [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) to `Runtime` devices.
+Delivers pending synchronization operations from the backend [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) to `Runtime` devices.  
 
 #### Responsibilities
 - Periodically check for pending synchronization operations.
+- Delivers `device status` changes from the server to the `ADMIN` device.
 - Group pending operations by target device.
 - Deliver operations to the target device through [SyncGateway](#syncgateway).
 - Process pending operations in creation order for each device.
@@ -247,7 +249,9 @@ Delivers pending synchronization operations from the backend [sync_outbox](https
 ### retryPending()
 Runs automatically every second using the **`@Interval(1000)`** decorator.
 
-It finds all devices with unprocessed records in [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) and starts delivery for each device:
+- delegates device status delivery to [DeviceStatusDeliveryService](connections.md#devicestatusdeliveryservice);
+- finds all devices with unprocessed records in [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) and starts delivery for each device:
+
 ```ts
 @Interval(1000)
 async retryPending(): Promise<void>
@@ -430,6 +434,7 @@ Represents the shared context used during database snapshot generation.
 Contains:
 * `userId` — authenticated user identifier used to restrict snapshot data.
 * `language` — requested language for language-dependent data.
+* `deviceId` - current device `id`.
 * `data` — accumulated snapshot data produced by the pipeline.
 
 The context is passed through all registered snapshot steps and returned as the final database snapshot.

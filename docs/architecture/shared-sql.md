@@ -152,10 +152,15 @@ Only the current user's `id` is stored locally.
 Contains records directly owned by the current user.
 - `participants`
 - `competitions`
-- `device_status`
 - `global_state`
 
 Records are selected using `created_by_user_id`.
+
+- #### TABLE_DEVICE_STATUS
+Contains information about connected device and its active role within the system.
+- `device_status`
+
+Selects only records belonging to current device without `sent_at` fuild.
 
 - #### COMPETITION_RUNTIME_TABLES
 Contains dynamic data generated during competition execution.

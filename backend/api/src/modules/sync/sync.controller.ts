@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, HttpCode, HttpStatus, Query} from '@nestjs/common';
+import { Controller, Get, UseGuards, Query} from '@nestjs/common';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { CurrentUser } from '../../guards/current-user.decorator';
 import { SyncService } from './sync.service';
@@ -15,10 +15,12 @@ export class SyncController {
     async getSnapshot(
         @CurrentUser() user: any,
         @Query('language') language: string,
+        @Query('device_id') deviceId: string,
     ) {
         return this.syncService.getDatabaseSnapshot(
             user.id,
             language,
+            deviceId,
         );
     }
 }

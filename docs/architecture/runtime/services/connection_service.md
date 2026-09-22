@@ -6,6 +6,7 @@
   - [check()](#check)
   - [exitParameters()](#exitparameters)
   - [deleteDevices()](#deletedevices)
+- [DeviceReceiverService](#devicereceiverservice)
 - [DTOs](#dtos)
   - [DeviceParameters](#deviceparameters)
   - [ConnectionDto](#connectiondto)
@@ -150,6 +151,17 @@ The method is used by:
 
 ---
 
+### DeviceReceiverService
+Receives device status updates from the server on the ADMIN device.
+
+It:
+- listens for `device-status` events;
+- inserts new device status records or updates existing ones;
+- removes records marked as deleted;
+- sends an acknowledgment after the local database operation succeeds.
+
+---
+
 ### DTOs
 
 ### DeviceParameters
@@ -172,13 +184,20 @@ Defines the device and application parameters sent by the frontend when checking
 
 ```typescript
 export interface ConnectionDto {
+  id: string;
+  created_by_user_id: string;
   device_id: string;
   language: string;
   device_role: string | null;
   mode: string;
-  ip_address: string;
-  user_agent: string;
+  ip_address?: string;
+  user_agent?: string;
+  browser?: string;
   created_at: Date;
+  created_at_formatted?: string;
+  updated_at: Date;
+  sent_at?: Date | null;
+  is_deleted: boolean;
 }
 ```
 

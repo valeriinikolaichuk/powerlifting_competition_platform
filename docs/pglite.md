@@ -68,7 +68,7 @@ The following tables are available in the browser database:
   - [organization_results](database/calculated.md)
 
 - **System Runtime Tables**
-  - [device_status](database/system_runtime.md#device_status)
+  - [device_status](database/system_runtime.md#device_status) (not contain `sent_at` field)
   - [global_state](database/system_runtime.md#global_state)
  
 - **Management Tables**

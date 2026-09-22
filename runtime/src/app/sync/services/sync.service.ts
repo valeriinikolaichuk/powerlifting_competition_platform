@@ -13,6 +13,7 @@ import {
   COMPETITION_SESSION_TABLES, 
   COMPETITION_GROUP_TABLES, 
   CREATED_BY_USER_TABLES, 
+  TABLE_DEVICE_STATUS, 
   COMPETITION_RUNTIME_TABLES, 
   ORGANIZATION_RESULT_TABLES, 
 } from '#shared-sql';
@@ -38,6 +39,7 @@ export class SyncService {
     ...COMPETITION_SESSION_TABLES, 
     ...COMPETITION_GROUP_TABLES, 
     ...CREATED_BY_USER_TABLES, 
+    ...TABLE_DEVICE_STATUS, 
     ...COMPETITION_RUNTIME_TABLES, 
     ...ORGANIZATION_RESULT_TABLES,
   ];
@@ -67,13 +69,18 @@ export class SyncService {
 
     const urlParams = new URLSearchParams(window.location.search);
     const language = urlParams.get('lang')?.toUpperCase() ?? '';
+    const deviceId = localStorage.getItem('device_id') ?? '';
 
-    const params = new HttpParams().set('language', language);
+    const params = new HttpParams()
+      .set('language', language)
+      .set('device_id', deviceId);
 
     return await firstValueFrom(
       this.http.get<SnapshotDto>(
         '/api/sync/snapshot',
-        { params }
+        { 
+          params 
+        }
       )
     );
   }

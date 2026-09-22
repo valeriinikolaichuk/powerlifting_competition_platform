@@ -1,4 +1,5 @@
-import {Injectable, NotFoundException, UnauthorizedException,} from '@nestjs/common';
+import {Injectable, UnauthorizedException,} from '@nestjs/common';
+import { DeviceMode, DeviceRole, Language } from '@prisma/client';
 
 import { PrismaService } from '../prisma/prisma.service';
 import { DeviceParametersDto } from './dto/device-parameters-dto';
@@ -56,6 +57,16 @@ export class ConnectionsService {
 
     if (currentDevice) {
 
+      await this.prisma.deviceStatus.update({
+        where: {
+          id: currentDevice.id,
+        },
+        data: {
+          ip_address: ipAddress,
+          user_agent: dto.user_agent,
+        },
+      });
+
       const connections = await this.findConnectionsWithoutAdmin(userId);
 
       return {
@@ -84,18 +95,15 @@ export class ConnectionsService {
 
     /** LAN client does not exist yet.*/
 
-      await this.prisma.deviceStatus.create({
-        data: {
-          created_by_user_id: userId,
-          device_id: dto.device_id,
-          language: dto.language,
-          mode: 'LAN',
-          device_role: null,
-          ip_address: ipAddress,
-          user_agent: dto.user_agent,
-          is_deleted: false,
-        },
-      });
+      await this.createDeviceStatus(
+        userId,
+        dto.device_id,
+        dto.language,
+        'LAN',
+        null,
+        ipAddress,
+        dto.user_agent,
+      );
     }
 
     return {
@@ -170,18 +178,15 @@ export class ConnectionsService {
 
     if (!admin) {
 
-      await this.prisma.deviceStatus.create({
-        data: {
-          created_by_user_id: userId,
-          device_id: dto.device_id,
-          language: dto.language,
-          mode: 'ONLINE',
-          device_role: 'ADMIN',
-          ip_address: ipAddress,
-          user_agent: dto.user_agent,
-          is_deleted: false,
-        },
-      });
+      await this.createDeviceStatus(
+        userId,
+        dto.device_id,
+        dto.language,
+        'ONLINE',
+        'ADMIN',
+        ipAddress,
+        dto.user_agent,
+      );
 
       const connections = await this.findConnectionsWithoutAdmin(userId);
 
@@ -194,18 +199,15 @@ export class ConnectionsService {
     /** ADMIN already exists.
      * Register current ONLINE device without role.*/
 
-    await this.prisma.deviceStatus.create({
-      data: {
-        created_by_user_id: userId,
-        device_id: dto.device_id,
-        language: dto.language,
-        mode: 'ONLINE',
-        device_role: null,
-        ip_address: ipAddress,
-        user_agent: dto.user_agent,
-        is_deleted: false,
-      },
-    });
+    await this.createDeviceStatus(
+      userId,
+      dto.device_id,
+      dto.language,
+      'ONLINE',
+      null,
+      ipAddress,
+      dto.user_agent,
+    );
 
     const connections = await this.findConnectionsWithoutCurrentDevice(
       userId,
@@ -269,15 +271,42 @@ export class ConnectionsService {
     });
   }
 
+  private async createDeviceStatus(
+    userId: string,
+    deviceId: string,
+    language: Language,
+    mode: DeviceMode,
+    deviceRole: DeviceRole | null,
+    ipAddress: string | null | undefined,
+    userAgent: string,
+  ): Promise<void> {
+    await this.prisma.deviceStatus.create({
+      data: {
+        created_by_user_id: userId,
+        device_id: deviceId,
+        language,
+        mode,
+        device_role: deviceRole,
+        ip_address: ipAddress,
+        user_agent: userAgent,
+      },
+    });
+  }
+
   async deleteDevices(
     deviceIds: string[],
   ): Promise<void> {
 
-    await this.prisma.deviceStatus.deleteMany({
+    await this.prisma.deviceStatus.updateMany({
       where: {
         device_id: {
           in: deviceIds,
         },
+        is_deleted: false,
+      },
+      data: {
+        is_deleted: true,
+        updated_at: new Date(),
       },
     });
   }
