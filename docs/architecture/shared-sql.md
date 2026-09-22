@@ -39,14 +39,14 @@ export const SYNC_OPERATIONS = {
   DELETE_COMPETITION: DELETE_COMPETITION_SQL,
 } as const;
 ```
-These `SQL queries` are defined in [/queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/queries) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/systems/sync-system.md#synchronization-operations)  and corresponding individual operations on the frontend.
+These `SQL queries` are defined in [/queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/queries) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/services/sync-service.md#synchronization-operations)  and corresponding individual operations on the frontend.
 
 ---
 
 ### Shared DTOs
 Shared data transfer types define the data structures used by synchronization operations on both the frontend and backend. They provide a common contract for data exchanged between the two sides and prevent duplicate DTO definitions.
 
-These `Shared DTOs` are defined in [/dto](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/dto) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/systems/sync-system.md#synchronization-operations)  and corresponding individual operations on the frontend.
+These `Shared DTOs` are defined in [/dto](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/dto) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/services/sync-service.md#synchronization-operations)  and corresponding individual operations on the frontend.
 
 ### CompetitionData
 Represents the data required to create a competition.
@@ -69,7 +69,7 @@ Represents the data required to create a competition.
 ### Synchronization Table Configuration
 The synchronization system groups database tables according to their ownership, visibility, and relationship to competition data.
 
-These groups are defined in [sync.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/sync.config.ts) and are used by the backend [snapshot pipeline](backend/systems/sync.md#snapshot-steps) and frontend [SyncService](runtime/systems/sync-system.md#syncservice) to determine which tables must be synchronized and which selection rules must be applied.
+These groups are defined in [sync.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/sync.config.ts) and are used by the backend [snapshot pipeline](backend/systems/sync.md#snapshot-steps) and frontend [SyncService](runtime/services/sync-service.md#syncservice) to determine which tables must be synchronized and which selection rules must be applied.
 
 - #### STATIC_REFERENCE_TABLES
 Contains system-wide reference data that does not belong to a specific user or competition.

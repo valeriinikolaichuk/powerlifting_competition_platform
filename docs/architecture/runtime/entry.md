@@ -20,7 +20,7 @@
 - Opens the [connections popup](services/connection_service.md#connectionspopupcomponent) when existing connections are found.
 - Waits for the popup result using [PopupService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#popupservice).
 - Re-checks connections after a deletion.
-- Triggers the initial database synchronization through [SyncService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/sync-system.md#syncservice).
+- Triggers the initial database synchronization through [SyncService](services/sync-service.md#syncservice).
 - Displays a blocking [synchronization popup](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/popup-system.md#components) while the [database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) is being initialized.
 - Handles synchronization errors and allows the user to retry.
 - Selects the appropriate application flow between [AdminComponent](admin.md#admincomponent) and [RoleComponent](client.md#rolecomponent).
@@ -53,7 +53,7 @@ For a detailed description of the process, see ➡ [Runtime Entry Flow](https://
 ---
 
 - ### synchronize()
-Opens a blocking system popup showing `SynchronizingDatabaseComponent` and performs the local `pgLite` database synchronization via [SyncService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/sync-system.md#syncservice).
+Opens a blocking system popup showing `SynchronizingDatabaseComponent` and performs the local `pgLite` database synchronization via [SyncService](services/sync-service.md#syncservice).
 
 If synchronization succeeds, the popup closes, and the component proceeds to navigation.
 If synchronization fails, the component catches the error, closes the loader, and opens `RetryPopupComponent` with `SynchronizationErrorComponent`. 

@@ -38,8 +38,8 @@ Based on Angular signals and lazy-loaded `JSON` files, supporting multi-language
 ### [competition configuration](runtime/systems/competition-config-system.md)
 Manages the general information and configuration of competitions
 
-### [sync](runtime/systems/sync-system.md)
-A real-time state synchronization system that accepts updates and instantly broadcasts them to all other connected clients.
+### [sync](runtime/services/sync-service.md)
+A real-time state synchronization services that accept updates and instantly broadcasts them to all other connected clients.
 
 ---
 
@@ -354,7 +354,7 @@ This ensures that the `Runtime` works with the updated connection state.
 #### Navigation
 
 - Determines the next route based on `adminExists`.
-- Performs the initial database synchronization using [SyncService](runtime/systems/sync-system.md#syncservice);
+- Performs the initial database synchronization using [SyncService](runtime/services/sync-service.md#syncservice);
 
 The runtime uses Angular `lazy-loaded` route modules for the main application areas.
 
@@ -486,7 +486,7 @@ Routes are protected by session and entry guards, ensuring that only an appropri
 The `Synchronization System` uses a two-stage confirmation between the browser and the server.
 
 #### 1. Queue Processing
-- [SyncQueueService](runtime/systems/sync-system.md#syncqueueservice) runs synchronization every second.
+- [SyncQueueService](runtime/services/sync-service.md#syncqueueservice) runs synchronization every second.
 - Only one synchronization process can run at a time. The `syncPromise` property prevents concurrent queue processing.
 - Before sending records, the service waits for an active socket connection.
 - Records are loaded in `created_at` order and sent sequentially. Processing stops when a synchronization error occurs. 
@@ -511,7 +511,7 @@ WHERE processed_at IS NOT NULL
 The current processed record is intentionally kept for the next synchronization cycle. This allows the server to receive the `processed_at` value and mark the corresponding [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) record as processed by the browser.
 
 #### 2. Browser → Server
-[SyncQueueService](runtime/systems/sync-system.md#syncqueueservice) periodically reads records from [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) in `created_at` order and sends them to the server through `Socket.IO`.
+[SyncQueueService](runtime/services/sync-service.md#syncqueueservice) periodically reads records from [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) in `created_at` order and sends them to the server through `Socket.IO`.
 <pre>
 sync_queue
     │
@@ -537,7 +537,7 @@ sync_inbox
 The server returns a successful `ACK` only after the `transaction` is completed.
 
 #### 4. Browser Receives ACK
-After receiving the `ACK`, [SyncQueueService](runtime/systems/sync-system.md#syncqueueservice) marks the local queue record as `processed` and removes its payload.
+After receiving the `ACK`, [SyncQueueService](runtime/services/sync-service.md#syncqueueservice) marks the local queue record as `processed` and removes its payload.
 <pre>
 sync_queue
     │
@@ -599,7 +599,7 @@ WHERE processed_at IS NOT NULL
 Records are delivered in `created_at` order for each device.
 
 #### 10. Receiving Device
-[SyncReceiverService](runtime/systems/sync-system.md#syncreceiverservice) checks whether the sync_id has already been processed.
+[SyncReceiverService](runtime/services/sync-service.md#syncreceiverservice) checks whether the sync_id has already been processed.
 
 If the record already exists in [sync_processed](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_processed), the synchronization operation is not executed again.
 

@@ -311,7 +311,7 @@ The competition is created using the `#shared-sql` operation:
 The operation receives the `#shared-sql` DTO [competition data](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#competitiondata) together with the current user ID.
 
 #### Synchronization Queue
-After the competition is created locally, the service registers a synchronization operation through [syncQueueService.addQueue](sync-system.md#addqueue).
+After the competition is created locally, the service registers a synchronization operation through [syncQueueService.addQueue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/sync-service.md#addqueue).
 
 The queued operation contains:
 
@@ -323,7 +323,7 @@ The queued operation contains:
 
 The operation remains in the local `synchronization queue` until it is processed by the `synchronization system`.  
 
-After the `transaction` is successfully committed, the [SyncQueueService](sync-system.md#sync) automatically detects the pending operation and sends it to the backend.
+After the `transaction` is successfully committed, the [SyncQueueService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/sync-service.md#sync) automatically detects the pending operation and sends it to the backend.
 
 ---
 
