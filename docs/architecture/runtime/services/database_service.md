@@ -15,7 +15,7 @@ Manages the local `PGlite` database lifecycle and provides a centralized interfa
 * provides a generic `query()` method for executing `SQL` statements.
 
 The service is located in the `database/` directory and is used by `Runtime` services that work directly with the local database.  
-The database migrations are defined in [pglite.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/database/services/pglite.config.ts) and executed by `PgliteService` during database initialization.
+The database migrations are defined in [pglite.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/database/pglite.config.ts) and executed by `PgliteService` during database initialization.
 
 - ### initialize()
 Creates the `local database` only once during the `Runtime` lifecycle.

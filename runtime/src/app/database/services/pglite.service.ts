@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
-import { migrationFiles } from './pglite.config';
+import { migrationFiles } from '../pglite.config';
 import { PopupService } from '../../popup/services/popup.service';
 import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
 import { CreatingDatabaseComponent } from '../../popup/components/system-popups/creating-database/creating-database.component';

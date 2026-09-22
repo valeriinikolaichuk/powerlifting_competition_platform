@@ -6,14 +6,14 @@ export const routes: Routes = [
     {
         path: 'admin',
         loadChildren: () =>
-            import('./admin/admin.routes')
+            import('./components/admin/admin.routes')
             .then(m => m.ADMIN_ROUTES),
         canActivate: [entryGuard],
     },
     {
         path: 'client',
         loadChildren: () =>
-            import('./client/client.routes')
+            import('./components/client/client.routes')
             .then(m => m.CLIENT_ROUTES),
         canActivate: [entryGuard],
     },

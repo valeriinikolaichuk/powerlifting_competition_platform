@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
-import { TranslationService } from '../../i18n/services/translation.service';
+import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
+import { TranslationService } from '../../../i18n/services/translation.service';
 
-import { PopupService } from '../../popup/services/popup.service';
-import { CompetitionPopupComponent } from '../../popup/components/competition-popup/competition-popup.component';
-import { CreateCompetitionComponent } from '../../popup/components/competition-popup/create-competition/create-competition.component';
+import { PopupService } from '../../../popup/services/popup.service';
+import { CompetitionPopupComponent } from '../../../popup/components/competition-popup/competition-popup.component';
+import { CreateCompetitionComponent } from '../../../popup/components/competition-popup/create-competition/create-competition.component';
 
 @Component({
   selector: 'app-main',

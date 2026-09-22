@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
-import { ExitService } from '../../services/exit.service';
+import { ExitService } from '../../exit.service';
 
-import { TranslatePipe } from '../../i18n/pipes/translate.pipe';
-import { TranslationService } from '../../i18n/services/translation.service';
+import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
+import { TranslationService } from '../../../i18n/services/translation.service';
 
 @Component({
   selector: 'app-weighing-in',

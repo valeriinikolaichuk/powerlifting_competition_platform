@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 
-import { sessionGuard } from '../session/guards/session-guard-guard';
+import { sessionGuard } from '../../session/guards/session-guard-guard';
 
 import { RoleComponent } from './role/role.component';
 import { WeighingInComponent } from './weighing-in.component/weighing-in.component';
