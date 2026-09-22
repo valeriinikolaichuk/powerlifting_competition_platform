@@ -152,7 +152,7 @@ The method is used by:
 ---
 
 ### DeviceReceiverService
-Receives device status updates from the server on the ADMIN device.
+Receives [device status updates](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#devicestatusdeliveryservice) from the server on the `ADMIN` device.
 
 It:
 - listens for `device-status` events;
