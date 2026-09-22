@@ -55,7 +55,7 @@ Contains `route-level components` representing the client interfaces.
 
 ### Services
 
-### [core services](runtime/services/entry.md)   
+### [core services](runtime/entry.md)   
 Starts and ends the `Runtime` initialization process.
 
 ### [connections](runtime/services/connection_service.md)
@@ -235,7 +235,7 @@ If the session is indeed expired, a new valid record is created inside the runti
   - **Heartbeat Activation.** The service triggers the `startHeartbeat()` method to regularly ping and keep the current session active.
   - **Wake-Up Listener Activation.** The service launches the `startWakeUpListener()` method to monitor system wake-up events (e.g., when the device wakes up from sleep mode).
 
-- The [EntryService](runtime/services/entry.md)
+- The [EntryService](runtime/entry.md)
   - creates the current device parameters using [ConnectionsService](runtime/services/connection_service.md#createparameters).
     - `language`
     - `mode`
@@ -334,7 +334,7 @@ The `device_status` table therefore acts as the **central connection registry**,
 **5. After receiving `ConnectionsResultDto`:
 
 - If `connections` is empty, the `EntryService` [navigates](#navigation) directly without displaying the connections popup.
-- If existing connections are returned the [EntryService](runtime/services/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
+- If existing connections are returned the [EntryService](runtime/entry.md) opens the `ConnectionsPopupComponent` and passes the returned connections to the popup. The user can select devices and delete their connections.
   - The popup receives the existing connections through `POPUP_DATA` and passes them to the dynamically loaded `ConnectionsPopupComponent`.
   - [ConnectionsPopupComponent](runtime/services/connection_service.md#connectionspopupcomponent) provides the user interface for selecting and deleting device connections.
   - The component:
@@ -345,7 +345,7 @@ The `device_status` table therefore acts as the **central connection registry**,
     - Calls [ConnectionsService.deleteDevices()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#deletedevices) with the selected IDs.
     - Returns the `deletedDeviceIds` to the parent popup.
 - If the popup is closed without deleting any devices the Runtime proceeds to the next step.
-- If devices were deleted, the [EntryService](runtime/services/entry.md) performs the connection check again:
+- If devices were deleted, the [EntryService](runtime/entry.md) performs the connection check again:
 ```
 await this.check(dto);
 ```

@@ -18,7 +18,7 @@ It initializes the local `pgLite` database, loads the translations required by t
 **UI**  
 The page uses a full-screen background video and provides two actions:
 - `ADMIN` — opens the administrator [main](#maincomponent) page.
-- `EXIT` — leaves the current Runtime session through [ExitService](services/entry.md#exitservice).
+- `EXIT` — leaves the current Runtime session through [ExitService](entry.md#exitservice).
 
 #### Responsibilities
 - [Initializes](services/database_service.md#pgliteservice) the local [pgLite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
@@ -26,7 +26,7 @@ The page uses a full-screen background video and provides two actions:
 - Loads the translations required by the administrator entry page.
 - Displays a loading state while the local database is being initialized.
 - Navigates to the administrator [main](#maincomponent) page.
-- Delegates the exit workflow to [ExitService](services/entry.md#exitservice).
+- Delegates the exit workflow to [ExitService](entry.md#exitservice).
 - Loads the `pages/entry` translation scope using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md)
 
 While initialization is in progress, the page displays a loading indicator.
