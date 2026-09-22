@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
-import { SyncQueueService } from '../../../sync/services/sync-queue.service';
+import { SyncQueueService } from '../../../services/sync/services/sync-queue.service';
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../i18n/services/translation.service';
 import { ExitService } from '../../exit.service';

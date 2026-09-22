@@ -7,7 +7,7 @@ import { ConnectionDto } from '../services/connections/dto/connection-dto';
 import { PopupService } from '../popup/services/popup.service';
 import { ConnectionsPopupComponent } from '../popup/components/connections-popup/connections-popup.component';
 
-import { SyncService } from '../sync/services/sync.service';
+import { SyncService } from '../services/sync/services/sync.service';
 import { SystemPopupComponent } from '../popup/components/system-popups/system-popup.component';
 import { SynchronizingDatabaseComponent } from '../popup/components/system-popups/synchronizing-database/synchronizing-database.component';
 import { RetryPopupComponent } from '../popup/components/retry-popup/retry-popup.component';

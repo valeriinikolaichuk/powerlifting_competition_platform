@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
-import { PgliteService } from '../../database/services/pglite.service';
+import { PgliteService } from '../../../database/services/pglite.service';
 import { SocketService } from './socket.service';
 import { SyncOperationFactory } from './sync-operations/sync-operation-factory';
 

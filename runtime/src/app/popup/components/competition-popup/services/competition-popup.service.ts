@@ -7,7 +7,7 @@ import { SYNC_OPERATIONS } from '#shared-sql';
 import { PgliteService } from '../../../../database/services/pglite.service';
 import { UserService } from '../../../../database/services/user.service';
 
-import { SyncQueueService } from '../../../../sync/services/sync-queue.service';
+import { SyncQueueService } from '../../../../services/sync/services/sync-queue.service';
 
 
 @Injectable({

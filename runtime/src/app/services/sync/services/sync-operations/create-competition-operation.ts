@@ -4,9 +4,9 @@ import type { CompetitionData } from '#shared-sql';
 import { SYNC_OPERATIONS } from '#shared-sql';
 
 import { SyncOperationInterface } from './sync-operation.interface';
-import { SyncOutboxDto } from '../../../services/sync/dto/sync-outbox.dto';
+import { SyncOutboxDto } from '../../dto/sync-outbox.dto';
 
-import { UserService } from '../../../database/services/user.service';
+import { UserService } from '../../../../database/services/user.service';
 
 @Injectable({
   providedIn: 'root',
