@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
 import { RuntimeSessionService } from '../session/services/runtime-session.service';
-import { ConnectionsService } from '../connections/services/connections.service';
+import { ConnectionsService } from '../services/connections/services/connections.service';
 
 @Injectable({
   providedIn: 'root',

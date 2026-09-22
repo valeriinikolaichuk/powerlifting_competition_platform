@@ -7,8 +7,8 @@ import { TranslationService } from '../../../i18n/services/translation.service';
 
 import { ConnectionsPopupService } from './services/connections-popup.service';
 
-import { ConnectionsService } from '../../../connections/services/connections.service';
-import { ConnectionDto } from '../../../connections/dto/connection-dto';
+import { ConnectionsService } from '../../../services/connections/services/connections.service';
+import { ConnectionDto } from '../../../services/connections/dto/connection-dto';
 
 @Component({
   selector: 'app-connections-popup',

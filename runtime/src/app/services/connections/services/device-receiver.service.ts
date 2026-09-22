@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { SocketService } from '../../sync/services/socket.service';
-import { PgliteService } from '../../database/services/pglite.service';
+import { SocketService } from '../../../sync/services/socket.service';
+import { PgliteService } from '../../../database/services/pglite.service';
 import { ConnectionDto } from '../dto/connection-dto';
 
 @Injectable({

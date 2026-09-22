@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { PGlite } from '@electric-sql/pglite';
 
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { DeviceParameters } from '../dto/device-parameters';
 import { LanTokenService } from '../../cookies/lan-token.service';
 import { ConnectionsResultDto } from '../dto/connections-result-dto';
 import { PgliteDeviceParameters } from '../dto/pglite-device-parameters';
-import { PgliteService } from '../../database/services/pglite.service';
+import { PgliteService } from '../../../database/services/pglite.service';
 
 @Injectable({
   providedIn: 'root',

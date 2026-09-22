@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ConnectionsService } from '../connections/services/connections.service';
-import { DeviceParameters } from '../connections/dto/device-parameters';
-import { ConnectionDto } from '../connections/dto/connection-dto';
+import { ConnectionsService } from '../services/connections/services/connections.service';
+import { DeviceParameters } from '../services/connections/dto/device-parameters';
+import { ConnectionDto } from '../services/connections/dto/connection-dto';
 import { PopupService } from '../popup/services/popup.service';
 import { ConnectionsPopupComponent } from '../popup/components/connections-popup/connections-popup.component';
 
