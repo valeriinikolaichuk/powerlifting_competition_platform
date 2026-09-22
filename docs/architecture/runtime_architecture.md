@@ -38,9 +38,6 @@ Based on Angular signals and lazy-loaded `JSON` files, supporting multi-language
 ### [competition configuration](runtime/systems/competition-config-system.md)
 Manages the general information and configuration of competitions
 
-### [sync](runtime/services/sync-service.md)
-A real-time state synchronization services that accept updates and instantly broadcasts them to all other connected clients.
-
 ---
 
 ### Components
@@ -63,6 +60,9 @@ The communication layer between the `Angular application` and the [backend conne
 
 ### [cookies](runtime/services/cookies.md)
 Ensures that the `LAN` runtime has an authentication session before performing connection checks.
+
+### [sync](runtime/services/sync-service.md)
+A real-time state synchronization services that accept updates and instantly broadcast them to all other connected clients.
 
 ---
 
@@ -483,7 +483,7 @@ Routes are protected by session and entry guards, ensuring that only an appropri
 
 ### Synchronization Flow
 
-The `Synchronization System` uses a two-stage confirmation between the browser and the server.
+The `Synchronization Services` use a two-stage confirmation between the browser and the server.
 
 #### 1. Queue Processing
 - [SyncQueueService](runtime/services/sync-service.md#syncqueueservice) runs synchronization every second.

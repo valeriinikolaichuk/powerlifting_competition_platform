@@ -1,5 +1,5 @@
-## Synchronization System
-A real-time state synchronization system that accepts updates, persists them to the database, and instantly broadcasts them to all other connected clients.
+## Synchronization Services
+A real-time state synchronization services that accept updates, persist them to the database, and instantly broadcast them to all other connected clients.
 
 <details open="open">
 <summary>Contents</summary>  

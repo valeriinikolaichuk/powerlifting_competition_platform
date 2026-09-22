@@ -321,7 +321,7 @@ The queued operation contains:
 * Competition data payload.
 * Update timestamp.
 
-The operation remains in the local `synchronization queue` until it is processed by the `synchronization system`.  
+The operation remains in the local `synchronization queue` until it is processed by the `synchronization service`.  
 
 After the `transaction` is successfully committed, the [SyncQueueService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/sync-service.md#sync) automatically detects the pending operation and sends it to the backend.
 
