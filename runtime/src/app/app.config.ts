@@ -4,7 +4,7 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { routes } from './app.routes';
 
-import { SYNC_OPERATIONS } from './sync/tokens/sync-operation.token';
+import { SYNC_OPERATIONS } from './services/sync/tokens/sync-operation.token';
 import { CreateCompetitionOperation } from './sync/services/sync-operations/create-competition-operation';
 
 export const appConfig: ApplicationConfig = {

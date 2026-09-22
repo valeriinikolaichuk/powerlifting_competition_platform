@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 
 import { SyncOperationInterface } from './sync-operation.interface';
-import { SYNC_OPERATIONS } from '../../tokens/sync-operation.token';
+import { SYNC_OPERATIONS } from '../../../services/sync/tokens/sync-operation.token';
 
 @Injectable({
   providedIn: 'root',

@@ -1,4 +1,4 @@
-import { SyncOutboxDto } from "../../dto/sync-outbox.dto";
+import { SyncOutboxDto } from "../../../services/sync/dto/sync-outbox.dto";
 
 export interface SyncOperationInterface {
 

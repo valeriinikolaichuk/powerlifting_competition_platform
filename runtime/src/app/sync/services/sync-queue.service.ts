@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { PgliteService } from '../../database/services/pglite.service';
 import { SocketService } from './socket.service';
-import { SyncQueueItem } from '../dto/sync-queue-item';
+import { SyncQueueItem } from '../../services/sync/dto/sync-queue-item';
 
 @Injectable({
   providedIn: 'root',

@@ -20,7 +20,7 @@ import {
 
 import { PgliteService } from '../../database/services/pglite.service';
 import { SyncQueueService } from './sync-queue.service';
-import { SnapshotDto } from '../dto/snapshot.dto';
+import { SnapshotDto } from '../../services/sync/dto/snapshot.dto';
 
 @Injectable({
   providedIn: 'root',
