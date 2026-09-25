@@ -10,7 +10,9 @@ export class SyncProcessorService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly syncOperationFactory: SyncOperationFactoryService,
-    ) {}
+    ) {
+        console.log('SyncProcessorService initialized');
+    }
 
     @Interval(1000)
     async processPending(): Promise<void> {

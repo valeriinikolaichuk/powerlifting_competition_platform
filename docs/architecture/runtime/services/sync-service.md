@@ -86,7 +86,7 @@ Synchronization Completed
 ---
 
 ### SocketService
-Provides the `Socket.IO` connection between the Runtime application and the backend synchronization server.
+Provides the `Socket.IO` connection between the `Runtime` application and the backend synchronization server.
 ```text
 SyncQueueService
        │
@@ -101,10 +101,13 @@ Backend Sync Gateway
 `SocketService` does not implement synchronization logic itself. It only provides the communication channel used by the synchronization services.
 
 #### Responsibilities
+- Obtains the current `deviceId` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice).
 - Establish a `Socket.IO` connection to the backend `API`.
 - Send the current device `ID` during connection initialization.
+- The backend uses the received `deviceId` to place the socket into the corresponding `Socket.IO room`.
 - Expose the active socket instance to other services.
 - Provide a method for waiting until the socket connection is established.
+- Rejects with a timeout error if the connection is not established within `5 seconds`.
 
 #### Initialization
 When the service is created, it retrieves the device ID from `localStorage` and establishes a `Socket.IO` connection using the backend API URL from the application environment.
@@ -351,7 +354,7 @@ The package provides:
 * [Shared DTOs/types](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#shared-dtos) describing the data exchanged between the frontend and backend.
 * **Shared operation definitions** through `SYNC_OPERATIONS`.
 
-Operation implementations can use additional services when required, such as [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/database_service.md#userservice) for resolving the local `user ID`.
+Operation implementations can use additional services when required, such as [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#userservice) for resolving the local `user ID`.
 
 ---
 

@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ConnectionsService } from '../services/connections/services/connections.service';
-import { DeviceParameters } from '../services/connections/dto/device-parameters';
-import { ConnectionDto } from '../services/connections/dto/connection-dto';
-import { PopupService } from '../popup/services/popup.service';
-import { ConnectionsPopupComponent } from '../popup/components/connections-popup/connections-popup.component';
+import { ConnectionsService } from '../connections/services/connections.service';
+import { DeviceParameters } from '../connections/dto/device-parameters';
+import { ConnectionDto } from '../connections/dto/connection-dto';
+import { PopupService } from '../../popup/services/popup.service';
+import { ConnectionsPopupComponent } from '../../popup/components/connections-popup/connections-popup.component';
 
-import { SyncService } from '../services/sync/services/sync.service';
-import { SystemPopupComponent } from '../popup/components/system-popups/system-popup.component';
-import { SynchronizingDatabaseComponent } from '../popup/components/system-popups/synchronizing-database/synchronizing-database.component';
-import { RetryPopupComponent } from '../popup/components/retry-popup/retry-popup.component';
-import { SynchronizationErrorComponent } from '../popup/components/retry-popup/synchronization-error/synchronization-error.component';
+import { SyncService } from '../sync/services/sync.service';
+import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
+import { SynchronizingDatabaseComponent } from '../../popup/components/system-popups/synchronizing-database/synchronizing-database.component';
+import { RetryPopupComponent } from '../../popup/components/retry-popup/retry-popup.component';
+import { SynchronizationErrorComponent } from '../../popup/components/retry-popup/synchronization-error/synchronization-error.component';
+
+import { PgliteService } from '../../database/services/pglite.service';
+import { DeviceRoleService } from '../connections/services/device-role.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +26,8 @@ export class EntryService {
     private readonly connectionsService: ConnectionsService,
     public popup: PopupService,
     private readonly syncService: SyncService,
+    private readonly pgliteService: PgliteService,
+    public deviceRoleService: DeviceRoleService,
   ) {}
 
   async entry(): Promise<void> {
@@ -45,6 +50,34 @@ export class EntryService {
     await this.router.navigate(
       adminExists ? ['/client'] : ['/admin']
     );
+  }
+
+  async clientRole(role: string): Promise<void> {
+
+    const result = await this.pgliteService.query<{ id: string }>(
+      `
+        SELECT id
+        FROM device_status 
+        LIMIT 1
+      `
+    );
+
+    const id = result.rows[0].id;
+    const now = new Date().toISOString();
+
+    const success = await this.deviceRoleService.updateRole({
+      id: id,
+      clientRole: role,
+      updated_at: now,
+    });
+
+    if (success) {
+      sessionStorage.setItem('device_role', role);
+
+      await this.router.navigate(
+        ['/client/'+role.toLowerCase()]
+      );
+    } 
   }
 
   private async check(

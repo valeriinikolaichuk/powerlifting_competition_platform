@@ -64,6 +64,7 @@ export class ConnectionsService {
         data: {
           ip_address: ipAddress,
           user_agent: dto.user_agent,
+          updated_at: new Date(),
         },
       });
 
@@ -95,6 +96,8 @@ export class ConnectionsService {
 
     /** LAN client does not exist yet.*/
 
+      let updatedAt = new Date();
+
       await this.createDeviceStatus(
         userId,
         dto.device_id,
@@ -103,6 +106,7 @@ export class ConnectionsService {
         null,
         ipAddress,
         dto.user_agent,
+        updatedAt,
       );
     }
 
@@ -177,6 +181,7 @@ export class ConnectionsService {
      * Current device becomes ADMIN.*/
 
     if (!admin) {
+      let updatedAt = new Date();
 
       await this.createDeviceStatus(
         userId,
@@ -186,6 +191,7 @@ export class ConnectionsService {
         'ADMIN',
         ipAddress,
         dto.user_agent,
+        updatedAt,
       );
 
       const connections = await this.findConnectionsWithoutAdmin(userId);
@@ -198,6 +204,7 @@ export class ConnectionsService {
 
     /** ADMIN already exists.
      * Register current ONLINE device without role.*/
+    let updatedAt = new Date();
 
     await this.createDeviceStatus(
       userId,
@@ -207,6 +214,7 @@ export class ConnectionsService {
       null,
       ipAddress,
       dto.user_agent,
+      updatedAt,
     );
 
     const connections = await this.findConnectionsWithoutCurrentDevice(
@@ -279,6 +287,7 @@ export class ConnectionsService {
     deviceRole: DeviceRole | null,
     ipAddress: string | null | undefined,
     userAgent: string,
+    updatedAt: Date,
   ): Promise<void> {
     await this.prisma.deviceStatus.create({
       data: {
@@ -289,11 +298,26 @@ export class ConnectionsService {
         device_role: deviceRole,
         ip_address: ipAddress,
         user_agent: userAgent,
+        updated_at: updatedAt,
       },
     });
   }
 
   async deleteDevices(
+    deviceIds: string[],
+  ): Promise<void> {
+
+    await this.prisma.deviceStatus.deleteMany({
+      where: {
+        device_id: {
+          in: deviceIds,
+        },
+        is_deleted: false,
+      },
+    });
+  }
+
+  async softDeleteDevices(
     deviceIds: string[],
   ): Promise<void> {
 

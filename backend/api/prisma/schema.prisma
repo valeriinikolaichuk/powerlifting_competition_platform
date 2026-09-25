@@ -1319,7 +1319,7 @@ model DeviceStatus {
   user_agent          String?
 
   created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  updated_at          DateTime
   sent_at             DateTime?
 
   is_deleted          Boolean @default(false)

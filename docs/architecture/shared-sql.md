@@ -13,6 +13,7 @@ It provides a single source of truth for database-related constants and `SQL` lo
 - [Synchronization Operations](#synchronization-operations)
 - [Shared DTOs](#shared-dtos)
   - [CompetitionData](#competitiondata)
+  - [DeviceRole](#devicerole)
 - [Synchronization Table Configuration](#synchronization-table-configuration)
 
 </details>
@@ -63,6 +64,16 @@ Represents the data required to create a competition.
 - division
 - federationCategoryIds
 - updated_at
+
+### DeviceRole
+```ts
+export interface DeviceRole {
+
+    id: string;
+    clientRole: string | null;
+    updated_at: string;
+}
+```
 
 ---
 

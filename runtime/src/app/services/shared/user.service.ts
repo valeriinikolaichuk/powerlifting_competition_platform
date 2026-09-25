@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PgliteService } from './pglite.service';
+import { PgliteService } from '../../database/services/pglite.service';
 
 @Injectable({
   providedIn: 'root',

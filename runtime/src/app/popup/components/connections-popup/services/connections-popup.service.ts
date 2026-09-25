@@ -31,12 +31,12 @@ export class ConnectionsPopupService {
     return 'Unknown';
   }
 
-  formatDate(createdAt: Date): string {
-
-    const formatted = createdAt.toISOString()
+  formatDate(createdAt: Date | string): string {
+    
+    const formatted = new Date(createdAt).toISOString()
       .replace('T', ' ')
       .replace(/\.\d{3}Z$/, '');
-      
+
     return formatted;
-  }  
+  }
 }

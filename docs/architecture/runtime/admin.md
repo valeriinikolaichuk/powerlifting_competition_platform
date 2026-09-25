@@ -18,9 +18,10 @@ It initializes the local `pgLite` database, loads the translations required by t
 **UI**  
 The page uses a full-screen background video and provides two actions:
 - `ADMIN` — opens the administrator [main](#maincomponent) page.
-- `EXIT` — leaves the current Runtime session through [ExitService](entry.md#exitservice).
+- `EXIT` — leaves the current Runtime session through [ExitService](entry.md#backtomode).
 
 #### Responsibilities
+- Injects [DeviceReceiverService](services/connection_service.md#devicereceiverservice) to initialize the listener for incoming `device-status` events.
 - [Initializes](services/database_service.md#pgliteservice) the local [pgLite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
 - starts the [SyncQueueService](services/sync-service.md#syncqueueservice), which continuously checks the local [sync_queue](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#sync_queue) and automatically sends pending synchronization operations to the backend.
 - Loads the translations required by the administrator entry page.

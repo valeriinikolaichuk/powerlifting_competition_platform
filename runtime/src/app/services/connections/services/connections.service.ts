@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { PGlite } from '@electric-sql/pglite';
 
 import { environment } from '../../../../environments/environment';
+import { DeviceIdService } from '../../shared/device-id.service';
 import { DeviceParameters } from '../dto/device-parameters';
 import { LanTokenService } from '../../cookies/lan-token.service';
 import { ConnectionsResultDto } from '../dto/connections-result-dto';
@@ -18,6 +19,7 @@ export class ConnectionsService {
   private pg!: PGlite;
   
   constructor(
+    private readonly deviceIdService: DeviceIdService,
     private readonly http: HttpClient,
     private readonly lanTokenService:LanTokenService,
     private readonly pgliteService: PgliteService,
@@ -30,20 +32,11 @@ export class ConnectionsService {
   async createParameters(): Promise<DeviceParameters> {
 
     const params = new URLSearchParams(window.location.search);
-
     const language = params.get('lang')?.toUpperCase() ?? '';
-    const mode = params.get('mode')?.toUpperCase() ?? '';
 
-    let deviceId = localStorage.getItem('device_id');
-
-    if (!deviceId) {
-      deviceId = crypto.randomUUID();
-      localStorage.setItem('device_id', deviceId);
-    }
-
-    if (mode === 'LAN' && window.location.hostname === 'localhost') {
-        deviceId = params.get('device_id') ?? '';
-    }
+    const deviceParams = this.deviceIdService.getDeviceId();
+    const mode = deviceParams.mode.toUpperCase() ?? '';
+    const deviceId = deviceParams.deviceId;
 
     if (mode === 'LAN') {
       await firstValueFrom(
@@ -74,17 +67,14 @@ export class ConnectionsService {
   async exitParameters(): Promise<DeviceParameters> {
 
     const params = new URLSearchParams(window.location.search);
-  
     const lang = params.get('lang') ?? '';
-    const mode = params.get('mode') ?? '';
 
-    let deviceId = localStorage.getItem('device_id');
+    const deviceParams = this.deviceIdService.getDeviceId();
+    const mode = deviceParams.mode.toUpperCase() ?? '';
+    const deviceId = deviceParams.deviceId;
 
     if (lang !== '' && mode !== '') {
-      if (mode === 'lan' && window.location.hostname === 'localhost') {
-        deviceId = params.get('device_id') ?? '';
-      }
-
+   
       return {
         device_id: deviceId!,
         language: lang,
@@ -126,7 +116,23 @@ export class ConnectionsService {
   ): Promise<void> {
     await firstValueFrom(
       this.http.delete(
-        `${environment.apiUrl}/api/connections/entry`,
+        `${environment.apiUrl}/api/connections/exit`,
+        {
+          body: {
+            device_ids: deviceIds,
+          },
+          withCredentials: true,
+        },
+      ),
+    );
+  }
+
+  async softDeleteDevices(
+    deviceIds: string[],
+  ): Promise<void> {
+    await firstValueFrom(
+      this.http.post(
+        `${environment.apiUrl}/api/connections/exit-client`,
         {
           body: {
             device_ids: deviceIds,

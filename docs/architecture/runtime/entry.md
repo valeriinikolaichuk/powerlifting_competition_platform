@@ -1,4 +1,4 @@
-## Entry/Exit  Services
+## Sared Services
 Starts and ends the `Runtime` initialization process.
 
 <details open="open">
@@ -6,6 +6,9 @@ Starts and ends the `Runtime` initialization process.
 
 - [EntryService](#entryservice)
 - [ExitService](#exitservice)
+- [DeviceIdService](#deviceidservice)
+  - [DeviceParamsDto](#deviceparamsdto)
+- [UserService](#userservice)
 
 </details>
 
@@ -34,6 +37,26 @@ The initial entry point of the `Runtime`.
 - Checks whether a device role already exists in `sessionStorage`.
 - If the device is already assigned the `ADMIN` role, the local database is synchronized and the device is redirected to [/admin](admin.md#admincomponent).
 - Otherwise, the service creates the device connection parameters using [ConnectionsService.createParameters()](services/connection_service.md#createparameters) and starts the connection check through `check()`.
+
+---
+
+- ### clientRole()
+Updates the current device role and navigates to the corresponding client view.
+
+1. Retrieves the current device record from the local `device_status` table.
+2. Generates a new `updated_at` timestamp.
+3. Sends the role update through [DeviceRoleService](services/connection_service.md#deviceroleservice).
+4. Stores the selected role in `sessionStorage`.
+5. Navigates to the corresponding client route after a successful update.
+
+#### Parameters
+
+- `role` — the new device role.
+
+#### Example
+
+```ts
+await clientRole('SCOREBOARD');
 
 ---
 
@@ -96,5 +119,50 @@ Provides the centralized exit workflow for the `Runtime` application.
 
 - #### clearCookies()
 Sends a request to the backend [${environment.apiUrl}/api/logout](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/authentication.md#authcontroller) to clear the  'LAN' authentication token cookies.
+
+- #### backToRole()
+  - Retrieves the current device status record from the local `device_status` table.
+  - Updates the device role to `null` through [DeviceRoleService](services/connection_service.md#deviceroleservice).
+  - Removes the current `device_role` from `sessionStorage` after a successful update.
+  - Navigates back to the `/client` route.
+
+---
+
+### DeviceIdService
+Provides the device `ID` and connection mode used by the `Runtime` application.
+
+- #### getDeviceId()
+Retrieves the `device ID` from `localStorage`.
+
+- If no device ID exists, generates a new `UUID` and stores it in `localStorage`.
+- In `LAN` mode on `localhost`, uses the `device_id` provided in the `URL` parameters and stores it in `localStorage`.
+- Returns the device ID and connection mode.
+
+`URL` parameters:
+* `mode` — connection mode (`lan`, `online`, etc.).
+* `device_id` — device ID used for a LAN `localhost` connection.
+
+Returns [DeviceParamsDto](#deviceparamsdto)
+
+---
+
+### DeviceParamsDto
+
+* deviceId: string;
+* mode: string;
+
+---
+
+### UserService
+Provides access to user-related data stored in the local PGlite database.
+
+- ### getUserId()
+Retrieves the identifier of the current user from the local users table.
+```
+SELECT id
+FROM users
+LIMIT 1
+```
+The `Runtime` database [users](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#users) table contains the currently synchronized `user` record.
 
 ---

@@ -35,6 +35,8 @@ export class SyncQueueService {
     createdAt: string,
   ): Promise<void> {
 
+    console.log(payload);
+
     await tx.query(
       `
         INSERT INTO sync_queue (

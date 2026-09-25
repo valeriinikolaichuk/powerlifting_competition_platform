@@ -10,7 +10,9 @@ export class SyncInboxService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly syncOutboxService: SyncOutboxService,
-    ) {}
+    ) {
+        console.log('SyncInboxService initialized');
+    }
 
     async receive(data: SyncQueueDto): Promise<void> {
 

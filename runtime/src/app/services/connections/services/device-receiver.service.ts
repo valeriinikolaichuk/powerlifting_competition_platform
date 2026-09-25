@@ -17,13 +17,19 @@ export class DeviceReceiverService {
   }
 
   private listen(): void {
+    console.log('SyncReceiverService: listen()');
+
     this.socketService.socket.on(
       'device-status',
       async (
         device: ConnectionDto,
         callback: () => void,
       ) => {
+        
+        console.log(device);
+
         try {
+
           if (device.is_deleted) {
             await this.pgliteService.query(
               `
@@ -50,12 +56,11 @@ export class DeviceReceiverService {
                 user_agent,
                 created_at,
                 updated_at,
-                sent_at,
                 is_deleted
               )
               VALUES (
                 $1, $2, $3, $4, $5, $6,
-                $7, $8, $9, $10, $11, $12
+                $7, $8, $9, $10, $11
               )
               ON CONFLICT (id)
               DO UPDATE SET
@@ -68,7 +73,6 @@ export class DeviceReceiverService {
                 user_agent = EXCLUDED.user_agent,
                 created_at = EXCLUDED.created_at,
                 updated_at = EXCLUDED.updated_at,
-                sent_at = EXCLUDED.sent_at,
                 is_deleted = EXCLUDED.is_deleted
             `,
             [
@@ -82,7 +86,6 @@ export class DeviceReceiverService {
               device.user_agent ?? null,
               device.created_at,
               device.updated_at,
-              device.sent_at ?? null,
               device.is_deleted,
             ],
           );

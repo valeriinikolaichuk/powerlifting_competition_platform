@@ -5,7 +5,7 @@ import { TranslationService } from '../../../../i18n/services/translation.servic
 import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 import { PopupService } from '../../../services/popup.service';
-import { CompetitionPopupService } from '../services/competition-popup.service';
+import { CompetitionConfigService } from '../../../../services/core/competition-config.service';
 import { CompetitionOptionsService } from '../services/competition-options.service';
 
 import { 
@@ -50,7 +50,7 @@ export class CreateCompetitionComponent {
     private readonly fb: FormBuilder,
     public tService: TranslationService,  
     private readonly popup: PopupService, 
-    private readonly competitionPopupService: CompetitionPopupService, 
+    private readonly competitionConfigService: CompetitionConfigService, 
     private readonly competitionOptionsService: CompetitionOptionsService,
   ) {
     const today = new Date().toISOString().slice(0, 10);
@@ -202,7 +202,7 @@ export class CreateCompetitionComponent {
     const language = localStorage.getItem('lang');
     const now = new Date().toISOString();
 
-    await this.competitionPopupService.create({
+    await this.competitionConfigService.create({
       id: id,
       name: value.competitionName!,
       country: value.country!,

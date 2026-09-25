@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { ExitService } from '../../exit.service';
+import { ExitService } from '../../../services/shared/exit.service';
 
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../i18n/services/translation.service';

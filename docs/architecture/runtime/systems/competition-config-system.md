@@ -9,7 +9,7 @@ It is responsible for defining and maintaining the fundamental competition param
   - [CreateCompetitionComponent](#createcompetitioncomponent)
 - [Services](#services)
   - [CompetitionOptionsService](#competitionoptionsservice)
-  - [CompetitionPopupService](#competitionpopupservice)
+  - [CompetitionConfigService](#competitionconfigservice)
 - [Creation Flow](#creation-flow)
 - [DTO / configuration models](#dto-and-configuration-models)
   - [FederationOption](#federationoption)
@@ -38,7 +38,7 @@ The `CompetitionPopupComponent` contains specialized components for different co
 ### CreateCompetitionComponent
 The `form` component responsible for creating a new competition in the `Runtime` application.
 
-The component manages competition data input, loads available federation-related options from the local database, handles dependent form fields, validates user input, and delegates competition creation to `CompetitionPopupService`.
+The component manages competition data input, loads available federation-related options from the local database, handles dependent form fields, validates user input, and delegates competition creation to `CompetitionConfigService`.
 
 #### Responsibilities
 * Creates and manages the competition creation form.
@@ -52,7 +52,7 @@ The component manages competition data input, loads available federation-related
 * Manages multiple age group selection.
 * Validates required form fields before creating a competition.
 * Generates a unique competition identifier.
-* Delegates competition creation to [CompetitionPopupService](#competitionpopupservice).
+* Delegates competition creation to [CompetitionConfigService](#competitionconfigservice).
 * Closes the popup through [PopupService](popup-system.md#popupservice).
 
 #### Form Initialization
@@ -198,7 +198,7 @@ The method performs the following steps:
 4. Retrieves the current application `language`.
 5. Generates the current `timestamp`.
 
-The competition is created through `CompetitionPopupService` [create()](#async-create)
+The competition is created through `CompetitionConfigService` [create()](#async-create)
 
 The component does not directly persist the competition data.
 
@@ -257,13 +257,13 @@ Each result is represented by [AgeGroupOption](#agegroupoption).
 
 ---
 
-### CompetitionPopupService
+### CompetitionConfigService
 Handles persistence and synchronization of competition configuration changes.  
 The service ensures that the local database update and synchronization queue entry are created within the same database transaction.
 
 #### Responsibilities
 * Provides access to the local [PGlite](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md) database.
-* Creates a competition in the local database.
+* Handles competition configurations and adds them to the local database.
 * Adds competition changes to the `synchronization queue`.
 * Starts `synchronization` after a successful local `transaction`.
 
@@ -279,7 +279,7 @@ Creates a new competition and adds the corresponding synchronization operation t
 
 #### User and Device Context
 Before creating the competition, the service retrieves:
-* the current `user ID` through [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/database_service.md#userservice);
+* the current `user ID` through [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/entry.md#userservice);
 * the current `device ID` from `localStorage`.
 
 #### Local Database Transaction
@@ -351,7 +351,7 @@ CreateCompetitionComponent
          ├── Validate Form
          │
          ▼
-CompetitionPopupService.create()
+CompetitionConfigService.create()
          │
          ├── UserService.getUserId()
          │

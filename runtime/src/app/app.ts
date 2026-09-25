@@ -4,7 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { PopupComponent } from './popup/components/popup.component';
 import { PgliteService } from './database/services/pglite.service';
 import { RuntimeSessionService } from './session/services/runtime-session.service';
-import { EntryService } from './components/entry.service';
+import { EntryService } from './services/shared/entry.service';
 
 @Component({
   selector: 'app-root',

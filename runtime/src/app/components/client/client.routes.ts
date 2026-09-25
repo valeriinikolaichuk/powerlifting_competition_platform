@@ -17,7 +17,7 @@ export const CLIENT_ROUTES: Routes = [
     canActivate: [sessionGuard],
   },
   {
-    path: 'weighing-in',
+    path: 'weighing_in',
     component: WeighingInComponent,
     canActivate: [sessionGuard],
   },
@@ -27,12 +27,12 @@ export const CLIENT_ROUTES: Routes = [
     canActivate: [sessionGuard],
   },
   {
-    path: 'lifting-order',
+    path: 'lifting_order',
     component: LiftingOrderComponent,
     canActivate: [sessionGuard],
   },
   {
-    path: 'discs-sequence',
+    path: 'discs_sequence',
     component: DiscsSequenceComponent,
     canActivate: [sessionGuard],
   },

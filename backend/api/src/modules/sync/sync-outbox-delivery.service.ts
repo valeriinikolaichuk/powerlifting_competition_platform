@@ -9,11 +9,15 @@ import { SyncGateway } from './sync.gateway';
 @Injectable()
 export class SyncOutboxDeliveryService {
 
+    private deviceStatusDeliveryRunning = false;
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly syncGateway: SyncGateway,
         private readonly deviceStatusDeliveryService: DeviceStatusDeliveryService,
-    ) {}
+    ) {
+        console.log('SyncOutboxDeliveryService initialized');
+    }
 
     @Interval(1000)
     async retryPending(): Promise<void> {
@@ -32,8 +36,16 @@ export class SyncOutboxDeliveryService {
             await this.deliver(device.device_id);
         }
 
-        for (const device of devices) {
-            await this.deviceStatusDeliveryService.deliver(device);
+        if (this.deviceStatusDeliveryRunning) { return; }
+
+        this.deviceStatusDeliveryRunning = true;
+
+        try {
+            for (const device of devices) {
+                await this.deviceStatusDeliveryService.deliver(device);
+            }
+        } finally {
+            this.deviceStatusDeliveryRunning = false;
         }
     }
     

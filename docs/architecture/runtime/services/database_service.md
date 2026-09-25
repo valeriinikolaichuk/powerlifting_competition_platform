@@ -66,17 +66,3 @@ async query<T>(
 Application services should use this method when they need to execute `SQL` queries without directly managing the `PGlite` instance.
 
 ---
-
-### UserService
-Provides access to user-related data stored in the local PGlite database.
-
-- ### getUserId()
-Retrieves the identifier of the current user from the local users table.
-```
-SELECT id
-FROM users
-LIMIT 1
-```
-The `Runtime` database [users](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#users) table contains the currently synchronized `user` record.
-
----

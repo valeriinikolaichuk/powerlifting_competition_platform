@@ -23,6 +23,7 @@ Contents
   - [SyncOperationFactoryService](#syncoperationfactoryservice)
   - [Synchronization Operations](#synchronization-operations)
   - [UserService](#userservice)
+- [DeviceRoleService](#deviceroleservice)
 - [DTOs](#dtos)
   - [SyncQueueDto](#syncqueuedto)
   - [SnapshotContext](#snapshotcontext)
@@ -39,6 +40,12 @@ Provides `HTTP` endpoints for synchronization operations.
 * Obtains the authenticated user's `ID` from the `JWT` context.
 * Delegates snapshot generation to [SyncService.getDatabaseSnapshot()](#getdatabasesnapshot).
 * Returns the generated database snapshot to the `Runtime`.
+
+#### `POST /api/sync/device-role` endpoint
+* Receives the device role synchronization data through the request body.
+* Receives the synchronization [SyncQueueDto](#syncqueuedto)
+* Delegates processing to [DeviceRoleService.updateInbox()](#deviceroleservice).
+* Stores the received synchronization data in the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) queue for processing.
 
 ---
 
@@ -410,6 +417,16 @@ SyncOperationInterface
 `getUserId()` looks up the active [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) record using the source device ID and returns its `created_by_user_id`.
 
 This service is used only by operations that require the source user's ID and is not required by every synchronization operation.
+
+---
+
+### DeviceRoleService
+Handles incoming device role synchronization requests.
+
+- ### updateInbox()
+* Receives the device role synchronization data from [SyncController](#synccontroller).
+* Stores the synchronization data in the [sync_inbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_inbox) table.
+* Preserves the synchronization ID, source device ID, operation ID, record ID, and payload for further processing by the [SyncProcessorService](#syncprocessorservice) and [SyncOutboxDeliveryService](#syncoutboxdeliveryservice).
 
 ---
 

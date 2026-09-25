@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, UseGuards, Delete, Query } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards, Delete } from '@nestjs/common';
 import type { Request } from 'express';
 
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
@@ -34,11 +34,20 @@ export class ConnectionsController {
     );
   }
 
-  @Delete('entry')
+  @Delete('exit')
     async deleteDevices(
     @Body() dto: DeleteDevicesDto,
   ) {
     return this.connectionsService.deleteDevices(
+      dto.device_ids,
+    );
+  }
+
+  @Post('exit-client')
+    async softDeleteDevices(
+    @Body() dto: DeleteDevicesDto,
+  ) {
+    return this.connectionsService.softDeleteDevices(
       dto.device_ids,
     );
   }

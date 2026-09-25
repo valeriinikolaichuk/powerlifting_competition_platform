@@ -13,6 +13,7 @@ export class DeviceStatusDeliveryService {
     ) {}
 
     async deliver(device: DeviceStatus): Promise<void> {
+       
         if (
             device.sent_at && 
             device.updated_at.getTime() === device.sent_at.getTime()
@@ -33,12 +34,14 @@ export class DeviceStatusDeliveryService {
 
         if (!admin) { return; }
 
+        console.log('Sending device-status to ADMIN:', admin.device_id);
+
         const success = await this.deviceGateway.sendToAdmin(admin.device_id, device);
 
         if (!success) { return; }
 
         await this.prisma.$transaction(async (tx) => {
-
+           
             if (device.is_deleted) {
                 await tx.deviceStatus.delete({
                     where: {
@@ -46,6 +49,7 @@ export class DeviceStatusDeliveryService {
                     },
                 });
             } else {
+                
                 await tx.deviceStatus.update({
                     where: {
                         id: device.id,

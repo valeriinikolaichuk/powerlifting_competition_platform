@@ -1,17 +1,14 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
 
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../i18n/services/translation.service';
-import { ExitService } from '../../exit.service';
+import { EntryService } from '../../../services/shared/entry.service';
+import { ExitService } from '../../../services/shared/exit.service';
 
 @Component({
   selector: 'app-role',
   standalone: true,
-  imports: [
-    TranslatePipe,
-    RouterLink,
-  ],
+  imports: [TranslatePipe],
   templateUrl: './role.component.html',
 })
 export class RoleComponent {
@@ -21,6 +18,7 @@ export class RoleComponent {
   constructor(
     public tService: TranslationService,
     public exitService: ExitService,
+    public entryService: EntryService,
   ){}
 
   async ngOnInit(){

@@ -6,7 +6,9 @@
   - [check()](#check)
   - [exitParameters()](#exitparameters)
   - [deleteDevices()](#deletedevices)
+- [DeviceRoleService](#deviceroleservice)
 - [DeviceReceiverService](#devicereceiverservice)
+- [Device Status Flow](#device-status-flow)
 - [DTOs](#dtos)
   - [DeviceParameters](#deviceparameters)
   - [ConnectionDto](#connectiondto)
@@ -38,9 +40,7 @@ Creates the device parameters used when entering the application.
 
 #### Responsibilities:
 - Reads the `lang` parameter from the `URL`.
-- Reads the `mode` parameter from the `URL`.
-- Retrieves the persistent `device_id` from `localStorage`.
-- Generates a new `UUID` if the device does not have an `ID` yet.
+- Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice)
 - Handles the special `LAN`/`ONLINE` development case.
 - Ensuring that a `LAN` authentication token exists before the device parameters are returned.
 - Adds the current browser user_agent.
@@ -111,7 +111,8 @@ The backend returns [ConnectionsResultDto](#connectionsresultdto) with [Connecti
 ---
 
 - ### exitParameters()
-Creates the device parameters required when leaving the Runtime application.
+Creates the device parameters required when leaving the Runtime application.  
+Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice)
 
 The method retrieves the information required by the exit flow:
 * `device_id` — identifies the current device connection.
@@ -151,6 +152,40 @@ The method is used by:
 
 ---
 
+### DeviceRoleService
+Handles device `role` updates from the `Runtime` application.
+
+- ### updateRole()
+Sends a `device role` update to the backend and updates the local [PGlite] database after a successful request.
+
+1. Retrieves the current `device_id` from `localStorage`.
+2. Generates a unique synchronization ID.
+3. Sends the [UPDATE_DEVICE_ROLE](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#synchronization-operations) operation to the backend.
+4. Updates the local `device_status` record in PGlite.
+5. Returns `true` if both operations succeed; otherwise returns `false`.
+
+#### Backend endpoint
+
+```ts
+@Post('device-role')
+async updateDeviceRole(
+  @Body() dto: SyncQueueDto
+) {
+  return this.deviceRoleService.updateInbox(dto);
+}
+````
+
+The [endpoint](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#synccontroller) receives the synchronization DTO and passes it to `DeviceRoleService.updateInbox()` for processing.
+
+The request contains:
+* `id` — unique synchronization event ID.
+* `source_id` — ID of the device sending the update.
+* `operation_id` — `UPDATE_DEVICE_ROLE`.
+* `record_id` — ID of the device status record.
+* `payload` — updated device role data.
+
+---
+
 ### DeviceReceiverService
 Receives [device status updates](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#devicestatusdeliveryservice) from the server on the `ADMIN` device.
 
@@ -159,6 +194,62 @@ It:
 - inserts new device status records or updates existing ones;
 - removes records marked as deleted;
 - sends an acknowledgment after the local database operation succeeds.
+
+---
+
+### Device Status Flow
+
+The device status is delivered from the backend to the `ADMIN` device through `Socket.IO`.
+
+1. The `Runtime` creates [SocketService](sync-service.md#socketservice).
+
+2. `SocketService` obtains the `deviceId` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice).
+
+3. `SocketService` connects to the backend and sends the `deviceId` in the `Socket.IO` handshake.
+
+4. [DeviceGateway](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#devicegateway) receives the connection and adds the socket to the room identified by the `deviceId`.
+
+5. [DeviceStatusDeliveryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/connections.md#devicestatusdeliveryservice) detects a device status that has not been delivered.
+
+6. It finds the corresponding `ADMIN` device and calls `DeviceGateway.sendToAdmin()`.
+
+7. `DeviceGateway` emits the `device-status` event to the `ADMIN` device's `room`.
+
+8. [DeviceReceiverService](#devicereceiverservice) receives the `device-status` event in the `Runtime`.
+
+9. `DeviceReceiverService` updates the local `device_status` table in PGlite.
+
+10. The client sends a Socket.IO acknowledgement after successfully processing the device status.
+
+11. `DeviceGateway.sendToAdmin()` receives the acknowledgement and returns the delivery result.
+
+12. After successful delivery, `DeviceStatusDeliveryService` updates `sent_at` or deletes the device status when it is marked as deleted.
+
+<pre>
+DeviceIdService
+      ↓
+SocketService
+      ↓
+Socket.IO handshake (deviceId)
+      ↓
+DeviceGateway
+      ↓
+deviceId room
+      ↓
+DeviceStatusDeliveryService
+      ↓
+DeviceGateway.sendToAdmin()
+      ↓
+device-status event
+      ↓
+DeviceReceiverService
+      ↓
+PGlite.device_status
+      ↓
+     ACK
+      ↓
+sent_at / delete
+</pre>
 
 ---
 

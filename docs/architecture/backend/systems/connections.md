@@ -38,7 +38,7 @@ Uses the authenticated user's ID and verifies the current `ADMIN` device on ever
 Handles initial `LAN` device registration.
 * Requires an authenticated `user_id`.
 * Checks whether the requesting device is already registered.
-* Registers a new LAN device when necessary.
+* Registers a new `LAN` device when necessary.
 * Returns the available connections and whether an `ADMIN` already exists.
 
 - #### checkOnline()
@@ -57,6 +57,9 @@ Returns active connections belonging to the user while excluding the `ADMIN` dev
 - #### findConnectionsWithoutCurrentDevice()
 Returns all active device connections belonging to the user, including the `ADMIN` device and excluding the currunt device.
 
+- #### createDeviceStatus()
+Creates [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) record.
+
 - #### deleteDevices()
 Performs the actual deletion of device connection records.
 The method deletes connections using only `device_id` identifier
@@ -66,21 +69,26 @@ The method deletes connections using only `device_id` identifier
 ### DeviceStatusDeliveryService
 Delivers device status changes from the server to the `ADMIN` device.
 
-It:
-- checks whether the [device status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) has changed since the last delivery;
-- sends the status to the [ADMIN device](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/connection_service.md#devicereceiverservice) via [DeviceGateway](#devicegateway);
-- updates `sent_at` only after a successful delivery acknowledgment;
-- removes soft-deleted device status records after successful delivery.
+- ### deliver()
+  - checks whether the [device status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) has changed since the last delivery;
+  - finds the active `ADMIN` device belonging to the same user.
+  - sends the status to the [ADMIN device](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/connection_service.md#devicereceiverservice) via [DeviceGateway](#devicegateway);
+  - updates `sent_at` only after a successful delivery acknowledgment;
+  - removes soft-deleted device status records after successful delivery.
 
 ---
 
 ### DeviceGateway
-Handles real-time device status notifications between the server and ADMIN devices.
+Manages `WebSocket` connections and delivers device status updates to the `ADMIN` device.
 
-It:
-- sends device status updates to the `ADMIN` device via `Socket.IO`;
-- waits for a delivery acknowledgment;
-- reports whether the delivery was successful.
+- ### handleConnection()
+  - Retrieves the `deviceId` from the `WebSocket` handshake query.
+  - Adds the connected socket to a room identified by the `deviceId`.
+
+- ### sendToAdmin()
+  - Sends the device status to the `ADMIN` device through its `deviceId` room.
+  - Waits up to `5` seconds for a client acknowledgement.
+  - Returns `true` when the client acknowledges the message and `false` when delivery fails or times out.
 
 ---
 

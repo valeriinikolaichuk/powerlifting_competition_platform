@@ -12,5 +12,8 @@ import { DeviceStatusDeliveryService } from './device-status-delivery.service';
     DeviceGateway,
     DeviceStatusDeliveryService,
   ],
+  exports: [
+    DeviceStatusDeliveryService,
+  ],
 })
 export class ConnectionsModule {}

@@ -6,10 +6,10 @@ import { SYNC_OPERATIONS } from '#shared-sql';
 
 import { SyncOperationInterface } from './sync-operation.interface';
 import { SyncInboxItem } from '../dto/sync-inbox-item';
-import { UserService } from './user.service';
+import { UserService } from '../user.service';
 
 @Injectable()
-export class CreateCompetitionOperation  implements SyncOperationInterface {
+export class CreateCompetitionOperation implements SyncOperationInterface {
 
     constructor( 
         private readonly userService: UserService,

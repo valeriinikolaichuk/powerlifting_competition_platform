@@ -4,16 +4,15 @@ import { PGlite } from '@electric-sql/pglite';
 import type { CompetitionData } from '#shared-sql';
 import { SYNC_OPERATIONS } from '#shared-sql';
 
-import { PgliteService } from '../../../../database/services/pglite.service';
-import { UserService } from '../../../../database/services/user.service';
+import { PgliteService } from '../../database/services/pglite.service';
+import { UserService } from '../shared/user.service';
 
-import { SyncQueueService } from '../../../../services/sync/services/sync-queue.service';
-
+import { SyncQueueService } from '../sync/services/sync-queue.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class CompetitionPopupService {
+export class CompetitionConfigService {
   
   private pg!: PGlite;
 
