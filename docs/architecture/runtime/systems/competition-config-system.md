@@ -279,7 +279,7 @@ Creates a new competition and adds the corresponding synchronization operation t
 
 #### User and Device Context
 Before creating the competition, the service retrieves:
-* the current `user ID` through [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/entry.md#userservice);
+* the current `user ID` through [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#userservice);
 * the current `device ID` from `localStorage`.
 
 #### Local Database Transaction

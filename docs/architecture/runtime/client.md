@@ -21,8 +21,8 @@ Allows the user to select the `role` for the current client device.
 - Loads the translations required by the role entry page;
 - Loads the `pages/entry` translation scope using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md)
 - Provides available client roles;
-- Assigns the selected role through [EntryService](entry.md#clientrole);
-- Allows to leave the current Runtime session through [ExitService](entry.md#backtomode).
+- Assigns the selected role through [EntryService](services/shared.md#clientrole);
+- Allows to leave the current Runtime session through [ExitService](services/shared.md#backtomode).
 
 ---
 

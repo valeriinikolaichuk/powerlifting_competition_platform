@@ -40,7 +40,7 @@ Creates the device parameters used when entering the application.
 
 #### Responsibilities:
 - Reads the `lang` parameter from the `URL`.
-- Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice)
+- Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](shared.md#deviceidservice)
 - Handles the special `LAN`/`ONLINE` development case.
 - Ensuring that a `LAN` authentication token exists before the device parameters are returned.
 - Adds the current browser user_agent.
@@ -112,7 +112,7 @@ The backend returns [ConnectionsResultDto](#connectionsresultdto) with [Connecti
 
 - ### exitParameters()
 Creates the device parameters required when leaving the Runtime application.  
-Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice)
+Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](services/shared.md#deviceidservice)
 
 The method retrieves the information required by the exit flow:
 * `device_id` — identifies the current device connection.
@@ -129,7 +129,7 @@ The application retrieves the following values from `device_status` table:
 
 The returned [PgliteDeviceParameters](#pglitedeviceparameters) object uses lowercase values required by the [DeviceParameters](#deviceparameters) DTO.
 
-The returned parameters are consumed by the [Runtime exit logic](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#exitservice) rather than being sent directly to the backend.
+The returned parameters are consumed by the [Runtime exit logic](services/shared.md#exitservice) rather than being sent directly to the backend.
 
 ---
 
@@ -203,7 +203,7 @@ The device status is delivered from the backend to the `ADMIN` device through `S
 
 1. The `Runtime` creates [SocketService](sync-service.md#socketservice).
 
-2. `SocketService` obtains the `deviceId` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice).
+2. `SocketService` obtains the `deviceId` from [DeviceIdService](services/shared.md#deviceidservice).
 
 3. `SocketService` connects to the backend and sends the `deviceId` in the `Socket.IO` handshake.
 

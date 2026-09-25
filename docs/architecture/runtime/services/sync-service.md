@@ -101,7 +101,7 @@ Backend Sync Gateway
 `SocketService` does not implement synchronization logic itself. It only provides the communication channel used by the synchronization services.
 
 #### Responsibilities
-- Obtains the current `deviceId` from [DeviceIdService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#deviceidservice).
+- Obtains the current `deviceId` from [DeviceIdService](services/shared.md#deviceidservice).
 - Establish a `Socket.IO` connection to the backend `API`.
 - Send the current device `ID` during connection initialization.
 - The backend uses the received `deviceId` to place the socket into the corresponding `Socket.IO room`.
@@ -354,7 +354,7 @@ The package provides:
 * [Shared DTOs/types](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#shared-dtos) describing the data exchanged between the frontend and backend.
 * **Shared operation definitions** through `SYNC_OPERATIONS`.
 
-Operation implementations can use additional services when required, such as [UserService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/entry.md#userservice) for resolving the local `user ID`.
+Operation implementations can use additional services when required, such as [UserService](services/shared.md#userservice) for resolving the local `user ID`.
 
 ---
 
