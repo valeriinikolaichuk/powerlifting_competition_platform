@@ -36,13 +36,13 @@ export class CreateCompetitionOperation implements SyncOperationInterface {
             competition.country,
             competition.city,
             competition.language,
-            competition.startDate,
-            competition.endDate,
+            new Date(competition.startDate),
+            new Date(competition.endDate),
             competition.level,
             competition.type,
             competition.division,
             competition.federationCategoryIds,
-            competition.updated_at,
+            new Date(competition.updated_at),
         );
     }
 }

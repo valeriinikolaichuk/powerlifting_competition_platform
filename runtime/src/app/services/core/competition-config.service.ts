@@ -33,7 +33,7 @@ export class CompetitionConfigService {
     if (!deviceId) {
       throw new Error('Device ID not found.');
     }
-
+console.log(data);
     await this.pg.transaction(async (tx) => {
 
       await tx.query(

@@ -24,6 +24,7 @@ import {
     TranslatePipe, 
   ],
   templateUrl: './create-competition.component.html',
+  styleUrl: '../autocomplete.css'
 })
 export class CreateCompetitionComponent {
 
@@ -41,6 +42,11 @@ export class CreateCompetitionComponent {
 
   form;
   isLoading = true;
+
+  countrySuggestion = '';
+  countrySuggestionOffset = 0;
+  citySuggestion = '';
+  citySuggestionOffset = 0;
 
   federations: FederationOption[] = [];
   divisions: DivisionOption[] = [];
@@ -122,6 +128,84 @@ export class CreateCompetitionComponent {
     this.form.get('federation')?.setValue(this.federations[0].id);
   }
 
+  // COUNTRY
+  async onCountryInput(): Promise<void> {
+
+    const value = this.form.get('country')?.value?.trim() ?? '';
+
+    this.countrySuggestion = '';
+
+    if (!value) { return; }
+
+    const suggestion = await this.competitionOptionsService.getCountrySuggestion(value);
+
+    this.countrySuggestionOffset = this.getTextWidth(value);
+
+    if (
+        suggestion &&
+        suggestion.toLowerCase() !== value.toLowerCase()
+    ) {
+        this.countrySuggestion = suggestion.slice(value.length);
+    }
+  }
+
+  acceptCountrySuggestion(): void {
+
+    if (!this.countrySuggestion) { return; }
+
+    const value = this.form.get('country')?.value ?? '';
+
+    this.form.get('country')?.setValue(value + this.countrySuggestion);
+
+    this.countrySuggestion = '';
+  }
+
+  // CITY
+  async onCityInput(): Promise<void> {
+
+    const value = this.form.get('city')?.value?.trim() ?? '';
+
+    this.citySuggestion = '';
+
+    if (!value) { return; }
+
+    const suggestion = await this.competitionOptionsService.getCitySuggestion(value);
+
+    this.citySuggestionOffset = this.getTextWidth(value);
+
+    if (
+        suggestion && 
+        suggestion.toLowerCase() !== value.toLowerCase()
+    ) {
+        this.citySuggestion = suggestion.slice(value.length);
+    }
+  }
+
+  acceptCitySuggestion(): void {
+
+    if (!this.citySuggestion) { return; }
+
+    const value = this.form.get('city')?.value ?? '';
+
+    this.form.get('city')?.setValue(value + this.citySuggestion);
+
+    this.citySuggestion = '';
+  }
+
+  public getTextWidth(text: string): number {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    if (!context) return 0;
+
+    const input = document.querySelector('.autocomplete-input') as HTMLInputElement;
+
+    context.font = getComputedStyle(input).font;
+
+    return context.measureText(text).width;
+  }
+
+  // AGE GROUP
   async loadAgeGroups(): Promise<void> {
 
     const federationId = this.form.get('federation')?.value;
@@ -183,6 +267,7 @@ export class CreateCompetitionComponent {
     }
   }
 
+  // CREATE
   async create(): Promise<void> {
 
     const value = this.form.getRawValue();
@@ -194,12 +279,10 @@ export class CreateCompetitionComponent {
       value.ageGroup,
     );
 
-    if (!isValid) {
-      return;
-    }
+    if (!isValid) { return; }
 
     const id = crypto.randomUUID();
-    const language = localStorage.getItem('lang');
+    const language = localStorage.getItem('lang')?.toUpperCase();
     const now = new Date().toISOString();
 
     await this.competitionConfigService.create({
@@ -216,6 +299,8 @@ export class CreateCompetitionComponent {
       federationCategoryIds: value.ageGroup ?? [],
       updated_at: now,
     });
+
+    this.popup.close();
   }
 
   validateForm(

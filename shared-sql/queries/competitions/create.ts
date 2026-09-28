@@ -5,7 +5,7 @@ WITH existing_country AS (
     FROM countries
     WHERE
         LOWER(name) = LOWER($4) 
-        AND language = $6
+        AND language = $6::"Language"
         AND is_deleted = false
     LIMIT 1
 ),
@@ -24,11 +24,11 @@ new_country AS (
     SELECT
         gen_random_uuid(),
         $4,
-        'USER',
-        $6,
-        $2,
-        $13,
-        $13
+        'USER'::"DataScope",
+        $6::"Language",
+        $2::uuid,
+        $13::timestamp,
+        $13::timestamp
     WHERE NOT EXISTS (
         SELECT 1 FROM existing_country
     )
@@ -53,7 +53,7 @@ existing_city AS (
         AND c.country_id = (
             SELECT id FROM country
         )
-        AND c.language = $6
+        AND c.language = $6::"Language"
         AND c.is_deleted = false
     LIMIT 1
 ),
@@ -76,11 +76,11 @@ new_city AS (
             SELECT id FROM country
         ),
         $5,
-        'USER',
-        $6,
-        $2,
-        $13,
-        $13
+        'USER'::"DataScope",
+        $6::"Language",
+        $2::uuid,
+        $13::timestamp,
+        $13::timestamp
     WHERE NOT EXISTS (
         SELECT 1 FROM existing_city
     )
@@ -113,20 +113,20 @@ new_competition AS (
         updated_at
     )
     VALUES (
-        $1,
-        $2,
+        $1::uuid,
+        $2::uuid,
         $3,
         (
             SELECT id FROM city
         ),
         $7,
         $8,
-        $9,
-        $10,
-        $11,
+        $9::"CompetitionLevel",
+        $10::"CompetitionType",
+        $11::"CompetitionDivision",
         'ACTIVE',
-        $13,
-        $13
+        $13::timestamp,
+        $13::timestamp
     )
     RETURNING id
 )
@@ -154,8 +154,8 @@ SELECT
     ),
     fc.default_team_scoring_limit,
     'BEST_POINTS',
-    $13,
-    $13
+    $13::timestamp,
+    $13::timestamp
 
 FROM new_competition nc
 

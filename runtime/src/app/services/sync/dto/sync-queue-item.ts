@@ -4,7 +4,7 @@ export interface SyncQueueItem {
     source_id: string;
     operation_id: string;
     record_id: string;
-    payload: string;
+    payload: unknown | null;
     created_at: string;
-    processed_at: string;
+    processed_at: string | null;
 }

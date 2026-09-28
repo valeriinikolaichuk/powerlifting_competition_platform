@@ -17,11 +17,43 @@ export class CompetitionOptionsService {
   
   constructor(
     private readonly pgliteService: PgliteService,
-  ) {}
+  ) {
+    this.pg = this.pgliteService.database;
+  }
+
+  async getCountrySuggestion(value: string): Promise<string | null> {
+    const result = await this.pg.query<{ name: string }>(
+      `
+        SELECT name
+        FROM countries
+        WHERE name ILIKE $1
+          AND is_deleted = false
+        ORDER BY name ASC
+        LIMIT 1
+      `,
+      [`${value}%`],
+    );
+
+    return result.rows[0]?.name ?? null;
+  }
+
+  async getCitySuggestion(value: string): Promise<string | null> {
+    const result = await this.pg.query<{ name: string }>(
+      `
+        SELECT name
+        FROM cities
+        WHERE name ILIKE $1
+          AND is_deleted = false
+        ORDER BY name ASC
+        LIMIT 1
+      `,
+      [`${value}%`],
+    );
+
+    return result.rows[0]?.name ?? null;
+  }
 
   async getFederations(): Promise<FederationOption[]> {
-
-    this.pg = this.pgliteService.database;
 
     const result = await this.pg.query<FederationOption>(
       `

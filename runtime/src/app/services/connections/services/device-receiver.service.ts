@@ -59,7 +59,8 @@ export class DeviceReceiverService {
                 is_deleted
               )
               VALUES (
-                $1, $2, $3, $4, $5, $6,
+                $1, $2::uuid, $3, 
+                $4::"DeviceMode", $5::"Language", $6::"DeviceRole",
                 $7, $8, $9, $10, $11
               )
               ON CONFLICT (id)

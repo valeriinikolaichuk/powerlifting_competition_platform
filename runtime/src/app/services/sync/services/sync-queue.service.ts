@@ -35,7 +35,7 @@ export class SyncQueueService {
     createdAt: string,
   ): Promise<void> {
 
-    console.log(payload);
+    console.log('payload: '+payload);
 
     await tx.query(
       `
@@ -54,7 +54,7 @@ export class SyncQueueService {
         sourceId,
         operationId,
         recordId,
-        JSON.stringify(payload),
+        payload,
         createdAt,
       ],
     );
@@ -96,13 +96,8 @@ export class SyncQueueService {
 
     for (const item of result.rows) {
 
-      const payload = JSON.parse(item.payload);
-      console.log(payload);
-    }
-
-    for (const item of result.rows) {
-
       try {
+        console.log('SyncQueueItem: '+item.payload);
         await this.send(item);
       } catch (error) {
         console.error('Sync failed:', error);
@@ -119,14 +114,12 @@ export class SyncQueueService {
         'sync',
         {
           id: item.id,
-          sourceId: item.source_id,
-          operationId: item.operation_id,
-          recordId: item.record_id,
-          payload: item.payload
-            ? JSON.parse(item.payload)
-            : null,
-          createdAt: item.created_at, 
-          processedAt: item.processed_at,
+          source_id: item.source_id,
+          operation_id: item.operation_id,
+          record_id: item.record_id,
+          payload: item.payload,
+          created_at: item.created_at, 
+          processed_at: item.processed_at,
         },
         (response: { success: boolean }) => {
 

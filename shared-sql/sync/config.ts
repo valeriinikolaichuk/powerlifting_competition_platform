@@ -1,3 +1,7 @@
+export const TABLE_USERS = [
+    'users'
+];
+
 export const STATIC_REFERENCE_TABLES = [
     'federations',
     'coefficients',
@@ -27,6 +31,12 @@ export const USER_REFERENCE_FEDERATIONS = [
     'sport_officials',
 ];
 
+export const CREATED_BY_USER_TABLES = [
+    'participants',
+    'competitions',
+    'global_state',
+];
+
 export const COMPETITION_TABLES = [
     'competition_age_groups', 
     'nomination_status', 
@@ -45,16 +55,6 @@ export const COMPETITION_SESSION_TABLES = [
 
 export const COMPETITION_GROUP_TABLES = [
     'weight_classes_in_group',
-];
-
-export const TABLE_USERS = [
-    'users'
-];
-
-export const CREATED_BY_USER_TABLES = [
-    'participants',
-    'competitions',
-    'global_state',
 ];
 
 export const TABLE_DEVICE_STATUS = [

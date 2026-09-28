@@ -82,6 +82,12 @@ The synchronization system groups database tables according to their ownership, 
 
 These groups are defined in [sync.config.ts](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/sync.config.ts) and are used by the backend [snapshot pipeline](backend/systems/sync.md#snapshot-steps) and frontend [SyncService](runtime/services/sync-service.md#syncservice) to determine which tables must be synchronized and which selection rules must be applied.
 
+- #### TABLE_USERS
+Contains the minimal user information required by the browser runtime.
+- `users`
+
+The current user's `id` and admin's `id` is stored locally.
+
 - #### STATIC_REFERENCE_TABLES
 Contains system-wide reference data that does not belong to a specific user or competition.
 - `federations`
@@ -122,7 +128,15 @@ Access rules:
 
 Relationship:  
 `GLOBAL → federation_id → user_federations → user_id`  
-`USER → created_by_user_id`  
+`USER → created_by_user_id` 
+
+- #### CREATED_BY_USER_TABLES
+Contains records directly owned by the current user.
+- `participants`
+- `competitions`
+- `global_state`
+
+Records are selected using `created_by_user_id`.
 
 - #### COMPETITION_TABLES
 Contains the main configuration and registration data belonging to a user's competitions.
@@ -152,20 +166,6 @@ Contains data belonging to groups within competition sessions.
 
 Records are selected through  
 `groups_in_session_id → groups_in_session → competition_session_id → competition_sessions → competition_id → created_by_user_id`.
-
-- #### TABLE_USERS
-Contains the minimal user information required by the browser runtime.
-- `users`
-
-Only the current user's `id` is stored locally.
-
-- #### CREATED_BY_USER_TABLES
-Contains records directly owned by the current user.
-- `participants`
-- `competitions`
-- `global_state`
-
-Records are selected using `created_by_user_id`.
 
 - #### TABLE_DEVICE_STATUS
 Contains information about connected device and its active role within the system.

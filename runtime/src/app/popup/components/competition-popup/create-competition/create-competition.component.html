@@ -48,6 +48,7 @@
                         type="text"
                         name="competition_name"
                         formControlName="competitionName"
+                        spellcheck="false"
                         class="w-full
                             border
                             border-black
@@ -85,30 +86,60 @@
             <tr>
                 <td class="p-2">
 
-                    <input
-                        type="text"
-                        name="country"
-                        formControlName="country"
-                        class="w-full
-                            border
-                            border-black
-                            rounded
-                            px-2
-                            py-1">
+                    <div class="autocomplete">
+                        @if (countrySuggestion) {
+                            <div class="autocomplete-suggestion"
+                                [style.left.px]="getTextWidth(form.get('country')?.value ?? '') + 5">
+                                {{ countrySuggestion }}
+                            </div>
+                        }
+
+                        <input
+                            type="text"
+                            name="country"
+                            formControlName="country"
+                            spellcheck="false"
+                            (input)="onCountryInput()"
+                            (keydown.tab)="acceptCountrySuggestion()"
+                            (blur)="acceptCountrySuggestion()"
+                            autocomplete="off"
+                            class="autocomplete-input
+                                w-full
+                                border
+                                border-black
+                                rounded
+                                px-2
+                                py-1">
+                    </div>
                 </td>
 
                 <td class="p-2">
 
-                    <input
-                        type="text"
-                        name="city"
-                        formControlName="city"
-                        class="w-full
-                            border
-                            border-black
-                            rounded
-                            px-2
-                            py-1">
+                    <div class="autocomplete">
+                        @if (citySuggestion) {
+                            <div class="autocomplete-suggestion"
+                                [style.left.px]="getTextWidth(form.get('city')?.value ?? '') + 5">
+                                {{ citySuggestion }}
+                            </div>
+                        }
+
+                        <input
+                            type="text"
+                            name="city"
+                            formControlName="city"
+                            spellcheck="false"
+                            (input)="onCityInput()"
+                            (keydown.tab)="acceptCitySuggestion()"
+                            (blur)="acceptCitySuggestion()"
+                            autocomplete="off"
+                            class="autocomplete-input
+                                w-full
+                                border
+                                border-black
+                                rounded
+                                px-2
+                                py-1">
+                    </div>    
                 </td>
 
                 <td class="p-2">
