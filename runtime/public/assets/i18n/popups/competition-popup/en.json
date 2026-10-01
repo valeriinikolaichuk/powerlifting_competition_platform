@@ -1,5 +1,6 @@
 {
     "CREATE": "CREATE A COMPETITION",
+    "LIST": "LIST OF COMPETITIONS",
     "EDIT": "EDIT THE COMPETITION",
     "NAME": "competition name",
         "validate_competition_name": "The [competition name] field must be completed",
@@ -38,5 +39,9 @@
         "IBSA_MASTER_WOMEN": "MASTER",
         "validate_age_group": "Selecting an age group is required",
     "CREATE_BUTTON": "CREATE",
-    "CANCEL": "CANCEL"
+    "CANCEL": "CANCEL",
+
+    "OPEN": "OPEN",
+    "EDIT_BUTTON": "EDIT",
+    "DELETE": "DELETE"
 }

@@ -113,6 +113,10 @@ export class EntryService {
 
   private async synchronize(): Promise<void> {
 
+    let sync_state = sessionStorage.getItem('sync_state');
+
+    if (sync_state) { return; }
+
     this.popup.open(
       SystemPopupComponent, 
       {
@@ -124,6 +128,8 @@ export class EntryService {
     try {
 
       await this.syncService.initialize();
+
+      sessionStorage.setItem('sync_state', 'sync_completed');
 
       this.popup.close();
 

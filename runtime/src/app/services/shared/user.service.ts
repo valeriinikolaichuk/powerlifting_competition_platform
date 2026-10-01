@@ -16,7 +16,7 @@ export class UserService {
       `
       SELECT id
       FROM users
-      LIMIT 1
+      WHERE role = 'USER'
       `,
     );
 

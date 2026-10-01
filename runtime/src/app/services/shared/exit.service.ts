@@ -33,16 +33,18 @@ export class ExitService {
 
     if (deviceId) {
       const role = sessionStorage.getItem('device_role');
-console.log(deviceId);
-//      if (role === 'ADMIN') {
+
+      if (role === 'ADMIN') {
         await this.connectionsService.deleteDevices([deviceId]);
-//      } else {
-//        await this.connectionsService.softDeleteDevices([deviceId]);
-//      }
+      } else {
+        await this.connectionsService.softDeleteDevices([deviceId]);
+        console.log('device ' + deviceId + ' was disconnected');
+      }
     }
 
     localStorage.removeItem('device_id');
     sessionStorage.removeItem('device_role');
+    sessionStorage.removeItem('sync_state');
 
     await this.runtimeSessionService.clearSession();
   

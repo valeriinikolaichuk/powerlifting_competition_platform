@@ -1,5 +1,6 @@
 {
     "CREATE": "UTWÓRZ ZAWODY",
+    "LIST": "LISTA ZAWODÓW",
     "EDIT": "EDYTUJ ZAWODY",
     "NAME": "nazwa zawodów",
         "validate_competition_name": "Pole [nazwa zawodów] musi być wypełnione",
@@ -38,5 +39,9 @@
         "IBSA_MASTER_WOMEN": "WETERANKI",
         "validate_age_group": "Wybór grupy wiekowej jest wymagany",
     "CREATE_BUTTON": "UTWÓRZ",
-    "CANCEL": "ANULUJ"
+    "CANCEL": "ANULUJ",
+
+    "OPEN": "OTWÓRZ",
+    "EDIT_BUTTON": "EDYTUJ",
+    "DELETE": "USUŃ"
 }

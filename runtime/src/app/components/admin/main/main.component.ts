@@ -7,6 +7,7 @@ import { TranslationService } from '../../../i18n/services/translation.service';
 import { PopupService } from '../../../popup/services/popup.service';
 import { CompetitionPopupComponent } from '../../../popup/components/competition-popup/competition-popup.component';
 import { CreateCompetitionComponent } from '../../../popup/components/competition-popup/create-competition/create-competition.component';
+import { OpenCompetitionPopupComponent } from '../../../popup/components/open-competition-popup/open-competition-popup.component';
 
 @Component({
   selector: 'app-main',
@@ -36,14 +37,12 @@ export class MainComponent {
       content: CreateCompetitionComponent
     });
   }
-/*
+
   async openOpenCompetition(){
 
-    this.popup.open(SystemPopupComponent, {
-      content: SynchronizingDatabaseComponent
-    });
+    this.popup.open(OpenCompetitionPopupComponent);
   }
-*/
+
   async backToAdmin(){
     
     await this.router.navigate(['/admin'])

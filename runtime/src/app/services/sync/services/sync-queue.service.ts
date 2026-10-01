@@ -75,6 +75,8 @@ export class SyncQueueService {
 
   private async processQueue(): Promise<void> {
 
+    if (!this.pgliteService.isInitialized()) { return; }
+
     await this.socketService.waitForConnection();
 
     console.log('Queue synchronization started...');

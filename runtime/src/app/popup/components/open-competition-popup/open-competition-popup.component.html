@@ -1,0 +1,205 @@
+<div
+    class="w-[1050px] 
+        h-[600px] 
+        bg-gray-300
+        border-2
+        border-black
+        rounded-xl 
+        shadow-[0_0_0_7px_rgb(143,143,143)]">
+    <div>
+        <button
+            type="button"
+            class="absolute
+                right-[5px]
+                top-[5px]
+                w-[35px]
+                h-[35px]
+                flex
+                items-center
+                justify-center
+                pb-[6px]
+                bg-white
+                text-black
+                font-extrabold
+                text-2xl
+                border-black-400
+                rounded-full
+                cursor-pointer"
+            (click)="close()">
+
+            &times;
+        </button>
+
+        <h3 class="text-center 
+                text-xl 
+                font-bold 
+                mb-5
+                pt-[12px]">
+            {{ 'LIST' | t:'popups/competition-popup' }}</h3>
+
+        <div class="h-full">
+
+            <!-- LEFT -->
+            <div
+                class="float-left 
+                    w-[75%] 
+                    h-full 
+                    mt-3
+                    ml-2">
+                <div
+                    class="max-h-[485px] 
+                        overflow-y-auto 
+                        overflow-x-hidden">
+
+                    @for (competition of competitions; track competition.id) {
+                        <button
+                        type="button"
+                        class="w-full 
+                            block 
+                            mt-1
+                            text-left
+                            font-bold
+                            pl-2
+                            border-2
+                            border-black"
+                            [ngClass]="{
+                                'bg-[rgb(250,190,90)]': selectedCompetition?.id === competition.id,
+                                'bg-[rgb(250,250,160)]': selectedCompetition?.id !== competition.id
+                            }"
+                            (click)="selectCompetition(competition)">
+                        {{ competition.name }}
+                        </button>
+                    }
+
+                </div>
+            </div>
+
+            <!-- RIGHT -->
+            <div
+                class="float-right 
+                    w-[24%] 
+                    h-full 
+                    mt-3
+                    text-center 
+                    bg-gray-300">
+
+                <table class="mx-auto">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="buttonstyle"
+                                    [disabled]="!selectedCompetition"
+                                    (click)="openCompetition()">
+                                {{ 'OPEN' | t:'popups/competition-popup' }}
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="buttonstyle"
+                                    [disabled]="!selectedCompetition"
+                                    (click)="changeCompetition()">
+                                {{ 'EDIT_BUTTON' | t:'popups/competition-popup' }}
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="buttonstyle">
+                                ONLINE REG
+                                </button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="buttonstyle"
+                                    [disabled]="!selectedCompetition"
+                                    (click)="deleteCompetition()">
+                                {{ 'DELETE' | t:'popups/competition-popup' }}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="mx-auto">
+                    <tbody>
+                        <tr>
+                            <td class="w-[100px] text-center whitespace-pre">
+
+                                @if (selectedCompetition) {
+
+                                    <div class="text-center">
+
+                                        <p class="my-[3px]">
+                                            {{ selectedCompetition.country }}
+                                        </p>
+
+                                        <p class="my-[3px]">
+                                            {{ selectedCompetition.city }}
+                                        </p>
+
+                                        <p class="my-[3px]">
+                                            {{ selectedCompetition.start_date | date:'dd.MM.yyyy' }}
+                                            -
+                                            {{ selectedCompetition.end_date | date:'dd.MM.yyyy' }}
+                                        </p>
+
+                                        <p class="my-[3px]">
+                                            {{ selectedCompetition.type | t:'popups/competition-popup' }}
+                                        </p>
+
+                                        <p class="my-[3px]">
+                                            {{ selectedCompetition.division_name | t:'popups/competition-popup' }}
+                                        </p>
+
+                                        <p class="my-[3px]">
+                                            {{ selectedCompetition.age_groups[0].sex | t:'popups/competition-popup' }}
+                                        </p>
+
+                                        @for (ageGroup of selectedCompetition.age_groups; track ageGroup.id) {
+                                            <div>
+                                                {{ selectedCompetition.federation_code + '_' + ageGroup.name + '_' + ageGroup.sex | t:'popups/competition-popup' }}
+                                            </div>
+                                        }
+
+                                    </div>
+                                }
+
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table class="mx-auto">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <button
+                                    type="button"
+                                    class="buttonstyle"
+                                    (click)="close()">
+                                {{ 'CANCEL' | t:'popups/competition-popup' }}
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="clear-both"></div>
+
+        </div>
+    </div>
+</div>

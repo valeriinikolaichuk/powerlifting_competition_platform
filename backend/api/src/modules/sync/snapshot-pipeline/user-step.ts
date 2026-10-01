@@ -15,7 +15,9 @@ export class UserStep implements SnapshotStepInterface {
 
         const result = await this.prisma.$queryRawUnsafe(
             `
-            SELECT id
+            SELECT 
+                id,
+                role
             FROM users
             WHERE
                 id = $1::uuid

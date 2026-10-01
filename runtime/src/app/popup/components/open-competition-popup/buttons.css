@@ -1,0 +1,12 @@
+.buttonstyle {
+  width: 150px;
+  height: 40px;
+  display: inline;
+  padding: 5px;
+  background-color: rgb(180, 180, 255);
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
+  font-weight: bold;
+  border-radius: 5px;
+}

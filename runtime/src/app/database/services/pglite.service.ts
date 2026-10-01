@@ -59,14 +59,9 @@ export class PgliteService {
     }
   }
 
-  private async runMigrations(): Promise<void> {
+  isInitialized(): boolean { return this.initialized; }
 
-    this.popup.open(
-      SystemPopupComponent, 
-      {
-        content: CreatingDatabaseComponent
-      }
-    );
+  private async runMigrations(): Promise<void> {
 
     try {
 
@@ -76,6 +71,20 @@ export class PgliteService {
 
       const appliedMigrations = new Set(
         appliedResult.rows.map(r => r.name)
+      );
+
+      const pendingMigrations = migrationFiles.filter(filePath => {
+        const fileName = filePath.split('/').pop()!;
+        return !appliedMigrations.has(fileName);
+      });
+
+      if (pendingMigrations.length === 0) { return; }
+
+      this.popup.open(
+        SystemPopupComponent, 
+        {
+          content: CreatingDatabaseComponent
+        }
       );
 
       for (const filePath of migrationFiles) {
