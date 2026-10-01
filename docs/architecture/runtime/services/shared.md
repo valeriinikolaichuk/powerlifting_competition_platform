@@ -57,6 +57,7 @@ Updates the current device role and navigates to the corresponding client view.
 
 ```ts
 await clientRole('SCOREBOARD');
+```
 
 ---
 
@@ -77,6 +78,12 @@ For a detailed description of the process, see ➡ [Runtime Entry Flow](https://
 ---
 
 - ### synchronize()
+Check if database has already been synchronized:
+```ts
+let sync_state = sessionStorage.getItem('sync_state');  
+if (sync_state) { return; }
+```
+
 Opens a blocking system popup showing `SynchronizingDatabaseComponent` and performs the local `pgLite` database synchronization via [SyncService](services/sync-service.md#syncservice).
 
 If synchronization succeeds, the popup closes, and the component proceeds to navigation.
