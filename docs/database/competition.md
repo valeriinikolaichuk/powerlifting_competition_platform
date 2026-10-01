@@ -120,7 +120,13 @@ Defines the current competition status.
                     │
                     └── federation_category_id
                               │
-                              └── age_group_id → age_groups
+                              ├── age_group_id → age_groups
+                              │
+                              └── federation_id → federations
+                                                    │
+                                                    ├── federation_code → federation_code
+                                                    │
+                                                    └── id → federation_divisions
 </pre>
 
 ![ER Diagram](competition_flow.png)
