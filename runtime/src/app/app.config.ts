@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 
 import { SYNC_OPERATIONS } from './services/sync/tokens/sync-operation.token';
 import { CreateCompetitionOperation } from './services/sync/services/sync-operations/create-competition-operation';
+import { UpdateCompetitionOperation } from './services/sync/services/sync-operations/update-competition-operation';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,11 @@ export const appConfig: ApplicationConfig = {
     {
         provide: SYNC_OPERATIONS,
         useClass: CreateCompetitionOperation,
+        multi: true,
+    },
+    {
+        provide: SYNC_OPERATIONS,
+        useClass: UpdateCompetitionOperation,
         multi: true,
     },
   ]

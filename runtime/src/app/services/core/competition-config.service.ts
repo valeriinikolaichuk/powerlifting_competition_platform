@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
-import type { CompetitionData } from '#shared-sql';
+import type { CompetitionData, UpdateCompetitionData } from '#shared-sql';
 import { SYNC_OPERATIONS } from '#shared-sql';
 
 import { PgliteService } from '../../database/services/pglite.service';
@@ -35,7 +35,7 @@ export class CompetitionConfigService {
     }
 
     console.log(data);
-    
+
     await this.pg.transaction(async (tx) => {
 
       await tx.query(
@@ -61,6 +61,47 @@ export class CompetitionConfigService {
         tx,
         deviceId,
         'CREATE_COMPETITION',
+        data.id,
+        data,
+        data.updated_at,
+      );
+      
+    });
+  }
+
+  async update(data: UpdateCompetitionData): Promise<void> {
+
+    const userId = await this.userService.getUserId();
+
+    let deviceId = localStorage.getItem('device_id');
+
+    if (!deviceId) {
+      throw new Error('Device ID not found.');
+    }
+
+    console.log(data);
+
+    await this.pg.transaction(async (tx) => {
+
+      await tx.query(
+        SYNC_OPERATIONS.UPDATE_COMPETITION,
+        [
+          data.id,
+          data.name,
+          data.country,
+          data.city,
+          data.startDate,
+          data.endDate,
+          userId,
+          data.language,
+          data.updated_at,
+        ],
+      );
+
+      await this.syncQueueService.addQueue(
+        tx,
+        deviceId,
+        'UPDATE_COMPETITION',
         data.id,
         data,
         data.updated_at,

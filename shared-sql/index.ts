@@ -19,7 +19,7 @@ import { DELETE_COMPETITION_SQL } from './queries/competitions/delete.js';
 
 import { UPDATE_DEVICE_ROLE_SQL } from './queries/device_status/update_device_role.js';
 
-import { CompetitionData } from './dto/competition-data.js';
+import { CompetitionData, UpdateCompetitionData } from './dto/competition-data.js';
 import { DeviceRole } from './dto/device-role.js';
 
 export { 
@@ -48,6 +48,6 @@ export const SYNC_OPERATIONS = {
 } as const;
 
 export type { 
-    CompetitionData, 
+    CompetitionData, UpdateCompetitionData, 
     DeviceRole, 
 };

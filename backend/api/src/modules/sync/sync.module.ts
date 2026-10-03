@@ -32,6 +32,7 @@ import { SYNC_OPERATIONS } from './sync.tokens';
 import { SyncOperationFactoryService } from './sync-operations/sync-operation-factory.service';
 import { UserService } from './user.service';
 import { CreateCompetitionOperation } from './sync-operations/create-competition-operation';
+import { UpdateCompetitionOperation } from './sync-operations/update-competition-operation';
 import { DeviceRoleOperation } from './sync-operations/device-role-operation';
 import { DeviceRoleService } from './device-role.service.service';
 
@@ -107,7 +108,7 @@ import { DeviceRoleService } from './device-role.service.service';
 
   // iterable<SyncOperationInterface>
     CreateCompetitionOperation,
-//    UpdateCompetitionOperation,
+    UpdateCompetitionOperation,
 //    DeleteCompetitionOperation,
 
     DeviceRoleOperation,
@@ -117,18 +118,18 @@ import { DeviceRoleService } from './device-role.service.service';
       provide: SYNC_OPERATIONS,
       useFactory: (
         createCompetition: CreateCompetitionOperation,
-//        updateCompetition: UpdateCompetitionOperation,
+        updateCompetition: UpdateCompetitionOperation,
 //        deleteCompetition: DeleteCompetitionOperation,
         deviceRole: DeviceRoleOperation,
       ) => [
         createCompetition,
-//        updateCompetition,
+        updateCompetition,
 //        deleteCompetition,
         deviceRole,
       ],
       inject: [
         CreateCompetitionOperation,
-//        UpdateCompetitionOperation,
+        UpdateCompetitionOperation,
 //        DeleteCompetitionOperation,
         DeviceRoleOperation,
       ],

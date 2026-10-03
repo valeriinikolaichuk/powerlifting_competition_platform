@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
+
 import { PgliteService } from '../../../../database/services/pglite.service';
+import { TranslationService } from '../../../../i18n/services/translation.service';
 
 import { 
   FederationOption, 
@@ -17,6 +19,7 @@ export class CompetitionOptionsService {
   
   constructor(
     private readonly pgliteService: PgliteService,
+    public tService: TranslationService,
   ) {
     this.pg = this.pgliteService.database;
   }
@@ -117,5 +120,55 @@ export class CompetitionOptionsService {
     );
 
     return result.rows;
+  }
+
+  validateForm(
+    competitionName: string | null,
+    country: string | null,
+    city: string | null,
+  ): boolean {
+
+    if (!competitionName) {
+      alert(this.tService.t(
+        'popups/competition-popup',
+        'validate_competition_name'
+      ));
+
+      return false;
+    }
+
+    if (!country) {
+      alert(this.tService.t(
+        'popups/competition-popup',
+        'validate_country'
+      ));
+
+      return false;
+    }
+
+    if (!city) {
+      alert(this.tService.t(
+        'popups/competition-popup',
+        'validate_city'
+      ));
+      
+      return false;
+    }
+
+    return true;
+  }
+
+  validateageGroupForm(ageGroup: string[] | null): boolean {
+
+    if (!ageGroup || ageGroup.length === 0) {
+      alert(this.tService.t(
+        'popups/competition-popup',
+        'validate_age_group'
+      ));
+
+      return false;
+    }
+
+    return true;
   }
 }

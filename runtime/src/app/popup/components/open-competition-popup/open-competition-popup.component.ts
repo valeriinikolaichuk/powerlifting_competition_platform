@@ -5,10 +5,12 @@ import { TranslationService } from '../../../i18n/services/translation.service';
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 
 import { PopupService } from '../../services/popup.service';
-import { OpenCompetitionService } from '../../../services/core/open-competition.service';
+import { OpenCompetitionService } from './services/open-competition.service';
 import { CompetitionListItem } from './dto/competition-list-item';
 import { Competition } from './dto/competition.dto';
-import { AgeGroupOption } from '../competition-popup/dto/competition-options.dtos';
+
+import { CompetitionPopupComponent } from '../competition-popup/competition-popup.component';
+import { EditCompetitionComponent } from '../competition-popup/edit-competition/edit-competition.component';
 
 @Component({
   selector: 'app-open-competition-popup',
@@ -24,7 +26,6 @@ export class OpenCompetitionPopupComponent {
 
   competitions: CompetitionListItem[] = [];
   selectedCompetition: Competition | null = null;
-  ageGroups: AgeGroupOption[] = [];
 
   constructor(
     public tService: TranslationService,
@@ -60,20 +61,27 @@ export class OpenCompetitionPopupComponent {
 
     console.log(
       'OPEN',
-      this.selectedCompetition,
+      this.selectedCompetition.id,
     );
   }
 
-  changeCompetition(): void {
+  async changeCompetition(): Promise<void> {
 
     if (!this.selectedCompetition) {
       return;
     }
 
     console.log(
-      'CHANGE',
-      this.selectedCompetition,
+      'EDIT',
+      this.selectedCompetition.id,
     );
+
+    this.popup.close();
+
+    await this.popup.open(CompetitionPopupComponent, {
+      content: EditCompetitionComponent,
+      competition: this.selectedCompetition,
+    });
   }
 
   onlineRegistration(): void {

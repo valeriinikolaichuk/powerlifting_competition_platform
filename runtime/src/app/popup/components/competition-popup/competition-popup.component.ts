@@ -3,6 +3,7 @@ import { NgComponentOutlet } from '@angular/common';
 
 import { PopupService } from '../../services/popup.service';
 import { POPUP_DATA } from '../../tokens/popup-data.token';
+import { Competition } from '../open-competition-popup/dto/competition.dto';
 
 @Component({
   selector: 'app-competition-popup',
@@ -16,5 +17,6 @@ export class CompetitionPopupComponent {
 
   data = inject(POPUP_DATA) as {
     content: Type<any>;
+    competition: Competition;
   };
 }

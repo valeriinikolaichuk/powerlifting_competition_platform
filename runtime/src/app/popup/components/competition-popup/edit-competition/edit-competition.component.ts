@@ -1,81 +1,62 @@
-import { Component, computed } from '@angular/core';
-import { ReactiveFormsModule, FormBuilder, } from '@angular/forms';
+import { Component, input } from '@angular/core';
+import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 
 import { TranslationService } from '../../../../i18n/services/translation.service';
 import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 
 import { PopupService } from '../../../services/popup.service';
+import { OpenCompetitionPopupComponent } from '../../open-competition-popup/open-competition-popup.component';
+
 import { CompetitionConfigService } from '../../../../services/core/competition-config.service';
 import { CompetitionOptionsService } from '../services/competition-options.service';
 
-import { 
-  FederationOption, 
-  COMPETITION_LEVELS, 
-  COMPETITION_TYPES, 
-  DivisionOption, 
-  SEXES, 
-  AgeGroupOption,
-} from '../dto/competition-options.dtos';
+import { Competition } from '../../open-competition-popup/dto/competition.dto';
+import { AgeGroupOption } from '../dto/competition-options.dtos';
 
 @Component({
-  selector: 'app-create-competition',
+  selector: 'app-edit-competition.component',
   imports: [
     ReactiveFormsModule,
     TranslatePipe, 
   ],
-  templateUrl: './create-competition.component.html',
+  templateUrl: './edit-competition.component.html',
   styleUrl: '../autocomplete.css'
 })
-export class CreateCompetitionComponent {
+export class EditCompetitionComponent {
 
-  readonly types = COMPETITION_TYPES;
-  readonly sexes = SEXES;
-  readonly levels = computed(() => {
-    const lang = this.tService.lang();
+  competition = input.required<Competition>();
 
-    if (lang === 'en') { return COMPETITION_LEVELS; }
-
-    return COMPETITION_LEVELS.filter(
-      level => level !== 'INTERNATIONAL'
-    );
-  });
-
-  form;
-  isLoading = true;
+  form!: FormGroup;
 
   countrySuggestion = '';
   countrySuggestionOffset = 0;
   citySuggestion = '';
   citySuggestionOffset = 0;
 
-  federations: FederationOption[] = [];
-  divisions: DivisionOption[] = [];
   ageGroups: AgeGroupOption[] = [];
 
   constructor(
     private readonly fb: FormBuilder,
     public tService: TranslationService,  
     private readonly popup: PopupService, 
-    private readonly competitionConfigService: CompetitionConfigService, 
+    private readonly competitionConfigService: CompetitionConfigService,
     private readonly competitionOptionsService: CompetitionOptionsService,
   ) {
-    const today = new Date().toISOString().slice(0, 10);
+    this.tService.load('popups/competition-popup');
+  }
+
+  async ngOnInit() {
+    const competition = this.competition();
+
+    console.log(competition);
 
     this.form = this.fb.group({
-      competitionName: [''],
-      country: [''],
-      city: [''],
-      startDate: [today],
-      endDate: [today],
-      federation: [''],
-      level: [this.levels()[0]],
-      type: [this.types[0]],
-      division: [''],
-      sex: [this.sexes[0]],
-      ageGroup: this.fb.control<string[]>([]),
+      competitionName: [competition.competition_name],
+      country: [competition.country],
+      city: [competition.city],
+      startDate: [this.formatDate(competition.start_date)],
+      endDate: [this.formatDate(competition.end_date)],
     });
-
-    this.tService.load('popups/competition-popup');
 
     this.form.get('startDate')?.valueChanges.subscribe(
       (startDate) => {const endDate = this.form.get('endDate')?.value;
@@ -95,37 +76,7 @@ export class CreateCompetitionComponent {
       },
     );
 
-    this.form.get('federation')?.valueChanges.subscribe(
-      async (federationId) => {
-
-        this.form.get('division')?.setValue('');
-
-        if (!federationId) {
-          this.divisions = [];
-          return;
-        }
-
-        this.divisions = await this.competitionOptionsService.getDivisions(federationId);
-
-        if (this.divisions.length > 0) {
-          this.form.get('division')?.setValue(this.divisions[0].division);
-        }
-      },
-    );
-
-    this.form.get('federation')?.valueChanges.subscribe(
-      async () => { await this.loadAgeGroups(); },
-    );
-
-    this.form.get('sex')?.valueChanges.subscribe(
-      async () => { await this.loadAgeGroups(); },
-    );
-  }
-
-  async ngOnInit(): Promise<void> {
-
-    this.federations = await this.competitionOptionsService.getFederations();
-    this.form.get('federation')?.setValue(this.federations[0].id);
+    await this.loadAgeGroups();
   }
 
   // COUNTRY
@@ -205,11 +156,22 @@ export class CreateCompetitionComponent {
     return context.measureText(text).width;
   }
 
+  private formatDate(date: Date | string): string {
+    const d = new Date(date);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
   // AGE GROUP
   async loadAgeGroups(): Promise<void> {
+    const competition = this.competition();
 
-    const federationId = this.form.get('federation')?.value;
-    const sex = this.form.get('sex')?.value;
+    const federationId = competition.federation_id ?? '';
+    const sex = competition.age_groups[0]?.sex ?? '';
 
     if (!federationId || !sex) {
       this.ageGroups = [];
@@ -220,8 +182,6 @@ export class CreateCompetitionComponent {
       federationId,
       sex,
     );
-
-    this.isLoading = false;
   }
 
   getAgeGroupLabel(ageGroup: AgeGroupOption): string {
@@ -238,37 +198,14 @@ export class CreateCompetitionComponent {
       : translated;
   }
 
-  isAgeGroupSelected(ageGroupId: string): boolean {
-    return this.form.get('ageGroup')?.value?.includes(ageGroupId) ?? false;
+  isExistingAgeGroup(id: string): boolean {
+    return this.competition()
+      .age_groups
+      .some(ageGroup => ageGroup.federation_category_id === id);
   }
 
-  onAgeGroupChange(
-    ageGroupId: string,
-    event: Event,
-  ): void {
-
-    const control = this.form.get('ageGroup');
-
-    const selected = control?.value ?? [];
-
-    const checked = (event.target as HTMLInputElement).checked;
-
-    if (checked) {
-      control?.setValue([
-        ...selected,
-        ageGroupId,
-      ]);
-    } else {
-      control?.setValue(
-        selected.filter(
-          (id: string) => id !== ageGroupId
-        )
-      );
-    }
-  }
-
-  // CREATE
-  async create(): Promise<void> {
+  // EDIT
+  async edit(): Promise<void> {
 
     const value = this.form.getRawValue();
 
@@ -280,34 +217,28 @@ export class CreateCompetitionComponent {
 
     if (!isValid) { return; }
 
-    const isaAeGroupValid = 
-      await this.competitionOptionsService.validateageGroupForm(value.ageGroup);
+    const competition = this.competition();
 
-    if (!isaAeGroupValid) { return; }
-
-    const id = crypto.randomUUID();
     const language = localStorage.getItem('lang')?.toUpperCase();
     const now = new Date().toISOString();
 
-    await this.competitionConfigService.create({
-      id: id,
+    await this.competitionConfigService.update({
+      id: competition.id,
       name: value.competitionName!.trim(),
       country: value.country!.trim(),
       city: value.city!.trim(),
-      language: language!,
       startDate: value.startDate!,
       endDate: value.endDate!,
-      level: value.level!,
-      type: value.type!,
-      division: value.division!,
-      federationCategoryIds: value.ageGroup ?? [],
+      language: language!,
       updated_at: now,
     });
 
     this.popup.close();
+    this.popup.open(OpenCompetitionPopupComponent);
   }
 
   close(): void {
     this.popup.close();
+    this.popup.open(OpenCompetitionPopupComponent);
   }
 }

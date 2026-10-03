@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
-import { PgliteService } from '../../database/services/pglite.service';
-import { UserService } from '../shared/user.service';
-import { CompetitionListItem } from '../../popup/components/open-competition-popup/dto/competition-list-item';
-import { Competition } from '../../popup/components/open-competition-popup/dto/competition.dto';
+import { PgliteService } from '../../../../database/services/pglite.service';
+import { UserService } from '../../../../services/shared/user.service';
+import { CompetitionListItem } from '../dto/competition-list-item';
+import { Competition } from '../dto/competition.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -52,8 +52,10 @@ export class OpenCompetitionService {
           c.competition_level,
           c.type,
 
+          c.name AS competition_name,
           ci.name AS city,
           co.name AS country,
+          f.id AS federation_id,
           f.federation_code AS federation_code,
           fd.name AS division_name,
 
@@ -62,7 +64,8 @@ export class OpenCompetitionService {
               jsonb_build_object(
                 'id', ag.id,
                 'name', ag.name,
-                'sex', ag.sex
+                'sex', ag.sex,
+                'federation_category_id', cag.federation_category_id
               )
             ) FILTER (WHERE ag.id IS NOT NULL),
             '[]'::jsonb
@@ -99,8 +102,10 @@ export class OpenCompetitionService {
           c.end_date,
           c.competition_level,
           c.type,
+          c.name,
           ci.name,
           co.name,
+          f.id,
           f.federation_code,
           fd.name
       `,
