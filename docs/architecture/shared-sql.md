@@ -13,6 +13,8 @@ It provides a single source of truth for database-related constants and `SQL` lo
 - [Synchronization Operations](#synchronization-operations)
 - [Shared DTOs](#shared-dtos)
   - [CompetitionData](#competitiondata)
+  - [UpdateCompetitionData](#updatecompetitiondata)
+  - [ArchiveCompetitionData](#archivecompetitiondata)
   - [DeviceRole](#devicerole)
 - [Synchronization Table Configuration](#synchronization-table-configuration)
 
@@ -37,7 +39,7 @@ It exports:
 export const SYNC_OPERATIONS = {
   CREATE_COMPETITION: CREATE_COMPETITION_SQL,
   UPDATE_COMPETITION: UPDATE_COMPETITION_SQL,
-  DELETE_COMPETITION: DELETE_COMPETITION_SQL,
+  ARCHIVE_COMPETITION: ARCHIVE_COMPETITION_SQL,
 } as const;
 ```
 These `SQL queries` are defined in [/queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/queries) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/services/sync-service.md#synchronization-operations)  and corresponding individual operations on the frontend.
@@ -63,6 +65,22 @@ Represents the data required to create a competition.
 - type
 - division
 - federationCategoryIds
+- updated_at
+
+### UpdateCompetitionData
+Represents the data required to edit competition data.
+
+- id
+- name
+- country
+- city
+- startDate
+- endDate
+- language
+- updated_at
+
+### ArchiveCompetitionData
+
 - updated_at
 
 ### DeviceRole

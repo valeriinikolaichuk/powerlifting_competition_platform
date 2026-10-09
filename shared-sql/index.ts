@@ -15,11 +15,14 @@ import {
 
 import { CREATE_COMPETITION_SQL } from './queries/competitions/create.js';
 import { UPDATE_COMPETITION_SQL } from './queries/competitions/update.js';
-import { DELETE_COMPETITION_SQL } from './queries/competitions/delete.js';
+import { ARCHIVE_COMPETITION_SQL } from './queries/competitions/archive.js';
 
 import { UPDATE_DEVICE_ROLE_SQL } from './queries/device_status/update_device_role.js';
 
-import { CompetitionData, UpdateCompetitionData } from './dto/competition-data.js';
+import { SET_NOMINATION_DATES_SQL } from './queries/nominations/set_dates.js';
+import { UPDATE_NOMINATION_STATUS_SQL } from './queries/nominations/update_staus.js';
+
+import { CompetitionData, UpdateCompetitionData, ArchiveCompetitionData } from './dto/competition-data.js';
 import { DeviceRole } from './dto/device-role.js';
 
 export { 
@@ -41,13 +44,16 @@ export const SYNC_OPERATIONS = {
 
   CREATE_COMPETITION: CREATE_COMPETITION_SQL,
   UPDATE_COMPETITION: UPDATE_COMPETITION_SQL,
-  DELETE_COMPETITION: DELETE_COMPETITION_SQL,
+  ARCHIVE_COMPETITION: ARCHIVE_COMPETITION_SQL,
 
   UPDATE_DEVICE_ROLE: UPDATE_DEVICE_ROLE_SQL,
+
+  SET_NOMINATION_DATES: SET_NOMINATION_DATES_SQL,
+  UPDATE_NOMINATION_STATUS: UPDATE_NOMINATION_STATUS_SQL,
 
 } as const;
 
 export type { 
-    CompetitionData, UpdateCompetitionData, 
+    CompetitionData, UpdateCompetitionData, ArchiveCompetitionData, 
     DeviceRole, 
 };

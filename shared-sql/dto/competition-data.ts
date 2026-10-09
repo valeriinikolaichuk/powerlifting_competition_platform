@@ -25,3 +25,7 @@ export interface UpdateCompetitionData {
     language: string;
     updated_at: string;
 }
+
+export interface ArchiveCompetitionData {
+    updated_at: string;
+}
