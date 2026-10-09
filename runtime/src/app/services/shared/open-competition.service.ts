@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
-import { PgliteService } from '../../../../database/services/pglite.service';
-import { UserService } from '../../../../services/shared/user.service';
-import { CompetitionListItem } from '../dto/competition-list-item';
-import { Competition } from '../dto/competition.dto';
+import { PgliteService } from '../../database/services/pglite.service';
+import { UserService } from './user.service';
+import { CompetitionListItem } from './dto/competition-list-item';
+import { NominationListItem } from './dto/nomination-list-item';
+import { Competition } from './dto/competition.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,34 @@ export class OpenCompetitionService {
           AND is_deleted = false
           AND status = 'ACTIVE'
         ORDER BY start_date
+      `,
+      [userId],
+    );
+
+    return result.rows;
+  }
+
+  async getNominatedCompetitions(): Promise<NominationListItem[]> {
+
+    const userId = await this.userService.getUserId();
+
+    const result = await this.pg.query<NominationListItem>(
+      `
+        SELECT
+          c.id,
+          c.name,
+          c.start_date,
+          c.end_date,
+          ns.competition_id IS NOT NULL AS online_registration,
+          ns.preliminary_date,
+          ns.final_date
+        FROM competitions c
+        LEFT JOIN nomination_status ns
+          ON ns.competition_id = c.id
+        WHERE c.created_by_user_id = $1
+          AND c.is_deleted = false
+          AND c.status = 'ACTIVE'
+        ORDER BY c.start_date DASC
       `,
       [userId],
     );
@@ -93,6 +122,7 @@ export class OpenCompetitionService {
 
         WHERE c.id = $1
           AND c.is_deleted = false
+          AND c.status = 'ACTIVE'
           AND ci.is_deleted = false
           AND co.is_deleted = false
 

@@ -5,6 +5,7 @@
 
 - [AdminComponent](#admincomponent)
 - [MainComponent](#maincomponent)
+- [RegistrationComponent](#registrationcomponent)
 
 </details>
 
@@ -50,5 +51,44 @@ The component provides access to administrator actions and serves as the entry p
 - Opens the competition creation workflow.
 - Navigates back to the [administrator page](#admincomponent).
 
+#### Features
+
+- **Create Competition** — Opens a `popup` containing [CreateCompetitionComponent](systems/competition-config-system.md#createcompetitioncomponent) to configure a new competition.
+- **Open Competition** — Opens [OpenCompetitionPopupComponent](systems/competition-config-system.md#opencompetitionpopupcomponent) to select an existing competition.
+- **Online Registration** — Displays a navigation button to the [registration page](#registrationcomponent) when an internet connection is available.
+- **Return** — Navigates back to the [administrator page](#admincomponent).
+
+#### Initialization
+
+During `ngOnInit()`, the component [checks](services/shared.md#checkonlineservice) internet connectivity, adjusts the navigation button position when online, and loads the page translations.
+
 ---
 
+### RegistrationComponent
+Provides the interface for viewing competitions and configuring online registration deadlines.
+
+#### Features
+- **Load Competitions** — Retrieves competitions available for registration through [OpenCompetitionService](services/shared.md#opencompetitionservice).
+- **Online Status** — Checks whether the current user is configured for online mode using [CheckOnlineService](services/shared.md#checkonlineservice) and adjusts the navigation button position accordingly.
+- **Select Competition** — Loads the full details of the selected competition.
+- **Set Deadlines** — Opens [SetDeadlinesComponent](systems/competition-config-system.mdSS#setdeadlinescomponent) inside `CompetitionPopupComponent` to configure nomination deadlines for the selected competition.
+- **Return Navigation** — Uses a dynamically positioned navigation button in the component template.
+
+#### Services
+- `TranslationService` — Loads translations from `pages/registration`.
+- `PgliteService` — Provides access to the local PGlite database.
+- [CheckOnlineService](services/shared.md#checkonlineservice) — Checks whether the current user has an ADMIN device configured for online mode.
+- [OpenCompetitionService](services/shared.md#opencompetitionservice) — Retrieves the competition list and selected competition details.
+- [PopupService](systems/popup-system.md) — Opens the deadline configuration popup.
+
+#### Initialization
+The constructor initializes the local database reference, loads page translations, and starts loading competitions.
+
+During `ngOnInit()`, the component checks online mode and updates the navigation button position.
+
+#### Methods
+- **`loadCompetitions()`** — Retrieves the competition list.
+- **`selectCompetition()`** — Loads the details of the selected competition.
+- **`openDeadline()`** — Opens the [deadline configuration popup](systems/competition-config-system.mdSS#setdeadlinescomponent) if a competition is selected.
+
+---

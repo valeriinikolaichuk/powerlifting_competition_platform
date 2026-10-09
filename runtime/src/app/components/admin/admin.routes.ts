@@ -4,6 +4,7 @@ import { sessionGuard } from '../../session/guards/session-guard-guard';
 
 import { AdminComponent } from './admin/admin.component';
 import { MainComponent } from './main/main.component';
+import { RegistrationComponent } from './registration/registration.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -14,6 +15,11 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'main',
     component: MainComponent,
+    canActivate: [sessionGuard],
+  },
+  {
+    path: 'registration',
+    component: RegistrationComponent,
     canActivate: [sessionGuard],
   },
 ];

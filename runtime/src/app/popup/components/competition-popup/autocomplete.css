@@ -20,11 +20,7 @@
 .autocomplete-suggestion .typed {
     visibility: hidden;
 }
-/*
-.autocomplete-suggestion .rest {
-    color: #9ca3af;
-}
-*/
+
 .autocomplete-input {
     position: relative;
     z-index: 1;

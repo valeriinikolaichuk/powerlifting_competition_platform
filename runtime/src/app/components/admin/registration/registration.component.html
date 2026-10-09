@@ -1,0 +1,91 @@
+<div class="flex 
+        flex-col 
+        w-full 
+        h-full">
+
+    <header class="w-full 
+                h-[30px]
+                bg-red-500">
+        <div class="flex 
+                items-start">
+
+        @if (this.isOnline) {
+
+            <button
+                type="button"
+                class="sticky 
+                    left-0 
+                    w-[100px] 
+                    h-[30px]
+                    p-[5px]
+                    bg-[rgb(180,180,255)]
+                    border
+                    border-black
+                    cursor-pointer"
+                    [disabled]="!selectedCompetition"
+                    (click)="openDeadline()">
+                {{ 'DEADLINES' | t:'pages/registration' }}
+            </button>
+
+        }
+                        
+            <button
+                routerLink="/admin/main"
+                type="button"
+                [style.left.px]="buttonLeft"
+                class="sticky 
+                    w-[100px] 
+                    h-[30px]
+                    p-[5px]
+                    bg-[rgb(180,180,255)]
+                    border
+                    border-black
+                    cursor-pointer">
+                {{ 'RETURN' | t:'pages/registration' }}
+            </button>
+
+        </div>
+    </header>
+
+    <main class="flex-1">
+        
+        <div
+            class="float-left 
+                w-full 
+                h-full 
+                mt-3
+                ml-2">
+            <div
+                class="max-h-[485px] 
+                    overflow-y-auto 
+                    overflow-x-hidden">
+
+                @for (competition of competitions; track competition.id) {
+
+                    <button
+                        type="button"
+                        class="w-full 
+                            block 
+                            mt-1
+                            text-left
+                            font-bold
+                            pl-2
+                            border-2
+                            border-black"
+                            [ngClass]="{
+                                'bg-[rgb(250,190,90)]': selectedCompetition?.id === competition.id,
+                                'bg-[rgb(250,250,160)]': selectedCompetition?.id !== competition.id
+                            }"
+                            (click)="selectCompetition(competition)">
+                        {{ competition.name }}
+                    </button>
+
+                }
+
+            </div>
+        </div>
+
+    </main>
+
+</div>
+

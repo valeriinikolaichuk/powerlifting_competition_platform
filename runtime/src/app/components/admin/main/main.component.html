@@ -38,24 +38,30 @@
                 (click)="openOpenCompetition()">
                 {{ 'OPEN' | t:'pages/main' }}
             </button>
-<!--
+
+        @if (this.isOnline) {
+
             <button
+                routerLink="/admin/registration"
                 type="button"
-                class="w-[100px] 
+                class="sticky 
+                        left-[200px]
+                        w-[100px] 
                         h-[30px]
                         p-[5px]
                         bg-[rgb(180,180,255)]
                         border
                         border-black
-                        cursor-pointer"
-                (click)="openNominations()">
-                NOMINATIONS
+                        cursor-pointer">
+                ONLINE
             </button>
--->
+
+        }
+
             <button
                 type="button"
+                [style.left.px]="buttonLeft"
                 class="sticky 
-                    left-[200px] 
                     w-[100px] 
                     h-[30px]
                     p-[5px]
