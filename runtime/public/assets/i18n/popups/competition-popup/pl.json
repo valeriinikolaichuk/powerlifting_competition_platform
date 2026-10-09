@@ -2,6 +2,7 @@
     "CREATE": "UTWÓRZ ZAWODY",
     "LIST": "LISTA ZAWODÓW",
     "EDIT": "EDYTUJ ZAWODY",
+    "SET_DEADLINES": "TERMINY NOMINACJI DO REJESTRACJI ONLINE",
     "NAME": "nazwa zawodów",
         "validate_competition_name": "Pole [nazwa zawodów] musi być wypełnione",
     "COUNTRY": "państwo",
@@ -43,5 +44,11 @@
 
     "OPEN": "OTWÓRZ",
     "EDIT_BUTTON": "EDYTUJ",
-    "DELETE": "USUŃ"
+    "ARCHIVE": "ARCHIWIZUJ",
+    "MESSAGE": "Czy na pewno chcesz zarchiwizować te zawody?",
+
+    "PRELIMINARY": "WSTĘPNA: ",
+    "FINAL": "KOŃCOWA: ",
+    "SET": "USTAW",
+    "Failed_to_save_nomination_dates": "Nie udało się zapisać dat nominacji"
 }

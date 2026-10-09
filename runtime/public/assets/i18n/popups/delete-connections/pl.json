@@ -1,10 +1,12 @@
 {
-    "MESSAGE": "Lista przedstawia połączenia wykryte przez system. Niektóre z nich mogą być połączeniami widmowymi (zawieszonymi sesjami), które pozostały po niepoprawnym zamknięciu aplikacji lub awarii sieci. Prosimy o ich weryfikację, zaznaczenie nieaktualnych i usunięcie.",
+    "MESSAGE": "Lista przedstawia połączenia wykryte przez system. Niektóre z nich mogą być połączeniami widmowymi (zawieszonymi sesjami), które pozostały po niepoprawnym zamknięciu aplikacji lub awarii sieci. Zweryfikuj je, zaznacz nieaktualne i usuń. Jeśli ich nie ma, naciśnij [ZAMKNIJ], w przeciwnym razie usuń nieprawidłowe połączenia",
     "NUMBER": "#",
     "IP": "IP",
     "BROWSER": "PRZEGLĄDARKA",
     "ROLE": "ROLA URZĄDZENIA",
     "CONNECTED": "POŁĄCZONO",
     "DELETE_WARNING": "⚠️ Uwaga! Usunięcie urządzenia, które jest obecnie połączone z systemem, może spowodować jego nieprawidłowe działanie. Czy na pewno chcesz usunąć wybrane połączenia?",
-    "DELETED": "Wybrane połączenia zostały usunięte."
+    "DELETED": "Wybrane połączenia zostały usunięte.",
+    "DELETE": "USUŃ",
+    "CLOSE": "ZAMKNIJ"
 }

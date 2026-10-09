@@ -1,5 +1,6 @@
 {
     "CREATE": "CREATE",
     "OPEN": "OPEN",
+    "ONLINE": "ONLINE",
     "RETURN": "RETURN"
 }

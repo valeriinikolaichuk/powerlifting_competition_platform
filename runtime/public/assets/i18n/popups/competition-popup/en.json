@@ -2,6 +2,7 @@
     "CREATE": "CREATE A COMPETITION",
     "LIST": "LIST OF COMPETITIONS",
     "EDIT": "EDIT THE COMPETITION",
+    "SET_DEADLINES": "SET NOMINATION DEADLINES FOR ONLINE REGISTRATION",
     "NAME": "competition name",
         "validate_competition_name": "The [competition name] field must be completed",
     "COUNTRY": "country",
@@ -43,5 +44,11 @@
 
     "OPEN": "OPEN",
     "EDIT_BUTTON": "EDIT",
-    "DELETE": "DELETE"
+    "ARCHIVE": "ARCHIVE",
+    "MESSAGE": "Are you sure you want to archive this competition?",
+    
+    "PRELIMINARY": "PRELIMINARY: ",
+    "FINAL": "FINAL: ",
+    "SET": "SET",
+    "Failed_to_save_nomination_dates": "Failed to save nomination dates"
 }
