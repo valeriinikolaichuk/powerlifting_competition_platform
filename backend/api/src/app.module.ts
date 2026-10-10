@@ -7,6 +7,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { RuntimeModule } from './modules/runtime/runtime.module';
 import { ConnectionsModule } from './modules/connections/connections.module';
 import { SyncModule } from './modules/sync/sync.module';
+import { NominationsModule } from './modules/nominations/nominations.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { SyncModule } from './modules/sync/sync.module';
     RuntimeModule,
     ConnectionsModule,
     SyncModule,
+    NominationsModule,
   ],
   controllers: [],
   providers: [],

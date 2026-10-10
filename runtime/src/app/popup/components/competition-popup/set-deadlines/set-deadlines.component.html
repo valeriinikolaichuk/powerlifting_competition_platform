@@ -1,0 +1,361 @@
+<button
+    type="button"
+    class="absolute
+        right-[5px]
+        top-[5px]
+        w-[35px]
+        h-[35px]
+        flex
+        items-center
+        justify-center
+        pb-[6px]
+        bg-white
+        text-black
+        font-extrabold
+        text-2xl
+        border-black-400
+        rounded-full
+        cursor-pointer"
+    (click)="close()">
+
+    &times;
+</button>
+
+<h3 class="text-center 
+        text-xl 
+        font-bold 
+        mb-5">
+    {{ 'SET_DEADLINES' | t:'popups/competition-popup' }}
+</h3>
+
+@if (form) {
+<form [formGroup]="form">
+
+    <table class="w-full 
+            border-collapse 
+            mb-4">
+        <tbody>
+
+            <tr>
+                <td class="p-2">
+                    {{ 'NAME' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+
+                    <div class="border 
+                        border-black 
+                        rounded 
+                        px-2 
+                        py-1">
+                        {{ competition().competition_name }}
+                    </div>
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <!-- COUNTRY / CITY / DATES -->
+    <table class="w-full 
+            border-collapse 
+            mb-4">
+        <tbody>
+
+            <tr>
+                <td class="p-2">
+                    {{ 'COUNTRY' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'CITY' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'START_DATE' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'END_DATE' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().country }}
+                    </div>
+
+                </td>
+
+                <td class="p-2">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().city }}
+                    </div>
+
+                </td>
+
+                <td class="p-2">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().start_date | date:'dd.MM.yyyy' }}
+                    </div>
+
+                </td>
+
+                <td class="p-2">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().end_date | date:'dd.MM.yyyy' }}
+                    </div>
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <!-- FEDERATION / LEVEL / TYPE / DIVISION -->
+    <table class="w-full 
+            border-collapse 
+            mb-4">
+        <tbody>
+
+            <tr>
+                <td class="p-2">
+                    {{ 'FEDERATION' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'LEVEL' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'TYPE' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2">
+                    {{ 'DIVISION' | t:'popups/competition-popup' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2 w-1/4">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().federation_code }}
+                    </div>
+
+                </td>
+
+                <td class="p-2 w-1/4">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().competition_level | t:'popups/competition-popup' }}
+                    </div>
+
+                </td>
+
+                <td class="p-2 w-1/4">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().type | t:'popups/competition-popup' }}
+                    </div>
+
+                </td>
+
+                <td class="p-2 w-1/4">
+
+                    <div class="border 
+                            border-black 
+                            rounded 
+                            px-2 
+                            py-1">
+                        {{ competition().division_name | t:'popups/competition-popup' }}
+                    </div>
+
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+                </td>
+
+                <td class="p-2">
+                    {{ 'AGE_GROUP' | t:'popups/competition-popup' }}
+                </td>
+
+                <td class="p-2 ">
+                </td>
+
+                <td class="p-2">
+                </td>
+            </tr>
+
+            <tr>
+                <td class="p-2">
+
+                    <div class="p-2">              
+                        {{ 'SEX' | t:'popups/competition-popup' }}
+                    </div>
+
+                    <div class="border 
+                        border-black 
+                        rounded 
+                        px-2 
+                        py-1
+                        mb-12">
+                        {{ competition().age_groups[0]?.sex ?? '' | t:'popups/competition-popup' }}
+                    </div>
+
+                </td>
+
+                <td class="p-2">
+
+                    @for (ageGroup of ageGroups; track ageGroup.id) {
+
+                        <label class="flex items-center gap-2">
+
+                            <input
+                                type="checkbox"
+                                class="custom-checkbox"
+                                [checked]="isExistingAgeGroup(ageGroup.id)"
+                                disabled>
+
+                            <span>
+                                {{ getAgeGroupLabel(ageGroup) | t:'popups/competition-popup' }}
+                            </span>
+
+                        </label>
+
+                    }
+
+                </td>
+
+                <td class="p-2">
+
+                    <div class="p-2">
+                        <b>
+                            {{ 'PRELIMINARY' | t:'popups/competition-popup' }}
+                            {{ preliminaryDays.toString() }}
+                        </b>
+                    </div>
+
+                    <input
+                        type="date"
+                        name="preliminary_date"
+                        formControlName="preliminaryDate"
+                        class="border
+                            border-black
+                            rounded
+                            px-2
+                            py-1
+                            mb-12">
+
+                </td>
+
+                <td class="p-2">
+
+                    <div class="p-2">
+                        <b>
+                            {{ 'FINAL' | t:'popups/competition-popup' }}
+                            {{ finalDays.toString() }}
+                        </b>
+                    </div>
+
+                    <input
+                        type="date"
+                        name="final_date"
+                        formControlName="finalDate"
+                        class="border
+                            border-black
+                            rounded
+                            px-2
+                            py-1
+                            mb-12">
+
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+
+    <!-- BUTTONS -->
+    <div class="flex 
+            justify-end 
+            mt-5">
+
+        <button
+            type="button"
+            class="w-[150px]
+                px-4
+                py-2
+                mr-2
+                rounded-md
+                border-2
+                border-black
+                cursor-pointer
+                bg-green-600
+                text-white
+                font-bold
+                hover:opacity-85"
+            (click)="setDeadlines()">
+            {{ 'SET' | t:'popups/competition-popup' }}
+        </button>
+
+        <button
+            type="button"
+            class="w-[150px]
+                px-4
+                py-2
+                rounded-md
+                border-2
+                border-black
+                cursor-pointer
+                bg-gray-500
+                text-white
+                font-bold
+                hover:opacity-85"
+            (click)="close()">
+            {{ 'CANCEL' | t:'popups/competition-popup' }}
+        </button>
+
+    </div>
+
+</form>
+}
+
