@@ -109,4 +109,32 @@ export class CompetitionConfigService {
       
     });
   }
+
+  async archive(id: string): Promise<void> {
+
+    const deviceId = localStorage.getItem('device_id');
+
+    if (!deviceId) { throw new Error('Device ID not found'); }
+
+    const now = new Date().toISOString();
+
+    await this.pg.transaction(async (tx) => {
+
+      await tx.query(
+        SYNC_OPERATIONS.ARCHIVE_COMPETITION,
+         [id, now],
+      );
+
+      await this.syncQueueService.addQueue(
+        tx,
+        deviceId,
+        'ARCHIVE_COMPETITION',
+        id,
+        {
+          updated_at: now,
+        },
+          now,
+        );
+    });
+  }
 }

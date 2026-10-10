@@ -5,9 +5,10 @@ import { TranslationService } from '../../../i18n/services/translation.service';
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 
 import { PopupService } from '../../services/popup.service';
-import { OpenCompetitionService } from './services/open-competition.service';
-import { CompetitionListItem } from './dto/competition-list-item';
-import { Competition } from './dto/competition.dto';
+import { OpenCompetitionService } from '../../../services/shared/open-competition.service';
+import { CompetitionConfigService } from '../../../services/core/competition-config.service';
+import { CompetitionListItem } from '../../../services/shared/dto/competition-list-item';
+import { Competition } from '../../../services/shared/dto/competition.dto';
 
 import { CompetitionPopupComponent } from '../competition-popup/competition-popup.component';
 import { EditCompetitionComponent } from '../competition-popup/edit-competition/edit-competition.component';
@@ -31,6 +32,7 @@ export class OpenCompetitionPopupComponent {
     public tService: TranslationService,
     private readonly popup: PopupService,
     private readonly openCompetitionService: OpenCompetitionService,
+    private readonly competitionConfigService: CompetitionConfigService,
   ) {
     this.tService.load('popups/competition-popup');
     this.loadCompetitions();
@@ -55,26 +57,16 @@ export class OpenCompetitionPopupComponent {
 
   openCompetition(): void {
 
-    if (!this.selectedCompetition) {
-      return;
-    }
+    if (!this.selectedCompetition) { return; }
 
-    console.log(
-      'OPEN',
-      this.selectedCompetition.id,
-    );
+    console.log('OPEN', this.selectedCompetition.id,);
   }
 
   async changeCompetition(): Promise<void> {
 
-    if (!this.selectedCompetition) {
-      return;
-    }
+    if (!this.selectedCompetition) { return; }
 
-    console.log(
-      'EDIT',
-      this.selectedCompetition.id,
-    );
+    console.log('EDIT', this.selectedCompetition.id,);
 
     this.popup.close();
 
@@ -84,28 +76,24 @@ export class OpenCompetitionPopupComponent {
     });
   }
 
-  onlineRegistration(): void {
+  async archiveCompetition(): Promise<void> {
 
-    if (!this.selectedCompetition) {
-      return;
-    }
+    if (!this.selectedCompetition) { return; }
 
-    console.log(
-      'ONLINE REG',
-      this.selectedCompetition,
-    );
-  }
+    console.log('ARCHIVE', this.selectedCompetition,);
 
-  deleteCompetition(): void {
+    const confirmed = window.confirm(this.tService.t(
+      'popups/competition-popup',
+      'MESSAGE'
+    ));
 
-    if (!this.selectedCompetition) {
-      return;
-    }
+    if (!confirmed) { return; }
 
-    console.log(
-      'DELETE',
-      this.selectedCompetition,
-    );
+    await this.competitionConfigService.archive(this.selectedCompetition.id,);
+
+    this.selectedCompetition = null;
+
+    await this.loadCompetitions();
   }
 
   close(): void {

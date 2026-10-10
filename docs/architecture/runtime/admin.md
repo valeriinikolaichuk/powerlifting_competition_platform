@@ -71,7 +71,7 @@ Provides the interface for viewing competitions and configuring online registrat
 - **Load Competitions** — Retrieves competitions available for registration through [OpenCompetitionService](services/shared.md#opencompetitionservice).
 - **Online Status** — Checks whether the current user is configured for online mode using [CheckOnlineService](services/shared.md#checkonlineservice) and adjusts the navigation button position accordingly.
 - **Select Competition** — Loads the full details of the selected competition.
-- **Set Deadlines** — Opens [SetDeadlinesComponent](systems/competition-config-system.mdSS#setdeadlinescomponent) inside `CompetitionPopupComponent` to configure nomination deadlines for the selected competition.
+- **Set Deadlines** — Opens [SetDeadlinesComponent](systems/competition-config-system.md#setdeadlinescomponent) inside `CompetitionPopupComponent` to configure nomination deadlines for the selected competition.
 - **Return Navigation** — Uses a dynamically positioned navigation button in the component template.
 
 #### Services

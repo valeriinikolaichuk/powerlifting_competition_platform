@@ -1,5 +1,5 @@
 export interface CompetitionListItem {
     
-  id: string;
-  name: string;
+    id: string;
+    name: string;
 }

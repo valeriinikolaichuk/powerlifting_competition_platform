@@ -113,20 +113,10 @@
                             <td>
                                 <button
                                     type="button"
-                                    class="buttonstyle">
-                                ONLINE REG
-                                </button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <button
-                                    type="button"
                                     class="buttonstyle"
                                     [disabled]="!selectedCompetition"
-                                    (click)="deleteCompetition()">
-                                {{ 'DELETE' | t:'popups/competition-popup' }}
+                                    (click)="archiveCompetition()">
+                                {{ 'ARCHIVE' | t:'popups/competition-popup' }}
                                 </button>
                             </td>
                         </tr>

@@ -8,7 +8,12 @@ Starts and ends the `Runtime` initialization process.
 - [ExitService](#exitservice)
 - [DeviceIdService](#deviceidservice)
   - [DeviceParamsDto](#deviceparamsdto)
+- [OpenCompetitionService](#opencompetitionservice)
+  - [CompetitionListItem](#competitionlistitem)
+  - [Competition DTO](#competition)
+  - [NominationListItem](#nominationlistitem)
 - [UserService](#userservice)
+- [CheckOnlineService](#checkonlineservice)
 
 </details>
 
@@ -160,6 +165,61 @@ Returns [DeviceParamsDto](#deviceparamsdto)
 
 ---
 
+### OpenCompetitionService
+Retrieves competition lists and detailed competition information from the local [PGlite database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md).
+
+- ### getCompetitions()
+Retrieves active, non-deleted competitions created by the current user, ordered by start date.
+
+- ### getNominatedCompetitions()
+Retrieves competitions created by the current user, including their dates and nomination information. It uses a `LEFT JOIN` with `nomination_status` to determine whether online registration has been configured and to retrieve preliminary and final nomination dates.
+
+- ### getCompetitionData()
+Retrieves detailed information about a selected competition, including its dates.
+
+---
+
+### DTOs
+
+- ### CompetitionListItem  
+  - id
+  - name
+
+- ### Competition
+```ts
+export interface CompetitionAgeGroup {
+  id: string;
+  name: string;
+  sex: string;
+  federation_category_id: string;
+}
+
+export interface Competition {
+
+  id: string;
+  competition_name: string;
+  start_date: string;
+  end_date: string;
+  competition_level: string;
+  type: string;
+  division_name: string;
+  city: string;
+  country: string;
+  federation_id: string;
+  federation_code: string;
+  age_groups: CompetitionAgeGroup[];
+}
+```
+
+- ### NominationListItem
+  - id
+  - name
+  - start_date
+  - end_date
+  - online_registration
+
+---
+
 ### UserService
 Provides access to user-related data stored in the local PGlite database.
 
@@ -171,5 +231,18 @@ FROM users
 LIMIT 1
 ```
 The `Runtime` database [users](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md#users) table contains the currently synchronized `user` record.
+
+---
+
+### CheckOnlineService
+Determines whether the current user has an active device configured for `online mode`.
+
+- **`checkOnline()`** — Retrieves the current user ID and queries the local PGlite database for a device matching the following conditions:
+  - `created_by_user_id` matches the current user.
+  - `device_role` is `ADMIN`.
+  - `mode` is `ONLINE`.
+  - `is_deleted` is `false`.
+
+The method returns `true` if a matching record exists; otherwise, it returns `false`.
 
 ---
