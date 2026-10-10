@@ -113,7 +113,7 @@ The backend returns [ConnectionsResultDto](#connectionsresultdto) with [Connecti
 
 - ### exitParameters()
 Creates the device parameters required when leaving the Runtime application.  
-Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](services/shared.md#deviceidservice)
+Reseaves the `mode` and the persistent `device_id` from [DeviceIdService](shared.md#deviceidservice)
 
 The method retrieves the information required by the exit flow:
 * `device_id` — identifies the current device connection.
@@ -211,7 +211,7 @@ The device status is delivered from the backend to the `ADMIN` device through `S
 
 1. The `Runtime` creates [SocketService](sync-service.md#socketservice).
 
-2. `SocketService` obtains the `deviceId` from [DeviceIdService](services/shared.md#deviceidservice).
+2. `SocketService` obtains the `deviceId` from [DeviceIdService](shared.md#deviceidservice).
 
 3. `SocketService` connects to the backend and sends the `deviceId` in the `Socket.IO` handshake.
 
