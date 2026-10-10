@@ -62,7 +62,9 @@
     </table>
 
     <!-- COUNTRY / CITY / DATES -->
-    <table class="w-full border-collapse mb-4">
+    <table class="w-full 
+            border-collapse 
+            mb-4">
         <tbody>
 
             <tr>
@@ -173,7 +175,9 @@
     </table>
 
     <!-- FEDERATION / LEVEL / TYPE / DIVISION -->
-    <table class="w-full border-collapse mb-4">
+    <table class="w-full 
+            border-collapse 
+            mb-4">
         <tbody>
 
             <tr>
@@ -290,7 +294,6 @@
 
             <tr>
                 <td class="p-2">
-                    {{ 'SEX' | t:'popups/competition-popup' }}
                 </td>
 
                 <td class="p-2">
@@ -301,6 +304,10 @@
             <tr>
                 <td class="p-2">
 
+                    <div class="p-2">              
+                        {{ 'SEX' | t:'popups/competition-popup' }}
+                    </div>
+
                     <select
                         name="sex"
                         formControlName="sex"
@@ -309,7 +316,8 @@
                             border-black
                             rounded
                             px-2
-                            py-1">
+                            py-1
+                            mb-12">
 
                     @for (sex of sexes; track sex) {
                         <option [value]="sex">
@@ -348,7 +356,9 @@
 
 
     <!-- BUTTONS -->
-    <div class="flex justify-end mt-5">
+    <div class="flex 
+            justify-end 
+            mt-5">
 
     @if (isLoading) {
 

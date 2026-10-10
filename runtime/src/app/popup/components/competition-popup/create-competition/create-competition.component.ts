@@ -169,7 +169,12 @@ export class CreateCompetitionComponent {
 
     if (!value) { return; }
 
-    const suggestion = await this.competitionOptionsService.getCitySuggestion(value);
+    const countryName = this.form.get('country')?.value?.trim() ?? '';
+
+    const suggestion = await this.competitionOptionsService.getCitySuggestion(
+      value,
+      countryName,
+    );
 
     this.citySuggestionOffset = this.getTextWidth(value);
 

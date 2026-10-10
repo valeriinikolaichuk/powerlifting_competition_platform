@@ -10,7 +10,7 @@ import { OpenCompetitionPopupComponent } from '../../open-competition-popup/open
 import { CompetitionConfigService } from '../../../../services/core/competition-config.service';
 import { CompetitionOptionsService } from '../services/competition-options.service';
 
-import { Competition } from '../../open-competition-popup/dto/competition.dto';
+import { Competition } from '../../../../services/shared/dto/competition.dto';
 import { AgeGroupOption } from '../dto/competition-options.dtos';
 
 @Component({
@@ -54,8 +54,8 @@ export class EditCompetitionComponent {
       competitionName: [competition.competition_name],
       country: [competition.country],
       city: [competition.city],
-      startDate: [this.formatDate(competition.start_date)],
-      endDate: [this.formatDate(competition.end_date)],
+      startDate: [this.competitionOptionsService.formatDate(competition.start_date)],
+      endDate: [this.competitionOptionsService.formatDate(competition.end_date)],
     });
 
     this.form.get('startDate')?.valueChanges.subscribe(
@@ -120,7 +120,12 @@ export class EditCompetitionComponent {
 
     if (!value) { return; }
 
-    const suggestion = await this.competitionOptionsService.getCitySuggestion(value);
+    const countryName = this.form.get('country')?.value?.trim() ?? '';
+
+    const suggestion = await this.competitionOptionsService.getCitySuggestion(
+      value,
+      countryName,
+    );
 
     this.citySuggestionOffset = this.getTextWidth(value);
 
@@ -154,16 +159,6 @@ export class EditCompetitionComponent {
     context.font = getComputedStyle(input).font;
 
     return context.measureText(text).width;
-  }
-
-  private formatDate(date: Date | string): string {
-    const d = new Date(date);
-
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
   }
 
   // AGE GROUP

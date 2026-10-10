@@ -40,17 +40,26 @@ export class CompetitionOptionsService {
     return result.rows[0]?.name ?? null;
   }
 
-  async getCitySuggestion(value: string): Promise<string | null> {
+  async getCitySuggestion(
+    value: string,
+    countryName?: string,
+  ): Promise<string | null> {
     const result = await this.pg.query<{ name: string }>(
       `
-        SELECT name
-        FROM cities
-        WHERE name ILIKE $1
-          AND is_deleted = false
-        ORDER BY name ASC
+        SELECT ci.name
+        FROM cities ci
+        JOIN countries co ON co.id = ci.country_id
+        WHERE ci.name ILIKE $1
+          AND ci.is_deleted = false
+          AND co.is_deleted = false
+          AND ($2 = '' OR co.name ILIKE $2)
+        ORDER BY ci.name ASC
         LIMIT 1
       `,
-      [`${value}%`],
+      [
+        `${value}%`, 
+        countryName ? countryName : '',
+      ],
     );
 
     return result.rows[0]?.name ?? null;
@@ -156,6 +165,16 @@ export class CompetitionOptionsService {
     }
 
     return true;
+  }
+
+  formatDate(date: Date | string): string {
+    const d = new Date(date);
+
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   validateageGroupForm(ageGroup: string[] | null): boolean {

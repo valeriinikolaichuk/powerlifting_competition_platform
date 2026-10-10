@@ -3,7 +3,7 @@ import { NgComponentOutlet } from '@angular/common';
 
 import { PopupService } from '../../services/popup.service';
 import { POPUP_DATA } from '../../tokens/popup-data.token';
-import { Competition } from '../open-competition-popup/dto/competition.dto';
+import { Competition } from '../../../services/shared/dto/competition.dto';
 
 @Component({
   selector: 'app-competition-popup',
