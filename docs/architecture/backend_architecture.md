@@ -42,3 +42,8 @@ Provides a globally available `PrismaService` for database access throughout the
 
 ### [runtime](backend/modules.md#runtime-module)
 Provides the Angular `Runtime Application` through the NestJS backend.
+
+### [nominations](backend/modules.md#nominations-module)
+Manages competition nomination settings.
+
+---

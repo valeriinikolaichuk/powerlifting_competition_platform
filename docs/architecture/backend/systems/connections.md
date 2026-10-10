@@ -24,6 +24,9 @@
 - #### `DELETE /api/connections/entry` endpoint
   - removes selected device connections
   - delegates the operation to [connectionsService.deleteDevices](#deletedevices)
+- #### `POST /api/connections/entry` endpoint
+  - receives the device IDs through [DeleteDevicesDto](#deletedevicesdto) 
+  - delegates the operation to [ConnectionsService.softDeleteDevices()](#softdeletedevices)
 
 ---
 
@@ -63,6 +66,13 @@ Creates [device_status](https://github.com/valeriinikolaichuk/powerlifting_compe
 - #### deleteDevices()
 Performs the actual deletion of device connection records.
 The method deletes connections using only `device_id` identifier
+
+- #### softDeleteDevices()
+Uses Prisma's `updateMany()` to find matching devices whose `device_id` is included in the request and whose `is_deleted` field is `false`. Updates each matching record by setting:
+- `is_deleted` to `true`.
+- `updated_at` to the current timestamp.
+
+This is a **soft delete**: device records remain in the database but are marked `as deleted`.
 
 ---
 

@@ -121,7 +121,9 @@ After devices are deleted, the component calls check(dto) again to obtain the up
 Provides the centralized exit workflow for the `Runtime` application.
 
 - Retrieves the current `device_id`, `mode`, and `language` using [ConnectionsService.exitParameters()](connection_service.md#exitparameters)
-- If a `device_id` exists, removes the current device connection through [ConnectionsService.deleteDevices()](connection_service.md#deletedevices).
+- - If a `device_id` exists, retrieves the current device role from `sessionStorage` and handles the device record accordingly:
+  - `ADMIN` — calls [ConnectionsService.deleteDevices([deviceId])](connection_service.md#deletedevices) to delete the device.
+  - Other roles — calls [ConnectionsService.softDeleteDevices([deviceId])](connection_service.md#softdeletedevices) to mark the device as deleted without physically removing its database record, and logs a disconnection message.
 - Removes the `device_id` from `localStorage`.
 - Removes the `device_role` from `sessionStorage`.
 - Clears the current local `runtime_session` using [RuntimeSessionService.clearSession()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/systems/session-system.md#clearsession).

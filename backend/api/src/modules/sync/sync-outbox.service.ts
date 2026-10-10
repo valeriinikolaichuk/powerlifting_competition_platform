@@ -11,6 +11,12 @@ export class SyncOutboxService {
         tx: Prisma.TransactionClient,
     ): Promise<void> {
 
+        await tx.deviceStatus.deleteMany({
+            where: {
+                is_deleted: true,
+            },
+        });
+
         const devices = await tx.deviceStatus.findMany({
             where: {
                 device_id: {
@@ -24,9 +30,7 @@ export class SyncOutboxService {
             distinct: ['device_id'],
         });
 
-        if (devices.length === 0) {
-            return;
-        }
+        if (devices.length === 0) { return; }
 
         await tx.syncOutbox.createMany({
             data: devices.map((device) => ({

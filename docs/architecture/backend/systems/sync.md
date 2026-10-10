@@ -200,6 +200,7 @@ Creates outgoing synchronization records for all active devices except the devic
 
 - ### createForDevices()
   - Finds all active devices registered in [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status).
+  - Deletes devices with `is_deleted = true` from `device_status` table.
   - Excludes the source device from synchronization.
   - Creates a separate [sync_outbox](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/management.md#sync_outbox) record for each target device.
   - Stores the `operation ID`, `record ID`, and payload required for synchronization.

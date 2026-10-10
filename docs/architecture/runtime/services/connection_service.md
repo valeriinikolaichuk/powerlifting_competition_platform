@@ -6,6 +6,7 @@
   - [check()](#check)
   - [exitParameters()](#exitparameters)
   - [deleteDevices()](#deletedevices)
+  - [softDeleteDevices()](#softdeletedevices)
 - [DeviceRoleService](#deviceroleservice)
 - [DeviceReceiverService](#devicereceiverservice)
 - [Device Status Flow](#device-status-flow)
@@ -149,6 +150,13 @@ DELETE /api/connections/entry
 
 The method is used by: 
 - [ConnectionsPopupComponent](connection_service.md#connectionspopupcomponent) after the user confirms the deletion.
+
+---
+
+- ### softDeleteDevices
+Sends a `POST` request to [/api/connections/exit-client](connection_service.md#connectionscontroller) with the device IDs in the request body. Credentials are included in the request.
+
+Devices with non-`ADMIN` roles are soft-deleted. Their records remain in the database with `is_deleted = true` until [SyncOutboxService.createForDevices()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/backend/systems/sync.md#createfordevices) physically deletes them from [device_status](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/database/system_runtime.md#device_status) table.
 
 ---
 

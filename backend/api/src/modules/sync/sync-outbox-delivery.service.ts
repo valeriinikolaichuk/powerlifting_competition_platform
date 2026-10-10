@@ -24,9 +24,16 @@ export class SyncOutboxDeliveryService {
 
         const devices = await this.prisma.deviceStatus.findMany({
             where: {
-                device_role: {
-                    not: 'ADMIN',
-                },
+                OR: [
+                    {
+                        device_role: {
+                            not: 'ADMIN',
+                        },
+                    },
+                    {
+                        device_role: null,
+                    },
+                ],
                 is_deleted: false,
             },
             distinct: ['device_id'],

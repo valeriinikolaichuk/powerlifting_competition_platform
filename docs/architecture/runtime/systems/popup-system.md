@@ -181,9 +181,9 @@ Popup Content
 - `CompetitionPopupComponent`— popup container.
   - Components:
     - [CreateCompetitionComponent](competition-config-system.md#createcompetitioncomponent) — competition creation form. Manages competition data input and delegates competition creation to `CompetitionConfigService`.
-  - Services:
-    - [CompetitionOptionsService](competition-config-system.md#competitionoptionsservice) — loads available competition options from the local database.
-    - [CompetitionConfigService](competition-config-system.md#competitionconfigservice) — manages the competition congiguration data and registers the synchronization operations.
+    - [EditCompetitionComponent](competition-config-system.md#editcompetitioncomponent) — provides a form for editing the configurable details of an existing competition.
+    - [SetDeadlinesComponent](competition-config-system.md#setdeadlinescomponent) — provides an interface for configuring preliminary and final nomination deadlines for a selected competition.
+- [OpenCompetitionPopupComponent](competition-config-system.md#opencompetitionpopupcomponent) - displays a list of active competitions created by the current user and provides actions to open, edit, or archive a selected competition.
 
 ---
 

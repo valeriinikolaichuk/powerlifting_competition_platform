@@ -62,7 +62,7 @@ export class OpenCompetitionService {
         WHERE c.created_by_user_id = $1
           AND c.is_deleted = false
           AND c.status = 'ACTIVE'
-        ORDER BY c.start_date DASC
+        ORDER BY c.start_date DESC
       `,
       [userId],
     );

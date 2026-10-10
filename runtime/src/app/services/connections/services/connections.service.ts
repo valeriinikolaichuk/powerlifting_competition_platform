@@ -134,9 +134,9 @@ export class ConnectionsService {
       this.http.post(
         `${environment.apiUrl}/api/connections/exit-client`,
         {
-          body: {
-            device_ids: deviceIds,
-          },
+          device_ids: deviceIds,
+        },
+        {
           withCredentials: true,
         },
       ),

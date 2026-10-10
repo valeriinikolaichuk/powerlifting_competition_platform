@@ -13,7 +13,7 @@ export class DeviceStatusDeliveryService {
     ) {}
 
     async deliver(device: DeviceStatus): Promise<void> {
-       
+
         if (
             device.sent_at && 
             device.updated_at.getTime() === device.sent_at.getTime()
@@ -40,25 +40,24 @@ export class DeviceStatusDeliveryService {
 
         if (!success) { return; }
 
-        await this.prisma.$transaction(async (tx) => {
-           
-            if (device.is_deleted) {
-                await tx.deviceStatus.delete({
-                    where: {
-                        id: device.id,
-                    },
-                });
-            } else {
-                
-                await tx.deviceStatus.update({
-                    where: {
-                        id: device.id,
-                    },
-                    data: {
-                        sent_at: device.updated_at,
-                    },
-                });
-            }
+        const currentDevice = await this.prisma.deviceStatus.findUnique({
+            where: {
+                id: device.id,
+            },
+            select: {
+                updated_at: true,
+            },
+        });
+
+        if (!currentDevice) { return; }
+
+        await this.prisma.deviceStatus.update({
+            where: {
+                id: device.id,
+            },
+            data: {
+                sent_at: currentDevice.updated_at,
+            },
         });
     }
 }
