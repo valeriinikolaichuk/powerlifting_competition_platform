@@ -230,13 +230,13 @@ The component delegates popup management to the generic [PopupService](popup-sys
 ### OpenCompetitionPopupComponent
 Displays a list of active competitions created by the current user and provides actions to open, edit, or archive a selected competition.
 
-- ### Load Competitions
+- #### Load Competitions
 Retrieves the competition list using [OpenCompetitionService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#opencompetitionservice).
-- ### Select Competition
+- #### Select Competition
 Loads the selected competition's details, including location, dates, type, division, federation, and age groups.
-- ### Open Competition
+- #### Open Competition
 Handles the action for opening the selected competition.
-- ### Edit Competition
+- #### Edit Competition
 Opens [EditCompetitionComponent](#editcompetitioncomponent) inside `CompetitionPopupComponent`, passing the selected competition's data.
 - **Archive Competition** — Requests user confirmation before [archiving](#archive) the selected competition. After archiving, clears the selection and refreshes the list.
 - **Close Popup** — Closes the popup without performing an action.
