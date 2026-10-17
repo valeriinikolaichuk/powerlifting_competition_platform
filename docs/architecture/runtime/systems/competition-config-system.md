@@ -199,9 +199,13 @@ Creates a new competition.
 The method performs the following steps:
 1. Retrieves the current form values.
 2. [Validates](#validateform) the required fields.
-3. Generates a `UUID` for the competition.
-4. Retrieves the current application `language`.
-5. Generates the current `timestamp`.
+3. Validates the selected age groups.
+4. Generates a `UUID` for the competition.
+5. Retrieves the current application `language` from `localStorage`.
+6. Generates the current `timestamp`.
+7. Passes the competition data to [CompetitionConfigService](#competitionconfigservice)
+8. Retrieves the created competition using [OpenCompetitionService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#opencompetitionservice).
+9. Closes the popup and returns the created competition to the parent component.
 
 The competition is created through `CompetitionConfigService` [create()](#async-create)
 
@@ -216,6 +220,8 @@ The following fields are required:
 * At least one age group.
 
 If validation fails, the component displays a localized validation message and stops the creation process.
+
+After successful creation, the parent component opens the competition and displays its `[nomination table]`.
 
 - ### close()
 Closes the current competition popup.
@@ -299,9 +305,6 @@ The editable fields are:
 The component uses reactive forms to manage input values and date validation. After a successful update, the modified data is stored locally and queued for synchronization with the server.
 
 ---
-
-
-
 
 
 
