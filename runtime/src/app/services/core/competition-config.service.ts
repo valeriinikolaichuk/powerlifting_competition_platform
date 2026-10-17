@@ -37,7 +37,7 @@ export class CompetitionConfigService {
     console.log(data);
 
     await this.pg.transaction(async (tx) => {
-
+      
       await tx.query(
         SYNC_OPERATIONS.CREATE_COMPETITION,
         [
@@ -65,7 +65,7 @@ export class CompetitionConfigService {
         data,
         data.updated_at,
       );
-      
+        
     });
   }
 

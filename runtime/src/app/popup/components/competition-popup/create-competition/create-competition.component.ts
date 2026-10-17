@@ -7,6 +7,8 @@ import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 import { PopupService } from '../../../services/popup.service';
 import { CompetitionConfigService } from '../../../../services/core/competition-config.service';
 import { CompetitionOptionsService } from '../services/competition-options.service';
+import { OpenCompetitionService } from '../../../../services/shared/open-competition.service';
+import { Competition } from '../../../../services/shared/dto/competition.dto';
 
 import { 
   FederationOption, 
@@ -52,12 +54,15 @@ export class CreateCompetitionComponent {
   divisions: DivisionOption[] = [];
   ageGroups: AgeGroupOption[] = [];
 
+  createdCompetition: Competition | null = null;
+
   constructor(
     private readonly fb: FormBuilder,
     public tService: TranslationService,  
     private readonly popup: PopupService, 
     private readonly competitionConfigService: CompetitionConfigService, 
     private readonly competitionOptionsService: CompetitionOptionsService,
+    private readonly openCompetitionService: OpenCompetitionService,
   ) {
     const today = new Date().toISOString().slice(0, 10);
 
@@ -285,31 +290,59 @@ export class CreateCompetitionComponent {
 
     if (!isValid) { return; }
 
-    const isaAeGroupValid = 
-      await this.competitionOptionsService.validateageGroupForm(value.ageGroup);
+    try {
+      const isaAeGroupValid = 
+        await this.competitionOptionsService.validateageGroupForm(value.ageGroup);
 
-    if (!isaAeGroupValid) { return; }
+      if (!isaAeGroupValid) { return; }
 
-    const id = crypto.randomUUID();
-    const language = localStorage.getItem('lang')?.toUpperCase();
-    const now = new Date().toISOString();
+      const id = crypto.randomUUID();
+      const language = localStorage.getItem('lang')?.toUpperCase();
+      const now = new Date().toISOString();
 
-    await this.competitionConfigService.create({
-      id: id,
-      name: value.competitionName!.trim(),
-      country: value.country!.trim(),
-      city: value.city!.trim(),
-      language: language!,
-      startDate: value.startDate!,
-      endDate: value.endDate!,
-      level: value.level!,
-      type: value.type!,
-      division: value.division!,
-      federationCategoryIds: value.ageGroup ?? [],
-      updated_at: now,
-    });
+      await this.competitionConfigService.create({
+        id: id,
+        name: value.competitionName!.trim(),
+        country: value.country!.trim(),
+        city: value.city!.trim(),
+        language: language!,
+        startDate: value.startDate!,
+        endDate: value.endDate!,
+        level: value.level!,
+        type: value.type!,
+        division: value.division!,
+        federationCategoryIds: value.ageGroup ?? [],
+        updated_at: now,
+      });
 
-    this.popup.close();
+      this.createdCompetition = 
+        await this.openCompetitionService.getCompetitionData(id);
+
+      if (!this.createdCompetition) {
+        
+        alert(this.tService.t(
+          'popups/competition-popup',
+          'Failed_to_create_competition'
+        ));
+
+        this.popup.close();
+      }
+
+      this.popup.close({
+        action: 'open',
+        competition: this.createdCompetition
+      });
+ 
+    } catch (error) {
+      console.error('Failed to create competition', error);
+
+      alert(this.tService.t(
+        'popups/competition-popup',
+        'Failed_to_create_competition'
+      ));
+
+      this.popup.close();
+    }
   }
 
   close(): void {

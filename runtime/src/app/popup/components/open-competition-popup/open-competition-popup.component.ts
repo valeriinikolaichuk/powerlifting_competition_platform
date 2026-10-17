@@ -59,7 +59,10 @@ export class OpenCompetitionPopupComponent {
 
     if (!this.selectedCompetition) { return; }
 
-    console.log('OPEN', this.selectedCompetition.id,);
+    this.popup.close({
+      action: 'open',
+      competition: this.selectedCompetition
+    });
   }
 
   async changeCompetition(): Promise<void> {

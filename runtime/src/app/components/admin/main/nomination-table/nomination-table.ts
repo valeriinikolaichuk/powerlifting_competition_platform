@@ -64,9 +64,7 @@ export class NominationTable implements OnChanges {
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
 
-    if (!this.competition) {
-      return;
-    }
+    if (!this.competition) { return; }
 
     this.configureColumns();
 
@@ -275,7 +273,6 @@ export class NominationTable implements OnChanges {
     this.newAthlete = this.createEmptyAthlete(); 
   }
 
-  /** The parent component handles persistence. */
   addAthlete(): void {
     const fullName = String(this.newAthlete['full_name'] ?? '').trim();
 
