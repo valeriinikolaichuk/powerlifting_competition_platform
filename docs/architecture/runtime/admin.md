@@ -11,6 +11,8 @@
     - [AthleteTableOptionsService](#athletetableoptionsservice)
     - [ColumnFactoryService](#columnfactoryservice)
     - [ColspanFactoryService](#colspanfactoryservice)
+  - [config](#config)
+  - [models](#models)
 - [RegistrationComponent](#registrationcomponent)
 
 </details>
@@ -184,6 +186,60 @@ The service provides a reusable mechanism for calculating table header colspans 
 
 #### Method
 - **create()** — Generates an adjusted configuration by applying the deductions returned by the specified pipelines.
+
+---
+
+### config
+
+#### ColumnContext
+```ts
+export interface ColumnContext {
+  lang: string | null;
+  competitionLevel: string;
+  competitionType: string;
+  ageGroupsCount: number;
+}
+```
+
+#### AthleteTableConfig
+```ts
+export interface AthleteTableConfig {
+  columns: AthleteTableColumn[];
+  competitionColspan: number;
+  infoColspan: number;
+  referenceColspan: number;
+  diciplineColspan: number;
+}
+```
+
+#### ColspanConfigDto
+```ts
+export interface ColspanConfigDto {
+  competitionColspan: number;
+  infoColspan: number;
+  referenceColspan: number;
+  diciplineColspan: number;
+}
+```
+
+#### HiddenColspanDto
+```ts
+export interface HiddenColspanDto {
+  competitionColspan: number;
+  infoColspan: number;
+  referenceColspan: number;
+  diciplineColspan: number;
+}
+```
+
+#### NOMINATION_COLUMNS
+Defines the column configuration for the nomination table.  
+Each column specifies its index, title, width, position, data field, editor type, sorting behaviour, visibility, and other display properties.  
+The configuration is used by `NominationTable` and `ColumnFactoryService` to render and configure the table columns.
+
+---
+
+### models
 
 ---
 
