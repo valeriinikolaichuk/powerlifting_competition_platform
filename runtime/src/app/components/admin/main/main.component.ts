@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, signal, Type } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { NgComponentOutlet } from '@angular/common';
 
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../i18n/services/translation.service';
@@ -11,10 +12,14 @@ import { CompetitionPopupComponent } from '../../../popup/components/competition
 import { CreateCompetitionComponent } from '../../../popup/components/competition-popup/create-competition/create-competition.component';
 import { OpenCompetitionPopupComponent } from '../../../popup/components/open-competition-popup/open-competition-popup.component';
 
+import { NominationTable } from './nomination-table/nomination-table';
+import { Competition } from '../../../services/shared/dto/competition.dto';
+
 @Component({
   selector: 'app-main',
   standalone: true,
   imports: [
+    NgComponentOutlet,
     TranslatePipe,
     RouterLink,
   ],
@@ -24,6 +29,10 @@ export class MainComponent {
 
   buttonLeft = 200;
   isOnline = false;
+
+  tableComponent = signal<Type<unknown> | null>(null);
+
+  selectedCompetition: Competition | null = null;
 
   constructor(
     private readonly router: Router,
@@ -44,17 +53,56 @@ export class MainComponent {
     this.tService.load('pages/main');
   }
 
+  // TOOLBAR
+
   async openCreateCompetition(): Promise<void> {
 
-    await this.popup.open(CompetitionPopupComponent, {
+    const result = await this.popup.open<{
+      action: string;
+      competition: Competition;
+    }>(CompetitionPopupComponent, {
       content: CreateCompetitionComponent
     });
+
+    if (result?.action === 'open') {
+      this.selectedCompetition = result.competition;
+      console.log('OPEN', this.selectedCompetition);
+      
+      this.showNomination();
+    }
   }
 
   async openOpenCompetition(){
 
-    this.popup.open(OpenCompetitionPopupComponent);
+    const result = await this.popup.open<{
+      action: 'open';
+      competition: Competition;
+    }>(
+      OpenCompetitionPopupComponent
+    );
+
+    if (result?.action === 'open') {
+      this.selectedCompetition = result.competition;
+      console.log('OPEN', this.selectedCompetition);
+      
+      this.showNomination();
+    }
   }
+
+  // TABLES
+
+  showNomination(): void {
+    this.tableComponent.set(NominationTable);
+  }
+/*
+  showWeighing(): void {
+    this.tableComponent.set(WeighingTableComponent);
+  }
+
+  showResults(): void {
+    this.tableComponent.set(ResultsTableComponent);
+  }
+*/
 
   async backToAdmin(){
     

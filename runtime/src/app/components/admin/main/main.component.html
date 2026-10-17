@@ -76,6 +76,13 @@
         </div>
     </header>
 
-    <main class="flex-1"></main>
+    <main class="flex-1">
+        @if (tableComponent()) {
+            <ng-container *ngComponentOutlet="tableComponent(); 
+                inputs: {
+                competition: selectedCompetition }">
+            </ng-container>
+        }
+    </main>
 
 </div>
