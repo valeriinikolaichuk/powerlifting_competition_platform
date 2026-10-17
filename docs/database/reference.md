@@ -547,7 +547,9 @@ The federation defines the visibility scope of athlete records.
 |---|---|
 | id | Unique athlete identifier |
 | full_name | Athlete full name |
-| date_of_birth | Athlete date of birth |
+| birth_day | Athlete date of birth |
+| birth_month | Athlete date of birth |
+| birth_year | Athlete date of birth |
 | sex | Athlete sex (`AthleteSex` enum) |
 | federation_id | Federation visibility scope |
 | created_by_user_id | User who created the record |

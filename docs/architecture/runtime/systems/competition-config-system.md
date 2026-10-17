@@ -199,9 +199,13 @@ Creates a new competition.
 The method performs the following steps:
 1. Retrieves the current form values.
 2. [Validates](#validateform) the required fields.
-3. Generates a `UUID` for the competition.
-4. Retrieves the current application `language`.
-5. Generates the current `timestamp`.
+3. Validates the selected age groups.
+4. Generates a `UUID` for the competition.
+5. Retrieves the current application `language` from `localStorage`.
+6. Generates the current `timestamp`.
+7. Passes the competition data to [CompetitionConfigService](#competitionconfigservice)
+8. Retrieves the created competition using [OpenCompetitionService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#opencompetitionservice).
+9. Closes the popup and returns the created competition to the parent component.
 
 The competition is created through `CompetitionConfigService` [create()](#async-create)
 
@@ -217,6 +221,8 @@ The following fields are required:
 
 If validation fails, the component displays a localized validation message and stops the creation process.
 
+After successful creation, the parent component opens the competition and displays its `[nomination table]`.
+
 - ### close()
 Closes the current competition popup.
 ```ts
@@ -230,13 +236,13 @@ The component delegates popup management to the generic [PopupService](popup-sys
 ### OpenCompetitionPopupComponent
 Displays a list of active competitions created by the current user and provides actions to open, edit, or archive a selected competition.
 
-- ### Load Competitions
+- #### Load Competitions
 Retrieves the competition list using [OpenCompetitionService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#opencompetitionservice).
-- ### Select Competition
+- #### Select Competition
 Loads the selected competition's details, including location, dates, type, division, federation, and age groups.
-- ### Open Competition
+- #### Open Competition
 Handles the action for opening the selected competition.
-- ### Edit Competition
+- #### Edit Competition
 Opens [EditCompetitionComponent](#editcompetitioncomponent) inside `CompetitionPopupComponent`, passing the selected competition's data.
 - **Archive Competition** — Requests user confirmation before [archiving](#archive) the selected competition. After archiving, clears the selection and refreshes the list.
 - **Close Popup** — Closes the popup without performing an action.
@@ -299,9 +305,6 @@ The editable fields are:
 The component uses reactive forms to manage input values and date validation. After a successful update, the modified data is stored locally and queued for synchronization with the server.
 
 ---
-
-
-
 
 
 
