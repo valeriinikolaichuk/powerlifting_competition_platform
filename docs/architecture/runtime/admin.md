@@ -48,15 +48,26 @@ The component provides access to administrator actions and serves as the entry p
 #### Responsibilities
 
 - Loads the translations required by the main page using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md).
+- Checks internet connectivity using [CheckOnlineService](services/shared.md#checkonlineservice)
 - Opens the competition creation workflow.
+- Displays the nomination table for the selected competition.
 - Navigates back to the [administrator page](#admincomponent).
 
 #### Features
 
-- **Create Competition** — Opens a `popup` containing [CreateCompetitionComponent](systems/competition-config-system.md#createcompetitioncomponent) to configure a new competition.
-- **Open Competition** — Opens [OpenCompetitionPopupComponent](systems/competition-config-system.md#opencompetitionpopupcomponent) to select an existing competition.
-- **Online Registration** — Displays a navigation button to the [registration page](#registrationcomponent) when an internet connection is available.
-- **Return** — Navigates back to the [administrator page](#admincomponent).
+- TOOLBAR
+  - **Create Competition** — Opens a `popup` containing [CreateCompetitionComponent](systems/competition-config-system.md#createcompetitioncomponent) to configure a new competition. If the returned action is `open`, the component stores the created competition and displays its nomination table.
+  - **Open Competition** — Opens [OpenCompetitionPopupComponent](systems/competition-config-system.md#opencompetitionpopupcomponent) to select an existing competition. If the returned action is `open`, the component stores the selected competition and displays its nomination table.
+  - **Online Registration** — Displays a navigation button to the [registration page](#registrationcomponent) when an internet connection is available.
+  - **Return** — Navigates back to the [administrator page](#admincomponent).
+- TABLES
+  - **Nomination Table** — Dynamically renders NominationTable using `NgComponentOutlet` and passes the selected competition through its competition input.
+
+#### Methods
+* **openCreateCompetition()** — Opens the competition creation popup. If the returned action is `open`, stores the created competition and displays its nomination table.
+* **openOpenCompetition()** — Opens the competition selection popup. If the returned action is `open`, stores the selected competition and displays its nomination table.
+* **showNomination()** — Sets `NominationTable` as the active table component.
+* **backToAdmin()** — Navigates to the administrator page.
 
 #### Initialization
 
