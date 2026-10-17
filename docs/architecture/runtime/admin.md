@@ -5,7 +5,12 @@
 
 - [AdminComponent](#admincomponent)
 - [MainComponent](#maincomponent)
-  - [NominationTable](#nominationtable)
+  - [TABLES](#tables)
+    - [NominationTable](#nominationtable)
+  - [SERVICES](#services)
+    - [AthleteTableOptionsService](#athletetableoptionsservice)
+    - [ColumnFactoryService](#columnfactoryservice)
+    - [ColspanFactoryService](#colspanfactoryservice)
 - [RegistrationComponent](#registrationcomponent)
 
 </details>
@@ -34,7 +39,7 @@ The page uses a full-screen background video and provides two actions:
 
 While initialization is in progress, the page displays a loading indicator.
 
-### - openMainPage()
+#### - openMainPage()
 Navigates the user to the administrator [main](#maincomponent) page:
 
 ```ts
@@ -75,6 +80,8 @@ The component provides access to administrator actions and serves as the entry p
 During `ngOnInit()`, the component [checks](services/shared.md#checkonlineservice) internet connectivity, adjusts the navigation button position when online, and loads the page translations.
 
 ---
+
+### TABLES
 
 ### NominationTable
 Provides the nomination table for a selected competition, displaying athlete information, competition details, and nomination data.
@@ -133,6 +140,50 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`createEmptyAthlete()`** — Creates the initial athlete form data.
 - **`resetNewAthlete()`** — Resets the athlete input form.
 - **`addAthlete()`** — Validates and normalizes the athlete's full name. Persistence is handled by the parent component.
+
+---
+
+### SERVICES
+
+### AthleteTableOptionsService
+The service retrieves weight class options from the local PGlite database based on the selected federation category.
+
+#### Responsibilities
+- Uses [PgliteService](services/database_service.md) to access the local database.
+- Retrieves the `weight_class_group` associated with a federation category.
+- Fetches the corresponding weight classes, ordered by weight, for use in the athlete table.
+
+#### Methods
+- **getWeightClasses()** — Returns the IDs and names of weight classes belonging to the selected federation category's weight class group.
+
+---
+
+### ColumnFactoryService
+The service configures athlete table columns and calculates table header colspans according to the competition context.
+
+#### Responsibilities
+- Applies `COLUMN_PIPELINES` to determine which columns should be hidden based on the competition level, competition type, and language.
+- Preserves the original column visibility when no pipeline defines a new value.
+- Uses [ColspanFactoryService](#colspanfactoryservice) with `COLSPAN_PIPELINES` to calculate header colspans based on the number of age groups and other competition settings.
+- Returns the configured columns and calculated colspans as an `AthleteTableConfig`.
+
+#### Methods
+- **`createTableConfig()`** — Applies column visibility rules, calculates header colspans, and combines the results into the table configuration.
+- **`hideColumnFactory()`** — Evaluates column pipelines in order and uses the first non-null result to determine column visibility.
+
+---
+
+### ColspanFactoryService
+The service provides a reusable mechanism for calculating table header colspans by applying context-dependent deductions to the initial configuration.
+
+#### Responsibilities
+- Initializes deductions for each key in the provided configuration.
+- Executes configuration pipelines using the supplied context.
+- Accumulates numeric deductions returned by the pipelines.
+- Calculates the final configuration by subtracting the accumulated deductions from the original values.
+
+#### Method
+- **create()** — Generates an adjusted configuration by applying the deductions returned by the specified pipelines.
 
 ---
 
