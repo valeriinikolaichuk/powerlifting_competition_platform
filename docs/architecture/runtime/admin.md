@@ -5,6 +5,7 @@
 
 - [AdminComponent](#admincomponent)
 - [MainComponent](#maincomponent)
+  - [NominationTable](#nominationtable)
 - [RegistrationComponent](#registrationcomponent)
 
 </details>
@@ -61,7 +62,7 @@ The component provides access to administrator actions and serves as the entry p
   - **Online Registration** — Displays a navigation button to the [registration page](#registrationcomponent) when an internet connection is available.
   - **Return** — Navigates back to the [administrator page](#admincomponent).
 - TABLES
-  - **Nomination Table** — Dynamically renders NominationTable using `NgComponentOutlet` and passes the selected competition through its competition input.
+  - [Nomination Table](#nominationtable) — Dynamically renders NominationTable using `NgComponentOutlet` and passes the selected competition through its competition input.
 
 #### Methods
 * **openCreateCompetition()** — Opens the competition creation popup. If the returned action is `open`, stores the created competition and displays its nomination table.
@@ -72,6 +73,66 @@ The component provides access to administrator actions and serves as the entry p
 #### Initialization
 
 During `ngOnInit()`, the component [checks](services/shared.md#checkonlineservice) internet connectivity, adjusts the navigation button position when online, and loads the page translations.
+
+---
+
+### NominationTable
+Provides the nomination table for a selected competition, displaying athlete information, competition details, and nomination data.
+
+#### Responsibilities
+- Receives competition details and athlete data through component inputs.
+- Configures column visibility and table header spans using `ColumnFactoryService`.
+- Loads athlete table translations using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md).
+- Retrieves available weight classes using `AthleteTableOptionsService`.
+- Manages the input form for adding athletes to the nomination list.
+
+#### Features
+- **Competition Information** — Displays the competition name, location, dates, type, division, sex, age groups, and federation.
+- **Dynamic Columns** — Configures column visibility according to the competition level, type, language, and number of age groups.
+- **Table Header Configuration** — Calculates `competitionColspan`, `infoColspan`, `referenceColspan`, and `diciplineColspan` through `ColumnFactoryService`.
+- **Athlete Display** — Renders athlete data using the configured column definitions.
+- **Athlete Registration** — Provides an input row for entering athlete details, including name, date of birth, age group, weight class, group, lot number, and nominations.
+- **Age Group Selection** — Allows the user to select an age group when multiple groups are available.
+- **Weight Class Selection** — Loads weight classes according to the selected federation category using `AthleteTableOptionsService`.
+- **Editable Mode** — Controls whether the athlete input form and checkbox controls are enabled through the `editable` input.
+- **Dynamic Column Positioning** — Adjusts sticky column positions when only one age group is configured.
+- **Date Formatting** — Formats birth date components and displays competition dates using Angular's `DatePipe`.
+
+#### Inputs
+- `competition: Competition` — Competition details used to configure the table.
+- `athletes: AthleteCompetitionRow[]` — Athletes displayed in the table.
+- `categories: string[]` — Category options supplied by the parent component.
+- `ageGroups: string[]` — Age group options supplied by the parent component.
+- `weightClasses: { id: string; name: string }[]` — Available weight classes.
+- `editable: boolean` — Determines whether editing controls are enabled. Defaults to `true`.
+
+#### Services
+- [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md) — Loads translations from `tables/athlete-table` and translates column labels and competition attributes.
+- `ColumnFactoryService` — Creates the table configuration, applying column visibility rules and calculating header spans.
+- `AthleteTableOptionsService` — Retrieves weight classes for the selected federation category.
+
+#### Initialization and Updates
+- **`ngOnInit()`** — Loads athlete table translations and initializes the new athlete form.
+- **`ngOnChanges()`** — Configures columns when competition data is available. When the competition changes, resets the athlete input form and loads weight classes for the first age group.
+- **`configureColumns()`** — Creates the `ColumnContext`, supplies the initial colspan configuration, and updates the table columns and header spans.
+
+#### Methods
+- **`getLabel()`** — Returns the translated column label.
+- **`trackColumn()`** — Tracks table columns by index.
+- **`trackAthlete()`** — Tracks athletes by ID.
+- **`getColumnLeft()`** — Calculates sticky column positions based on the number of age groups.
+- **`displayValue()`** — Returns the value displayed in an athlete's cell, handling row numbering, empty values, and checkboxes.
+- **`isChecked()`** — Determines the checkbox state for an existing athlete.
+- **`isNewChecked()`** — Determines the checkbox state in the new athlete form.
+- **`setNewCheckbox()`** — Updates a checkbox value in the new athlete form.
+- **`setNewNumber()`** — Updates a numeric field in the new athlete form.
+- **`setNewText()`** — Updates a text field in the new athlete form.
+- **`onDatePartChange()`** — Updates a birth date component.
+- **`formatDatePart()`** — Formats day and month values with leading zeros.
+- **`onAgeGroupChange()`** — Updates the selected age group, resets the weight class, and loads the corresponding weight classes.
+- **`createEmptyAthlete()`** — Creates the initial athlete form data.
+- **`resetNewAthlete()`** — Resets the athlete input form.
+- **`addAthlete()`** — Validates and normalizes the athlete's full name. Persistence is handled by the parent component.
 
 ---
 
