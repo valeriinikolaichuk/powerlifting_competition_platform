@@ -42,6 +42,8 @@
     "CREATE_BUTTON": "CREATE",
     "CANCEL": "CANCEL",
 
+    "Failed_to_create_competition": "Failed to create competition",
+
     "OPEN": "OPEN",
     "EDIT_BUTTON": "EDIT",
     "ARCHIVE": "ARCHIVE",

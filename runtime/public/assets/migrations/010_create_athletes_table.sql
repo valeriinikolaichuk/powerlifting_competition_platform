@@ -5,7 +5,9 @@ CREATE TYPE "AthleteSex" AS ENUM ('MAN', 'WOMAN');
 CREATE TABLE "athletes" (
     "id" UUID NOT NULL,
     "full_name" TEXT NOT NULL,
-    "date_of_birth" TIMESTAMP(3) NOT NULL,
+    "birth_day" SMALLINT,
+    "birth_month" SMALLINT,
+    "birth_year" SMALLINT,
     "sex" "AthleteSex" NOT NULL,
     "federation_id" UUID NOT NULL,
     "created_by_user_id" UUID,

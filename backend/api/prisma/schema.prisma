@@ -409,7 +409,10 @@ model Athletes {
   id                 String @id @default(uuid()) @db.Uuid
 
   full_name          String
-  date_of_birth      DateTime
+  
+  birth_day          Int?    @db.SmallInt
+  birth_month        Int?    @db.SmallInt
+  birth_year         Int?    @db.SmallInt
 
   sex                AthleteSex
 

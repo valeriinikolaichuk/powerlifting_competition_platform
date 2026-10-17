@@ -42,6 +42,8 @@
     "CREATE_BUTTON": "UTWÓRZ",
     "CANCEL": "ANULUJ",
 
+    "Failed_to_create_competition": "Nie udało się stworzyć zawodów",
+
     "OPEN": "OTWÓRZ",
     "EDIT_BUTTON": "EDYTUJ",
     "ARCHIVE": "ARCHIWIZUJ",

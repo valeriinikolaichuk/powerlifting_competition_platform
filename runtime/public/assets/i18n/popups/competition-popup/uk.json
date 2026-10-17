@@ -42,6 +42,8 @@
     "CREATE_BUTTON": "СТВОРИТИ",
     "CANCEL": "ВІДМІНА",
 
+    "Failed_to_create_competition": "He вдалося створити змагання",
+
     "OPEN": "ВІДКРИТИ",
     "EDIT_BUTTON": "ЗМІНИТИ",
     "ARCHIVE": "АРХІВУВАТИ",
