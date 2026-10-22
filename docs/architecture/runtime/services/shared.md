@@ -1,4 +1,4 @@
-## Sared Services
+## Shared Services
 Starts and ends the `Runtime` initialization process.
 
 <details open="open">
