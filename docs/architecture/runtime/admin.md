@@ -90,19 +90,22 @@ Provides the nomination table for a selected competition, displaying athlete inf
 
 #### Responsibilities
 - Receives competition details and athlete data through component inputs.
-- Configures column visibility and table header spans using `ColumnFactoryService`.
+- Configures column visibility and table header spans using [ColumnFactoryService](#columnfactoryservice).
 - Loads athlete table translations using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md).
-- Retrieves available weight classes using `AthleteTableOptionsService`.
+- Retrieves autocomplete suggestions and athlete date-of-birth data using [SuggestionService](runtime/services/shared.md#suggestionservice).
 - Manages the input form for adding athletes to the nomination list.
 
 #### Features
 - **Competition Information** — Displays the competition name, location, dates, type, division, sex, age groups, and federation.
 - **Dynamic Columns** — Configures column visibility according to the competition level, type, language, and number of age groups.
-- **Table Header Configuration** — Calculates `competitionColspan`, `infoColspan`, `referenceColspan`, and `diciplineColspan` through `ColumnFactoryService`.
+- **Table Header Configuration** — Calculates `competitionColspan`, `infoColspan`, `referenceColspan`, and `diciplineColspan` through [ColumnFactoryService](#columnfactoryservice).
 - **Athlete Display** — Renders athlete data using the configured column definitions.
 - **Athlete Registration** — Provides an input row for entering athlete details, including name, date of birth, age group, weight class, group, lot number, and nominations.
 - **Age Group Selection** — Allows the user to select an age group when multiple groups are available.
-- **Weight Class Selection** — Loads weight classes according to the selected federation category using `AthleteTableOptionsService`.
+- **Weight Class Selection** — Loads weight classes according to the selected federation category using [AthleteTableOptionsService](#athletetableoptionsservice).
+- **Autocomplete Suggestions** — Suggests athlete names, countries, regions, and cities based on the entered text using [SuggestionService](runtime/services/shared.md#suggestionservice).
+- **Athlete Date of Birth** — Automatically fills in the athlete's date of birth when an existing athlete is selected from the suggestions.
+- **Athlete Suggestion Filtering** — Filters athlete suggestions by federation, language, and sex.
 - **Editable Mode** — Controls whether the athlete input form and checkbox controls are enabled through the `editable` input.
 - **Dynamic Column Positioning** — Adjusts sticky column positions when only one age group is configured.
 - **Date Formatting** — Formats birth date components and displays competition dates using Angular's `DatePipe`.
@@ -117,8 +120,9 @@ Provides the nomination table for a selected competition, displaying athlete inf
 
 #### Services
 - [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md) — Loads translations from `tables/athlete-table` and translates column labels and competition attributes.
-- `ColumnFactoryService` — Creates the table configuration, applying column visibility rules and calculating header spans.
-- `AthleteTableOptionsService` — Retrieves weight classes for the selected federation category.
+- [ColumnFactoryService](#columnfactoryservice) — Creates the table configuration, applying column visibility rules and calculating header spans.
+- [AthleteTableOptionsService](#athletetableoptionsservice) — Retrieves weight classes for the selected federation category.
+- [SuggestionService](runtime/services/shared.md#suggestionservice) — Provides autocomplete suggestions for athlete names, countries, regions, and cities, and retrieves an existing athlete's date of birth.
 
 #### Initialization and Updates
 - **`ngOnInit()`** — Loads athlete table translations and initializes the new athlete form.
@@ -131,9 +135,6 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`trackAthlete()`** — Tracks athletes by ID.
 - **`getColumnLeft()`** — Calculates sticky column positions based on the number of age groups.
 - **`displayValue()`** — Returns the value displayed in an athlete's cell, handling row numbering, empty values, and checkboxes.
-- **`isChecked()`** — Determines the checkbox state for an existing athlete.
-- **`isNewChecked()`** — Determines the checkbox state in the new athlete form.
-- **`setNewCheckbox()`** — Updates a checkbox value in the new athlete form.
 - **`setNewNumber()`** — Updates a numeric field in the new athlete form.
 - **`setNewText()`** — Updates a text field in the new athlete form.
 - **`onDatePartChange()`** — Updates a birth date component.
@@ -142,6 +143,13 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`createEmptyAthlete()`** — Creates the initial athlete form data.
 - **`resetNewAthlete()`** — Resets the athlete input form.
 - **`addAthlete()`** — Validates and normalizes the athlete's full name. Persistence is handled by the parent component.
+- **`getSuggestion()`** — Returns the current autocomplete suggestion for the specified field.
+- **`onAutocompleteInput()`** — Retrieves autocomplete suggestions for athlete names, countries, regions, and cities.
+- **`acceptSuggestion()`** — Accepts an autocomplete suggestion and retrieves the athlete's date of birth when an existing athlete name is selected.
+- **`setSuggestion()`** — Updates the autocomplete suggestion for the specified field.
+- **`isAutocompleteField()`** — Checks whether a field supports autocomplete.
+- **`getTextWidth()`** — Calculates the rendered text width for autocomplete positioning.
+- **`getNewAthleteValue()`** — Returns a new athlete form field value as a string.
 
 ---
 
