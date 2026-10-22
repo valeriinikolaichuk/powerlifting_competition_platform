@@ -6,7 +6,7 @@ import { SYNC_OPERATIONS } from '#shared-sql';
 import { SyncOperationInterface } from './sync-operation.interface';
 import { SyncOutboxDto } from '../../dto/sync-outbox.dto';
 
-import { UserService } from '../../../shared/user.service';
+import { UserService } from '../../../../shared/services/user.service';
 
 @Injectable({
   providedIn: 'root',

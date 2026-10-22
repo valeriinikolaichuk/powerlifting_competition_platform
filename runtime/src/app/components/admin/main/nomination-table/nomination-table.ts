@@ -13,8 +13,13 @@ import { ColumnContext } from '../config/column-context';
 import { ColspanConfigDto } from '../config/colspan.dto';
 
 import { AthleteTableOptionsService } from '../services/athlete-table-options.service';
-import { Competition } from '../../../../services/shared/dto/competition.dto';
+import { Competition } from '../../../../shared/services/dto/competition.dto';
 import { AthleteCellValue, AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
+
+import { CompetitionOptionsService } from '../../../../popup/components/competition-popup/services/competition-options.service';
+import { SuggestionService } from '../../../../shared/services/suggestion.service';
+
+type AutocompleteField = 'full_name' | 'country' | 'region' | 'city';
 
 @Component({
   selector: 'app-nomination-table',
@@ -25,7 +30,10 @@ import { AthleteCellValue, AthleteCompetitionRow } from '../models/athlete-compe
     TranslatePipe,
   ],
   templateUrl: './nomination-table.html',
-  styleUrl: '../styles/nomination-table.css',
+  styleUrls: [
+    '../styles/nomination-table.css',
+    '../../../../shared/styles/autocomplete.css',
+  ],
 })
 export class NominationTable implements OnChanges {
 
@@ -50,10 +58,17 @@ export class NominationTable implements OnChanges {
 
   newAthlete: Partial<AthleteCompetitionRow> = {};
 
+  countrySuggestion = '';
+  regionSuggestion = '';
+  citySuggestion = '';
+  athleteSuggestion = '';
+
   constructor(
     public tService: TranslationService,
     private readonly columnFactoryService: ColumnFactoryService,
     private readonly athleteTableOptionsService: AthleteTableOptionsService,
+    private readonly competitionOptionsService: CompetitionOptionsService,
+    private readonly suggestionService: SuggestionService,
   ){}
 
   async ngOnInit(){
@@ -69,6 +84,10 @@ export class NominationTable implements OnChanges {
     this.configureColumns();
 
     if (changes['competition'] && this.competition) {
+
+      this.athletes = await this.athleteTableOptionsService.getAthletes(
+        this.competition.id
+      );
 
       this.weightClasses = [];
 
@@ -160,32 +179,6 @@ export class NominationTable implements OnChanges {
 
     return value;
   }
-  
-  isChecked(
-    athlete: AthleteCompetitionRow, 
-    field: string | null
-  ): boolean {
-    if (!field) return false;
-
-    return Boolean(athlete[field]);
-  }
-
-  isNewChecked(
-    field: string | null
-  ): boolean {
-    if (!field) return false;
-
-    return Boolean(this.newAthlete[field]);
-  }
-
-  setNewCheckbox(
-    field: string | null, 
-    event: Event
-  ): void {
-    if (!field) return;
-
-    this.newAthlete[field] = (event.target as HTMLInputElement).checked;
-  }
 
   setNewNumber(
     field: string | null, 
@@ -244,7 +237,7 @@ export class NominationTable implements OnChanges {
       birth_year: null,
       age_group: this.competition.age_groups[0]?.federation_category_id ?? '',
       weight_class: '',
-      groups_in_session: 1,
+      group_order: 1,
       lot: null,
       sport_rank_class: '',
       country: '',
@@ -260,11 +253,10 @@ export class NominationTable implements OnChanges {
       trener_4: '',
       squat_nominated: null,
       bench_press_nominated: null,
-      deadlift_nom: null,
-      total_nom: null,
-      personally: false,
-      out_of_comp: false,
-      disqualified: false,
+      deadlift_nominated: null,
+      total_nominated: null,
+      status: 'TEAM',
+      qualification: 'QUALIFIED',
       titles: '',
     };
   }
@@ -282,6 +274,188 @@ export class NominationTable implements OnChanges {
       ...this.newAthlete,
       ['full_name']: fullName,
     };
+  }
+
+  // AUTOCOMPLETE
+
+  getSuggestion(field: string | null | undefined): string {
+    switch (field) {
+      case 'full_name':
+        return this.athleteSuggestion;
+      case 'country':
+        return this.countrySuggestion;
+      case 'region':
+        return this.regionSuggestion;
+      case 'city':
+        return this.citySuggestion;
+      default:
+        return '';
+    }
+  }
+
+  async onAutocompleteInput(
+    field: string | null,
+  ): Promise<void> {
+    if (!field || !this.isAutocompleteField(field)) return;
+
+    let value = String(this.newAthlete[field] ?? '').trim();
+
+    this.setSuggestion(field, '');
+
+    if (!value) return;
+
+    let suggestion: string | null = null;
+
+    switch (field) {
+      case 'full_name':
+        const language = localStorage.getItem('lang')?.toUpperCase() ?? 'EN';
+        const competitionSex = this.competition.age_groups[0].sex;
+        let sex;
+
+        if (competitionSex === 'MEN') {
+          sex = 'MAN';
+        } else {
+          sex = 'WOMAN';
+        }
+
+        suggestion = await this.suggestionService.getAthleteSuggestion(
+          value,
+          this.competition.federation_id, 
+          language, 
+          sex,
+        );
+        break;
+
+      case 'country':
+        suggestion = await this.suggestionService.getCountrySuggestion(value);
+        break;
+
+      case 'region':
+        suggestion = await this.suggestionService.getRegionSuggestion(value);
+        break;
+
+      case 'city':
+        value = this.newAthlete['city']?.toString().trim() ?? '';
+
+        this.citySuggestion = '';
+
+        if (!value) return;
+
+        const regionName = this.newAthlete['region']?.toString().trim() ?? '';
+
+        suggestion = await this.suggestionService.getCityByRegionSuggestion(
+          value,
+          regionName,
+        );
+
+        if (suggestion && suggestion.toLowerCase() !== value.toLowerCase()) {
+          this.citySuggestion = suggestion.slice(value.length);
+        }
+
+        break;
+    }
+
+    if (String(this.newAthlete[field] ?? '').trim() !== value) return;
+
+    if (
+      suggestion &&
+      suggestion.toLowerCase().startsWith(value.toLowerCase()) &&
+      suggestion.toLowerCase() !== value.toLowerCase()
+    ) {
+      this.setSuggestion(field, suggestion.slice(value.length));
+    }
+  }
+
+  async acceptSuggestion(field: string | null): Promise<void> {
+    if (!field || !this.isAutocompleteField(field)) return;
+
+    const suggestion = this.getSuggestion(field);
+
+    if (!suggestion) return;
+
+    const value = String(this.newAthlete[field] ?? '');
+
+    this.newAthlete[field] = value + suggestion;
+    this.setSuggestion(field, '');
+
+    if (field === 'full_name') {
+      const language = localStorage.getItem('lang')?.toUpperCase() ?? 'EN';
+      const competitionSex = this.competition.age_groups[0].sex;
+      let sex;
+
+      if (competitionSex === 'MEN') {
+        sex = 'MAN';
+      } else {
+        sex = 'WOMAN';
+      }
+
+      if (!sex) return;
+
+      const athlete = await this.suggestionService.getDateOfBirthByName(
+        String(this.newAthlete['full_name']),
+        this.competition.federation_id,
+        language,
+        sex,
+      );
+
+      if (athlete) {
+        this.newAthlete['birth_day'] = athlete.birth_day;
+        this.newAthlete['birth_month'] = athlete.birth_month;
+        this.newAthlete['birth_year'] = athlete.birth_year;
+      }
+    }
+  }
+
+  private setSuggestion(
+    field: AutocompleteField,
+    value: string,
+  ): void {
+    switch (field) {
+      case 'full_name':
+        this.athleteSuggestion = value;
+        break;
+      case 'country':
+        this.countrySuggestion = value;
+        break;
+      case 'region':
+        this.regionSuggestion = value;
+        break;
+      case 'city':
+        this.citySuggestion = value;
+        break;
+    }
+  }
+
+  private isAutocompleteField(
+    field: string,
+  ): field is AutocompleteField {
+    return [
+      'full_name',
+      'country',
+      'region',
+      'city',
+    ].includes(field);
+  }
+
+  public getTextWidth(text: string): number {
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+
+    if (!context) return 0;
+
+    const input = document.querySelector(
+      '.autocomplete-input',
+    ) as HTMLInputElement | null;
+
+    if (!input) return 0;
+
+    context.font = getComputedStyle(input).font;
+
+    return context.measureText(text).width;
+  }
+
+  getNewAthleteValue(field: string): string {
+    return String(this.newAthlete[field] ?? '');
   }
 }
 

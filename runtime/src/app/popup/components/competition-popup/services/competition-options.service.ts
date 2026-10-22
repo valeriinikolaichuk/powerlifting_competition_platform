@@ -24,47 +24,6 @@ export class CompetitionOptionsService {
     this.pg = this.pgliteService.database;
   }
 
-  async getCountrySuggestion(value: string): Promise<string | null> {
-    const result = await this.pg.query<{ name: string }>(
-      `
-        SELECT name
-        FROM countries
-        WHERE name ILIKE $1
-          AND is_deleted = false
-        ORDER BY name ASC
-        LIMIT 1
-      `,
-      [`${value}%`],
-    );
-
-    return result.rows[0]?.name ?? null;
-  }
-
-  async getCitySuggestion(
-    value: string,
-    countryName?: string,
-  ): Promise<string | null> {
-    const result = await this.pg.query<{ name: string }>(
-      `
-        SELECT ci.name
-        FROM cities ci
-        JOIN countries co ON co.id = ci.country_id
-        WHERE ci.name ILIKE $1
-          AND ci.is_deleted = false
-          AND co.is_deleted = false
-          AND ($2 = '' OR co.name ILIKE $2)
-        ORDER BY ci.name ASC
-        LIMIT 1
-      `,
-      [
-        `${value}%`, 
-        countryName ? countryName : '',
-      ],
-    );
-
-    return result.rows[0]?.name ?? null;
-  }
-
   async getFederations(): Promise<FederationOption[]> {
 
     const result = await this.pg.query<FederationOption>(

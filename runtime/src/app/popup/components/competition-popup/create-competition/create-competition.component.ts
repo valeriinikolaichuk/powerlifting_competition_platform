@@ -7,8 +7,9 @@ import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 import { PopupService } from '../../../services/popup.service';
 import { CompetitionConfigService } from '../../../../services/core/competition-config.service';
 import { CompetitionOptionsService } from '../services/competition-options.service';
-import { OpenCompetitionService } from '../../../../services/shared/open-competition.service';
-import { Competition } from '../../../../services/shared/dto/competition.dto';
+import { OpenCompetitionService } from '../../../../shared/services/open-competition.service';
+import { SuggestionService } from '../../../../shared/services/suggestion.service';
+import { Competition } from '../../../../shared/services/dto/competition.dto';
 
 import { 
   FederationOption, 
@@ -26,7 +27,7 @@ import {
     TranslatePipe, 
   ],
   templateUrl: './create-competition.component.html',
-  styleUrl: '../autocomplete.css'
+  styleUrl: '../../../../shared/styles/autocomplete.css'
 })
 export class CreateCompetitionComponent {
 
@@ -63,6 +64,7 @@ export class CreateCompetitionComponent {
     private readonly competitionConfigService: CompetitionConfigService, 
     private readonly competitionOptionsService: CompetitionOptionsService,
     private readonly openCompetitionService: OpenCompetitionService,
+    private readonly suggestionService: SuggestionService,
   ) {
     const today = new Date().toISOString().slice(0, 10);
 
@@ -142,7 +144,7 @@ export class CreateCompetitionComponent {
 
     if (!value) { return; }
 
-    const suggestion = await this.competitionOptionsService.getCountrySuggestion(value);
+    const suggestion = await this.suggestionService.getCountrySuggestion(value);
 
     this.countrySuggestionOffset = this.getTextWidth(value);
 
@@ -176,7 +178,7 @@ export class CreateCompetitionComponent {
 
     const countryName = this.form.get('country')?.value?.trim() ?? '';
 
-    const suggestion = await this.competitionOptionsService.getCitySuggestion(
+    const suggestion = await this.suggestionService.getCitySuggestion(
       value,
       countryName,
     );
@@ -319,7 +321,7 @@ export class CreateCompetitionComponent {
         await this.openCompetitionService.getCompetitionData(id);
 
       if (!this.createdCompetition) {
-        
+
         alert(this.tService.t(
           'popups/competition-popup',
           'Failed_to_create_competition'

@@ -9,8 +9,9 @@ import { OpenCompetitionPopupComponent } from '../../open-competition-popup/open
 
 import { CompetitionConfigService } from '../../../../services/core/competition-config.service';
 import { CompetitionOptionsService } from '../services/competition-options.service';
+import { SuggestionService } from '../../../../shared/services/suggestion.service';
 
-import { Competition } from '../../../../services/shared/dto/competition.dto';
+import { Competition } from '../../../../shared/services/dto/competition.dto';
 import { AgeGroupOption } from '../dto/competition-options.dtos';
 
 @Component({
@@ -20,7 +21,7 @@ import { AgeGroupOption } from '../dto/competition-options.dtos';
     TranslatePipe, 
   ],
   templateUrl: './edit-competition.component.html',
-  styleUrl: '../autocomplete.css'
+  styleUrl: '../../../../shared/styles/autocomplete.css'
 })
 export class EditCompetitionComponent {
 
@@ -41,6 +42,7 @@ export class EditCompetitionComponent {
     private readonly popup: PopupService, 
     private readonly competitionConfigService: CompetitionConfigService,
     private readonly competitionOptionsService: CompetitionOptionsService,
+    private readonly suggestionService: SuggestionService,
   ) {
     this.tService.load('popups/competition-popup');
   }
@@ -88,7 +90,7 @@ export class EditCompetitionComponent {
 
     if (!value) { return; }
 
-    const suggestion = await this.competitionOptionsService.getCountrySuggestion(value);
+    const suggestion = await this.suggestionService.getCountrySuggestion(value);
 
     this.countrySuggestionOffset = this.getTextWidth(value);
 
@@ -122,7 +124,7 @@ export class EditCompetitionComponent {
 
     const countryName = this.form.get('country')?.value?.trim() ?? '';
 
-    const suggestion = await this.competitionOptionsService.getCitySuggestion(
+    const suggestion = await this.suggestionService.getCitySuggestion(
       value,
       countryName,
     );

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../i18n/services/translation.service';
-import { EntryService } from '../../../services/shared/entry.service';
-import { ExitService } from '../../../services/shared/exit.service';
+import { EntryService } from '../../../shared/services/entry.service';
+import { ExitService } from '../../../shared/services/exit.service';
 
 @Component({
   selector: 'app-role',

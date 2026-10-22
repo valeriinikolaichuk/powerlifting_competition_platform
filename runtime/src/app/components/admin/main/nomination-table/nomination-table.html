@@ -56,7 +56,7 @@
         <th [attr.colspan]="diciplineColspan">
             {{ 'nominations' | t:'tables/athlete-table' }}
         </th>
-        <th colspan="4"></th>
+        <th colspan="3"></th>
       </tr>
 
       <tr class="column-heading">
@@ -95,50 +95,6 @@
     </thead>
 
     <tbody>
-      @for (
-        athlete of athletes;
-        track trackAthlete($index, athlete)
-      ) {
-        <tr [id]="'tr' + athlete.id" data-type="html">
-
-          @for (column of columns; track trackColumn($index, column)) {
-            <td
-              [class.hidden-column]="
-                column.hidden ||
-                (column.key === 6 && competition.age_groups.length === 1)
-              "
-              [class.sticky]="
-                column.left !== null ||
-                column.index === 1 ||
-                (column.index >= 2 && column.index <= 6)
-              "
-              [class.table-number]="column.index === 1"
-              [attr.id]="'td' + column.index + athlete.id"
-              [attr.data-discipline]="column.discipline"
-              [style.left.px]="getColumnLeft(column)"
-              [style.width.px]="column.width"
-              [style.text-align]="
-                [1, 3, 4, 5, 7, 8, 9].includes(column.index)
-                  ? 'center'
-                  : null
-              "
-            >
-              @if (column.editor === 'checkbox') {
-                <input
-                  class="cell-checkbox"
-                  type="checkbox"
-                  [checked]="isChecked(athlete, column.field)"
-                  [attr.aria-label]="getLabel(column)"
-                  [disabled]="!editable"
-                />
-              } @else {
-                {{ displayValue(athlete, column) }}
-              }
-            </td>
-          }
-
-        </tr>
-      }
 
       @if (editable) {
         <tr id="tr0" class="input-line sticky" data-type="input">
@@ -207,18 +163,42 @@
                 }
 
                 @case ('text') {
-                  <input
-                    class="cell-input"
-                    type="text"
-                    [name]="'new-' + (column.field || column.index)"
-                    [value]="
-                      column.field
-                        ? (newAthlete[column.field] ?? '')
-                        : ''
-                    "
-                    (input)="setNewText(column.field, $event)"
-                    [disabled]="!editable"
-                  />
+                  @if (['full_name', 'country', 'region', 'city'].includes(column.field ?? '')) {
+                    <div class="autocomplete">
+
+                    @if (getSuggestion(column.field)) {
+                        <div
+                        class="autocomplete-suggestion"
+                        [style.left.px]="getTextWidth(getNewAthleteValue(column.field!)) + 2"
+                        >
+                        {{ getSuggestion(column.field) }}
+                        </div>
+                    }
+
+                    <input
+                        class="cell-input autocomplete-input"
+                        type="text"
+                        [name]="'new-' + (column.field || column.index)"
+                        [value]="column.field ? (newAthlete[column.field] ?? '') : ''"
+                        (input)="setNewText(column.field, $event); onAutocompleteInput(column.field)"
+                        (keydown.tab)="acceptSuggestion(column.field)"
+                        (blur)="acceptSuggestion(column.field)"
+                        autocomplete="off"
+                        spellcheck="false"
+                        [disabled]="!editable"
+                    />
+
+                    </div>
+                  } @else {
+                    <input
+                        class="cell-input"
+                        type="text"
+                        [name]="'new-' + (column.field || column.index)"
+                        [value]="column.field ? (newAthlete[column.field] ?? '') : ''"
+                        (input)="setNewText(column.field, $event)"
+                        [disabled]="!editable"
+                    />
+                  }
                 }
 
                 @case ('birthDay') {
@@ -287,28 +267,26 @@
                 }
 
                 @case ('selectCategory') {
-                    <select
-                        class="cell-input"
-                        name="weight_class"
-                        [value]="newAthlete['weight_class'] ?? ''"
-                        (change)="setNewText('weight_class', $event)"
-                        [disabled]="!editable || !newAthlete['age_group']"
-                    >
+                  <select
+                    class="cell-input"
+                    name="weight_class"
+                    [value]="newAthlete['weight_class'] ?? ''"
+                    (change)="setNewText('weight_class', $event)"
+                    [disabled]="!editable || !newAthlete['age_group']"
+                  >
 
-                        @for (category of weightClasses; track category.id) {
-                            <option [value]="category.id">
-                            {{ category.name }}
-                            </option>
-                        }
-                    </select>
+                    @for (category of weightClasses; track category.id) {
+                      <option [value]="category.id"> {{ category.name }} </option>
+                    }
+                  </select>
                 }
 
                 @case ('selectGroup') {
                   <select
                     class="cell-input"
-                    name="groups_in_session"
-                    [value]="newAthlete['groups_in_session'] ?? 1"
-                    (change)="setNewNumber('groups_in_session', $event)"
+                    name="group_order"
+                    [value]="newAthlete['group_order'] ?? 1"
+                    (change)="setNewNumber('group_order', $event)"
                     [disabled]="!editable"
                   >
                     @for (group of groupOptions; track group) {
@@ -317,15 +295,32 @@
                   </select>
                 }
 
-                @case ('checkbox') {
-                  <input
-                    class="cell-checkbox"
-                    type="checkbox"
+                @case ('selectStatus') {
+                  <select
+                    class="cell-input"
                     [name]="'new-' + column.field"
-                    [checked]="isNewChecked(column.field)"
-                    (change)="setNewCheckbox(column.field, $event)"
+                    [value]="newAthlete['status'] ?? 'TEAM'"
+                    (change)="setNewText(column.field, $event)"
                     [disabled]="!editable"
-                  />
+                  >
+                    <option value="TEAM">TEAM</option>
+                    <option value="PERSONALLY">PERSONALLY</option>
+                    <option value="OUT_OF_COMP">OUT_OF_COMP</option>
+                  </select>
+                }
+
+                @case ('selectQualification') {
+                  <select
+                    class="cell-input"
+                    [name]="'new-' + column.field"
+                    [value]="newAthlete['qualification'] ?? 'QUALIFIED'"
+                    (change)="setNewText(column.field, $event)"
+                    [disabled]="!editable"
+                  >
+                    <option value="QUALIFIED">QUALIFIED</option>
+                    <option value="WITHDRAWN">WITHDRAWN</option>
+                    <option value="DISQUALIFIED">DISQUALIFIED</option>
+                  </select>
                 }
 
                 @case ('display') {
@@ -338,6 +333,41 @@
 
               }
 
+            </td>
+          }
+
+        </tr>
+      }
+
+      @for (
+        athlete of athletes;
+        track trackAthlete($index, athlete)
+      ) {
+        <tr [id]="'tr' + athlete.id" data-type="html">
+
+          @for (column of columns; track trackColumn($index, column)) {
+            <td
+              [class.hidden-column]="
+                column.hidden ||
+                (column.key === 6 && competition.age_groups.length === 1)
+              "
+              [class.sticky]="
+                column.left !== null ||
+                column.index === 1 ||
+                (column.index >= 2 && column.index <= 6)
+              "
+              [class.table-number]="column.index === 1"
+              [attr.id]="'td' + column.index + athlete.id"
+              [attr.data-discipline]="column.discipline"
+              [style.left.px]="getColumnLeft(column)"
+              [style.width.px]="column.width"
+              [style.text-align]="
+                [1, 3, 4, 5, 7, 8, 9].includes(column.index)
+                  ? 'center'
+                  : null
+              "
+            >
+                {{ displayValue(athlete, column) }}
             </td>
           }
 

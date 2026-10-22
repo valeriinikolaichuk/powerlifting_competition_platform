@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { PGlite } from '@electric-sql/pglite';
 
 import { environment } from '../../../../environments/environment';
-import { DeviceIdService } from '../../shared/device-id.service';
+import { DeviceIdService } from '../../../shared/services/device-id.service';
 import { DeviceParameters } from '../dto/device-parameters';
 import { LanTokenService } from '../../cookies/lan-token.service';
 import { ConnectionsResultDto } from '../dto/connections-result-dto';

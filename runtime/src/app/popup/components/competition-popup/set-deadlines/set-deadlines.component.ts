@@ -11,7 +11,7 @@ import { NominationConfigService } from '../../../../services/core/nomination-co
 import { NominationOptionsService } from '../services/nomination-options.service';
 import { CompetitionOptionsService } from '../services/competition-options.service';
 
-import { Competition } from '../../../../services/shared/dto/competition.dto';
+import { Competition } from '../../../../shared/services/dto/competition.dto';
 import { AgeGroupOption } from '../dto/competition-options.dtos';
 
 @Component({
@@ -22,7 +22,7 @@ import { AgeGroupOption } from '../dto/competition-options.dtos';
     DatePipe,
   ],
   templateUrl: './set-deadlines.component.html',
-  styleUrl: '../autocomplete.css',
+  styleUrl: '../../../../shared/styles/autocomplete.css',
 })
 export class SetDeadlinesComponent {
 

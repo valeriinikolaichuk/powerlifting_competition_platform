@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { ConnectionsService } from '../connections/services/connections.service';
-import { DeviceParameters } from '../connections/dto/device-parameters';
-import { ConnectionDto } from '../connections/dto/connection-dto';
+import { ConnectionsService } from '../../services/connections/services/connections.service';
+import { DeviceParameters } from '../../services/connections/dto/device-parameters';
+import { ConnectionDto } from '../../services/connections/dto/connection-dto';
 import { PopupService } from '../../popup/services/popup.service';
 import { ConnectionsPopupComponent } from '../../popup/components/connections-popup/connections-popup.component';
 
-import { SyncService } from '../sync/services/sync.service';
+import { SyncService } from '../../services/sync/services/sync.service';
 import { SystemPopupComponent } from '../../popup/components/system-popups/system-popup.component';
 import { SynchronizingDatabaseComponent } from '../../popup/components/system-popups/synchronizing-database/synchronizing-database.component';
 import { RetryPopupComponent } from '../../popup/components/retry-popup/retry-popup.component';
 import { SynchronizationErrorComponent } from '../../popup/components/retry-popup/synchronization-error/synchronization-error.component';
 
 import { PgliteService } from '../../database/services/pglite.service';
-import { DeviceRoleService } from '../connections/services/device-role.service';
+import { DeviceRoleService } from '../../services/connections/services/device-role.service';
 
 @Injectable({
   providedIn: 'root',

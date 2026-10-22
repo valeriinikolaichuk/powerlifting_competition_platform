@@ -31,6 +31,7 @@ CREATE TABLE "athlete_registrations" (
     "bodyweight" DECIMAL(5,2),
     "athlete_coefficient" DECIMAL(5,4),
     "group_in_session_id" UUID,
+    "group_order" INTEGER NOT NULL DEFAULT 1,
     "lot" INTEGER,
     "double" BOOLEAN NOT NULL DEFAULT false,
     "status" "AthleteRegistrationStatus" NOT NULL DEFAULT 'TEAM',

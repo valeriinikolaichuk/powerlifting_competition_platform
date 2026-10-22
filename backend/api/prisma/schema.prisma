@@ -409,7 +409,7 @@ model Athletes {
   id                 String @id @default(uuid()) @db.Uuid
 
   full_name          String
-  
+
   birth_day          Int?    @db.SmallInt
   birth_month        Int?    @db.SmallInt
   birth_year         Int?    @db.SmallInt
@@ -972,6 +972,7 @@ model AthleteRegistrations {
   athlete_coefficient    Decimal? @db.Decimal(5, 4)
 
   group_in_session_id   String? @db.Uuid
+  group_order           Int @default(1)
 
   lot                   Int?
 

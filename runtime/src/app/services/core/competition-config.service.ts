@@ -5,7 +5,7 @@ import type { CompetitionData, UpdateCompetitionData } from '#shared-sql';
 import { SYNC_OPERATIONS } from '#shared-sql';
 
 import { PgliteService } from '../../database/services/pglite.service';
-import { UserService } from '../shared/user.service';
+import { UserService } from '../../shared/services/user.service';
 
 import { SyncQueueService } from '../sync/services/sync-queue.service';
 
@@ -37,7 +37,7 @@ export class CompetitionConfigService {
     console.log(data);
 
     await this.pg.transaction(async (tx) => {
-      
+
       await tx.query(
         SYNC_OPERATIONS.CREATE_COMPETITION,
         [

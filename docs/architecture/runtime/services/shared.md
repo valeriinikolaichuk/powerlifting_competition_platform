@@ -14,6 +14,7 @@ Starts and ends the `Runtime` initialization process.
   - [NominationListItem](#nominationlistitem)
 - [UserService](#userservice)
 - [CheckOnlineService](#checkonlineservice)
+- [SuggestionService](#suggestionservice)
 
 </details>
 
@@ -248,3 +249,7 @@ Determines whether the current user has an active device configured for `online 
 The method returns `true` if a matching record exists; otherwise, it returns `false`.
 
 ---
+
+### SuggestionService
+
+- ### getCountrySuggestion

@@ -7,6 +7,8 @@ import { SyncOperationFactoryService } from './sync-operations/sync-operation-fa
 @Injectable()
 export class SyncProcessorService {
 
+    private isProcessing = false;
+
     constructor(
         private readonly prisma: PrismaService,
         private readonly syncOperationFactory: SyncOperationFactoryService,
@@ -17,57 +19,66 @@ export class SyncProcessorService {
     @Interval(1000)
     async processPending(): Promise<void> {
 
-        await this.prisma.syncInbox.deleteMany({
-            where: {
-                processed_by_browser: { not: null },
-                processed_at: { not: null },
-            },
-        });
+        if (this.isProcessing) return;
 
-        const items = await this.prisma.syncInbox.findMany({
-            where: {
-                processed_at: null,
-            },
-            orderBy: {
-                received_at: 'asc',
-            },
-        });
+        this.isProcessing = true;
 
-        for (const item of items) {
+        try {
+            await this.prisma.syncInbox.deleteMany({
+                where: {
+                    processed_by_browser: { not: null },
+                    processed_at: { not: null },
+                },
+            });
 
-            try {
+            const items = await this.prisma.syncInbox.findMany({
+                where: {
+                    processed_at: null,
+                },
+                orderBy: {
+                    received_at: 'asc',
+                },
+            });
 
-                const operation = this.syncOperationFactory.create(
-                    item.operation_id
-                );
+            for (const item of items) {
 
-                await this.prisma.$transaction(async (tx) => {
+                try {
 
-                    await operation.execute({
-                        id: item.id,
-                        sourceId: item.source_id,
-                        operationId: item.operation_id,
-                        recordId: item.record_id,
-                        payload: item.payload,
-                    }, tx);
+                    const operation = this.syncOperationFactory.create(
+                        item.operation_id
+                    );
 
-                    await tx.syncInbox.update({
-                        where: {
+                    await this.prisma.$transaction(async (tx) => {
+
+                        await operation.execute({
                             id: item.id,
-                        },
-                        data: {
-                            processed_at: new Date(),
-                        },
+                            sourceId: item.source_id,
+                            operationId: item.operation_id,
+                            recordId: item.record_id,
+                            payload: item.payload,
+                        }, tx);
+
+                        await tx.syncInbox.update({
+                            where: {
+                                id: item.id,
+                            },
+                            data: {
+                                processed_at: new Date(),
+                            },
+                        });
                     });
-                });
 
-            } catch (error) {
-
-                console.error(
-                    `Failed to process sync operation ${item.operation_id}:`,
-                    error,
-                );
+                    } catch (error) {
+                    console.error(
+                        `Failed to process sync operation ${item.operation_id}:`,
+                        error,
+                    );
+                }
             }
+        } catch (error) {
+            console.error('Failed to process sync inbox:', error);
+        } finally {
+            this.isProcessing = false;
         }
     }
 }

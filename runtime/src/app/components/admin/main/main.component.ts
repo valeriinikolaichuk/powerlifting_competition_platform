@@ -5,7 +5,7 @@ import { NgComponentOutlet } from '@angular/common';
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../i18n/services/translation.service';
 
-import { CheckOnlineService } from '../../../services/shared/check-online.service';
+import { CheckOnlineService } from '../../../shared/services/check-online.service';
 
 import { PopupService } from '../../../popup/services/popup.service';
 import { CompetitionPopupComponent } from '../../../popup/components/competition-popup/competition-popup.component';
@@ -13,7 +13,7 @@ import { CreateCompetitionComponent } from '../../../popup/components/competitio
 import { OpenCompetitionPopupComponent } from '../../../popup/components/open-competition-popup/open-competition-popup.component';
 
 import { NominationTable } from './nomination-table/nomination-table';
-import { Competition } from '../../../services/shared/dto/competition.dto';
+import { Competition } from '../../../shared/services/dto/competition.dto';
 
 @Component({
   selector: 'app-main',

@@ -4,10 +4,10 @@ import { Router } from '@angular/router';
 
 import { environment } from '../../../environments/environment';
 import { RuntimeSessionService } from '../../session/services/runtime-session.service';
-import { ConnectionsService } from '../connections/services/connections.service';
+import { ConnectionsService } from '../../services/connections/services/connections.service';
 
 import { PgliteService } from '../../database/services/pglite.service';
-import { DeviceRoleService } from '../connections/services/device-role.service';
+import { DeviceRoleService } from '../../services/connections/services/device-role.service';
 
 @Injectable({
   providedIn: 'root',

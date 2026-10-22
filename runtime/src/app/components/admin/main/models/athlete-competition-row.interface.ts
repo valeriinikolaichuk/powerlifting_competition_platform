@@ -1,34 +1,47 @@
 export type AthleteCellValue = string | number | boolean | null | undefined;
 
 export interface AthleteCompetitionRow {
-  [key: string]: AthleteCellValue;
-  id: string | number;
-  surname_name?: string | null;
-  birth_day?: number | null;
-  birth_month?: number | null;
-  birth_year?: number | null;
-  category?: string | null;
+    [key: string]: AthleteCellValue;
+    id: string | number;
+    full_name?: string | null;
+    birth_day?: number | null;
+    birth_month?: number | null;
+    birth_year?: number | null;
+
+    age_group?: string | null;
+    weight_class?: string | null;
+    group_order?: number | null;
+    lot?: number | null;
+    sport_rank_class?: string | null;
+
+    country?: string | null;
+    region?: string | null;
+    city?: string | null;
+
+    sport_society_code?: string | null;
+    club_code?: string | null;
+    sport_school_code?: string | null;
+    university_code?: string | null;
+
+    trener_1?: string | null;
+    trener_2?: string | null;
+    trener_3?: string | null;
+    trener_4?: string | null;
+
+    squat_nominated?: number | null;
+    bench_press_nominated?: number | null;
+    deadlift_nominated?: number | null;
+    total_nominated?: number | null;
+    status: string | null;
+    qualification: string | null;
+    titles?: string | null;
+
   bodyweight?: number | null;
   iPF_GL_Cf?: number | null;
-  grp?: number | null;
-  lot?: number | null;
-  rank_class?: string | null;
-  region?: string | null;
-  city?: string | null;
-  club?: string | null;
-  trener_1?: string | null;
-  trener_2?: string | null;
-  trener_3?: string | null;
-  trener_4?: string | null;
-  titles?: string | null;
-  personally?: boolean | number | null;
-  out_of_comp?: boolean | number | null;
-  MD?: boolean | number | null;
-  dbl?: boolean | number | null;
-  squat_nom?: number | null;
-  bench_press_nom?: number | null;
-  deadlift_nom?: number | null;
-  total_nom?: number | null;
+
+
+
+  
   squat_1?: number | null;
   bench_press_1?: number | null;
   deadlift_1?: number | null;

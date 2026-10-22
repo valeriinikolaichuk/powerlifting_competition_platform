@@ -141,7 +141,7 @@ export const WEIGHING_COLUMNS: AthleteTableColumn[] = [
     discipline: null,
     indexAttr: "sort",
     draggable: true,
-    field: "groups_in_session",
+    field: "group_order",
     editor: "selectGroup",
     cancelSorting: false
   },

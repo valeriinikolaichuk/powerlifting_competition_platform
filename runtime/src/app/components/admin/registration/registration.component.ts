@@ -8,10 +8,10 @@ import { PgliteService } from '../../../database/services/pglite.service';
 import { TranslatePipe } from '../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../i18n/services/translation.service';
 
-import { OpenCompetitionService } from '../../../services/shared/open-competition.service';
-import { CheckOnlineService } from '../../../services/shared/check-online.service';
-import { CompetitionListItem } from '../../../services/shared/dto/competition-list-item';
-import { Competition } from '../../../services/shared/dto/competition.dto';
+import { OpenCompetitionService } from '../../../shared/services/open-competition.service';
+import { CheckOnlineService } from '../../../shared/services/check-online.service';
+import { CompetitionListItem } from '../../../shared/services/dto/competition-list-item';
+import { Competition } from '../../../shared/services/dto/competition.dto';
 
 import { PopupService } from '../../../popup/services/popup.service';
 import { CompetitionPopupComponent } from '../../../popup/components/competition-popup/competition-popup.component';
@@ -23,7 +23,7 @@ import { SetDeadlinesComponent } from '../../../popup/components/competition-pop
     TranslatePipe,
     RouterLink,
     NgClass, 
-    DatePipe,
+//    DatePipe,
   ],
   templateUrl: './registration.component.html',
 })

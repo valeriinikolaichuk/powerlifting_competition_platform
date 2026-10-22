@@ -271,7 +271,7 @@ Competition dates are displayed in `dd.MM.yyyy` format.
 Provides a form for editing the configurable details of an existing competition.
 
 - **Form Initialization** — Initializes the reactive form using the selected competition's data, including its name, country, city, start date, and end date.
-- **Country Autocomplete** — Retrieves country suggestions through [CompetitionOptionsService](#competitionoptionsservice) and allows the user to select a matching country.
+- **Country Autocomplete** — Retrieves country suggestions through [SuggestionService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#suggestionservice) and allows the user to select a matching country.
 - **City Autocomplete** — Provides city suggestions based on the selected country.
 - **Date Validation** — Ensures the end date is not earlier than the start date. Updates the end date when necessary after the start date changes.
 - **Age Groups** — Loads available age groups based on the competition's federation and sex. Identifies existing age groups using their federation category IDs and displays translated labels.
@@ -281,7 +281,8 @@ Provides a form for editing the configurable details of an existing competition.
 
 #### Services
 - [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md) — Provides translations for age-group labels and other localized text.
-- [CompetitionOptionsService](#competitionoptionsservice) — Retrieves country and city suggestions and available age-group options.
+- [CompetitionOptionsService](#competitionoptionsservice) — Retrieves available age-group options.
+- [SuggestionService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#suggestionservice) — Retrieves country and city suggestions.
 - [CompetitionConfigService](#update) — Updates competition details and queues changes for synchronization.
 - [PopupService](popup-system.md) — Manages popup navigation.
 
