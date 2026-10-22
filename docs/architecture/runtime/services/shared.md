@@ -248,10 +248,45 @@ Determines whether the current user has an active device configured for `online 
 The method returns `true` if a matching record exists; otherwise, it returns `false`.
 
 ---
-<<<<<<< HEAD
 
 ### SuggestionService
+Provides autocomplete suggestions and retrieves athlete-related data from the local [PGlite database](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md).
 
-- ### getCountrySuggestion
-=======
->>>>>>> 094025c63eeb736d474dbf267fb6432f10d11c5a
+- ### getCountrySuggestion()
+Retrieves the first country name matching the entered value.
+* Filters out deleted records.
+* Matches names using `ILIKE`.
+* Sorts results alphabetically and returns the first match.
+
+- ### getRegionSuggestion()
+Retrieves the first region name matching the entered value.
+* Filters out deleted records.
+* Matches names using `ILIKE`.
+* Sorts results alphabetically and returns the first match.
+
+- ### getCitySuggestion()
+Retrieves the first city name matching the entered value, optionally filtered by country.
+* Excludes deleted cities and countries.
+* Matches the country name when provided.
+* Sorts results alphabetically and returns the first match.
+
+- ### getCityByRegionSuggestion()
+Retrieves the first city name matching the entered value, optionally filtered by region.
+* Excludes deleted cities and ignores deleted regions.
+* Matches the region name when provided.
+* Includes cities without an associated region when no region filter is specified.
+* Sorts results alphabetically and returns the first match.
+
+### getAthleteSuggestion()
+Retrieves the first athlete's full name matching the entered value.
+* Filters athletes by federation, language, and sex.
+* Excludes deleted records.
+* Sorts results alphabetically and returns the first match.
+
+### getDateOfBirthByName()
+Retrieves an athlete's date of birth using their full name and federation details.
+* Matches the athlete's full name, federation ID, language, and sex.
+* Excludes deleted records.
+* Returns the birth day, month, and year, or `null` if no matching athlete is found.
+
+---
