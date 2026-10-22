@@ -1,4 +1,4 @@
-## Sared Services
+## Shared Services
 Starts and ends the `Runtime` initialization process.
 
 <details open="open">
@@ -249,7 +249,10 @@ Determines whether the current user has an active device configured for `online 
 The method returns `true` if a matching record exists; otherwise, it returns `false`.
 
 ---
+<<<<<<< HEAD
 
 ### SuggestionService
 
 - ### getCountrySuggestion
+=======
+>>>>>>> 094025c63eeb736d474dbf267fb6432f10d11c5a

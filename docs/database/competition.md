@@ -164,6 +164,7 @@ Each record contains the athlete's competition entry, nomination attempts, compe
 | bodyweight | Official bodyweight after weigh-in (optional) |
 | athlete_coefficient | Calculated competition coefficient |
 | group_in_session_id | Assigned competition group (optional) |
+| group_order | group_in_session order `DEFAULT 1` |
 | lot | Lot number |
 | double | Indicates participation outside the main classification |
 | status | Participation status (`AthleteRegistrationStatus` enum) |
