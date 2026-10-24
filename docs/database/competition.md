@@ -9,6 +9,7 @@
   - [CompetitionType enum](#competitiontype-enum)
   - [CompetitionDivision enum](#competitiondivision-enum)
   - [CompetitionStatus enum](#competitionstatus-enum)
+  - [Language Enum](#language-enum)
   - [Competition Flow](#competition-flow)
 - [athlete_registrations](#athlete_registrations)
   - [AthleteRegistrationStatus enum](#athleteregistrationstatus)
@@ -40,6 +41,7 @@ The competition configuration defines the competition level, discipline, divisio
 | competition_level | Competition level (`CompetitionLevel` enum) |
 | type | Competition discipline (`CompetitionType` enum) |
 | division | Equipment division (`CompetitionDivision` enum) |
+| language | ENUM [Language](#language-enum) |
 | status | Competition status (`CompetitionStatus` enum) |
 | archived_at | Archive timestamp |
 | created_at | Record creation timestamp |
@@ -75,6 +77,15 @@ Defines the equipment division.
 | RAW_WRAPS | Classic (RAW with wraps) division. |
 | SINGLE_PLY | Equipped division. |
 | MULTI_PLY | Multi-ply equipped division. |
+
+#### Language Enum
+Defines the user interface language.
+
+| Value | Description |
+|--------|-------------|
+| EN | English |
+| UK | Ukrainian |
+| PL | Polish |
 
 #### CompetitionStatus enum
 Defines the current competition status.
