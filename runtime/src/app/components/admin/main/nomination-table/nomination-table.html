@@ -1,10 +1,11 @@
 <div class="w-full 
+        max-h-[calc(100vh-30px)]
         overflow-auto 
         relative">
 
   <table class="athlete-table">
     <thead>
-      <tr class="bg-gray-300">
+      <tr class="competition_name">
         <th class="hidden-column"></th>
         <th class="sticky 
                 left-0 
@@ -92,10 +93,7 @@
           </th>
         }
       </tr>
-    </thead>
-
-    <tbody>
-
+    
       @if (editable) {
         <tr id="tr0" class="input-line sticky" data-type="input">
 
@@ -114,8 +112,6 @@
               [attr.data-discipline]="column.discipline"
               [style.left.px]="getColumnLeft(column)"
               [style.width.px]="column.width"
-              [style.top]="column.index === 1 ? '86px' : null"
-              [style.z-index]="column.left !== null ? 6 : null"
             >
 
               @switch (column.editor) {
@@ -163,15 +159,15 @@
                 }
 
                 @case ('text') {
-                  @if (['full_name', 'country', 'region', 'city'].includes(column.field ?? '')) {
+                  @if (isAutocompleteField(column.field)) {
                     <div class="autocomplete">
 
                     @if (getSuggestion(column.field)) {
                         <div
-                        class="autocomplete-suggestion"
-                        [style.left.px]="getTextWidth(getNewAthleteValue(column.field!)) + 2"
-                        >
-                        {{ getSuggestion(column.field) }}
+                            class="autocomplete-suggestion"
+                            [style.left.px]="getTextWidth(getNewAthleteValue(column.field!)) + 2"
+                            >
+                            {{ getSuggestion(column.field) }}
                         </div>
                     }
 
@@ -338,7 +334,9 @@
 
         </tr>
       }
+    </thead>
 
+    <tbody>
       @for (
         athlete of athletes;
         track trackAthlete($index, athlete)

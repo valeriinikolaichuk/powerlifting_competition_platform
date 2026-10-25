@@ -16,10 +16,10 @@ import { AthleteTableOptionsService } from '../services/athlete-table-options.se
 import { Competition } from '../../../../shared/services/dto/competition.dto';
 import { AthleteCellValue, AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
 
-import { CompetitionOptionsService } from '../../../../popup/components/competition-popup/services/competition-options.service';
 import { SuggestionService } from '../../../../shared/services/suggestion.service';
-
-type AutocompleteField = 'full_name' | 'country' | 'region' | 'city';
+import { AutocompleteFactoryService } from '../../../../shared/services/autocomplete/autocomplete-factory.service';
+import { AutocompleteField } from '../types/autocomplete-field.type';
+import { organizationTypes } from '../types/organization-types';
 
 @Component({
   selector: 'app-nomination-table',
@@ -67,8 +67,8 @@ export class NominationTable implements OnChanges {
     public tService: TranslationService,
     private readonly columnFactoryService: ColumnFactoryService,
     private readonly athleteTableOptionsService: AthleteTableOptionsService,
-    private readonly competitionOptionsService: CompetitionOptionsService,
     private readonly suggestionService: SuggestionService,
+    private readonly autocompleteFactoryService: AutocompleteFactoryService,
   ){}
 
   async ngOnInit(){
@@ -122,6 +122,7 @@ export class NominationTable implements OnChanges {
       competitionLevel: this.competition.competition_level,
       competitionType: this.competition.type,
       ageGroupsCount: this.competition.age_groups.length,
+      federationCode: this.competition.federation_code,
     };
 
     const colspanConfig: ColspanConfigDto = {
@@ -230,34 +231,39 @@ export class NominationTable implements OnChanges {
 
   createEmptyAthlete(): Partial<AthleteCompetitionRow> {
     return {
-      id: -1,
-      full_name: '',
+      id: crypto.randomUUID(),
+      full_name: null,
       birth_day: null,
       birth_month: null,
       birth_year: null,
+
       age_group: this.competition.age_groups[0]?.federation_category_id ?? '',
-      weight_class: '',
+      weight_class: null,
       group_order: 1,
       lot: null,
-      sport_rank_class: '',
-      country: '',
-      region: '',
-      city: '',
-      sport_society_code: '',
-      club_code: '',
-      sport_school_code: '',
-      university_code: '',
-      trener_1: '',
-      trener_2: '',
-      trener_3: '',
-      trener_4: '',
+      sport_rank_class: null,
+
+      country: null,
+      region: null,
+      city: null,
+
+      sport_society_code: null,
+      club_code: null,
+      sport_school_code: null,
+      university_code: null,
+
+      trener_1: null,
+      trener_2: null,
+      trener_3: null,
+      trener_4: null,
+
       squat_nominated: null,
       bench_press_nominated: null,
       deadlift_nominated: null,
       total_nominated: null,
       status: 'TEAM',
       qualification: 'QUALIFIED',
-      titles: '',
+      titles: null,
     };
   }
 
@@ -306,54 +312,20 @@ export class NominationTable implements OnChanges {
 
     let suggestion: string | null = null;
 
-    switch (field) {
-      case 'full_name':
-        const language = localStorage.getItem('lang')?.toUpperCase() ?? 'EN';
-        const competitionSex = this.competition.age_groups[0].sex;
-        let sex;
+    const context = {
+      federationId: this.competition.federation_id,
+      language: localStorage.getItem('lang')?.toUpperCase() ?? 'EN',
+      competitionSex: this.competition.age_groups[0].sex,
+      regionName: String(this.newAthlete['region'] ?? '').trim(),
+      countryName: String(this.newAthlete['country'] ?? '').trim(),
+      organizationType: organizationTypes[field] ,
+    };
 
-        if (competitionSex === 'MEN') {
-          sex = 'MAN';
-        } else {
-          sex = 'WOMAN';
-        }
+    const strategy = this.autocompleteFactoryService.getStrategy(field);
 
-        suggestion = await this.suggestionService.getAthleteSuggestion(
-          value,
-          this.competition.federation_id, 
-          language, 
-          sex,
-        );
-        break;
+    if (!strategy) return;
 
-      case 'country':
-        suggestion = await this.suggestionService.getCountrySuggestion(value);
-        break;
-
-      case 'region':
-        suggestion = await this.suggestionService.getRegionSuggestion(value);
-        break;
-
-      case 'city':
-        value = this.newAthlete['city']?.toString().trim() ?? '';
-
-        this.citySuggestion = '';
-
-        if (!value) return;
-
-        const regionName = this.newAthlete['region']?.toString().trim() ?? '';
-
-        suggestion = await this.suggestionService.getCityByRegionSuggestion(
-          value,
-          regionName,
-        );
-
-        if (suggestion && suggestion.toLowerCase() !== value.toLowerCase()) {
-          this.citySuggestion = suggestion.slice(value.length);
-        }
-
-        break;
-    }
+    suggestion = await strategy.getSuggestion(value, context);
 
     if (String(this.newAthlete[field] ?? '').trim() !== value) return;
 
@@ -426,15 +398,15 @@ export class NominationTable implements OnChanges {
     }
   }
 
-  private isAutocompleteField(
-    field: string,
+  public isAutocompleteField(
+    field: string | null | undefined,
   ): field is AutocompleteField {
     return [
       'full_name',
       'country',
       'region',
       'city',
-    ].includes(field);
+    ].includes(field ?? '');
   }
 
   public getTextWidth(text: string): number {

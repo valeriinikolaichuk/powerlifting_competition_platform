@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
 import { PgliteService } from '../../database/services/pglite.service';
+import { OrganizationType } from './types/organization-type';
 
 @Injectable({
   providedIn: 'root',
@@ -100,9 +101,7 @@ export class SuggestionService {
             regionName || '',
         ],
     );
- console.log('value:', value);
-  console.log('regionName:', regionName);
-  console.log('rows:', result.rows)
+
     return result.rows[0]?.name ?? null;
   }
 
@@ -128,6 +127,27 @@ export class SuggestionService {
     );
 
     return result.rows[0]?.full_name ?? null;
+  }
+
+  async getOrganizationSuggestion(
+    value: string,
+    organizationType: OrganizationType,
+  ): Promise<string | null> {
+    
+    const result = await this.pg.query<{ organization_code: string }>(
+      `
+        SELECT organization_code
+        FROM organizations
+        WHERE organization_code ILIKE $1
+          AND type = $2
+          AND is_deleted = false
+        ORDER BY organization_code ASC
+        LIMIT 1
+      `,
+      [`${value}%`, organizationType],
+    );
+
+    return result.rows[0]?.organization_code ?? null;
   }
 
   async getDateOfBirthByName(
