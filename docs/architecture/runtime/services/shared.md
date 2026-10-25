@@ -15,6 +15,9 @@
 - [CheckOnlineService](#checkonlineservice)
 - [SuggestionService](#suggestionservice)
   - [types](#types)
+- [AutocompleteFactoryService](#autocompletefactoryservice)
+  - [AutocompleteStrategy](#autocompletestrategy)
+  - [AutocompleteContext](#autocompletecontext)
 
 </details>
 
@@ -278,13 +281,20 @@ Retrieves the first city name matching the entered value, optionally filtered by
 * Includes cities without an associated region when no region filter is specified.
 * Sorts results alphabetically and returns the first match.
 
-### getAthleteSuggestion()
+- ### getAthleteSuggestion()
 Retrieves the first athlete's full name matching the entered value.
 * Filters athletes by federation, language, and sex.
 * Excludes deleted records.
 * Sorts results alphabetically and returns the first match.
 
-### getDateOfBirthByName()
+- ### getOrganizationSuggestion()
+Retrieves the first matching organization code from the database.
+- Searches for organization codes starting with the provided value (case-insensitive).
+- Filters organizations by [type](#organizationtype) and excludes deleted records.
+- Sorts results alphabetically and returns the first match.
+- Returns the organization code or `null` if no match is found.
+
+- ### getDateOfBirthByName()
 Retrieves an athlete's date of birth using their full name and federation details.
 * Matches the athlete's full name, federation ID, language, and sex.
 * Excludes deleted records.
@@ -304,3 +314,51 @@ export type OrganizationType =
 ```
 
 ---
+
+### AutocompleteFactoryService
+- Defines a common [interface](#autocompletestrategy) for autocomplete strategies.
+- Selects the appropriate autocomplete strategy based on the field name.
+- Asynchronously retrieves a suggestion based on the input value and optional context. Returns a suggestion string or `null` if no match is found.
+- Uses [SuggestionService](#suggestionservice) methods for implementations.
+
+| Field | Strategy |
+|---|---|
+| `full_name` | `FullnameAutocompleteStrategy` |
+| `country` | `CountryAutocompleteStrategy` |
+| `region` | `RegionAutocompleteStrategy` |
+| `city` | `CityAutocompleteStrategy` |
+| `sport_society_code` | `OrganizationAutocompleteStrategy` |
+| `club_code` | `OrganizationAutocompleteStrategy` |
+| `sport_school_code` | `OrganizationAutocompleteStrategy` |
+| `university_code` | `OrganizationAutocompleteStrategy` |
+
+- `getStrategy(field)` — returns the strategy associated with the field or `null` if no strategy is registered.
+
+---
+
+### AutocompleteStrategy
+```ts
+export interface AutocompleteStrategy {
+  getSuggestion(
+    value: string,
+    context?: AutocompleteContext,
+  ): Promise<string | null>;
+}
+```
+
+---
+
+### AutocompleteContext
+Provides optional parameters used by autocomplete strategies to filter suggestions.
+
+| Property | Description |
+|---|---|
+| `federationId` | Federation identifier. |
+| `language` | Language code. |
+| `competitionSex` | Competition sex. |
+| `regionName` | Region name used for city suggestions. |
+| `countryName` | Country name. |
+| `organizationType` | Organization type used to filter organization suggestions. |
+
+---
+
