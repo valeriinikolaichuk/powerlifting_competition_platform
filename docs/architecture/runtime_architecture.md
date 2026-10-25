@@ -64,6 +64,12 @@ Ensures that the `LAN` runtime has an authentication session before performing c
 ### [sync](runtime/services/sync-service.md)
 A real-time state synchronization services that accept updates and instantly broadcast them to all other connected clients.
 
+### [database](runtime/services/database_service.md)
+Manages the local [PGlite database]((https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/pglite.md)) lifecycle and provides a centralized interface for database access.
+
+### [shared](runtime/services/shared.md)
+Reusable services that provide common functionality across application modules.
+
 ---
 
 ### LAN Download and Installation

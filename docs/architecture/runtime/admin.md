@@ -13,6 +13,8 @@
     - [ColspanFactoryService](#colspanfactoryservice)
   - [config](#config)
   - [models](#models)
+  - [units](#units)
+  - [types](#types)
 - [RegistrationComponent](#registrationcomponent)
 
 </details>
@@ -90,19 +92,22 @@ Provides the nomination table for a selected competition, displaying athlete inf
 
 #### Responsibilities
 - Receives competition details and athlete data through component inputs.
-- Configures column visibility and table header spans using `ColumnFactoryService`.
+- Configures column visibility and table header spans using [ColumnFactoryService](#columnfactoryservice).
 - Loads athlete table translations using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md).
-- Retrieves available weight classes using `AthleteTableOptionsService`.
+- Retrieves autocomplete suggestions and athlete date-of-birth data using [SuggestionService](runtime/services/shared.md#suggestionservice).
 - Manages the input form for adding athletes to the nomination list.
 
 #### Features
 - **Competition Information** — Displays the competition name, location, dates, type, division, sex, age groups, and federation.
 - **Dynamic Columns** — Configures column visibility according to the competition level, type, language, and number of age groups.
-- **Table Header Configuration** — Calculates `competitionColspan`, `infoColspan`, `referenceColspan`, and `diciplineColspan` through `ColumnFactoryService`.
+- **Table Header Configuration** — Calculates `competitionColspan`, `infoColspan`, `referenceColspan`, and `diciplineColspan` through [ColumnFactoryService](#columnfactoryservice).
 - **Athlete Display** — Renders athlete data using the configured column definitions.
 - **Athlete Registration** — Provides an input row for entering athlete details, including name, date of birth, age group, weight class, group, lot number, and nominations.
 - **Age Group Selection** — Allows the user to select an age group when multiple groups are available.
-- **Weight Class Selection** — Loads weight classes according to the selected federation category using `AthleteTableOptionsService`.
+- **Weight Class Selection** — Loads weight classes according to the selected federation category using [AthleteTableOptionsService](#athletetableoptionsservice).
+- **Autocomplete Suggestions** — Suggests athlete names, countries, regions, and cities based on the entered text using [SuggestionService](runtime/services/shared.md#suggestionservice).
+- **Athlete Date of Birth** — Automatically fills in the athlete's date of birth when an existing athlete is selected from the suggestions.
+- **Athlete Suggestion Filtering** — Filters athlete suggestions by federation, language, and sex.
 - **Editable Mode** — Controls whether the athlete input form and checkbox controls are enabled through the `editable` input.
 - **Dynamic Column Positioning** — Adjusts sticky column positions when only one age group is configured.
 - **Date Formatting** — Formats birth date components and displays competition dates using Angular's `DatePipe`.
@@ -117,8 +122,9 @@ Provides the nomination table for a selected competition, displaying athlete inf
 
 #### Services
 - [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md) — Loads translations from `tables/athlete-table` and translates column labels and competition attributes.
-- `ColumnFactoryService` — Creates the table configuration, applying column visibility rules and calculating header spans.
-- `AthleteTableOptionsService` — Retrieves weight classes for the selected federation category.
+- [ColumnFactoryService](#columnfactoryservice) — Creates the table configuration, applying column visibility rules and calculating header spans.
+- [AthleteTableOptionsService](#athletetableoptionsservice) — Retrieves weight classes for the selected federation category.
+- [SuggestionService](runtime/services/shared.md#suggestionservice) — Provides autocomplete suggestions for athlete names, countries, regions, and cities, and retrieves an existing athlete's date of birth.
 
 #### Initialization and Updates
 - **`ngOnInit()`** — Loads athlete table translations and initializes the new athlete form.
@@ -131,9 +137,6 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`trackAthlete()`** — Tracks athletes by ID.
 - **`getColumnLeft()`** — Calculates sticky column positions based on the number of age groups.
 - **`displayValue()`** — Returns the value displayed in an athlete's cell, handling row numbering, empty values, and checkboxes.
-- **`isChecked()`** — Determines the checkbox state for an existing athlete.
-- **`isNewChecked()`** — Determines the checkbox state in the new athlete form.
-- **`setNewCheckbox()`** — Updates a checkbox value in the new athlete form.
 - **`setNewNumber()`** — Updates a numeric field in the new athlete form.
 - **`setNewText()`** — Updates a text field in the new athlete form.
 - **`onDatePartChange()`** — Updates a birth date component.
@@ -142,6 +145,21 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`createEmptyAthlete()`** — Creates the initial athlete form data.
 - **`resetNewAthlete()`** — Resets the athlete input form.
 - **`addAthlete()`** — Validates and normalizes the athlete's full name. Persistence is handled by the parent component.
+- **`getSuggestion()`** — Returns the current autocomplete suggestion for the specified field.
+  - Validates the field and checks whether autocomplete is supported.
+  - Reads the input value and clears the previous suggestion.
+  - Builds an [AutocompleteContext](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletecontext) using competition settings, athlete form values, and the organization type.
+  - Retrieves the appropriate strategy through [AutocompleteFactoryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletefactoryservice).
+  - Calls [getSuggestion(value, context)](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#suggestionservice) to find a matching value.
+  - Verifies that the input has not changed while the asynchronous request was running.
+  - Displays only the remaining suffix if the suggestion starts with the input value and is not an exact match.
+  - If the field is invalid, the input is empty, no strategy exists, or no suitable suggestion is found, no suggestion is displayed.
+- **`onAutocompleteInput()`** — Handles autocomplete suggestions for the new athlete form.
+- **`acceptSuggestion()`** — Accepts an autocomplete suggestion and retrieves the athlete's date of birth when an existing athlete name is selected.
+- **`setSuggestion()`** — Updates the autocomplete suggestion for the specified field.
+- **`isAutocompleteField()`** — Checks whether a field supports autocomplete.
+- **`getTextWidth()`** — Calculates the rendered text width for autocomplete positioning.
+- **`getNewAthleteValue()`** — Returns a new athlete form field value as a string.
 
 ---
 
@@ -164,9 +182,9 @@ The service retrieves weight class options from the local PGlite database based 
 The service configures athlete table columns and calculates table header colspans according to the competition context.
 
 #### Responsibilities
-- Applies `COLUMN_PIPELINES` to determine which columns should be hidden based on the competition level, competition type, and language.
+- Applies [COLUMN_PIPELINES](#column_pipelines) to determine which columns should be hidden based on the competition level, competition type, and language.
 - Preserves the original column visibility when no pipeline defines a new value.
-- Uses [ColspanFactoryService](#colspanfactoryservice) with `COLSPAN_PIPELINES` to calculate header colspans based on the number of age groups and other competition settings.
+- Uses [ColspanFactoryService](#colspanfactoryservice) with [COLSPAN_PIPELINES](#colspan_pipelines) to calculate header colspans based on the number of age groups and other competition settings.
 - Returns the configured columns and calculated colspans as an `AthleteTableConfig`.
 
 #### Methods
@@ -185,7 +203,7 @@ The service provides a reusable mechanism for calculating table header colspans 
 - Calculates the final configuration by subtracting the accumulated deductions from the original values.
 
 #### Method
-- **create()** — Generates an adjusted configuration by applying the deductions returned by the specified pipelines.
+- **create()** — Generates an adjusted configuration by applying the deductions returned by the specified [COLSPAN_PIPELINES](#colspan_pipelines).
 
 ---
 
@@ -236,11 +254,78 @@ export interface HiddenColspanDto {
 #### NOMINATION_COLUMNS
 Defines the column configuration for the nomination table.  
 Each column specifies its index, title, width, position, data field, editor type, sorting behaviour, visibility, and other display properties.  
-The configuration is used by `NominationTable` and `ColumnFactoryService` to render and configure the table columns.
+The configuration is used by `NominationTable` and [ColumnFactoryService](#columnfactoryservice) to render and configure the table columns.
 
 ---
 
 ### models
+
+#### AthleteTableColumn
+
+Defines the configuration of a column in the athlete table.
+
+| Property | Type | Description |
+|---|---|---|
+| `index` | `number` | Column position in the table. |
+| `key` | `number` | Unique column identifier used by the table configuration. |
+| `title` | `string` | Column title. |
+| `translationScope` | `string` | Translation scope used to resolve the column title. |
+| `width` | `number \| null` | Column width in pixels. |
+| `left` | `number \| null` | Left offset in pixels for sticky columns. |
+| `sortType` | `string \| null` | Sorting type used by the column. |
+| `hidden` | `boolean` | Determines whether the column is hidden. |
+| `discipline` | `string \| null` | Associated powerlifting discipline, if applicable. |
+| `indexAttr` | `string \| null` | Value used for the column's `data-index` attribute. |
+| `draggable` | `boolean` | Determines whether the column can be dragged. |
+| `field` | `string \| null` | Data field associated with the column. |
+| `editor` | `string` | Specifies the type of editor used to display or edit the cell value. |
+| `cancelSorting` | `boolean` | Determines whether sorting is disabled for the column. |
+
+---
+
+### units
+
+#### COLUMN_PIPELINES
+Contains conditional pipelines that determine column visibility based on competition settings, language, and federation.
+
+| Pipeline | Description |
+|---|---|
+| `langPipeline` | Hides the rank classification column when the selected language is not `uk`. |
+| `countryPipeline` | Hides the country column for non-international competitions. |
+| `regionCityPipeline` | Hides region, city, sport society, and sport school columns for international competitions. |
+| `exercisePipeline` | Hides squat, deadlift, and total columns for bench press competitions. |
+| `ibsaOrganizationPipeline` | Applies additional column visibility rules for IBSA competitions, hiding sport society and university columns, and club columns in international competitions. |
+
+`COLUMN_PIPELINES` contains all pipelines used to determine column visibility.
+
+#### COLSPAN_PIPELINES
+Contains configuration pipelines that determine how column spans are adjusted according to competition settings.
+
+| Pipeline | Description |
+|---|---|
+| `ageGroupsPipeline` | Adjusts column spans when the competition has only one age group. |
+| `rankClassPipeline` | Adjusts column spans when the selected language is not Ukrainian. |
+| `countryPipeline` | Adjusts column spans for competitions that are not international. |
+| `regionCityPipeline` | Adjusts column spans for international competitions. |
+| `disciplinesPipeline` | Adjusts column spans for bench press competitions. |
+| `ibsaOrganizationColspanPipeline` | Adjusts column spans for competitions organized under the IBSA federation. |
+
+`COLSPAN_PIPELINES` contains all pipelines applied when calculating the table header column spans.
+
+---
+
+### types
+Contains TypeScript interfaces and type definitions used to define data structures and ensure type safety across the application.
+
+- #### [AutocompleteField](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/components/admin/main/types/autocomplete-field.type.ts)
+
+- #### Pipeline Types
+  - `ColumnPipelineFn` — defines a function that determines column visibility based on an [AthleteTableColumn](#athletetablecolumn) and [ColumnContext](#columncontext). Returns `true`, `false`, or `null`.
+  - `ConfigPipelineFn<TContext, TResult>` — defines a configuration function that receives a context and returns a partial result object with numeric values or `null`.
+
+- #### OrganizationTypes
+Maps autocomplete fields to their corresponding [OrganizationType](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#organizationtype) values.  
+The mapping uses `Partial<Record<AutocompleteField, OrganizationType>>`, so only selected autocomplete fields need to be defined.
 
 ---
 
