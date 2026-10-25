@@ -146,7 +146,15 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`resetNewAthlete()`** — Resets the athlete input form.
 - **`addAthlete()`** — Validates and normalizes the athlete's full name. Persistence is handled by the parent component.
 - **`getSuggestion()`** — Returns the current autocomplete suggestion for the specified field.
-- **`onAutocompleteInput()`** — Retrieves autocomplete suggestions for athlete names, countries, regions, and cities.
+  - Validates the field and checks whether autocomplete is supported.
+  - Reads the input value and clears the previous suggestion.
+  - Builds an [AutocompleteContext](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletecontext) using competition settings, athlete form values, and the organization type.
+  - Retrieves the appropriate strategy through [AutocompleteFactoryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletefactoryservice).
+  - Calls [getSuggestion(value, context)](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#suggestionservice) to find a matching value.
+  - Verifies that the input has not changed while the asynchronous request was running.
+  - Displays only the remaining suffix if the suggestion starts with the input value and is not an exact match.
+  - If the field is invalid, the input is empty, no strategy exists, or no suitable suggestion is found, no suggestion is displayed.
+- **`onAutocompleteInput()`** — Handles autocomplete suggestions for the new athlete form.
 - **`acceptSuggestion()`** — Accepts an autocomplete suggestion and retrieves the athlete's date of birth when an existing athlete name is selected.
 - **`setSuggestion()`** — Updates the autocomplete suggestion for the specified field.
 - **`isAutocompleteField()`** — Checks whether a field supports autocomplete.
