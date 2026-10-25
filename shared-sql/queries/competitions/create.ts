@@ -108,6 +108,7 @@ new_competition AS (
         competition_level,
         type,
         division,
+        language,      
         status,
         created_at,
         updated_at
@@ -124,6 +125,7 @@ new_competition AS (
         $9::"CompetitionLevel",
         $10::"CompetitionType",
         $11::"CompetitionDivision",
+        $6::"Language",
         'ACTIVE',
         $13::timestamp,
         $13::timestamp

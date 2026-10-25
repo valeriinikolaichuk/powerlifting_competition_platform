@@ -894,6 +894,7 @@ model Competitions {
   competition_level   CompetitionLevel
   type                CompetitionType
   division            CompetitionDivision
+  language            Language @default(EN)
   status              CompetitionStatus @default(ACTIVE)
 
   archived_at         DateTime?

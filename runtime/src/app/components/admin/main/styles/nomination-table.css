@@ -1,6 +1,6 @@
 .athlete-table { 
-    border-collapse: 
-    separate; border-spacing: 0; 
+    border-collapse: separate; 
+    border-spacing: 0; 
     min-width: 
     max-content; 
     width: 100%; 
@@ -19,27 +19,33 @@
     position: relative; 
     text-align: center; 
     border: 2px solid rgb(151, 150, 150);
-    background: var(--table-header-background, #f2f2f2); 
+    background: var(--table-header-background, #e0e0e0); 
+}
+
+.competition_name {
+    position: sticky; 
+    top: 0px; 
+    z-index: 8; 
 }
 
 .competition-heading th { 
     position: sticky; 
-    top: 0; 
+    top: 29px; 
     z-index: 8; 
     height: 30px; 
 }
 
 .competition-heading th.competition-sticky {
     z-index: 10;
-    background: var(--table-header-background, #f2f2f2);
+    background: var(--table-header-background, #e0e0e0);
 }
 
 .column-heading th { 
     position: sticky; 
-    top: 30px; 
+    top: 62px; 
     z-index: 7; 
     height: 28px; 
-    background: var(--table-header-background, #f2f2f2);
+    background: var(--table-header-background, #e0e0e0);
 }
 
 .athlete-table .sticky { 
@@ -48,7 +54,7 @@
 }
 
 .athlete-table th.sticky { 
-    background: var(--table-header-background, #f2f2f2); 
+    background: var(--table-header-background, #e0e0e0); 
 }
 
 .athlete-table td.table-number { 
@@ -80,11 +86,25 @@
     cursor: col-resize; 
 }
 
-.input-line td { 
-    position: sticky; 
-    top: 86px; 
-    z-index: 5; 
-    background: var(--table-input-background, #fffbe6); 
+.input-line {
+    position: sticky;
+    top: 95px;
+    z-index: 8;
+}
+
+.input-line td {
+    position: sticky;
+    background: var(--table-input-background, #fffbe6);
+}
+
+.input-line td.sticky {
+    z-index: 10;
+}
+
+.input-line td.table-number {
+    left: 0;
+    z-index: 12;
+    background: var(--table-input-background, #fffbe6);
 }
 
 .cell-input { 

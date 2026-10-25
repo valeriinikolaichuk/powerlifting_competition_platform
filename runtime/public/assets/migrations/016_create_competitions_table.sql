@@ -21,6 +21,7 @@ CREATE TABLE "competitions" (
     "competition_level" "CompetitionLevel" NOT NULL,
     "type" "CompetitionType" NOT NULL,
     "division" "CompetitionDivision" NOT NULL,
+    "language" "Language" NOT NULL DEFAULT 'EN',
     "status" "CompetitionStatus" NOT NULL DEFAULT 'ACTIVE',
     "archived_at" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,

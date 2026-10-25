@@ -25,8 +25,10 @@ export class OrganizationResultStep implements SnapshotStepInterface {
                 INNER JOIN competitions c
                     ON c.id = co.competition_id
                 WHERE c.created_by_user_id = $1::uuid
+                    AND language = $2::"Language"
                 `,
                 context.userId,
+                context.language,
             );
 
             context.data[table] = result as any[];

@@ -20,6 +20,7 @@ import { CompetitionStep } from './snapshot-pipeline/competition-step';
 import { CompetitionSessionStep } from './snapshot-pipeline/competition-session-step';
 import { CompetitionGroupStep } from './snapshot-pipeline/competition-group-step';
 import { UserStep } from './snapshot-pipeline/user-step';
+import { CompetitionsTableStep } from './snapshot-pipeline/competitions-table-step';
 import { CreatedByUserStep } from './snapshot-pipeline/created-by-user-step';
 import { DeviceStatusStep } from './snapshot-pipeline/device-status-step';
 import { CompetitionRuntimeStep } from './snapshot-pipeline/competition-runtime-step';
@@ -56,6 +57,7 @@ import { DeviceRoleService } from './device-role.service.service';
     CompetitionSessionStep, 
     CompetitionGroupStep, 
     UserStep, 
+    CompetitionsTableStep,
     CreatedByUserStep, 
     DeviceStatusStep,
     CompetitionRuntimeStep, 
@@ -73,6 +75,7 @@ import { DeviceRoleService } from './device-role.service.service';
         competitionSession: CompetitionSessionStep, 
         competitionGroup: CompetitionGroupStep, 
         user: UserStep, 
+        competitionsTable: CompetitionsTableStep,
         createdByUser: CreatedByUserStep, 
         deviceStatus: DeviceStatusStep,
         competitionRuntime: CompetitionRuntimeStep, 
@@ -86,6 +89,7 @@ import { DeviceRoleService } from './device-role.service.service';
         competitionSession, 
         competitionGroup, 
         user, 
+        competitionsTable,
         createdByUser, 
         deviceStatus, 
         competitionRuntime, 
@@ -100,6 +104,7 @@ import { DeviceRoleService } from './device-role.service.service';
         CompetitionSessionStep, 
         CompetitionGroupStep, 
         UserStep, 
+        CompetitionsTableStep,
         CreatedByUserStep, 
         DeviceStatusStep, 
         CompetitionRuntimeStep, 

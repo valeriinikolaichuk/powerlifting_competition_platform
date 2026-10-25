@@ -19,7 +19,7 @@
     "rankClass": "Розряд",
 
     "Country": "Країна",
-    "Region": "Регіон",
+    "Region": "Область",
     "City": "Місто",
     "sportSociety": "CT",
     "Club": "Клуб",
@@ -59,5 +59,11 @@
         "IBSA_SUB_MASTER_MEN": "SUB MASTER", 
         "IBSA_SUB_MASTER_WOMEN": "SUB MASTER",
         "IBSA_MASTER_MEN": "ВЕТЕРАНИ",
-        "IBSA_MASTER_WOMEN": "ВЕТЕРАНИ"
+        "IBSA_MASTER_WOMEN": "ВЕТЕРАНИ",
+    "TEAM": "КОМАНДА",
+    "PERSONALLY": "ОСОБИСТО",
+    "OUT_OF_COMP": "ПОЗА KOHKYPCOM",
+    "QUALIFIED": "КВАЛІФІКОВАНО",
+    "WITHDRAWN": "ЗНЯТО ЛІКАРЕМ",
+    "DISQUALIFIED": "ДИСКВАЛІФІКОВАНО"
 }

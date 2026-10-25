@@ -148,10 +148,13 @@ Relationship:
 `GLOBAL → federation_id → user_federations → user_id`  
 `USER → created_by_user_id` 
 
+- #### COMPETITIONS_TABLE
+Contains registration data belonging to a user's competitions.
+- `competitions`
+
 - #### CREATED_BY_USER_TABLES
 Contains records directly owned by the current user.
 - `participants`
-- `competitions`
 - `global_state`
 
 Records are selected using `created_by_user_id`.
