@@ -13,6 +13,8 @@
     - [ColspanFactoryService](#colspanfactoryservice)
   - [config](#config)
   - [models](#models)
+  - [units](#units)
+  - [types](#types)
 - [RegistrationComponent](#registrationcomponent)
 
 </details>
@@ -172,9 +174,9 @@ The service retrieves weight class options from the local PGlite database based 
 The service configures athlete table columns and calculates table header colspans according to the competition context.
 
 #### Responsibilities
-- Applies `COLUMN_PIPELINES` to determine which columns should be hidden based on the competition level, competition type, and language.
+- Applies [COLUMN_PIPELINES](#column_pipelines) to determine which columns should be hidden based on the competition level, competition type, and language.
 - Preserves the original column visibility when no pipeline defines a new value.
-- Uses [ColspanFactoryService](#colspanfactoryservice) with `COLSPAN_PIPELINES` to calculate header colspans based on the number of age groups and other competition settings.
+- Uses [ColspanFactoryService](#colspanfactoryservice) with [COLSPAN_PIPELINES](#colspan_pipelines) to calculate header colspans based on the number of age groups and other competition settings.
 - Returns the configured columns and calculated colspans as an `AthleteTableConfig`.
 
 #### Methods
@@ -193,7 +195,7 @@ The service provides a reusable mechanism for calculating table header colspans 
 - Calculates the final configuration by subtracting the accumulated deductions from the original values.
 
 #### Method
-- **create()** — Generates an adjusted configuration by applying the deductions returned by the specified pipelines.
+- **create()** — Generates an adjusted configuration by applying the deductions returned by the specified [COLSPAN_PIPELINES](#colspan_pipelines).
 
 ---
 
@@ -243,11 +245,78 @@ export interface HiddenColspanDto {
 #### NOMINATION_COLUMNS
 Defines the column configuration for the nomination table.  
 Each column specifies its index, title, width, position, data field, editor type, sorting behaviour, visibility, and other display properties.  
-The configuration is used by `NominationTable` and `ColumnFactoryService` to render and configure the table columns.
+The configuration is used by `NominationTable` and [ColumnFactoryService](#columnfactoryservice) to render and configure the table columns.
 
 ---
 
 ### models
+
+#### AthleteTableColumn
+
+Defines the configuration of a column in the athlete table.
+
+| Property | Type | Description |
+|---|---|---|
+| `index` | `number` | Column position in the table. |
+| `key` | `number` | Unique column identifier used by the table configuration. |
+| `title` | `string` | Column title. |
+| `translationScope` | `string` | Translation scope used to resolve the column title. |
+| `width` | `number \| null` | Column width in pixels. |
+| `left` | `number \| null` | Left offset in pixels for sticky columns. |
+| `sortType` | `string \| null` | Sorting type used by the column. |
+| `hidden` | `boolean` | Determines whether the column is hidden. |
+| `discipline` | `string \| null` | Associated powerlifting discipline, if applicable. |
+| `indexAttr` | `string \| null` | Value used for the column's `data-index` attribute. |
+| `draggable` | `boolean` | Determines whether the column can be dragged. |
+| `field` | `string \| null` | Data field associated with the column. |
+| `editor` | `string` | Specifies the type of editor used to display or edit the cell value. |
+| `cancelSorting` | `boolean` | Determines whether sorting is disabled for the column. |
+
+---
+
+### units
+
+#### COLUMN_PIPELINES
+Contains conditional pipelines that determine column visibility based on competition settings, language, and federation.
+
+| Pipeline | Description |
+|---|---|
+| `langPipeline` | Hides the rank classification column when the selected language is not `uk`. |
+| `countryPipeline` | Hides the country column for non-international competitions. |
+| `regionCityPipeline` | Hides region, city, sport society, and sport school columns for international competitions. |
+| `exercisePipeline` | Hides squat, deadlift, and total columns for bench press competitions. |
+| `ibsaOrganizationPipeline` | Applies additional column visibility rules for IBSA competitions, hiding sport society and university columns, and club columns in international competitions. |
+
+`COLUMN_PIPELINES` contains all pipelines used to determine column visibility.
+
+#### COLSPAN_PIPELINES
+Contains configuration pipelines that determine how column spans are adjusted according to competition settings.
+
+| Pipeline | Description |
+|---|---|
+| `ageGroupsPipeline` | Adjusts column spans when the competition has only one age group. |
+| `rankClassPipeline` | Adjusts column spans when the selected language is not Ukrainian. |
+| `countryPipeline` | Adjusts column spans for competitions that are not international. |
+| `regionCityPipeline` | Adjusts column spans for international competitions. |
+| `disciplinesPipeline` | Adjusts column spans for bench press competitions. |
+| `ibsaOrganizationColspanPipeline` | Adjusts column spans for competitions organized under the IBSA federation. |
+
+`COLSPAN_PIPELINES` contains all pipelines applied when calculating the table header column spans.
+
+---
+
+### types
+Contains TypeScript interfaces and type definitions used to define data structures and ensure type safety across the application.
+
+- #### [AutocompleteField](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/components/admin/main/types/autocomplete-field.type.ts)
+
+- #### Pipeline Types
+  - `ColumnPipelineFn` — defines a function that determines column visibility based on an [AthleteTableColumn](#athletetablecolumn) and [ColumnContext](#columncontext). Returns `true`, `false`, or `null`.
+  - `ConfigPipelineFn<TContext, TResult>` — defines a configuration function that receives a context and returns a partial result object with numeric values or `null`.
+
+- #### OrganizationTypes
+Maps autocomplete fields to their corresponding [OrganizationType](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#organizationtype) values.  
+The mapping uses `Partial<Record<AutocompleteField, OrganizationType>>`, so only selected autocomplete fields need to be defined.
 
 ---
 
