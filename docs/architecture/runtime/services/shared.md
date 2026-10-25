@@ -14,6 +14,7 @@
 - [UserService](#userservice)
 - [CheckOnlineService](#checkonlineservice)
 - [SuggestionService](#suggestionservice)
+  - [types](#types)
 
 </details>
 
@@ -288,5 +289,18 @@ Retrieves an athlete's date of birth using their full name and federation detail
 * Matches the athlete's full name, federation ID, language, and sex.
 * Excludes deleted records.
 * Returns the birth day, month, and year, or `null` if no matching athlete is found.
+
+---
+
+### types
+
+#### OrganizationType
+```ts
+export type OrganizationType =
+  | 'SPORT_SOCIETY'
+  | 'CLUB'
+  | 'SPORT_SCHOOL'
+  | 'UNIVERSITY';
+```
 
 ---
