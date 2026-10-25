@@ -2,7 +2,7 @@ export type AthleteCellValue = string | number | boolean | null | undefined;
 
 export interface AthleteCompetitionRow {
     [key: string]: AthleteCellValue;
-    id: string | number;
+    id: string;
     full_name?: string | null;
     birth_day?: number | null;
     birth_month?: number | null;
@@ -36,12 +36,10 @@ export interface AthleteCompetitionRow {
     qualification: string | null;
     titles?: string | null;
 
+
+
   bodyweight?: number | null;
   iPF_GL_Cf?: number | null;
-
-
-
-  
   squat_1?: number | null;
   bench_press_1?: number | null;
   deadlift_1?: number | null;

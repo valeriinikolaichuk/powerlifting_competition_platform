@@ -1,5 +1,5 @@
 import { ColumnContext } from "../config/column-context";
-import { ConfigPipelineFn } from "../config/config-pipeline.types";
+import { ConfigPipelineFn } from "../types/config-pipeline.types";
 import { HiddenColspanDto } from "../config/colspan.dto";
 
 export type ColspanPipelineFn = ConfigPipelineFn<ColumnContext, HiddenColspanDto>;
@@ -31,18 +31,25 @@ export const countryPipeline: ColspanPipelineFn = context =>
 export const regionCityPipeline: ColspanPipelineFn = context =>
   context.competitionLevel === 'INTERNATIONAL'
     ? {
-        competitionColspan: 2,
-        referenceColspan: 2,
+        competitionColspan: 4,
+        referenceColspan: 4,
       }
     : null;
 
 export const disciplinesPipeline: ColspanPipelineFn = context =>
   context.competitionType === 'BENCH_PRESS'
     ? {
-        competitionColspan: 3,
         diciplineColspan: 3,
       }
     : null;
+
+export const ibsaOrganizationColspanPipeline: ColspanPipelineFn = context => 
+  context.federationCode === 'IBSA'
+    ? {
+        competitionColspan: 2,
+        referenceColspan: 2,
+    }
+  : null;
 
 export const COLSPAN_PIPELINES: ColspanPipelineFn[] = [
   ageGroupsPipeline,
@@ -50,4 +57,5 @@ export const COLSPAN_PIPELINES: ColspanPipelineFn[] = [
   countryPipeline,
   regionCityPipeline,
   disciplinesPipeline,
+  ibsaOrganizationColspanPipeline,
 ];

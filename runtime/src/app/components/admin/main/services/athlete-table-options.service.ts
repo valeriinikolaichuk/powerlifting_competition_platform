@@ -164,6 +164,8 @@ export class AthleteTableOptionsService {
     const userId = await this.userService.getUserId();
 
     const athleteId = crypto.randomUUID();
+
+    
     const registrationId = crypto.randomUUID();
 
     await this.pg.transaction(async (tx) => {
@@ -190,38 +192,36 @@ export class AthleteTableOptionsService {
       }
 
       // 2. Find existing athlete.
-const existingAthlete = await tx.query<{
-  id: string;
-}>(
-  `
-    SELECT id
-    FROM athletes
-    WHERE full_name = $1
-      AND birth_day IS NOT DISTINCT FROM $2
-      AND birth_month IS NOT DISTINCT FROM $3
-      AND birth_year IS NOT DISTINCT FROM $4
-      AND sex = $5
-      AND federation_id = $6
-      AND is_deleted = false
-    LIMIT 1
-  `,
-  [
-    athlete.full_name?.trim(),
-    athlete.birth_day || null,
-    athlete.birth_month || null,
-    athlete.birth_year || null,
-    sex,
-    federationId,
-  ],
-);
+      const existingAthlete = await tx.query<{
+        id: string;
+      }>(
+        `
+          SELECT id
+          FROM athletes
+          WHERE full_name = $1
+            AND birth_day IS NOT DISTINCT FROM $2
+            AND birth_month IS NOT DISTINCT FROM $3
+            AND birth_year IS NOT DISTINCT FROM $4
+            AND sex = $5
+            AND federation_id = $6
+            AND is_deleted = false
+          LIMIT 1
+        `,
+        [
+          athlete.full_name?.trim(),
+          athlete.birth_day || null,
+          athlete.birth_month || null,
+          athlete.birth_year || null,
+          sex,
+          federationId,
+        ],
+      );
 
 let athleteId: string;
 
 if (existingAthlete.rows.length > 0) {
-  // Athlete already exists.
   athleteId = existingAthlete.rows[0].id;
 } else {
-  // Athlete does not exist: create a new record.
   athleteId = crypto.randomUUID();
 
       // 3. Create athlete.

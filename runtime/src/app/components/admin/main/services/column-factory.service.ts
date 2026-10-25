@@ -62,7 +62,6 @@ export class ColumnFactoryService {
 
       if (result !== null) {
         targetHidden = result;
-        break; 
       }
     }
 

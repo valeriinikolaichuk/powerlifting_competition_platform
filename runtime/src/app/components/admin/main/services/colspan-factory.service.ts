@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { ConfigPipelineFn } from '../config/config-pipeline.types';
+import { ConfigPipelineFn } from '../types/config-pipeline.types';
 
 @Injectable({
   providedIn: 'root',

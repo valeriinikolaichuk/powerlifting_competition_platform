@@ -1,5 +1,5 @@
 import { AthleteTableColumn } from "../models/athlete-table-column.interface";
-import { ColumnContext } from "./column-context";
+import { ColumnContext } from "../config/column-context";
 
 export type ColumnPipelineFn = (
   column: AthleteTableColumn, context: ColumnContext

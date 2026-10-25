@@ -3,4 +3,5 @@ export interface ColumnContext {
   competitionLevel: string;
   competitionType: string;
   ageGroupsCount: number;
+  federationCode: string;
 }
