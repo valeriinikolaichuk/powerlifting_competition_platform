@@ -78,13 +78,18 @@
             [style.left.px]="getColumnLeft(column)"
             [style.z-index]="column.left !== null ? 10 : null"
             [style.text-align]="column.index === 2 ? 'left' : null"
+            (click)="onSort(column)"
           >
             @if (column.indexAttr === 'sort' && !column.cancelSorting) {
-              <span class="sort-icon" aria-hidden="true"></span>
+              <span class="sort-icon" aria-hidden="true">
+                {{ getSortIcon(column) }}
+              </span>
             }
 
             @if (getLabel(column)) {
-              <span>{{ getLabel(column) }}</span>
+              <span>
+                {{ getLabel(column) }}
+              </span>
             }
 
             @if (column.draggable && column.width && column.width >= 130) {

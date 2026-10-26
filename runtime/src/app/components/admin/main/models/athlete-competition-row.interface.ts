@@ -1,4 +1,4 @@
-export type AthleteCellValue = string | number | boolean | null | undefined;
+import type { AthleteCellValue } from "../types/athlete-cell.type";
 
 export interface AthleteCompetitionRow {
     [key: string]: AthleteCellValue;
@@ -37,7 +37,7 @@ export interface AthleteCompetitionRow {
     titles?: string | null;
 
 
-
+/*
   bodyweight?: number | null;
   iPF_GL_Cf?: number | null;
   squat_1?: number | null;
@@ -60,4 +60,5 @@ export interface AthleteCompetitionRow {
   bench_press_rnk_fcst?: number | null;
   bench_press_rnk?: number | null;
   points_bp?: number | null;
+  */
 }

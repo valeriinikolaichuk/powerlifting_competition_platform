@@ -14,12 +14,16 @@ import { ColspanConfigDto } from '../config/colspan.dto';
 
 import { AthleteTableOptionsService } from '../services/athlete-table-options.service';
 import { Competition } from '../../../../shared/services/dto/competition.dto';
-import { AthleteCellValue, AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
+import { AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
+import { AthleteCellValue } from '../types/athlete-cell.type';
 
 import { SuggestionService } from '../../../../shared/services/suggestion.service';
 import { AutocompleteFactoryService } from '../../../../shared/services/autocomplete/autocomplete-factory.service';
 import { AutocompleteField } from '../types/autocomplete-field.type';
 import { organizationTypes } from '../types/organization-types';
+
+import { SortingService } from '../services/sorting.service';
+import type { SortType, SortDirection } from '../types/sorting.types';
 
 @Component({
   selector: 'app-nomination-table',
@@ -63,12 +67,20 @@ export class NominationTable implements OnChanges {
   citySuggestion = '';
   athleteSuggestion = '';
 
+  private originalAthletes: AthleteCompetitionRow[] = [];
+  private sortState: {
+    field: string;
+    type: SortType;
+    direction: SortDirection;
+  } | null = null;
+
   constructor(
     public tService: TranslationService,
     private readonly columnFactoryService: ColumnFactoryService,
     private readonly athleteTableOptionsService: AthleteTableOptionsService,
     private readonly suggestionService: SuggestionService,
     private readonly autocompleteFactoryService: AutocompleteFactoryService,
+    private readonly sortingService: SortingService,
   ){}
 
   async ngOnInit(){
@@ -89,6 +101,8 @@ export class NominationTable implements OnChanges {
         this.competition.id
       );
 
+      this.originalAthletes = [...this.athletes];
+      
       this.weightClasses = [];
 
       const ageGroup = this.competition.age_groups[0];
@@ -175,8 +189,6 @@ export class NominationTable implements OnChanges {
     }
 
     if (value === null || value === undefined) return '';
-
-    if (column.editor === 'checkbox') { return Boolean(value); }
 
     return value;
   }
@@ -428,6 +440,74 @@ export class NominationTable implements OnChanges {
 
   getNewAthleteValue(field: string): string {
     return String(this.newAthlete[field] ?? '');
+  }
+
+  // SORTING
+
+  setAthletes(athletes: AthleteCompetitionRow[]): void {
+
+    this.originalAthletes = athletes.map(athlete => ({ ...athlete }));
+    this.athletes = [...athletes];
+    this.sortState = null;
+  }
+
+  onSort(column: AthleteTableColumn): void {
+
+    if (column.index === 1) {
+      this.resetSorting();
+      return;
+    }
+
+    if (
+      column.cancelSorting ||
+      !column.field ||
+      !column.sortType
+    ) {
+      return;
+    }
+
+    const type = column.sortType;
+
+    if (type !== 'number' && type !== 'string') {
+      return;
+    }
+
+    const direction: SortDirection =
+      this.sortState?.field === column.field &&
+      this.sortState.direction === 'asc'
+        ? 'desc'
+        : 'asc';
+
+    this.sortState = {
+      field: column.field,
+      type,
+      direction,
+    };
+
+    this.athletes = this.sortingService.sort(
+      this.athletes,
+      column.field,
+      type,
+      direction,
+    );
+  }
+
+  resetSorting(): void {
+
+    if (this.originalAthletes.length === 0) {
+      return;
+    }
+
+    this.athletes = [...this.originalAthletes];
+    this.sortState = null;
+  }
+
+  getSortIcon(column: AthleteTableColumn): string {
+    if (this.sortState?.field !== column.field) {
+      return '';
+    }
+
+    return this.sortState.direction === 'asc' ? '↑' : '↓';
   }
 }
 

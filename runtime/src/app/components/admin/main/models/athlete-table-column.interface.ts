@@ -1,3 +1,5 @@
+import type { AthleteSortType } from "../types/sorting.types";
+
 export interface AthleteTableColumn {
   index: number;
   key: number;
@@ -5,7 +7,7 @@ export interface AthleteTableColumn {
   translationScope: string;
   width: number | null;
   left: number | null;
-  sortType: string | null;
+  sortType: AthleteSortType;
   hidden: boolean;
   discipline: string | null;
   indexAttr: string | null;

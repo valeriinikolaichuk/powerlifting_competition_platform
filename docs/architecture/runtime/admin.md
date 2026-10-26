@@ -272,7 +272,7 @@ Defines the configuration of a column in the athlete table.
 | `translationScope` | `string` | Translation scope used to resolve the column title. |
 | `width` | `number \| null` | Column width in pixels. |
 | `left` | `number \| null` | Left offset in pixels for sticky columns. |
-| `sortType` | `string \| null` | Sorting type used by the column. |
+| `sortType` | `string \number \| null` | Sorting type used by the column. |
 | `hidden` | `boolean` | Determines whether the column is hidden. |
 | `discipline` | `string \| null` | Associated powerlifting discipline, if applicable. |
 | `indexAttr` | `string \| null` | Value used for the column's `data-index` attribute. |
