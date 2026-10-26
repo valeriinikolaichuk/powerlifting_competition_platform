@@ -11,6 +11,7 @@
     - [AthleteTableOptionsService](#athletetableoptionsservice)
     - [ColumnFactoryService](#columnfactoryservice)
     - [ColspanFactoryService](#colspanfactoryservice)
+    - [SortingService](#sortingservice)
   - [config](#config)
   - [models](#models)
   - [units](#units)
@@ -96,6 +97,7 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - Loads athlete table translations using [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md).
 - Retrieves autocomplete suggestions and athlete date-of-birth data using [SuggestionService](runtime/services/shared.md#suggestionservice).
 - Manages the input form for adding athletes to the nomination list.
+- Sorts text and numeric values in ascending or descending order.
 
 #### Features
 - **Competition Information** — Displays the competition name, location, dates, type, division, sex, age groups, and federation.
@@ -111,6 +113,7 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **Editable Mode** — Controls whether the athlete input form and checkbox controls are enabled through the `editable` input.
 - **Dynamic Column Positioning** — Adjusts sticky column positions when only one age group is configured.
 - **Date Formatting** — Formats birth date components and displays competition dates using Angular's `DatePipe`.
+- **Sorting** — Supports sorting by column using the [AthleteTableColumn](#athletetablecolumn) configuration.
 
 #### Inputs
 - `competition: Competition` — Competition details used to configure the table.
@@ -160,6 +163,25 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`isAutocompleteField()`** — Checks whether a field supports autocomplete.
 - **`getTextWidth()`** — Calculates the rendered text width for autocomplete positioning.
 - **`getNewAthleteValue()`** — Returns a new athlete form field value as a string.
+- **`setAthletes(athletes)`** — stores the original athlete order, initializes the table data, and clears the sorting state.
+- **`onSort(column)`** — sorts athletes by the selected column in ascending or descending order using the [SortingService](#sortingservice). Clicking the row-number column resets sorting.
+- **`resetSorting()`** — restores the original athlete order and clears the active sorting state.
+- **`getSortIcon(column)`** — returns an upward arrow (`↑`) or downward arrow (`↓`) for the currently sorted column, or an empty string if the column is not sorted.
+
+#### Sorting Configuration
+Each column defines its sorting behavior through the following properties:
+| Property | Description |
+|---|---|
+| `sortType` | Specifies the sorting type: `string`, `number`, or `null` if sorting is disabled. |
+| `field` | Specifies the athlete data field used for sorting. |
+| `cancelSorting` | Prevents sorting for columns where it is set to `true`. |
+| `hidden` | Indicates whether the column is hidden. |
+
+#### Sorting Behavior
+- **String sorting** — sorts text values in ascending or descending order.
+- **Number sorting** — sorts numeric values in ascending or descending order. Empty values are placed last.
+- **Column number (`number`)** — clicking the row-number column resets sorting and restores the original athlete order.
+- **Unsupported columns** — hidden columns, columns without a data field, and columns without a sorting type are not sorted.
 
 ---
 
@@ -204,6 +226,16 @@ The service provides a reusable mechanism for calculating table header colspans 
 
 #### Method
 - **create()** — Generates an adjusted configuration by applying the deductions returned by the specified [COLSPAN_PIPELINES](#colspan_pipelines).
+
+---
+
+### SortingService
+Sorts the [AthleteCompetitionRow[]](#athletecompetitionrow) array without modifying the original array.
+
+- `sort(athletes, field, type, direction)` — returns a sorted copy of the athlete array.
+- Supports `string` and `number` [sorting types](#sorting-types).
+- Uses case-insensitive string comparison with numeric-aware ordering.
+- Places empty values last when sorting numeric fields.
 
 ---
 
@@ -281,6 +313,9 @@ Defines the configuration of a column in the athlete table.
 | `editor` | `string` | Specifies the type of editor used to display or edit the cell value. |
 | `cancelSorting` | `boolean` | Determines whether sorting is disabled for the column. |
 
+#### AthleteCompetitionRow
+Defines the data structure of an athlete's competition registration, including personal details, competition information, nominations, and status.
+
 ---
 
 ### units
@@ -317,6 +352,11 @@ Contains configuration pipelines that determine how column spans are adjusted ac
 ### types
 Contains TypeScript interfaces and type definitions used to define data structures and ensure type safety across the application.
 
+- #### [AthleteCellValue]
+```ts
+export type AthleteCellValue = string | number | boolean | null | undefined;
+```
+
 - #### [AutocompleteField](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/components/admin/main/types/autocomplete-field.type.ts)
 
 - #### Pipeline Types
@@ -326,6 +366,13 @@ Contains TypeScript interfaces and type definitions used to define data structur
 - #### OrganizationTypes
 Maps autocomplete fields to their corresponding [OrganizationType](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#organizationtype) values.  
 The mapping uses `Partial<Record<AutocompleteField, OrganizationType>>`, so only selected autocomplete fields need to be defined.
+
+- #### Sorting Types
+```ts
+export type AthleteSortType = 'number' | 'string' | null;
+export type SortType = 'number' | 'string' | 'cancelSorting';
+export type SortDirection = 'asc' | 'desc';
+```
 
 ---
 
