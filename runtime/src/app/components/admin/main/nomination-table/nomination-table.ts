@@ -24,6 +24,8 @@ import { organizationTypes } from '../types/organization-types';
 
 import { SortingService } from '../services/sorting.service';
 import type { SortType, SortDirection } from '../types/sorting.types';
+import { DragAndDropService } from '../services/drag-and-drop.service';
+import { ColumnResizeService } from '../services/column-resize.service';
 
 @Component({
   selector: 'app-nomination-table',
@@ -68,11 +70,14 @@ export class NominationTable implements OnChanges {
   athleteSuggestion = '';
 
   private originalAthletes: AthleteCompetitionRow[] = [];
+
   private sortState: {
     field: string;
     type: SortType;
     direction: SortDirection;
   } | null = null;
+
+  private dragIndex = -1;
 
   constructor(
     public tService: TranslationService,
@@ -81,6 +86,8 @@ export class NominationTable implements OnChanges {
     private readonly suggestionService: SuggestionService,
     private readonly autocompleteFactoryService: AutocompleteFactoryService,
     private readonly sortingService: SortingService,
+    private readonly dragAndDropService: DragAndDropService,
+    private readonly columnResizeService: ColumnResizeService,
   ){}
 
   async ngOnInit(){
@@ -102,7 +109,7 @@ export class NominationTable implements OnChanges {
       );
 
       this.originalAthletes = [...this.athletes];
-      
+
       this.weightClasses = [];
 
       const ageGroup = this.competition.age_groups[0];
@@ -508,6 +515,116 @@ export class NominationTable implements OnChanges {
     }
 
     return this.sortState.direction === 'asc' ? '↑' : '↓';
+  }
+
+  // DRAG & DROP
+
+  onDragStart(event: DragEvent, target: EventTarget | null): void {
+
+    if (!(target instanceof HTMLTableCellElement)) return;
+
+    // title: "fullName"
+    if (target.dataset['key'] === '2') {
+      event.preventDefault();
+      return;
+    }
+
+    this.dragIndex = this.dragAndDropService.getVisualIndex(target);
+
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  onDrop(event: DragEvent, target: EventTarget | null): void {
+    event.preventDefault();
+
+    if (!(target instanceof HTMLTableCellElement)) {
+      return;
+    }
+
+    const dropIndex = this.dragAndDropService.getVisualIndex(target);
+
+    if (
+      this.dragIndex < 0 ||
+      dropIndex < 0 ||
+      this.dragIndex === dropIndex
+    ) {
+      this.dragIndex = -1;
+      return;
+    }
+
+    const columns = [...this.columns];
+
+    const fromIndex = columns.findIndex(
+      (_, index) => index === this.dragIndex
+    );
+
+    const toIndex = columns.findIndex(
+      (_, index) => index === dropIndex
+    );
+
+    if (fromIndex < 0 || toIndex < 0) {
+      this.dragIndex = -1;
+      return;
+    }
+
+    const [movedColumn] = columns.splice(fromIndex, 1);
+    columns.splice(toIndex, 0, movedColumn);
+
+    this.columns = columns;
+    this.dragIndex = -1;
+  }
+
+  onResizeStart(event: MouseEvent, target: EventTarget | null): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!(target instanceof HTMLElement)) return;
+
+    const resizer = target.closest('.resizer') as HTMLElement | null;
+    const th = resizer?.closest('th');
+    const table = th?.closest('table');
+
+    if (!resizer || !th || !table) return;
+
+    const startX = event.pageX;
+    const startWidth = th.offsetWidth;
+
+    const allThs = Array.from(
+      table.querySelectorAll<HTMLElement>('th')
+    );
+
+    const allTrs = Array.from(
+      table.querySelectorAll<HTMLTableRowElement>('tr')
+    );
+
+    const onMouseMove = (moveEvent: MouseEvent) => {
+      this.columnResizeService.resizeColumn(
+        moveEvent,
+        startX,
+        startWidth,
+        th,
+        allThs,
+        allTrs
+      );
+    };
+
+    const onMouseUp = () => {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   }
 }
 
