@@ -12,6 +12,7 @@
     - [ColumnFactoryService](#columnfactoryservice)
     - [ColspanFactoryService](#colspanfactoryservice)
     - [SortingService](#sortingservice)
+    - [DragAndDropService](#draganddropservice)
   - [config](#config)
   - [models](#models)
   - [units](#units)
@@ -126,8 +127,11 @@ Provides the nomination table for a selected competition, displaying athlete inf
 #### Services
 - [TranslationService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/frontend/systems/i18n.md) — Loads translations from `tables/athlete-table` and translates column labels and competition attributes.
 - [ColumnFactoryService](#columnfactoryservice) — Creates the table configuration, applying column visibility rules and calculating header spans.
+- [ColspanFactoryService](#colspanfactoryservice) — Provides a reusable mechanism for calculating table header colspans.
 - [AthleteTableOptionsService](#athletetableoptionsservice) — Retrieves weight classes for the selected federation category.
 - [SuggestionService](runtime/services/shared.md#suggestionservice) — Provides autocomplete suggestions for athlete names, countries, regions, and cities, and retrieves an existing athlete's date of birth.
+- [SortingService](#sortingservice) — Sorts the [AthleteCompetitionRow[]](#athletecompetitionrow) array without modifying the original array.
+- [DragAndDropService](#draganddropservice) — Dynamic column ordering using drag and drop.
 
 #### Initialization and Updates
 - **`ngOnInit()`** — Loads athlete table translations and initializes the new athlete form.
@@ -167,6 +171,9 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`onSort(column)`** — sorts athletes by the selected column in ascending or descending order using the [SortingService](#sortingservice). Clicking the row-number column resets sorting.
 - **`resetSorting()`** — restores the original athlete order and clears the active sorting state.
 - **`getSortIcon(column)`** — returns an upward arrow (`↑`) or downward arrow (`↓`) for the currently sorted column, or an empty string if the column is not sorted.
+- **`onDragStart()`** — records the index of the dragged column.
+- **`onDragOver()`** — enables dropping a column.
+- **`onDrop()`** — reorders columns and updates the table.
 
 #### Sorting Configuration
 Each column defines its sorting behavior through the following properties:
@@ -182,6 +189,12 @@ Each column defines its sorting behavior through the following properties:
 - **Number sorting** — sorts numeric values in ascending or descending order. Empty values are placed last.
 - **Column number (`number`)** — clicking the row-number column resets sorting and restores the original athlete order.
 - **Unsupported columns** — hidden columns, columns without a data field, and columns without a sorting type are not sorted.
+
+#### Table Column Management
+- Dynamic column ordering using drag and drop.
+- Synchronized column order across the table header, athlete registration form, and athlete rows.
+- Preserves the competition name and group header rows during column reordering.
+- Maintains column widths, sorting functionality, and sticky column positioning.
 
 ---
 
@@ -236,6 +249,13 @@ Sorts the [AthleteCompetitionRow[]](#athletecompetitionrow) array without modify
 - Supports `string` and `number` [sorting types](#sorting-types).
 - Uses case-insensitive string comparison with numeric-aware ordering.
 - Places empty values last when sorting numeric fields.
+
+---
+
+### DragAndDropService
+- `getVisualIndex()` — calculates a column's visual index, accounting for `colspan`.
+- `swapColumns()` — swaps columns across table rows.
+- `getCellByVisualIndex()` — finds a cell by its visual index.
 
 ---
 
