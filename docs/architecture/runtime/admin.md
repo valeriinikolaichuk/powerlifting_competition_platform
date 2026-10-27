@@ -13,6 +13,7 @@
     - [ColspanFactoryService](#colspanfactoryservice)
     - [SortingService](#sortingservice)
     - [DragAndDropService](#draganddropservice)
+    - [ColumnResizeService](#columnresizeservice)
   - [config](#config)
   - [models](#models)
   - [units](#units)
@@ -174,6 +175,7 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`onDragStart()`** — records the index of the dragged column.
 - **`onDragOver()`** — enables dropping a column.
 - **`onDrop()`** — reorders columns and updates the table.
+- **`onResizeStart()`** — initiates column resizing and registers mouse event handlers to update the column width.
 
 #### Sorting Configuration
 Each column defines its sorting behavior through the following properties:
@@ -256,6 +258,11 @@ Sorts the [AthleteCompetitionRow[]](#athletecompetitionrow) array without modify
 - `getVisualIndex()` — calculates a column's visual index, accounting for `colspan`.
 - `swapColumns()` — swaps columns across table rows.
 - `getCellByVisualIndex()` — finds a cell by its visual index.
+
+---
+
+### ColumnResizeService
+**`resizeColumn()`** — resizes a column and updates the widths of corresponding cells across table rows.
 
 ---
 
