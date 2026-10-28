@@ -166,7 +166,6 @@ Each record contains the athlete's competition entry, nomination attempts, compe
 | trainer_3_id | Additional trainer (optional) |
 | trainer_4_id | Additional trainer (optional) |
 | sport_rank_class | Athlete's sport rank or class |
-| sport_titles | Athlete's sport titles |
 | squat_nominated | Nominated squat weight |
 | bench_press_nominated | Nominated bench press weight |
 | deadlift_nominated | Nominated deadlift weight |

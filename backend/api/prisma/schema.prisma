@@ -421,6 +421,8 @@ model Athletes {
 
   scope              DataScope
   language           Language
+  
+  sport_titles           String?
 
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
@@ -960,7 +962,6 @@ model AthleteRegistrations {
   trainer_4_id           String? @db.Uuid
 
   sport_rank_class       String?
-  sport_titles           String?
 
   squat_nominated        Decimal? @db.Decimal(4, 1)
   bench_press_nominated  Decimal? @db.Decimal(4, 1)

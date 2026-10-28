@@ -39,7 +39,7 @@ export const RESULTS_COLUMNS: AthleteTableColumn[] = [
     title: "fullName",
     translationScope: 'tables/athlete-table',
     width: 320,
-    left: 37,
+    left: 39,
     sortType: "string",
     hidden: false,
     discipline: null,

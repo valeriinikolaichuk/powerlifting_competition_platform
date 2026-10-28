@@ -145,14 +145,13 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`trackAthlete()`** — Tracks athletes by ID.
 - **`getColumnLeft()`** — Calculates sticky column positions based on the number of age groups.
 - **`displayValue()`** — Returns the value displayed in an athlete's cell, handling row numbering, empty values, and checkboxes.
-- **`setNewNumber()`** — Updates a numeric field in the new athlete form.
-- **`setNewText()`** — Updates a text field in the new athlete form.
 - **`onDatePartChange()`** — Updates a birth date component.
 - **`formatDatePart()`** — Formats day and month values with leading zeros.
 - **`onAgeGroupChange()`** — Updates the selected age group, resets the weight class, and loads the corresponding weight classes.
 - **`createEmptyAthlete()`** — Creates the initial athlete form data.
-- **`resetNewAthlete()`** — Resets the athlete input form.
-- **`addAthlete()`** — Validates and normalizes the athlete's full name. Persistence is handled by the parent component.
+- **`resetNewAthlete()`** — Resets the athlete data and reinitializes the form with default values.
+- **`onNewAthleteKeydown(event)`** — handles the Enter key and calls `addAthlete()`.
+- **`addAthlete()`** — Validates and normalizes the athlete's full name and resets the form. Persistence is handled by the parent component.
 - **`getSuggestion()`** — Returns the current autocomplete suggestion for the specified field.
   - Validates the field and checks whether autocomplete is supported.
   - Reads the input value and clears the previous suggestion.
@@ -197,6 +196,9 @@ Each column defines its sorting behavior through the following properties:
 - Synchronized column order across the table header, athlete registration form, and athlete rows.
 - Preserves the competition name and group header rows during column reordering.
 - Maintains column widths, sorting functionality, and sticky column positioning.
+
+#### Athlete Form
+The reactive form (`FormGroup`) manages the input fields for a new athlete. It is initialized using `createEmptyAthlete()` and supports validation and autocomplete.
 
 ---
 

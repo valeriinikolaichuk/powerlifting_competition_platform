@@ -3,18 +3,21 @@
         overflow-auto 
         relative">
 
-  <table class="athlete-table">
-    <thead>
-      <tr class="competition_name">
-        <th class="hidden-column"></th>
-        <th class="sticky 
+  <form [formGroup]="form" 
+        (keydown.enter)="onNewAthleteKeydown($event)">
+
+    <table class="athlete-table">
+      <thead>
+        <tr class="competition_name">
+          <th class="hidden-column"></th>
+          <th class="sticky 
                 left-0 
                 w-[30px]">
-        </th>
-        <th class="sticky 
+          </th>
+          <th class="sticky 
                 !text-left 
                 text-sm
-                left-[37px]
+                left-[45px]
                 competition-sticky"
                 [attr.colspan]="competitionColspan">
 
@@ -24,18 +27,18 @@
                 - 
             {{ competition.end_date | date:'dd.MM.yyyy' }}
 
-        </th>
-      </tr>
-      <tr class="competition-heading">
-        <th class="hidden-column"></th>
-        <th class="sticky 
+          </th>
+        </tr>
+        <tr class="competition-heading">
+          <th class="hidden-column"></th>
+          <th class="sticky 
                 left-0 
                 w-[30px]">
-        </th>
-        <th class="sticky 
+          </th>
+          <th class="sticky 
                 !text-left 
                 text-sm
-                left-[37px]
+                left-[45px]
                 competition-sticky" 
                 [attr.colspan]="infoColspan">
 
@@ -49,41 +52,41 @@
                                             
             }
 
-        </th>
-        <th [attr.colspan]="referenceColspan"></th>
-        <th colspan="4">
+          </th>
+          <th [attr.colspan]="referenceColspan"></th>
+          <th colspan="4">
             {{ 'Treners' | t:'tables/athlete-table' }}
-        </th>
-        <th [attr.colspan]="diciplineColspan">
+          </th>
+          <th [attr.colspan]="diciplineColspan">
             {{ 'nominations' | t:'tables/athlete-table' }}
-        </th>
-        <th colspan="2"></th>
-        <th></th>
-      </tr>
+          </th>
+          <th colspan="2"></th>
+          <th></th>
+        </tr>
 
-      <tr class="column-heading">
-        @for (column of columns; track trackColumn($index, column)) {
-          <th
-            [class.hidden-column]="
-              column.hidden ||
-              (column.key === 6 && competition.age_groups.length === 1)
-            "
-            [class.sticky]="column.left !== null || column.index === 1"
-            [class.no-sort]="column.cancelSorting"
-            [attr.data-key]="column.key"
-            [attr.data-index]="column.indexAttr"
-            [attr.data-type]="column.sortType"
-            [attr.data-discipline]="column.discipline"
-            [draggable]="column.draggable"
-            [style.width.px]="column.width"
-            [style.left.px]="getColumnLeft(column)"
-            [style.z-index]="column.left !== null ? 10 : null"
-            [style.text-align]="column.index === 2 ? 'left' : null"
-            (click)="onSort(column)"
-            (dragstart)="onDragStart($event, $event.currentTarget)"
-            (dragover)="onDragOver($event)"
-            (drop)="onDrop($event, $event.currentTarget)"
-          >
+        <tr class="column-heading">
+          @for (column of columns; track trackColumn($index, column)) {
+            <th
+                [class.hidden-column]="
+                column.hidden ||
+                (column.key === 6 && competition.age_groups.length === 1)
+                "
+                [class.sticky]="column.left !== null || column.index === 1"
+                [class.no-sort]="column.cancelSorting"
+                [attr.data-key]="column.key"
+                [attr.data-index]="column.indexAttr"
+                [attr.data-type]="column.sortType"
+                [attr.data-discipline]="column.discipline"
+                [draggable]="column.draggable"
+                [style.width.px]="column.width"
+                [style.left.px]="getColumnLeft(column)"
+                [style.z-index]="column.left !== null ? 10 : null"
+                [style.text-align]="column.index === 2 ? 'left' : null"
+                (click)="onSort(column)"
+                (dragstart)="onDragStart($event, $event.currentTarget)"
+                (dragover)="onDragOver($event)"
+                (drop)="onDrop($event, $event.currentTarget)"
+            >
             @if (column.indexAttr === 'sort' && !column.cancelSorting) {
               <span class="sort-icon" aria-hidden="true">
                 {{ getSortIcon(column) }}
@@ -103,29 +106,32 @@
                 (mousedown)="onResizeStart($event, $any($event.target))"
               ></span>
             }
-          </th>
-        }
-      </tr>
-    
-      @if (editable) {
-        <tr id="tr0" class="input-line sticky" data-type="input">
+            </th>
+          }
+        </tr>
+      </thead>
 
-          @for (column of columns; track trackColumn($index, column)) {
-            <td
-              [class.hidden-column]="
-                column.hidden ||
-                (column.key === 6 && competition.age_groups.length === 1)
-              "
-              [class.input-colour]="true"
-              [class.sticky]="
-                column.left !== null ||
-                (column.index >= 1 && column.index <= 6)
-              "
-              [attr.id]="'new-' + (column.field || column.index)"
-              [attr.data-discipline]="column.discipline"
-              [style.left.px]="getColumnLeft(column)"
-              [style.width.px]="column.width"
-            >
+      <tbody>
+    
+        @if (editable) {
+          <tr id="tr0" class="input-line sticky" data-type="input">
+
+            @for (column of columns; track trackColumn($index, column)) {
+              <td
+                [class.hidden-column]="
+                    column.hidden ||
+                    (column.key === 6 && competition.age_groups.length === 1)
+                "
+                [class.input-colour]="true"
+                [class.sticky]="
+                    column.left !== null ||
+                    (column.index >= 1 && column.index <= 6)
+                "
+                [attr.id]="'new-' + (column.field || column.index)"
+                [attr.data-discipline]="column.discipline"
+                [style.left.px]="getColumnLeft(column)"
+                [style.width.px]="column.width"
+              >
 
               @switch (column.editor) {
 
@@ -133,11 +139,7 @@
                   <input
                     type="hidden"
                     [name]="'new-' + (column.field || column.index)"
-                    [value]="
-                      column.field
-                        ? (newAthlete[column.field] ?? '')
-                        : (newAthlete.id ?? -1)
-                    "
+                    [formControlName]="column.field!"
                   />
                 }
 
@@ -149,8 +151,9 @@
                       class="cell-input"
                       type="number"
                       [name]="'new-' + (column.field || column.index)"
+                      [formControlName]="column.field!"
                       min="0"
-                      [max]="column.field === 'lot' ? 9999 : 9999"
+                      [max]="column.field === 'lot' ? 999 : 999"
                       [step]="
                         [
                           'squat_nominated',
@@ -160,12 +163,6 @@
                           ? 0.5
                           : 1
                       "
-                      [value]="
-                        column.field
-                          ? (newAthlete[column.field] ?? '')
-                          : ''
-                      "
-                      (input)="setNewNumber(column.field, $event)"
                       [disabled]="!editable"
                     />
                   }
@@ -188,8 +185,8 @@
                         class="cell-input autocomplete-input"
                         type="text"
                         [name]="'new-' + (column.field || column.index)"
-                        [value]="column.field ? (newAthlete[column.field] ?? '') : ''"
-                        (input)="setNewText(column.field, $event); onAutocompleteInput(column.field)"
+                        [formControlName]="column.field!"
+                        (input)="onAutocompleteInput(column.field)"
                         (keydown.tab)="acceptSuggestion(column.field)"
                         (blur)="acceptSuggestion(column.field)"
                         autocomplete="off"
@@ -203,8 +200,7 @@
                         class="cell-input"
                         type="text"
                         [name]="'new-' + (column.field || column.index)"
-                        [value]="column.field ? (newAthlete[column.field] ?? '') : ''"
-                        (input)="setNewText(column.field, $event)"
+                        [formControlName]="column.field!"
                         [disabled]="!editable"
                     />
                   }
@@ -214,7 +210,7 @@
                   <select
                     class="cell-input"
                     name="birth_day"
-                    [value]="newAthlete.birth_day ?? 0"
+                    formControlName="birth_day"
                     (change)="onDatePartChange('birth_day', $event)"
                     [disabled]="!editable"
                   >
@@ -230,7 +226,7 @@
                   <select
                     class="cell-input"
                     name="birth_month"
-                    [value]="newAthlete.birth_month ?? 0"
+                    formControlName="birth_month"
                     (change)="onDatePartChange('birth_month', $event)"
                     [disabled]="!editable"
                   >
@@ -246,7 +242,7 @@
                   <select
                     class="cell-input"
                     name="birth_year"
-                    [value]="newAthlete.birth_year ?? 0"
+                    formControlName="birth_year"
                     (change)="onDatePartChange('birth_year', $event)"
                     [disabled]="!editable"
                   >
@@ -262,7 +258,7 @@
                   <select
                     class="cell-input"
                     name="age_group"
-                    [value]="newAthlete['age_group'] ?? ''"
+                    formControlName="age_group"
                     (change)="onAgeGroupChange($event)"
                     [disabled]="!editable || competition.age_groups.length === 1"
                   >
@@ -279,9 +275,8 @@
                   <select
                     class="cell-input"
                     name="weight_class"
-                    [value]="newAthlete['weight_class'] ?? ''"
-                    (change)="setNewText('weight_class', $event)"
-                    [disabled]="!editable || !newAthlete['age_group']"
+                    formControlName="weight_class"
+                    [disabled]="!editable || !form.get('age_group')?.value"
                   >
 
                     @for (category of weightClasses; track category.id) {
@@ -294,8 +289,7 @@
                   <select
                     class="cell-input"
                     name="group_order"
-                    [value]="newAthlete['group_order'] ?? 1"
-                    (change)="setNewNumber('group_order', $event)"
+                    formControlName="group_order"
                     [disabled]="!editable"
                   >
                     @for (group of groupOptions; track group) {
@@ -308,8 +302,7 @@
                   <select
                     class="cell-input"
                     [name]="'new-' + column.field"
-                    [value]="newAthlete['status'] ?? 'TEAM'"
-                    (change)="setNewText(column.field, $event)"
+                    [formControlName]="column.field!"
                     [disabled]="!editable"
                   >
                     <option value="TEAM">TEAM</option>
@@ -322,8 +315,7 @@
                   <select
                     class="cell-input"
                     [name]="'new-' + column.field"
-                    [value]="newAthlete['qualification'] ?? 'QUALIFIED'"
-                    (change)="setNewText(column.field, $event)"
+                    [formControlName]="column.field!"
                     [disabled]="!editable"
                   >
                     <option value="QUALIFIED">QUALIFIED</option>
@@ -342,49 +334,60 @@
 
               }
 
-            </td>
-          }
+              </td>
+            }
 
-        </tr>
-      }
-    </thead>
+          </tr>
+        }
 
-    <tbody>
-      @for (
-        athlete of athletes;
-        track trackAthlete($index, athlete)
-      ) {
-        <tr [id]="'tr' + athlete.id" data-type="html">
+        @for (
+            athlete of athletes;
+            track trackAthlete($index, athlete)
+        ) {
+          <tr [id]="'tr' + athlete.id" data-type="html"
+              (click)="startEditing(athlete)"
+              [class.editing-row]="isEditing(athlete)">
 
-          @for (column of columns; track trackColumn($index, column)) {
-            <td
-              [class.hidden-column]="
-                column.hidden ||
-                (column.key === 6 && competition.age_groups.length === 1)
-              "
-              [class.sticky]="
-                column.left !== null ||
-                column.index === 1 ||
-                (column.index >= 2 && column.index <= 6)
-              "
-              [class.table-number]="column.index === 1"
-              [attr.id]="'td' + column.index + athlete.id"
-              [attr.data-discipline]="column.discipline"
-              [style.left.px]="getColumnLeft(column)"
-              [style.width.px]="column.width"
-              [style.text-align]="
-                [1, 3, 4, 5, 7, 8, 9].includes(column.index)
-                  ? 'center'
-                  : null
-              "
-            >
-                {{ displayValue(athlete, column) }}
-            </td>
-          }
+            @for (column of columns; track trackColumn($index, column)) {
+              <td
+                [class.hidden-column]="
+                    column.hidden ||
+                    (column.key === 6 && competition.age_groups.length === 1)
+                "
+                [class.sticky]="
+                    column.left !== null ||
+                    column.index === 1 ||
+                    (column.index >= 2 && column.index <= 6)
+                "
+                [class.table-number]="column.index === 1"
+                [attr.id]="'td' + column.index + athlete.id"
+                [attr.data-discipline]="column.discipline"
+                [style.left.px]="getColumnLeft(column)"
+                [style.width.px]="column.width"
+                [style.text-align]="
+                    [1, 3, 4, 5, 7, 8, 9].includes(column.index)
+                    ? 'center'
+                    : null
+                "
+              >
+                @if (isEditing(athlete)) {
 
-        </tr>
-      }
+                  <input
+                    class="editing-row"
+                    [value]="athlete[column.field!]"
+                    (click)="$event.stopPropagation()"
+                    (change)="athlete[column.field!] = $any($event.target).value"
+                    />
+                } @else {
+                    {{ displayValue(athlete, column) }}
+                }
+              </td>
+            }
 
-    </tbody>
-  </table>
+          </tr>
+        }
+
+      </tbody>
+    </table>
+  </form>
 </div>

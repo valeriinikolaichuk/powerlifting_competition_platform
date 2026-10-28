@@ -22,7 +22,6 @@ CREATE TABLE "athlete_registrations" (
     "trainer_3_id" UUID,
     "trainer_4_id" UUID,
     "sport_rank_class" TEXT,
-    "sport_titles" TEXT,
     "squat_nominated" DECIMAL(4,1),
     "bench_press_nominated" DECIMAL(4,1),
     "deadlift_nominated" DECIMAL(4,1),

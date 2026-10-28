@@ -55,6 +55,7 @@ export class AthleteTableOptionsService {
           a.birth_day,
           a.birth_month,
           a.birth_year,
+          a.sport_titles AS titles,
 
           ag.name AS age_group,
           wc.name AS weight_class,
@@ -83,8 +84,7 @@ export class AthleteTableOptionsService {
           ar.total_nominated,
 
           ar.status,
-          ar.qualification,
-          ar.sport_titles AS titles
+          ar.qualification
 
         FROM athlete_registrations ar
 

@@ -555,6 +555,7 @@ The federation defines the visibility scope of athlete records.
 | created_by_user_id | User who created the record |
 | scope | Record ownership scope ([**DataScope**](#datascope-enum) enum) |
 | language | Language stored for faster athlete lookup during data entry ([**Language**](#language-enum) enum) |
+| sport_titles | Athlete's sport titles |
 | created_at | Record creation timestamp |
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |

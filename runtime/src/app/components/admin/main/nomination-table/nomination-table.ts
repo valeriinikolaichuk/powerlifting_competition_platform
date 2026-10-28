@@ -1,6 +1,6 @@
 import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { TranslatePipe } from '../../../../i18n/pipes/translate.pipe';
 import { TranslationService } from '../../../../i18n/services/translation.service';
@@ -32,7 +32,7 @@ import { ColumnResizeService } from '../services/column-resize.service';
   standalone: true,
   imports: [
     DatePipe,
-    FormsModule,
+    ReactiveFormsModule,
     TranslatePipe,
   ],
   templateUrl: './nomination-table.html',
@@ -42,6 +42,8 @@ import { ColumnResizeService } from '../services/column-resize.service';
   ],
 })
 export class NominationTable implements OnChanges {
+
+  form!: FormGroup;
 
   @Input() competition!: Competition;
 
@@ -62,8 +64,6 @@ export class NominationTable implements OnChanges {
   readonly monthOptions = Array.from({ length: 13 }, (_, index) => index);
   readonly yearOptions = [0, ...Array.from({ length: 81 }, (_, index) => 2015 - index)];
 
-  newAthlete: Partial<AthleteCompetitionRow> = {};
-
   countrySuggestion = '';
   regionSuggestion = '';
   citySuggestion = '';
@@ -79,7 +79,12 @@ export class NominationTable implements OnChanges {
 
   private dragIndex = -1;
 
+  newAthlete: Partial<AthleteCompetitionRow> = {};
+  editedAthletes: AthleteCompetitionRow[] = [];
+  editingAthleteId: string | null = null;
+
   constructor(
+    private readonly fb: FormBuilder,
     public tService: TranslationService,
     private readonly columnFactoryService: ColumnFactoryService,
     private readonly athleteTableOptionsService: AthleteTableOptionsService,
@@ -93,7 +98,7 @@ export class NominationTable implements OnChanges {
   async ngOnInit(){
     this.tService.load('tables/athlete-table');
 
-    this.newAthlete = this.createEmptyAthlete();
+    this.resetNewAthlete();
   }
 
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
@@ -200,26 +205,6 @@ export class NominationTable implements OnChanges {
     return value;
   }
 
-  setNewNumber(
-    field: string | null, 
-    event: Event
-  ): void {
-    if (!field) return;
-
-    const raw = (event.target as HTMLInputElement).value;
-
-    this.newAthlete[field] = raw === '' ? null : Number(raw);
-  }
-
-  setNewText(
-    field: string | null, 
-    event: Event
-  ): void {
-    if (!field) return;
-
-    this.newAthlete[field] = (event.target as HTMLInputElement).value;
-  }
-
   onDatePartChange(
     field: 'birth_day' | 'birth_month' | 'birth_year', 
     event: Event
@@ -227,7 +212,7 @@ export class NominationTable implements OnChanges {
     const raw = (event.target as HTMLSelectElement).value;
     const parsed = raw === '' ? null : Number(raw);
 
-    this.newAthlete[field] = parsed === 0 ? null : parsed;
+    this.form.get(field)?.setValue(parsed === 0 ? null : parsed);
   }
 
   formatDatePart(
@@ -241,12 +226,16 @@ export class NominationTable implements OnChanges {
   ): Promise<void> {
     const federationCategoryId = (event.target as HTMLSelectElement).value;
 
-    this.newAthlete['age_group'] = federationCategoryId;
-    this.newAthlete['weight_class'] = '';
+    this.form.patchValue({
+      age_group: federationCategoryId,
+      weight_class: null,
+    });
 
-    this.weightClasses 
-      = await this.athleteTableOptionsService.getWeightClasses(federationCategoryId);
+    this.weightClasses = 
+        await this.athleteTableOptionsService.getWeightClasses(federationCategoryId);
   }
+
+  // NEW ATHLETE
 
   createEmptyAthlete(): Partial<AthleteCompetitionRow> {
     return {
@@ -288,17 +277,72 @@ export class NominationTable implements OnChanges {
 
   resetNewAthlete(): void { 
     this.newAthlete = this.createEmptyAthlete(); 
+
+    this.form = this.fb.group({
+      ...this.newAthlete,
+      full_name: [
+        this.newAthlete.full_name,
+        Validators.required,
+      ],
+    });
+  }
+
+  onNewAthleteKeydown(event: Event): void {
+    event.preventDefault();
+    this.addAthlete();
   }
 
   addAthlete(): void {
-    const fullName = String(this.newAthlete['full_name'] ?? '').trim();
+    const fullName = String(this.form.get('full_name')?.value ?? '').trim();
 
-    if (!fullName) return;
+    if (!fullName) {
+      this.form.get('full_name')?.setErrors({ required: true });
+      return;
+    }
 
-    this.newAthlete = {
+    const athlete = {
       ...this.newAthlete,
-      ['full_name']: fullName,
-    };
+      ...this.form.getRawValue(),
+      full_name: fullName,
+    } as AthleteCompetitionRow;
+
+    this.athletes = [athlete, ...this.athletes];
+
+    this.resetNewAthlete();
+  }
+
+/*
+const changes: AthleteChange[] = [
+  {
+    operation: 'INSERT',
+    data: newAthlete as AthleteCompetitionRow,
+  },
+  ...editedAthletes.map(data => ({
+    operation: 'UPDATE' as const,
+    data,
+  })),
+];
+
+*/
+
+
+
+  // EDIT ATHLETE
+
+  startEditing(
+    athlete: AthleteCompetitionRow
+  ): void {
+    this.editingAthleteId = athlete.id;
+  }
+
+  isEditing(
+    athlete: AthleteCompetitionRow
+  ): boolean {
+    return this.editingAthleteId === athlete.id;
+  }
+
+  stopEditing(): void {
+    this.editingAthleteId = null;
   }
 
   // AUTOCOMPLETE
@@ -323,7 +367,7 @@ export class NominationTable implements OnChanges {
   ): Promise<void> {
     if (!field || !this.isAutocompleteField(field)) return;
 
-    let value = String(this.newAthlete[field] ?? '').trim();
+    let value = String(this.form.get(field)?.value ?? '').trim();
 
     this.setSuggestion(field, '');
 
@@ -335,8 +379,8 @@ export class NominationTable implements OnChanges {
       federationId: this.competition.federation_id,
       language: localStorage.getItem('lang')?.toUpperCase() ?? 'EN',
       competitionSex: this.competition.age_groups[0].sex,
-      regionName: String(this.newAthlete['region'] ?? '').trim(),
-      countryName: String(this.newAthlete['country'] ?? '').trim(),
+      regionName: String(this.form.get('region')?.value ?? '').trim(),
+      countryName: String(this.form.get('country')?.value ?? '').trim(),
       organizationType: organizationTypes[field] ,
     };
 
@@ -346,7 +390,7 @@ export class NominationTable implements OnChanges {
 
     suggestion = await strategy.getSuggestion(value, context);
 
-    if (String(this.newAthlete[field] ?? '').trim() !== value) return;
+    if (String(this.form.get(field)?.value ?? '').trim() !== value) return;
 
     if (
       suggestion &&
@@ -357,42 +401,41 @@ export class NominationTable implements OnChanges {
     }
   }
 
-  async acceptSuggestion(field: string | null): Promise<void> {
+  async acceptSuggestion(
+    field: string | null
+  ): Promise<void> {
     if (!field || !this.isAutocompleteField(field)) return;
 
     const suggestion = this.getSuggestion(field);
-
     if (!suggestion) return;
 
-    const value = String(this.newAthlete[field] ?? '');
+    const control = this.form.get(field);
+    if (!control) return;
 
-    this.newAthlete[field] = value + suggestion;
+    const value = String(control.value ?? '');
+
+    control.setValue(value + suggestion);
     this.setSuggestion(field, '');
 
     if (field === 'full_name') {
       const language = localStorage.getItem('lang')?.toUpperCase() ?? 'EN';
       const competitionSex = this.competition.age_groups[0].sex;
-      let sex;
 
-      if (competitionSex === 'MEN') {
-        sex = 'MAN';
-      } else {
-        sex = 'WOMAN';
-      }
-
-      if (!sex) return;
+      const sex = competitionSex === 'MEN' ? 'MAN' : 'WOMAN';
 
       const athlete = await this.suggestionService.getDateOfBirthByName(
-        String(this.newAthlete['full_name']),
+        String(this.form.get('full_name')?.value ?? ''),
         this.competition.federation_id,
         language,
         sex,
       );
 
       if (athlete) {
-        this.newAthlete['birth_day'] = athlete.birth_day;
-        this.newAthlete['birth_month'] = athlete.birth_month;
-        this.newAthlete['birth_year'] = athlete.birth_year;
+        this.form.patchValue({
+          birth_day: athlete.birth_day,
+          birth_month: athlete.birth_month,
+          birth_year: athlete.birth_year,
+        });
       }
     }
   }
@@ -445,8 +488,10 @@ export class NominationTable implements OnChanges {
     return context.measureText(text).width;
   }
 
-  getNewAthleteValue(field: string): string {
-    return String(this.newAthlete[field] ?? '');
+  getNewAthleteValue(
+    field: string
+  ): string {
+    return String(this.form.get(field)?.value ?? '');
   }
 
   // SORTING
