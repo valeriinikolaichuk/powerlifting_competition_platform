@@ -1,0 +1,31 @@
+:host {
+    position: sticky;
+    top: 95px;
+    z-index: 8;
+    display: table-row;
+}
+
+:host td {
+    position: sticky;
+    background: var(--table-input-background, #fffbe6);
+}
+
+:host td.sticky {
+    z-index: 10;
+}
+
+:host td.table-number {
+    left: 0;
+    z-index: 12;
+    background: var(--table-input-background, #fffbe6);
+}
+
+.cell-input { 
+    box-sizing: border-box; 
+    width: 100%; 
+    min-width: 35px; 
+    border: 1px solid #c7c7c7; 
+    padding: 3px; 
+    font: inherit; 
+    background: transparent; 
+}

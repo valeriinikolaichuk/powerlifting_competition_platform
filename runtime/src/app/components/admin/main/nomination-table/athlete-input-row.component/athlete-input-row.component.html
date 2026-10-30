@@ -1,0 +1,219 @@
+@for (column of columns; track trackColumn($index, column)) {
+    <td
+        [class.hidden-column]="
+            column.hidden ||
+            (column.key === 6 && competition.age_groups.length === 1)
+        "
+        [class.input-colour]="true"
+        [class.sticky]="
+            column.left !== null ||
+            (column.index >= 1 && column.index <= 6)
+        "
+        [attr.id]="'new-' + (column.field || column.index)"
+        [attr.data-discipline]="column.discipline"
+        [style.left.px]="getColumnLeft(column)"
+        [style.width.px]="column.width"
+    >
+
+    @switch (column.editor) {
+
+        @case ('hidden') {
+            <input
+                type="hidden"
+                [name]="'new-' + (column.field || column.index)"
+                [formControl]="$any(form.get(column.field!))"
+            />
+        }
+
+        @case ('number') {
+            @if (column.index === 1) {
+                <span></span>
+            } @else {
+                <input
+                    class="cell-input"
+                    type="number"
+                    [name]="'new-' + (column.field || column.index)"
+                    [formControl]="$any(form.get(column.field!))"
+                    min="0"
+                    [max]="column.field === 'lot' ? 999 : 999"
+                    [step]="
+                    [
+                        'squat_nominated',
+                        'bench_press_nominated',
+                        'deadlift_nom'
+                    ].includes(column.field || '')
+                        ? 0.5
+                        : 1
+                    "
+                    [disabled]="!editable"
+                />
+            }
+        }
+
+        @case ('text') {
+            @if (isAutocompleteField(column.field)) {
+                <div class="autocomplete">
+
+                    @if (getSuggestion(column.field)) {
+                        <div
+                            class="autocomplete-suggestion"
+                            [style.left.px]="getTextWidth(getNewAthleteValue(column.field!)) + 2"
+                            >
+                            {{ getSuggestion(column.field) }}
+                        </div>
+                    }
+
+                    <input
+                        class="autocomplete-input cell-input"
+                        type="text"
+                        [name]="'new-' + (column.field || column.index)"
+                        [formControl]="$any(form.get(column.field!))"
+                        (input)="onAutocompleteInput(column.field)"
+                        (keydown.tab)="acceptSuggestion(column.field)"
+                        (blur)="acceptSuggestion(column.field)"
+                        autocomplete="off"
+                        spellcheck="false"
+                        [disabled]="!editable"
+                    />
+
+                </div>
+
+            } @else {
+                <input
+                    class="cell-input"
+                    type="text"
+                    [name]="'new-' + (column.field || column.index)"
+                    [formControl]="$any(form.get(column.field!))"
+                    [disabled]="!editable"
+                />
+            }
+        }
+
+        @case ('birthDay') {
+            <select
+                class="cell-input"
+                name="birth_day"
+                [formControl]="$any(form.get(column.field!))"
+                (change)="onDatePartChange('birth_day', $event)"
+                [disabled]="!editable"
+            >
+                @for (day of dayOptions; track day) {
+                    <option [value]="day">
+                        {{ day === 0 ? '00' : formatDatePart(day) }}
+                    </option>
+                }
+            </select>
+        }
+
+        @case ('birthMonth') {
+            <select
+                class="cell-input"
+                name="birth_month"
+                [formControl]="$any(form.get(column.field!))"
+                (change)="onDatePartChange('birth_month', $event)"
+                [disabled]="!editable"
+            >
+                @for (month of monthOptions; track month) {
+                    <option [value]="month">
+                        {{ month === 0 ? '00' : formatDatePart(month) }}
+                    </option>
+                }
+            </select>
+        }
+
+        @case ('birthYear') {
+            <select
+                class="cell-input"
+                name="birth_year"
+                [formControl]="$any(form.get(column.field!))"
+                (change)="onDatePartChange('birth_year', $event)"
+                [disabled]="!editable"
+            >
+                @for (year of yearOptions; track year) {
+                    <option [value]="year">
+                        {{ year === 0 ? '0000' : year }}
+                    </option>
+                }
+            </select>
+        }
+
+        @case ('ageGroup') {
+            <select
+                class="cell-input"
+                name="age_group"
+                [formControl]="$any(form.get(column.field!))"
+                (change)="onAgeGroupChange($event)"
+                [disabled]="!editable || competition.age_groups.length === 1"
+            >
+                @for (ageGroup of competition.age_groups; track ageGroup.id) {
+                    <option [value]="ageGroup.federation_category_id">
+                        {{ competition.federation_code + '_' + ageGroup.name + '_' + ageGroup.sex | t:'tables/athlete-table' }}
+                    </option>
+                }
+            </select>
+        }
+
+        @case ('selectCategory') {
+            <select
+                class="cell-input"
+                name="weight_class"
+                [formControl]="$any(form.get(column.field!))"
+                [disabled]="!editable || !form.get('age_group')?.value"
+            >
+                @for (category of weightClasses; track category.id) {
+                    <option [value]="category.id"> {{ category.name }} </option>
+                }
+            </select>
+        }
+
+        @case ('selectGroup') {
+            <select
+                class="cell-input"
+                name="group_order"
+                [formControl]="$any(form.get(column.field!))"
+                [disabled]="!editable"
+            >
+                @for (group of groupOptions; track group) {
+                    <option [value]="group">{{ group }}</option>
+                }
+            </select>
+        }
+
+        @case ('selectStatus') {
+            <select
+                class="cell-input"
+                [name]="'new-' + column.field"
+                [formControl]="$any(form.get(column.field!))"
+                [disabled]="!editable"
+            >
+                <option value="TEAM">{{ 'TEAM' | t:'tables/athlete-table' }}</option>
+                <option value="PERSONALLY">{{ 'PERSONALLY' | t:'tables/athlete-table' }}</option>
+                <option value="OUT_OF_COMP">{{ 'OUT_OF_COMP' | t:'tables/athlete-table' }}</option>
+            </select>
+        }
+
+        @case ('selectQualification') {
+            <select
+                class="cell-input"
+                [name]="'new-' + column.field"
+                [formControl]="$any(form.get(column.field!))"
+                [disabled]="!editable"
+            >
+                <option value="QUALIFIED">{{ 'QUALIFIED' | t:'tables/athlete-table' }}</option>
+                <option value="WITHDRAWN">{{ 'WITHDRAWN' | t:'tables/athlete-table' }}</option>
+                <option value="DISQUALIFIED">{{ 'DISQUALIFIED' | t:'tables/athlete-table' }}</option>
+            </select>
+        }
+
+        @case ('display') {
+            <span></span>
+        }
+
+        @default {
+            <span></span>
+        }
+
+    }
+
+    </td>
+}

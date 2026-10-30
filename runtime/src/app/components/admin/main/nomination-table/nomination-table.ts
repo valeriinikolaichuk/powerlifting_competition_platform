@@ -17,15 +17,12 @@ import { Competition } from '../../../../shared/services/dto/competition.dto';
 import { AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
 import { AthleteCellValue } from '../types/athlete-cell.type';
 
-import { SuggestionService } from '../../../../shared/services/suggestion.service';
-import { AutocompleteFactoryService } from '../../../../shared/services/autocomplete/autocomplete-factory.service';
-import { AutocompleteField } from '../types/autocomplete-field.type';
-import { organizationTypes } from '../types/organization-types';
-
 import { SortingService } from '../services/sorting.service';
 import type { SortType, SortDirection } from '../types/sorting.types';
 import { DragAndDropService } from '../services/drag-and-drop.service';
 import { ColumnResizeService } from '../services/column-resize.service';
+
+import { AthleteInputRowComponent } from './athlete-input-row.component/athlete-input-row.component';
 
 @Component({
   selector: 'app-nomination-table',
@@ -34,11 +31,11 @@ import { ColumnResizeService } from '../services/column-resize.service';
     DatePipe,
     ReactiveFormsModule,
     TranslatePipe,
+    AthleteInputRowComponent,
   ],
   templateUrl: './nomination-table.html',
   styleUrls: [
-    '../styles/nomination-table.css',
-    '../../../../shared/styles/autocomplete.css',
+    '../styles/table.css',
   ],
 })
 export class NominationTable implements OnChanges {
@@ -46,10 +43,7 @@ export class NominationTable implements OnChanges {
   form!: FormGroup;
 
   @Input() competition!: Competition;
-
   @Input() athletes: AthleteCompetitionRow[] = [];
-  @Input() categories: string[] = [];
-  @Input() ageGroups: string[] = [];
   @Input() weightClasses: { id: string; name: string }[] = [];
   @Input() editable = true;
 
@@ -58,16 +52,6 @@ export class NominationTable implements OnChanges {
   infoColspan = 0;
   referenceColspan = 0;
   diciplineColspan = 0;
-
-  readonly groupOptions = Array.from({ length: 9 }, (_, index) => index + 1);
-  readonly dayOptions = Array.from({ length: 32 }, (_, index) => index);
-  readonly monthOptions = Array.from({ length: 13 }, (_, index) => index);
-  readonly yearOptions = [0, ...Array.from({ length: 81 }, (_, index) => 2015 - index)];
-
-  countrySuggestion = '';
-  regionSuggestion = '';
-  citySuggestion = '';
-  athleteSuggestion = '';
 
   private originalAthletes: AthleteCompetitionRow[] = [];
 
@@ -88,8 +72,6 @@ export class NominationTable implements OnChanges {
     public tService: TranslationService,
     private readonly columnFactoryService: ColumnFactoryService,
     private readonly athleteTableOptionsService: AthleteTableOptionsService,
-    private readonly suggestionService: SuggestionService,
-    private readonly autocompleteFactoryService: AutocompleteFactoryService,
     private readonly sortingService: SortingService,
     private readonly dragAndDropService: DragAndDropService,
     private readonly columnResizeService: ColumnResizeService,
@@ -205,36 +187,6 @@ export class NominationTable implements OnChanges {
     return value;
   }
 
-  onDatePartChange(
-    field: 'birth_day' | 'birth_month' | 'birth_year', 
-    event: Event
-  ): void {
-    const raw = (event.target as HTMLSelectElement).value;
-    const parsed = raw === '' ? null : Number(raw);
-
-    this.form.get(field)?.setValue(parsed === 0 ? null : parsed);
-  }
-
-  formatDatePart(
-    value: number | null | undefined
-  ): string {
-    return !value ? '' : String(value).padStart(2, '0');
-  }
-
-  async onAgeGroupChange(
-    event: Event
-  ): Promise<void> {
-    const federationCategoryId = (event.target as HTMLSelectElement).value;
-
-    this.form.patchValue({
-      age_group: federationCategoryId,
-      weight_class: null,
-    });
-
-    this.weightClasses = 
-        await this.athleteTableOptionsService.getWeightClasses(federationCategoryId);
-  }
-
   // NEW ATHLETE
 
   createEmptyAthlete(): Partial<AthleteCompetitionRow> {
@@ -344,7 +296,7 @@ const changes: AthleteChange[] = [
   stopEditing(): void {
     this.editingAthleteId = null;
   }
-
+/*
   // AUTOCOMPLETE
 
   getSuggestion(field: string | null | undefined): string {
@@ -493,7 +445,7 @@ const changes: AthleteChange[] = [
   ): string {
     return String(this.form.get(field)?.value ?? '');
   }
-
+*/
   // SORTING
 
   setAthletes(athletes: AthleteCompetitionRow[]): void {

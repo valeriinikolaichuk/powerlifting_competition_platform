@@ -7,6 +7,7 @@
 - [MainComponent](#maincomponent)
   - [TABLES](#tables)
     - [NominationTable](#nominationtable)
+      - [AthleteInputRowComponent](#AthleteInputRowComponent)
   - [SERVICES](#services)
     - [AthleteTableOptionsService](#athletetableoptionsservice)
     - [ColumnFactoryService](#columnfactoryservice)
@@ -120,8 +121,6 @@ Provides the nomination table for a selected competition, displaying athlete inf
 #### Inputs
 - `competition: Competition` — Competition details used to configure the table.
 - `athletes: AthleteCompetitionRow[]` — Athletes displayed in the table.
-- `categories: string[]` — Category options supplied by the parent component.
-- `ageGroups: string[]` — Age group options supplied by the parent component.
 - `weightClasses: { id: string; name: string }[]` — Available weight classes.
 - `editable: boolean` — Determines whether editing controls are enabled. Defaults to `true`.
 
@@ -130,7 +129,6 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - [ColumnFactoryService](#columnfactoryservice) — Creates the table configuration, applying column visibility rules and calculating header spans.
 - [ColspanFactoryService](#colspanfactoryservice) — Provides a reusable mechanism for calculating table header colspans.
 - [AthleteTableOptionsService](#athletetableoptionsservice) — Retrieves weight classes for the selected federation category.
-- [SuggestionService](runtime/services/shared.md#suggestionservice) — Provides autocomplete suggestions for athlete names, countries, regions, and cities, and retrieves an existing athlete's date of birth.
 - [SortingService](#sortingservice) — Sorts the [AthleteCompetitionRow[]](#athletecompetitionrow) array without modifying the original array.
 - [DragAndDropService](#draganddropservice) — Dynamic column ordering using drag and drop.
 
@@ -145,28 +143,10 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`trackAthlete()`** — Tracks athletes by ID.
 - **`getColumnLeft()`** — Calculates sticky column positions based on the number of age groups.
 - **`displayValue()`** — Returns the value displayed in an athlete's cell, handling row numbering, empty values, and checkboxes.
-- **`onDatePartChange()`** — Updates a birth date component.
-- **`formatDatePart()`** — Formats day and month values with leading zeros.
-- **`onAgeGroupChange()`** — Updates the selected age group, resets the weight class, and loads the corresponding weight classes.
 - **`createEmptyAthlete()`** — Creates the initial athlete form data.
 - **`resetNewAthlete()`** — Resets the athlete data and reinitializes the form with default values.
 - **`onNewAthleteKeydown(event)`** — handles the Enter key and calls `addAthlete()`.
 - **`addAthlete()`** — Validates and normalizes the athlete's full name and resets the form. Persistence is handled by the parent component.
-- **`getSuggestion()`** — Returns the current autocomplete suggestion for the specified field.
-  - Validates the field and checks whether autocomplete is supported.
-  - Reads the input value and clears the previous suggestion.
-  - Builds an [AutocompleteContext](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletecontext) using competition settings, athlete form values, and the organization type.
-  - Retrieves the appropriate strategy through [AutocompleteFactoryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletefactoryservice).
-  - Calls [getSuggestion(value, context)](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#suggestionservice) to find a matching value.
-  - Verifies that the input has not changed while the asynchronous request was running.
-  - Displays only the remaining suffix if the suggestion starts with the input value and is not an exact match.
-  - If the field is invalid, the input is empty, no strategy exists, or no suitable suggestion is found, no suggestion is displayed.
-- **`onAutocompleteInput()`** — Handles autocomplete suggestions for the new athlete form.
-- **`acceptSuggestion()`** — Accepts an autocomplete suggestion and retrieves the athlete's date of birth when an existing athlete name is selected.
-- **`setSuggestion()`** — Updates the autocomplete suggestion for the specified field.
-- **`isAutocompleteField()`** — Checks whether a field supports autocomplete.
-- **`getTextWidth()`** — Calculates the rendered text width for autocomplete positioning.
-- **`getNewAthleteValue()`** — Returns a new athlete form field value as a string.
 - **`setAthletes(athletes)`** — stores the original athlete order, initializes the table data, and clears the sorting state.
 - **`onSort(column)`** — sorts athletes by the selected column in ascending or descending order using the [SortingService](#sortingservice). Clicking the row-number column resets sorting.
 - **`resetSorting()`** — restores the original athlete order and clears the active sorting state.
@@ -199,6 +179,42 @@ Each column defines its sorting behavior through the following properties:
 
 #### Athlete Form
 The reactive form (`FormGroup`) manages the input fields for a new athlete. It is initialized using `createEmptyAthlete()` and supports validation and autocomplete.
+
+---
+
+### AthleteInputRowComponent
+A reusable Angular component responsible for rendering and managing the athlete input row in the nomination table. It handles athlete data entry, form controls, and autocomplete suggestions for athlete-related fields.
+
+**Input Properties** – The component receives data and configuration from its parent component through Angular `@Input()` properties:
+* `form` – Reactive form group used to manage athlete input fields.
+* `columns` – Defines the table columns and their configuration.
+* `competition` – Provides competition details and settings.
+* `weightClasses` – List of available weight classes.
+* `editable` – Determines whether the input fields are editable.
+
+#### Services
+- [AthleteTableOptionsService](#athletetableoptionsservice) — Retrieves weight classes for the selected federation category.
+- [SuggestionService](runtime/services/shared.md#suggestionservice) — Provides autocomplete suggestions for athlete names, countries, regions, and cities, and retrieves an existing athlete's date of birth.
+
+#### Methods
+- **`onDatePartChange()`** — Updates a birth date component.
+- **`formatDatePart()`** — Formats day and month values with leading zeros.
+- **`onAgeGroupChange()`** — Updates the selected age group, resets the weight class, and loads the corresponding weight classes.
+- **`getSuggestion()`** — Returns the current autocomplete suggestion for the specified field.
+  - Validates the field and checks whether autocomplete is supported.
+  - Reads the input value and clears the previous suggestion.
+  - Builds an [AutocompleteContext](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletecontext) using competition settings, athlete form values, and the organization type.
+  - Retrieves the appropriate strategy through [AutocompleteFactoryService](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#autocompletefactoryservice).
+  - Calls [getSuggestion(value, context)](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#suggestionservice) to find a matching value.
+  - Verifies that the input has not changed while the asynchronous request was running.
+  - Displays only the remaining suffix if the suggestion starts with the input value and is not an exact match.
+  - If the field is invalid, the input is empty, no strategy exists, or no suitable suggestion is found, no suggestion is displayed.
+- **`onAutocompleteInput()`** — Handles autocomplete suggestions for the new athlete form.
+- **`acceptSuggestion()`** — Accepts an autocomplete suggestion and retrieves the athlete's date of birth when an existing athlete name is selected.
+- **`setSuggestion()`** — Updates the autocomplete suggestion for the specified field.
+- **`isAutocompleteField()`** — Checks whether a field supports autocomplete.
+- **`getTextWidth()`** — Calculates the rendered text width for autocomplete positioning.
+- **`getNewAthleteValue()`** — Returns a new athlete form field value as a string.
 
 ---
 
