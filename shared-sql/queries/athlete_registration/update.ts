@@ -1,0 +1,3 @@
+export const UPDATE_ATHLETE_REGISTRATION_SQL = `
+
+`;

@@ -421,7 +421,7 @@ model Athletes {
 
   scope              DataScope
   language           Language
-  
+
   sport_titles           String?
 
   created_at         DateTime @default(now())
@@ -915,7 +915,6 @@ model Competitions {
   refereeNominations     RefereeNominations[]
   nominationStatuses     NominationStatus?
   competitionSessions    CompetitionSessions[]
-  athleteRegistrations   AthleteRegistrations[]
   athleteNominations     AthleteNominations[]
   competitionOrganizations CompetitionOrganizations[]
 
@@ -943,7 +942,6 @@ model AthleteRegistrations {
   id                    String @id @default(uuid()) @db.Uuid
 
   athlete_id            String @db.Uuid
-  competition_id        String @db.Uuid
 
   country_id            String? @db.Uuid
   region_id             String? @db.Uuid
@@ -990,8 +988,6 @@ model AthleteRegistrations {
 
   athlete               Athletes @relation(fields: [athlete_id], references: [id])
 
-  competition           Competitions @relation(fields: [competition_id], references: [id])
-
   country               Countries? @relation(fields: [country_id], references: [id])
   region                Regions? @relation(fields: [region_id], references: [id])
   city                  Cities? @relation(fields: [city_id], references: [id])
@@ -1015,15 +1011,12 @@ model AthleteRegistrations {
   athleteLifts AthleteLifts[]
   competitionResult CompetitionResults?
 
-  @@unique([competition_id, athlete_id, competition_age_group_id])
+  @@unique([athlete_id, competition_age_group_id])
 
-  @@index([competition_id])
   @@index([weight_class_id])
   @@index([group_in_session_id])
   @@index([status])
   @@index([competition_age_group_id])
-  @@index([competition_id, weight_class_id])
-  @@index([competition_id, group_in_session_id])
 
   @@map("athlete_registrations")
 }

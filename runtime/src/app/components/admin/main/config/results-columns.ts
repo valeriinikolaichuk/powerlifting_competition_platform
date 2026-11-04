@@ -575,7 +575,7 @@ export const RESULTS_COLUMNS: AthleteTableColumn[] = [
   {
     index: 21,
     key: 21,
-    title: "Treners",
+    title: "Trainers",
     translationScope: 'tables/athlete-table',
     width: 420,
     left: null,
@@ -584,7 +584,7 @@ export const RESULTS_COLUMNS: AthleteTableColumn[] = [
     discipline: null,
     indexAttr: "sort",
     draggable: true,
-    field: "treners",
+    field: "trainers",
     editor: "text",
     cancelSorting: false
   },

@@ -1,0 +1,3 @@
+export const CREATE_ATHLETE_REGISTRATION_SQL = `
+
+`;

@@ -292,7 +292,7 @@ export const NOMINATION_COLUMNS: AthleteTableColumn[] = [
   {
     index: 18,
     key: 18,
-    title: "Trener_1",
+    title: "Trainer_1",
     translationScope: 'tables/athlete-table',
     width: 130,
     left: null,
@@ -301,14 +301,14 @@ export const NOMINATION_COLUMNS: AthleteTableColumn[] = [
     discipline: null,
     indexAttr: "sort",
     draggable: true,
-    field: "trener_1",
+    field: "trainer_1",
     editor: "text",
     cancelSorting: false
   },
   {
     index: 19,
     key: 19,
-    title: "Trener_2",
+    title: "Trainer_2",
     translationScope: 'tables/athlete-table',
     width: 130,
     left: null,
@@ -317,14 +317,14 @@ export const NOMINATION_COLUMNS: AthleteTableColumn[] = [
     discipline: null,
     indexAttr: "sort",
     draggable: true,
-    field: "trener_2",
+    field: "trainer_2",
     editor: "text",
     cancelSorting: false
   },
   {
     index: 20,
     key: 20,
-    title: "Trener_3",
+    title: "Trainer_3",
     translationScope: 'tables/athlete-table',
     width: 130,
     left: null,
@@ -333,14 +333,14 @@ export const NOMINATION_COLUMNS: AthleteTableColumn[] = [
     discipline: null,
     indexAttr: "sort",
     draggable: true,
-    field: "trener_3",
+    field: "trainer_3",
     editor: "text",
     cancelSorting: false
   },
   {
     index: 21,
     key: 21,
-    title: "Trener_4",
+    title: "Trainer_4",
     translationScope: 'tables/athlete-table',
     width: 130,
     left: null,
@@ -349,7 +349,7 @@ export const NOMINATION_COLUMNS: AthleteTableColumn[] = [
     discipline: null,
     indexAttr: "sort",
     draggable: true,
-    field: "trener_4",
+    field: "trainer_4",
     editor: "text",
     cancelSorting: false
   },

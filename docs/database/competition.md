@@ -152,7 +152,6 @@ Each record contains the athlete's competition entry, nomination attempts, compe
 |--------|-------------|
 | id | Unique registration identifier |
 | athlete_id | Registered athlete |
-| competition_id | Competition |
 | country_id | Country represented by the athlete (optional) |
 | region_id | Region represented by the athlete (optional) |
 | city_id | City represented by the athlete (optional) |
@@ -205,7 +204,6 @@ Defines the athlete's qualification status during the competition.
 
 #### Relations
 - related with [**athletes**](reference.md#athletes) by `athlete_id`
-- related with [**competitions**](#competitions) by `competition_id`
 - related with [**countries**](reference.md#countries) by `country_id`
 - related with [**regions**](reference.md#regions) by `region_id`
 - related with [**cities**](reference.md#cities) by `city_id`
@@ -222,7 +220,7 @@ Defines the athlete's qualification status during the competition.
 - related with [**groups_in_session**](configuration.md#groups_in_session) by `group_in_session_id`
 
 #### Business Rules
-- An athlete may be registered for the same competition only once within the same competition age group.
+- An athlete may be registered for the same competition only once within the same `competition age group`.
 - Registration may include the athlete's represented country, region, city, and organizations.
 - Up to four trainers may be assigned.
 - The competition age group determines the available weight classes.

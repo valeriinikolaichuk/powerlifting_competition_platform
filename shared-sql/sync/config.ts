@@ -46,9 +46,12 @@ export const COMPETITION_TABLES = [
     'competition_sessions', 
     'referee_competition', 
     'referee_nominations', 
-    'athlete_registrations', 
     'athlete_nominations', 
     'competition_organizations', 
+];
+
+export const ATHLETE_TABLES = [
+    'athlete_registrations',
 ];
 
 export const COMPETITION_SESSION_TABLES = [

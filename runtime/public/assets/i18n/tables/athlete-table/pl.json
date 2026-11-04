@@ -26,11 +26,11 @@
     "sportSchool": "Sz Sport",
     "University": "Uniw",
 
-    "Trener_1": "Trener 1",
-    "Trener_2": "Trener 2",
-    "Trener_3": "Trener 3",
-    "Trener_4": "Trener 4",
-    "Treners": "Trenery",
+    "Trainer_1": "Trener 1",
+    "Trainer_2": "Trener 2",
+    "Trainer_3": "Trener 3",
+    "Trainer_4": "Trener 4",
+    "Trainers": "Trenery",
     "Titles": "Tytuły",
 
     "status": "Status",
@@ -65,5 +65,7 @@
     "OUT_OF_COMP": "POZA KONKURSEM",
     "QUALIFIED": "ZAKWALIFIKOWANO",
     "WITHDRAWN": "WYCOFANO (MED)",
-    "DISQUALIFIED": "ZDYSKWALIFIKOWANO"
+    "DISQUALIFIED": "ZDYSKWALIFIKOWANO",
+
+    "create_new": "utwórz nowego"
 }

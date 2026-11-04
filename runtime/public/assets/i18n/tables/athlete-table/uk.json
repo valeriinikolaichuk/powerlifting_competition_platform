@@ -26,11 +26,11 @@
     "sportSchool": "ДЮСШ",
     "University": "Унів",
 
-    "Trener_1": "Тренер 1",
-    "Trener_2": "Тренер 2",
-    "Trener_3": "Тренер 3",
-    "Trener_4": "Тренер 4",
-    "Treners": "Тренери",
+    "Trainer_1": "Тренер 1",
+    "Trainer_2": "Тренер 2",
+    "Trainer_3": "Тренер 3",
+    "Trainer_4": "Тренер 4",
+    "Trainers": "Тренери",
     "Titles": "Титули",
 
     "status": "Статус",
@@ -65,5 +65,7 @@
     "OUT_OF_COMP": "ПОЗА KOHKYPCOM",
     "QUALIFIED": "КВАЛІФІКОВАНО",
     "WITHDRAWN": "ЗНЯТО ЛІКАРЕМ",
-    "DISQUALIFIED": "ДИСКВАЛІФІКОВАНО"
+    "DISQUALIFIED": "ДИСКВАЛІФІКОВАНО",
+
+    "create_new": "створити нового"
 }

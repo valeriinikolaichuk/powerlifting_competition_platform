@@ -6,7 +6,8 @@ import {
     USER_REFERENCE_FEDERATIONS,
     COMPETITIONS_TABLE, 
     CREATED_BY_USER_TABLES,
-    COMPETITION_TABLES, 
+    COMPETITION_TABLES,
+    ATHLETE_TABLES, 
     COMPETITION_SESSION_TABLES, 
     COMPETITION_GROUP_TABLES,  
     TABLE_DEVICE_STATUS, 
@@ -23,6 +24,9 @@ import { UPDATE_DEVICE_ROLE_SQL } from './queries/device_status/update_device_ro
 import { SET_NOMINATION_DATES_SQL } from './queries/nominations/set_dates.js';
 import { UPDATE_NOMINATION_STATUS_SQL } from './queries/nominations/update_staus.js';
 
+import { CREATE_ATHLETE_REGISTRATION_SQL } from './queries/athlete_registration/create.js';
+import { UPDATE_ATHLETE_REGISTRATION_SQL } from './queries/athlete_registration/update.js';
+
 import { CompetitionData, UpdateCompetitionData, ArchiveCompetitionData } from './dto/competition-data.js';
 import { DeviceRole } from './dto/device-role.js';
 
@@ -34,7 +38,8 @@ export {
     USER_REFERENCE_FEDERATIONS,
     COMPETITIONS_TABLE,
     CREATED_BY_USER_TABLES, 
-    COMPETITION_TABLES, 
+    COMPETITION_TABLES,
+    ATHLETE_TABLES, 
     COMPETITION_SESSION_TABLES, 
     COMPETITION_GROUP_TABLES, 
     TABLE_DEVICE_STATUS ,
@@ -52,6 +57,9 @@ export const SYNC_OPERATIONS = {
 
   SET_NOMINATION_DATES: SET_NOMINATION_DATES_SQL,
   UPDATE_NOMINATION_STATUS: UPDATE_NOMINATION_STATUS_SQL,
+
+  CREATE_ATHLETE_REGISTRATION: CREATE_ATHLETE_REGISTRATION_SQL,
+  UPDATE_ATHLETE_REGISTRATION: UPDATE_ATHLETE_REGISTRATION_SQL,
 
 } as const;
 

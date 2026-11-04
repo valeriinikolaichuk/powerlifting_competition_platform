@@ -17,6 +17,7 @@ import { AdminReferenceStep } from './snapshot-pipeline/admin-reference-step';
 import { UserReferenceStep } from './snapshot-pipeline/user-reference-step';
 import { UserReferenceFederationsStep } from './snapshot-pipeline/user-reference-federations-step';
 import { CompetitionStep } from './snapshot-pipeline/competition-step';
+import { AthleteStep } from './snapshot-pipeline/athlete-step';
 import { CompetitionSessionStep } from './snapshot-pipeline/competition-session-step';
 import { CompetitionGroupStep } from './snapshot-pipeline/competition-group-step';
 import { UserStep } from './snapshot-pipeline/user-step';
@@ -53,7 +54,8 @@ import { DeviceRoleService } from './device-role.service.service';
     AdminReferenceStep, 
     UserReferenceStep, 
     UserReferenceFederationsStep, 
-    CompetitionStep, 
+    CompetitionStep,
+    AthleteStep, 
     CompetitionSessionStep, 
     CompetitionGroupStep, 
     UserStep, 
@@ -72,6 +74,7 @@ import { DeviceRoleService } from './device-role.service.service';
         userReference: UserReferenceStep, 
         userReferenceFederations: UserReferenceFederationsStep, 
         competition: CompetitionStep, 
+        athlete: AthleteStep,
         competitionSession: CompetitionSessionStep, 
         competitionGroup: CompetitionGroupStep, 
         user: UserStep, 
@@ -86,6 +89,7 @@ import { DeviceRoleService } from './device-role.service.service';
         userReference, 
         userReferenceFederations, 
         competition, 
+        athlete, 
         competitionSession, 
         competitionGroup, 
         user, 
@@ -101,6 +105,7 @@ import { DeviceRoleService } from './device-role.service.service';
         UserReferenceStep, 
         UserReferenceFederationsStep, 
         CompetitionStep, 
+        AthleteStep, 
         CompetitionSessionStep, 
         CompetitionGroupStep, 
         UserStep, 

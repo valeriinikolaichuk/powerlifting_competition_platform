@@ -22,10 +22,14 @@ export class CompetitionRuntimeStep implements SnapshotStepInterface {
                 FROM "${table}" t
                 INNER JOIN athlete_registrations ar
                     ON ar.id = t.athlete_registration_id
+                INNER JOIN competition_age_groups cag
+                    ON cag.id = ar.competition_age_group_id
                 INNER JOIN competitions c
-                    ON c.id = ar.competition_id
+                    ON c.id = cag.competition_id
+                INNER JOIN athletes a
+                    ON a.id = ar.athlete_id
                 WHERE c.created_by_user_id = $1::uuid
-                    AND language = $2::"Language"
+                    AND a.language = $2::"Language"
                 `,
                 context.userId,
                 context.language,

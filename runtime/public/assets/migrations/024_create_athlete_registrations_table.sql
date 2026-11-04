@@ -8,7 +8,6 @@ CREATE TYPE "AthleteQualification" AS ENUM ('QUALIFIED', 'WITHDRAWN', 'DISQUALIF
 CREATE TABLE "athlete_registrations" (
     "id" UUID NOT NULL,
     "athlete_id" UUID NOT NULL,
-    "competition_id" UUID NOT NULL,
     "country_id" UUID,
     "region_id" UUID,
     "city_id" UUID,
@@ -43,9 +42,6 @@ CREATE TABLE "athlete_registrations" (
 );
 
 -- CreateIndex
-CREATE INDEX "athlete_registrations_competition_id_idx" ON "athlete_registrations"("competition_id");
-
--- CreateIndex
 CREATE INDEX "athlete_registrations_weight_class_id_idx" ON "athlete_registrations"("weight_class_id");
 
 -- CreateIndex
@@ -58,19 +54,10 @@ CREATE INDEX "athlete_registrations_status_idx" ON "athlete_registrations"("stat
 CREATE INDEX "athlete_registrations_competition_age_group_id_idx" ON "athlete_registrations"("competition_age_group_id");
 
 -- CreateIndex
-CREATE INDEX "athlete_registrations_competition_id_weight_class_id_idx" ON "athlete_registrations"("competition_id", "weight_class_id");
-
--- CreateIndex
-CREATE INDEX "athlete_registrations_competition_id_group_in_session_id_idx" ON "athlete_registrations"("competition_id", "group_in_session_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "athlete_registrations_competition_id_athlete_id_competition_key" ON "athlete_registrations"("competition_id", "athlete_id", "competition_age_group_id");
+CREATE UNIQUE INDEX "athlete_registrations_athlete_id_competition_age_group_id_key" ON "athlete_registrations"("athlete_id", "competition_age_group_id");
 
 -- AddForeignKey
 ALTER TABLE "athlete_registrations" ADD CONSTRAINT "athlete_registrations_athlete_id_fkey" FOREIGN KEY ("athlete_id") REFERENCES "athletes"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "athlete_registrations" ADD CONSTRAINT "athlete_registrations_competition_id_fkey" FOREIGN KEY ("competition_id") REFERENCES "competitions"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "athlete_registrations" ADD CONSTRAINT "athlete_registrations_country_id_fkey" FOREIGN KEY ("country_id") REFERENCES "countries"("id") ON DELETE SET NULL ON UPDATE CASCADE;

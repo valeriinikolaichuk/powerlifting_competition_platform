@@ -142,7 +142,7 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`trackColumn()`** — Tracks table columns by index.
 - **`trackAthlete()`** — Tracks athletes by ID.
 - **`getColumnLeft()`** — Calculates sticky column positions based on the number of age groups.
-- **`displayValue()`** — Returns the value displayed in an athlete's cell, handling row numbering, empty values, and checkboxes.
+- **`displayValue()`** — Returns the value displayed in an athlete's cell, handling row numbering and empty values.
 - **`createEmptyAthlete()`** — Creates the initial athlete form data.
 - **`resetNewAthlete()`** — Resets the athlete data and reinitializes the form with default values.
 - **`onNewAthleteKeydown(event)`** — handles the Enter key and calls `addAthlete()`.

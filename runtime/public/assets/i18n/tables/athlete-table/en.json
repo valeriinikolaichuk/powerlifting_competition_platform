@@ -26,11 +26,11 @@
     "sportSchool": "Sp Sch",
     "University": "Univ",
 
-    "Trener_1": "Trener 1",
-    "Trener_2": "Trener 2",
-    "Trener_3": "Trener 3",
-    "Trener_4": "Trener 4",
-    "Treners": "Treners",
+    "Trainer_1": "Trainer 1",
+    "Trainer_2": "Trainer 2",
+    "Trainer_3": "Trainer 3",
+    "Trainer_4": "Trainer 4",
+    "Trainers": "Trainers",
     "Titles": "Titles",
 
     "status": "Status",
@@ -65,5 +65,7 @@
     "OUT_OF_COMP": "OUT OF COMP",
     "QUALIFIED": "QUALIFIED",
     "WITHDRAWN": "WITHDRAWN",
-    "DISQUALIFIED": "DISQUALIFIED"
+    "DISQUALIFIED": "DISQUALIFIED",
+
+    "create_new": "create new"
 }

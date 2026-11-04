@@ -51,32 +51,47 @@ export class AthleteTableOptionsService {
       `
         SELECT
           ar.id,
+          ar.athlete_id,
+          
           a.full_name,
           a.birth_day,
           a.birth_month,
           a.birth_year,
           a.sport_titles AS titles,
 
+          cag.federation_category_id AS federation_category_id,
           ag.name AS age_group,
+          ar.weight_class_id AS category_id,
           wc.name AS weight_class,
 
           ar.group_order,
           ar.lot,
           ar.sport_rank_class,
 
+          ar.country_id,
           co.name AS country,
+          ar.region_id,
           r.name AS region,
+          ar.city_id,
           c.name AS city,
 
+          ar.sport_society_id,
           so.organization_code AS sport_society_code,
+          ar.club_id,
           cl.organization_code AS club_code,
+          ar.sport_school_id,
           ss.organization_code AS sport_school_code,
+          ar.university_id,
           un.organization_code AS university_code,
 
-          t1.full_name AS trener_1,
-          t2.full_name AS trener_2,
-          t3.full_name AS trener_3,
-          t4.full_name AS trener_4,
+          ar.trainer_1_id,
+          t1.full_name AS trainer_1,
+          ar.trainer_2_id,
+          t2.full_name AS trainer_2,
+          ar.trainer_3_id,
+          t3.full_name AS trainer_3,
+          ar.trainer_4_id,
+          t4.full_name AS trainer_4,
 
           ar.squat_nominated,
           ar.bench_press_nominated,
@@ -136,7 +151,8 @@ export class AthleteTableOptionsService {
         LEFT JOIN sport_officials t4
           ON t4.id = ar.trainer_4_id
 
-        WHERE ar.competition_id = $1
+        WHERE cag.competition_id = $1
+          AND cag.is_deleted = false
           AND ar.is_deleted = false
           AND a.is_deleted = false
 
@@ -150,6 +166,21 @@ export class AthleteTableOptionsService {
 
     return result.rows;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   async createAthleteRegistration(
     competitionId: string,
@@ -269,7 +300,6 @@ if (existingAthlete.rows.length > 0) {
           INSERT INTO athlete_registrations (
             id,
             athlete_id,
-            competition_id,
             competition_age_group_id,
             weight_class_id,
             group_order,
@@ -301,7 +331,6 @@ if (existingAthlete.rows.length > 0) {
         [
           registrationId,
           athleteId,
-          competitionId,
           competitionAgeGroupId,
           athlete.weight_class || null,
           athlete.group_order ?? 1,

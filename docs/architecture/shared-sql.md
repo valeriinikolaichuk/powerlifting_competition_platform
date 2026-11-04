@@ -166,12 +166,15 @@ Contains the main configuration and registration data belonging to a user's comp
 - `competition_sessions`
 - `referee_competition`
 - `referee_nominations`
-- `athlete_registrations`
 - `athlete_nominations`
 - `competition_organizations`
 
 Records are selected through their relationship with the user's competitions.  
 Relationship: `competition_id → created_by_user_id`
+
+- #### ATHLETE_TABLES
+Contains the athlete registration data within competition.
+- `athlete_registrations` 
 
 - #### COMPETITION_SESSION_TABLES
 Contains data belonging to competition sessions.
