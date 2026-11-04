@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
 import { PgliteService } from '../../database/services/pglite.service';
+import { AthleteNameMatch } from './dto/athlete-name-match';
 import { OrganizationType } from './types/organization-type';
 
 @Injectable({
@@ -129,11 +130,42 @@ export class SuggestionService {
     return result.rows[0]?.full_name ?? null;
   }
 
+  async getAthletesByName(
+    fullName: string,
+    federationId: string,
+    language: string,
+    sex: string,
+  ): Promise<AthleteNameMatch[]> {
+
+    const result = await this.pg.query<AthleteNameMatch>(
+      `
+        SELECT
+          id,
+          full_name,
+          birth_day,
+          birth_month,
+          birth_year
+        FROM athletes
+        WHERE full_name ILIKE $1
+          AND federation_id = $2
+          AND language = $3
+          AND sex = $4
+          AND is_deleted = false
+        ORDER BY birth_year NULLS LAST,
+                birth_month NULLS LAST,
+                birth_day NULLS LAST
+      `,
+      [fullName, federationId, language, sex],
+    );
+
+    return result.rows;
+  }
+
   async getOrganizationSuggestion(
     value: string,
     organizationType: OrganizationType,
   ): Promise<string | null> {
-    
+
     const result = await this.pg.query<{ organization_code: string }>(
       `
         SELECT organization_code

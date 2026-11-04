@@ -9,9 +9,11 @@ import { Competition } from '../../../../../shared/services/dto/competition.dto'
 import { SuggestionService } from '../../../../../shared/services/suggestion.service';
 import { AutocompleteFactoryService } from '../../../../../shared/services/autocomplete/autocomplete-factory.service';
 import { AutocompleteField } from '../../types/autocomplete-field.type';
+import { AthleteNameMatch } from '../../../../../shared/services/dto/athlete-name-match';
 import { organizationTypes } from '../../types/organization-types';
 
 import { AthleteTableColumn } from '../../models/athlete-table-column.interface';
+import { AthleteCompetitionRow } from '../../models/athlete-competition-row.interface';
 
 @Component({
   selector: 'tr[app-athlete-input-row]',
@@ -35,6 +37,9 @@ export class AthleteInputRowComponent {
   @Input() weightClasses: { id: string; name: string }[] = [];
   @Input() editable = true;
 
+  @Input() mode: 'create' | 'edit' = 'create';
+  @Input() athlete: AthleteCompetitionRow | null = null;
+
   readonly groupOptions = Array.from({ length: 9 }, (_, index) => index + 1);
   readonly dayOptions = Array.from({ length: 32 }, (_, index) => index);
   readonly monthOptions = Array.from({ length: 13 }, (_, index) => index);
@@ -45,6 +50,10 @@ export class AthleteInputRowComponent {
   citySuggestion = '';
   athleteSuggestion = '';
 
+  athleteMatches: AthleteNameMatch[] = [];
+  showAthleteMatches = false;
+  pendingAthleteName = '';
+
   constructor(
     private readonly athleteTableOptionsService: AthleteTableOptionsService,
     private readonly suggestionService: SuggestionService,
@@ -52,6 +61,18 @@ export class AthleteInputRowComponent {
   ){}
 
   trackColumn(_: number, column: AthleteTableColumn): number { return column.index; }
+
+  async ngOnInit(): Promise<void> {
+    const federationCategoryId =
+      this.form.get('federation_category_id')?.value;
+
+    if (federationCategoryId) {
+      this.weightClasses =
+        await this.athleteTableOptionsService.getWeightClasses(
+          federationCategoryId
+        );
+    }
+  }
 
   getColumnLeft(column: AthleteTableColumn): number | null {
     if (column.left === null) return null;
@@ -150,10 +171,102 @@ export class AthleteInputRowComponent {
       this.setSuggestion(field, suggestion.slice(value.length));
     }
   }
-  
+
+  async onEnter(
+    event: Event, 
+    field: string | null
+  ): Promise<void> {
+    if (!field || !this.isAutocompleteField(field)) return;
+
+    const suggestion = this.getSuggestion(field);
+
+    if (suggestion) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (field === 'full_name') 
+      {
+        await this.acceptAthleteSuggestion();
+        return;
+      }
+
+      await this.acceptSuggestion(field);
+    }
+  }
+
+  async acceptAthleteSuggestion(): Promise<void> {
+
+    const suggestion = this.athleteSuggestion;
+    if (!suggestion) return;
+
+    const control = this.form.get('full_name');
+    if (!control) return;
+
+    const fullName = String(control.value ?? '') + suggestion;
+
+    this.setSuggestion('full_name', '');
+
+    const language = localStorage.getItem('lang')?.toUpperCase() ?? 'EN';
+    const competitionSex = this.competition.age_groups[0].sex;
+    const sex = competitionSex === 'MEN' ? 'MAN' : 'WOMAN';
+
+    const athletes = await this.suggestionService.getAthletesByName(
+      fullName,
+      this.competition.federation_id,
+      language,
+      sex,
+    );
+
+    if (athletes.length === 0) 
+    {
+      control.setValue(fullName);
+      return;
+    }
+
+    this.pendingAthleteName = fullName;
+    this.athleteMatches = athletes;
+    this.showAthleteMatches = true;
+  }
+
+  selectAthleteMatch(
+    athlete: AthleteNameMatch
+  ): void {
+
+console.log('Selected athlete:', athlete);
+
+    this.form.patchValue({
+      athlete_id: athlete.id,
+      full_name: athlete.full_name,
+      birth_day: athlete.birth_day,
+      birth_month: athlete.birth_month,
+      birth_year: athlete.birth_year,
+    });
+
+console.log('Form athlete_id:', this.form.get('athlete_id')?.value);
+
+    this.athleteMatches = [];
+    this.showAthleteMatches = false;
+  }
+
+  createNewAthleteFromSuggestion(): void {
+
+    this.form.patchValue({
+      athlete_id: null,
+      full_name: this.pendingAthleteName,
+      birth_day: null,
+      birth_month: null,
+      birth_year: null,
+    });
+
+    this.athleteMatches = [];
+    this.showAthleteMatches = false;
+    this.pendingAthleteName = '';
+  }
+
   async acceptSuggestion(
     field: string | null
   ): Promise<void> {
+
     if (!field || !this.isAutocompleteField(field)) return;
   
     const suggestion = this.getSuggestion(field);
@@ -180,7 +293,8 @@ export class AthleteInputRowComponent {
         sex,
       );
   
-      if (athlete) {
+      if (athlete) 
+      {
         this.form.patchValue({
           birth_day: athlete.birth_day,
           birth_month: athlete.birth_month,
@@ -242,5 +356,27 @@ export class AthleteInputRowComponent {
     field: string
   ): string {
     return String(this.form.get(field)?.value ?? '');
+  }
+
+  async checkAthlete(fullName: string): Promise<boolean> {
+
+    const language = localStorage.getItem('lang')?.toUpperCase() ?? 'EN';
+    const competitionSex = this.competition.age_groups[0].sex;
+    const sex = competitionSex === 'MEN' ? 'MAN' : 'WOMAN';
+
+    const athletes = await this.suggestionService.getAthletesByName(
+      fullName,
+      this.competition.federation_id,
+      language,
+      sex,
+    );
+
+    if (athletes.length === 0) return false;
+
+    this.pendingAthleteName = fullName;
+    this.athleteMatches = athletes;
+    this.showAthleteMatches = true;
+
+    return true;
   }
 }

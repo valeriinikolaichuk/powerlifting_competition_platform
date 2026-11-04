@@ -55,7 +55,7 @@
           </th>
           <th [attr.colspan]="referenceColspan"></th>
           <th colspan="4">
-            {{ 'Treners' | t:'tables/athlete-table' }}
+            {{ 'Trainers' | t:'tables/athlete-table' }}
           </th>
           <th [attr.colspan]="diciplineColspan">
             {{ 'nominations' | t:'tables/athlete-table' }}
@@ -117,9 +117,12 @@
           <tr app-athlete-input-row
             class="input-line sticky" 
                 data-type="input"
+                #athleteInputRow
                 [form]="form"
                 [columns]="columns"
-                [competition]="competition">
+                [competition]="competition"
+                [athlete]="null"
+                mode="create">
           </tr>
         }
 
@@ -127,47 +130,50 @@
             athlete of athletes;
             track trackAthlete($index, athlete)
         ) {
-          <tr [id]="'tr' + athlete.id" data-type="html"
-              (click)="startEditing(athlete)"
-              [class.editing-row]="isEditing(athlete)">
+            @if (isEditing(athlete)) {
+                <tr app-athlete-input-row
+                    class="input-line sticky" 
+                        data-type="input"
+                        [form]="getEditForm(athlete.id)"
+                        [columns]="columns"
+                        [competition]="competition"
+                        [athlete]="athlete"
+                        mode="edit">
+                </tr>
 
-            @for (column of columns; track trackColumn($index, column)) {
-              <td
-                [class.hidden-column]="
-                    column.hidden ||
-                    (column.key === 6 && competition.age_groups.length === 1)
-                "
-                [class.sticky]="
-                    column.left !== null ||
-                    column.index === 1 ||
-                    (column.index >= 2 && column.index <= 6)
-                "
-                [class.table-number]="column.index === 1"
-                [attr.id]="'td' + column.index + athlete.id"
-                [attr.data-discipline]="column.discipline"
-                [style.left.px]="getColumnLeft(column)"
-                [style.width.px]="column.width"
-                [style.text-align]="
-                    [1, 3, 4, 5, 7, 8, 9].includes(column.index)
-                    ? 'center'
-                    : null
-                "
-              >
-                @if (isEditing(athlete)) {
+            } @else {
 
-                  <input
-                    class="editing-row"
-                    [value]="athlete[column.field!]"
-                    (click)="$event.stopPropagation()"
-                    (change)="athlete[column.field!] = $any($event.target).value"
-                    />
-                } @else {
-                    {{ displayValue(athlete, column) }}
+                <tr data-type="html"
+                    (click)="startEditing(athlete)"
+                    [class.editing-row]="isEditing(athlete)">
+
+                @for (column of columns; track trackColumn($index, column)) {
+                    <td
+                        [class.hidden-column]="
+                            column.hidden ||
+                            (column.key === 6 && competition.age_groups.length === 1)
+                        "
+                        [class.sticky]="
+                            column.left !== null ||
+                            column.index === 1 ||
+                            (column.index >= 2 && column.index <= 6)
+                        "
+                        [class.table-number]="column.index === 1"
+                        [attr.id]="'td' + column.index + athlete.id"
+                        [attr.data-discipline]="column.discipline"
+                        [style.left.px]="getColumnLeft(column)"
+                        [style.width.px]="column.width"
+                        [style.text-align]="
+                            [1, 3, 4, 5, 7, 8, 9].includes(column.index)
+                            ? 'center'
+                            : null
+                        "
+                    >
+                        {{ displayValue(athlete, column) }}
+                    </td>
                 }
-              </td>
+                </tr>
             }
-
-          </tr>
         }
 
       </tbody>

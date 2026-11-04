@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
@@ -40,7 +40,8 @@ import { AthleteInputRowComponent } from './athlete-input-row.component/athlete-
 })
 export class NominationTable implements OnChanges {
 
-  form!: FormGroup;
+  form!: FormGroup;                           // CREATE
+  editForms = new Map<string, FormGroup>();   // EDIT
 
   @Input() competition!: Competition;
   @Input() athletes: AthleteCompetitionRow[] = [];
@@ -55,6 +56,10 @@ export class NominationTable implements OnChanges {
 
   private originalAthletes: AthleteCompetitionRow[] = [];
 
+  newAthlete: Partial<AthleteCompetitionRow> = {};
+  editedAthletes: AthleteCompetitionRow[] = [];
+  editingAthleteIds: string[] = [];
+
   private sortState: {
     field: string;
     type: SortType;
@@ -63,9 +68,8 @@ export class NominationTable implements OnChanges {
 
   private dragIndex = -1;
 
-  newAthlete: Partial<AthleteCompetitionRow> = {};
-  editedAthletes: AthleteCompetitionRow[] = [];
-  editingAthleteId: string | null = null;
+  @ViewChild('athleteInputRow')
+  athleteInputRow!: AthleteInputRowComponent;
 
   constructor(
     private readonly fb: FormBuilder,
@@ -96,7 +100,8 @@ export class NominationTable implements OnChanges {
       );
 
       this.originalAthletes = [...this.athletes];
-
+console.log('originalAthletes: ');
+console.log(this.originalAthletes);
       this.weightClasses = [];
 
       const ageGroup = this.competition.age_groups[0];
@@ -192,13 +197,17 @@ export class NominationTable implements OnChanges {
   createEmptyAthlete(): Partial<AthleteCompetitionRow> {
     return {
       id: crypto.randomUUID(),
+      athlete_id: null,
+
       full_name: null,
       birth_day: null,
       birth_month: null,
       birth_year: null,
 
-      age_group: this.competition.age_groups[0]?.federation_category_id ?? '',
-      weight_class: null,
+      titles: null,
+
+      federation_category_id: this.competition.age_groups[0]?.federation_category_id ?? null,
+      category_id: null,
       group_order: 1,
       lot: null,
       sport_rank_class: null,
@@ -212,10 +221,10 @@ export class NominationTable implements OnChanges {
       sport_school_code: null,
       university_code: null,
 
-      trener_1: null,
-      trener_2: null,
-      trener_3: null,
-      trener_4: null,
+      trainer_1: null,
+      trainer_2: null,
+      trainer_3: null,
+      trainer_4: null,
 
       squat_nominated: null,
       bench_press_nominated: null,
@@ -223,7 +232,6 @@ export class NominationTable implements OnChanges {
       total_nominated: null,
       status: 'TEAM',
       qualification: 'QUALIFIED',
-      titles: null,
     };
   }
 
@@ -244,7 +252,7 @@ export class NominationTable implements OnChanges {
     this.addAthlete();
   }
 
-  addAthlete(): void {
+  async addAthlete(): Promise<void> {
     const fullName = String(this.form.get('full_name')?.value ?? '').trim();
 
     if (!fullName) {
@@ -252,18 +260,48 @@ export class NominationTable implements OnChanges {
       return;
     }
 
+    const athleteId = this.form.get('athlete_id')?.value;
+
+    if (!athleteId) {
+      const exists = await this.athleteInputRow.checkAthlete(fullName);
+
+      if (exists) return;
+    }
+
+    const formValue = this.form.getRawValue();
+
+    const selectedAgeGroup = this.competition.age_groups.find(
+      ageGroup =>
+        ageGroup.federation_category_id === formValue.federation_category_id
+    );
+
+    const selectedWeightClass = this.weightClasses.find(
+      category => category.id === formValue.category_id
+    );
+
     const athlete = {
       ...this.newAthlete,
       ...this.form.getRawValue(),
+      athlete_id: formValue.athlete_id ?? null,
       full_name: fullName,
+      age_group: selectedAgeGroup?.name ?? null,
+      weight_class: selectedWeightClass?.name ?? null,
     } as AthleteCompetitionRow;
 
+console.log(formValue.athlete_id ?? null);
+
     this.athletes = [athlete, ...this.athletes];
+
+console.log('athletes: ');
+console.log(this.athletes);
 
     this.resetNewAthlete();
   }
 
+
+
 /*
+
 const changes: AthleteChange[] = [
   {
     operation: 'INSERT',
@@ -275,177 +313,169 @@ const changes: AthleteChange[] = [
   })),
 ];
 
+
+
+const changes: AthleteChange[] = [];
+
+if (this.newAthlete['full_name']?.trim()) {
+  changes.push({
+    operation: 'INSERT',
+    data: this.newAthlete as AthleteCompetitionRow,
+  });
+}
+
+
+
+const changes: AthleteChange[] = [
+  ...(this.newAthlete['full_name']?.trim()
+    ? [{
+        operation: 'INSERT' as const,
+        data: this.newAthlete as AthleteCompetitionRow,
+      }]
+    : []),
+
+  ...this.editedAthletes.map(data => ({
+    operation: 'UPDATE' as const,
+    data,
+  })),
+];
+
+
+
+
+
+const changes: AthleteChange[] = [];
+
+const fullName = String(this.newAthlete['full_name'] ?? '').trim();
+
+if (fullName) {
+  changes.push({
+    operation: 'INSERT',
+    data: {
+      ...this.newAthlete,
+      full_name: fullName,
+    } as AthleteCompetitionRow,
+  });
+}
+
+changes.push(
+  ...this.editedAthletes
+    .filter(athlete => String(athlete.full_name ?? '').trim() !== '')
+    .map(data => ({
+      operation: 'UPDATE' as const,
+      data,
+    })),
+);
+
 */
 
 
 
   // EDIT ATHLETE
 
-  startEditing(
-    athlete: AthleteCompetitionRow
-  ): void {
-    this.editingAthleteId = athlete.id;
+  startEditing(athlete: AthleteCompetitionRow): void {
+    if (this.editForms.has(athlete.id)) return;
+
+    const editForm = this.createAthleteForm(athlete);
+
+    this.editForms.set(athlete.id, editForm);
+    this.editingAthleteIds.push(athlete.id);
   }
 
   isEditing(
     athlete: AthleteCompetitionRow
   ): boolean {
-    return this.editingAthleteId === athlete.id;
+    return this.editingAthleteIds.includes(athlete.id);
   }
 
-  stopEditing(): void {
-    this.editingAthleteId = null;
+  getEditForm(
+    athleteId: string
+  ): FormGroup {
+    return this.editForms.get(athleteId)!;
   }
+
+  createAthleteForm(
+    athlete: Partial<AthleteCompetitionRow> = {}
+  ): FormGroup {
+    return this.fb.group({
+      id: [athlete.id ?? null],
+      athlete_id: [athlete.athlete_id ?? null],
+      full_name: [athlete.full_name ?? '', Validators.required],
+      birth_day: [athlete.birth_day ?? null],
+      birth_month: [athlete.birth_month ?? null],
+      birth_year: [athlete.birth_year ?? null],
+      federation_category_id: [athlete.federation_category_id ?? null],
+      category_id: [athlete.category_id ?? null],
+      group_order: [athlete.group_order ?? null],
+      lot: [athlete.lot ?? null],
+      sport_rank_class: [athlete.sport_rank_class ?? null],
+      country: [athlete.country ?? null],
+      region: [athlete.region ?? null],
+      city: [athlete.city ?? null],
+      sport_society_code: [athlete.sport_society_code ?? null],
+      club_code: [athlete.club_code ?? null],
+      sport_school_code: [athlete.sport_school_code ?? null],
+      university_code: [athlete.university_code ?? null],
+      trainer_1: [athlete.trainer_1 ?? null],
+      trainer_2: [athlete.trainer_2 ?? null],
+      trainer_3: [athlete.trainer_3 ?? null],
+      trainer_4: [athlete.trainer_4 ?? null],
+      squat_nominated: [athlete.squat_nominated ?? null],
+      bench_press_nominated: [athlete.bench_press_nominated ?? null],
+      deadlift_nominated: [athlete.deadlift_nominated ?? null],
+      total_nominated: [athlete.total_nominated ?? null],
+      status: [athlete.status ?? null],
+      qualification: [athlete.qualification ?? null],
+      titles: [athlete.titles ?? null],
+    });
+  }
+
+
+
+
+
+
 /*
-  // AUTOCOMPLETE
-
-  getSuggestion(field: string | null | undefined): string {
-    switch (field) {
-      case 'full_name':
-        return this.athleteSuggestion;
-      case 'country':
-        return this.countrySuggestion;
-      case 'region':
-        return this.regionSuggestion;
-      case 'city':
-        return this.citySuggestion;
-      default:
-        return '';
+  saveEditedAthlete(): void {
+    if (!this.editingAthleteId) {
+      return;
     }
-  }
 
-  async onAutocompleteInput(
-    field: string | null,
-  ): Promise<void> {
-    if (!field || !this.isAutocompleteField(field)) return;
+    const athlete = this.athletes.find(
+      a => a.id === this.editingAthleteId
+    );
 
-    let value = String(this.form.get(field)?.value ?? '').trim();
-
-    this.setSuggestion(field, '');
-
-    if (!value) return;
-
-    let suggestion: string | null = null;
-
-    const context = {
-      federationId: this.competition.federation_id,
-      language: localStorage.getItem('lang')?.toUpperCase() ?? 'EN',
-      competitionSex: this.competition.age_groups[0].sex,
-      regionName: String(this.form.get('region')?.value ?? '').trim(),
-      countryName: String(this.form.get('country')?.value ?? '').trim(),
-      organizationType: organizationTypes[field] ,
-    };
-
-    const strategy = this.autocompleteFactoryService.getStrategy(field);
-
-    if (!strategy) return;
-
-    suggestion = await strategy.getSuggestion(value, context);
-
-    if (String(this.form.get(field)?.value ?? '').trim() !== value) return;
-
-    if (
-      suggestion &&
-      suggestion.toLowerCase().startsWith(value.toLowerCase()) &&
-      suggestion.toLowerCase() !== value.toLowerCase()
-    ) {
-      this.setSuggestion(field, suggestion.slice(value.length));
+    if (!athlete) {
+      return;
     }
-  }
 
-  async acceptSuggestion(
-    field: string | null
-  ): Promise<void> {
-    if (!field || !this.isAutocompleteField(field)) return;
+    const updatedAthlete = {
+      ...athlete,
+      ...this.form.getRawValue(),
+    } as AthleteCompetitionRow;
 
-    const suggestion = this.getSuggestion(field);
-    if (!suggestion) return;
+    this.athletes = this.athletes.map(a =>
+      a.id === updatedAthlete.id ? updatedAthlete : a
+    );
 
-    const control = this.form.get(field);
-    if (!control) return;
+    const index = this.editedAthletes.findIndex(
+      a => a.id === updatedAthlete.id
+    );
 
-    const value = String(control.value ?? '');
-
-    control.setValue(value + suggestion);
-    this.setSuggestion(field, '');
-
-    if (field === 'full_name') {
-      const language = localStorage.getItem('lang')?.toUpperCase() ?? 'EN';
-      const competitionSex = this.competition.age_groups[0].sex;
-
-      const sex = competitionSex === 'MEN' ? 'MAN' : 'WOMAN';
-
-      const athlete = await this.suggestionService.getDateOfBirthByName(
-        String(this.form.get('full_name')?.value ?? ''),
-        this.competition.federation_id,
-        language,
-        sex,
-      );
-
-      if (athlete) {
-        this.form.patchValue({
-          birth_day: athlete.birth_day,
-          birth_month: athlete.birth_month,
-          birth_year: athlete.birth_year,
-        });
-      }
+    if (index === -1) {
+      this.editedAthletes.push(updatedAthlete);
+    } else {
+      this.editedAthletes[index] = updatedAthlete;
     }
+
+    this.editingAthleteId = null;
+    this.resetNewAthlete();
   }
 
-  private setSuggestion(
-    field: AutocompleteField,
-    value: string,
-  ): void {
-    switch (field) {
-      case 'full_name':
-        this.athleteSuggestion = value;
-        break;
-      case 'country':
-        this.countrySuggestion = value;
-        break;
-      case 'region':
-        this.regionSuggestion = value;
-        break;
-      case 'city':
-        this.citySuggestion = value;
-        break;
-    }
-  }
-
-  public isAutocompleteField(
-    field: string | null | undefined,
-  ): field is AutocompleteField {
-    return [
-      'full_name',
-      'country',
-      'region',
-      'city',
-    ].includes(field ?? '');
-  }
-
-  public getTextWidth(text: string): number {
-    const canvas = document.createElement('canvas');
-    const context = canvas.getContext('2d');
-
-    if (!context) return 0;
-
-    const input = document.querySelector(
-      '.autocomplete-input',
-    ) as HTMLInputElement | null;
-
-    if (!input) return 0;
-
-    context.font = getComputedStyle(input).font;
-
-    return context.measureText(text).width;
-  }
-
-  getNewAthleteValue(
-    field: string
-  ): string {
-    return String(this.form.get(field)?.value ?? '');
-  }
 */
+
+
+
   // SORTING
 
   setAthletes(athletes: AthleteCompetitionRow[]): void {

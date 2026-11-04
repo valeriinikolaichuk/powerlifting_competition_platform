@@ -69,12 +69,44 @@
                         [name]="'new-' + (column.field || column.index)"
                         [formControl]="$any(form.get(column.field!))"
                         (input)="onAutocompleteInput(column.field)"
+                        (keydown.enter)="onEnter($event, column.field)"
                         (keydown.tab)="acceptSuggestion(column.field)"
                         (blur)="acceptSuggestion(column.field)"
                         autocomplete="off"
                         spellcheck="false"
                         [disabled]="!editable"
                     />
+
+                    @if (showAthleteMatches) {
+
+                        <div class="athlete-match-list">
+
+                            @for (athlete of athleteMatches; track athlete.id) {
+
+                                <button
+                                    type="button"
+                                    class="athlete-match-option"
+                                    (mousedown)="selectAthleteMatch(athlete)"
+                                >
+                                    <span>{{ athlete.full_name }}</span>
+
+                                    <span>
+                                        {{ athlete.birth_day }}.{{ athlete.birth_month }}.{{ athlete.birth_year }}
+                                    </span>
+                                    
+                                </button>
+                            }
+
+                            <button
+                            type="button"
+                            class="athlete-match-option create-new"
+                            (mousedown)="createNewAthleteFromSuggestion()"
+                            >
+                            {{ 'create_new' | t:'tables/athlete-table' }} {{ pendingAthleteName }}
+                            </button>
+
+                        </div>
+                    }
 
                 </div>
 
@@ -140,11 +172,17 @@
         @case ('ageGroup') {
             <select
                 class="cell-input"
-                name="age_group"
-                [formControl]="$any(form.get(column.field!))"
+                name="federation_category_id"
+                [formControl]="$any(form.get('federation_category_id'))"
                 (change)="onAgeGroupChange($event)"
                 [disabled]="!editable || competition.age_groups.length === 1"
             >
+                @if (mode === 'edit') {
+                    <option [value]="athlete?.federation_category_id">
+                        {{ athlete?.age_group }}
+                    </option>
+                }
+
                 @for (ageGroup of competition.age_groups; track ageGroup.id) {
                     <option [value]="ageGroup.federation_category_id">
                         {{ competition.federation_code + '_' + ageGroup.name + '_' + ageGroup.sex | t:'tables/athlete-table' }}
@@ -156,12 +194,21 @@
         @case ('selectCategory') {
             <select
                 class="cell-input"
-                name="weight_class"
-                [formControl]="$any(form.get(column.field!))"
-                [disabled]="!editable || !form.get('age_group')?.value"
+                name="category_id"
+                [formControl]="$any(form.get('category_id'))"
+                [disabled]="!editable || !form.get('federation_category_id')?.value"
             >
+
+                @if (mode === 'edit') {
+                    <option [value]="athlete?.category_id">
+                        {{ athlete?.weight_class }}
+                    </option>
+                }
+
                 @for (category of weightClasses; track category.id) {
-                    <option [value]="category.id"> {{ category.name }} </option>
+                    <option [value]="category.id"> 
+                        {{ category.name }} 
+                    </option>
                 }
             </select>
         }
@@ -174,7 +221,9 @@
                 [disabled]="!editable"
             >
                 @for (group of groupOptions; track group) {
-                    <option [value]="group">{{ group }}</option>
+                    <option [value]="group">
+                        {{ group }}
+                    </option>
                 }
             </select>
         }

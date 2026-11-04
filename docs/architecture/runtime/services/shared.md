@@ -14,6 +14,7 @@
 - [UserService](#userservice)
 - [CheckOnlineService](#checkonlineservice)
 - [SuggestionService](#suggestionservice)
+  - [AthleteNameMatch](#athletenamematch)
   - [types](#types)
 - [AutocompleteFactoryService](#autocompletefactoryservice)
   - [AutocompleteStrategy](#autocompletestrategy)
@@ -287,6 +288,8 @@ Retrieves the first athlete's full name matching the entered value.
 * Excludes deleted records.
 * Sorts results alphabetically and returns the first match.
 
+- ### getAthletesByName() – Retrieves existing athletes from the database by full name, federation ID, language, and sex. Excludes deleted records and sorts matching athletes by date of birth, with missing date values placed last. Returns athlete IDs, full names, and dates of birth using [AthleteNameMatch interface](#athletenamematch).
+
 - ### getOrganizationSuggestion()
 Retrieves the first matching organization code from the database.
 - Searches for organization codes starting with the provided value (case-insensitive).
@@ -301,6 +304,17 @@ Retrieves an athlete's date of birth using their full name and federation detail
 * Returns the birth day, month, and year, or `null` if no matching athlete is found.
 
 ---
+
+### AthleteNameMatch
+```ts
+export interface AthleteNameMatch { 
+    id: string;
+    full_name: string;
+    birth_day: number | null;
+    birth_month: number | null;
+    birth_year: number | null;
+}
+```
 
 ### types
 

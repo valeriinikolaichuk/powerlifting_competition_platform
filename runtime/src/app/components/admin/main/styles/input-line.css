@@ -29,3 +29,31 @@
     font: inherit; 
     background: transparent; 
 }
+
+.athlete-match-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  background: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.athlete-match-option {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+}
+
+.athlete-match-option:hover {
+  background: #eee;
+}

@@ -146,7 +146,7 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - **`createEmptyAthlete()`** — Creates the initial athlete form data.
 - **`resetNewAthlete()`** — Resets the athlete data and reinitializes the form with default values.
 - **`onNewAthleteKeydown(event)`** — handles the Enter key and calls `addAthlete()`.
-- **`addAthlete()`** — Validates and normalizes the athlete's full name and resets the form. Persistence is handled by the parent component.
+- **`addAthlete()`** — Validates and normalizes the athlete's full name and resets the form. Checks whether an athlete with the specified full name already exists using [checkAthlete()](#checkathlete). Persistence is handled by the parent component.
 - **`setAthletes(athletes)`** — stores the original athlete order, initializes the table data, and clears the sorting state.
 - **`onSort(column)`** — sorts athletes by the selected column in ascending or descending order using the [SortingService](#sortingservice). Clicking the row-number column resets sorting.
 - **`resetSorting()`** — restores the original athlete order and clears the active sorting state.
@@ -197,6 +197,9 @@ A reusable Angular component responsible for rendering and managing the athlete 
 - [SuggestionService](runtime/services/shared.md#suggestionservice) — Provides autocomplete suggestions for athlete names, countries, regions, and cities, and retrieves an existing athlete's date of birth.
 
 #### Methods
+- **`ngOnInit()`**
+  - Added automatic loading of available weight classes based on the selected federation category when the athlete registration form is initialized.
+  - Ensured that the weight class options correspond to the selected competition category.
 - **`onDatePartChange()`** — Updates a birth date component.
 - **`formatDatePart()`** — Formats day and month values with leading zeros.
 - **`onAgeGroupChange()`** — Updates the selected age group, resets the weight class, and loads the corresponding weight classes.
@@ -210,11 +213,17 @@ A reusable Angular component responsible for rendering and managing the athlete 
   - Displays only the remaining suffix if the suggestion starts with the input value and is not an exact match.
   - If the field is invalid, the input is empty, no strategy exists, or no suitable suggestion is found, no suggestion is displayed.
 - **`onAutocompleteInput()`** — Handles autocomplete suggestions for the new athlete form.
+- **`onEnter()`** – Handles Enter key events in autocomplete fields, accepting suggestions and triggering athlete matching when the full name field is active.
+- **`acceptAthleteSuggestion()`** – Completes the athlete's full name using the autocomplete suggestion and searches the database for existing athletes matching the entered name, federation, language, and sex using [suggestionService.getAthletesByName](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#getathletesbyname) method.
+- **`selectAthleteMatch()`** – Selects an existing athlete from the matching results and populates the form with their ID, full name, and date of birth using [AthleteNameMatch interface](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/runtime/services/shared.md#athletenamematch).
+- **`createNewAthleteFromSuggestion()`** – Creates a new athlete registration entry using the entered name when the user chooses not to select an existing athlete, clearing the athlete ID and date of birth.
 - **`acceptSuggestion()`** — Accepts an autocomplete suggestion and retrieves the athlete's date of birth when an existing athlete name is selected.
 - **`setSuggestion()`** — Updates the autocomplete suggestion for the specified field.
 - **`isAutocompleteField()`** — Checks whether a field supports autocomplete.
 - **`getTextWidth()`** — Calculates the rendered text width for autocomplete positioning.
 - **`getNewAthleteValue()`** — Returns a new athlete form field value as a string.
+- ####`checkAthlete()` – Checks whether an athlete with the specified full name already exists in the database using federation, language, and sex criteria. If matches are found, displays the athlete selection dropdown and returns `true`; otherwise, returns `false`.
+
 
 ---
 
