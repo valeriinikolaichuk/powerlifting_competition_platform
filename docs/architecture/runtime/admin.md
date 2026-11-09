@@ -120,7 +120,7 @@ Provides the nomination table for a selected competition, displaying athlete inf
 
 #### Inputs
 - `competition: Competition` — Competition details used to configure the table.
-- `athletes: AthleteCompetitionRow[]` — Athletes displayed in the table.
+- `athletes: [AthleteCompetitionRow[]](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#athletecompetitionrow)` — Athletes displayed in the table.
 - `weightClasses: { id: string; name: string }[]` — Available weight classes.
 - `editable: boolean` — Determines whether editing controls are enabled. Defaults to `true`.
 
@@ -129,7 +129,7 @@ Provides the nomination table for a selected competition, displaying athlete inf
 - [ColumnFactoryService](#columnfactoryservice) — Creates the table configuration, applying column visibility rules and calculating header spans.
 - [ColspanFactoryService](#colspanfactoryservice) — Provides a reusable mechanism for calculating table header colspans.
 - [AthleteTableOptionsService](#athletetableoptionsservice) — Retrieves weight classes for the selected federation category.
-- [SortingService](#sortingservice) — Sorts the [AthleteCompetitionRow[]](#athletecompetitionrow) array without modifying the original array.
+- [SortingService](#sortingservice) — Sorts the [AthleteCompetitionRow[]](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#athletecompetitionrow) array without modifying the original array.
 - [DragAndDropService](#draganddropservice) — Dynamic column ordering using drag and drop.
 
 #### Initialization and Updates
@@ -272,7 +272,7 @@ The service provides a reusable mechanism for calculating table header colspans 
 ---
 
 ### SortingService
-Sorts the [AthleteCompetitionRow[]](#athletecompetitionrow) array without modifying the original array.
+Sorts the [AthleteCompetitionRow[]](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#athletecompetitionrow) array without modifying the original array.
 
 - `sort(athletes, field, type, direction)` — returns a sorted copy of the athlete array.
 - Supports `string` and `number` [sorting types](#sorting-types).
@@ -367,9 +367,6 @@ Defines the configuration of a column in the athlete table.
 | `editor` | `string` | Specifies the type of editor used to display or edit the cell value. |
 | `cancelSorting` | `boolean` | Determines whether sorting is disabled for the column. |
 
-#### AthleteCompetitionRow
-Defines the data structure of an athlete's competition registration, including personal details, competition information, nominations, and status.
-
 ---
 
 ### units
@@ -405,11 +402,6 @@ Contains configuration pipelines that determine how column spans are adjusted ac
 
 ### types
 Contains TypeScript interfaces and type definitions used to define data structures and ensure type safety across the application.
-
-- #### [AthleteCellValue]
-```ts
-export type AthleteCellValue = string | number | boolean | null | undefined;
-```
 
 - #### [AutocompleteField](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/runtime/src/app/components/admin/main/types/autocomplete-field.type.ts)
 

@@ -1,1 +1,0 @@
-export type AthleteCellValue = string | number | boolean | null | undefined;

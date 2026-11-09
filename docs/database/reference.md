@@ -396,6 +396,7 @@ related with [referee_competition_roles](configuration.md#referee_competition_ro
   - [OrganizationType enum](#organizationtype)
 - [athletes](#athletes)
   - [AthleteSex enum](#athletesex-enum)
+- [athlete_titles](#athlete_titles)
 - [sport_officials](#sport_officials)
   - [DataScope enum](#datascope-enum)
   - [Language Enum](#language-enum)
@@ -555,7 +556,6 @@ The federation defines the visibility scope of athlete records.
 | created_by_user_id | User who created the record |
 | scope | Record ownership scope ([**DataScope**](#datascope-enum) enum) |
 | language | Language stored for faster athlete lookup during data entry ([**Language**](#language-enum) enum) |
-| sport_titles | Athlete's sport titles |
 | created_at | Record creation timestamp |
 | updated_at | Record update timestamp |
 | is_deleted | Soft delete flag |
@@ -577,6 +577,24 @@ The federation defines the visibility scope of athlete records.
 - For online registration, `created_by_user_id` is assigned to the registered `PARTICIPANT` user.
 - `USER` and their associated `PARTICIPANT` can edit their own athlete records.
 - `ADMIN` user can edit any athlete record.
+
+---
+
+### athlete_titles
+A table for storing user-specific athlete titles and additional information. Each record is linked to an athlete and its creator, allowing users to maintain their own athlete titles independently without affecting other users' data.
+
+| Field | Description |
+|---|---|
+| id | Unique registration identifier |
+| athlete_id	| Registered athlete |
+| sport_titles | Athlete's sport titles |
+| created_by_user_id | User who created the record |
+| created_at | Record creation timestamp |
+| updated_at | Record update timestamp |
+| is_deleted | Soft delete flag |
+
+#### Relations
+- related with [**athletes**](#athletes) by `athlete_id`.
 
 ---
 

@@ -14,8 +14,11 @@ import { ColspanConfigDto } from '../config/colspan.dto';
 
 import { AthleteTableOptionsService } from '../services/athlete-table-options.service';
 import { Competition } from '../../../../shared/services/dto/competition.dto';
-import { AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
-import { AthleteCellValue } from '../types/athlete-cell.type';
+import type { AthleteCompetitionRow } from '#shared-sql';
+import type { AthleteCellValue } from '#shared-sql';
+
+import { AthleteRegistrationService } from '../../../../services/core/athlete-registration.service';
+import type { AthleteChange } from '#shared-sql';
 
 import { SortingService } from '../services/sorting.service';
 import type { SortType, SortDirection } from '../types/sorting.types';
@@ -76,6 +79,7 @@ export class NominationTable implements OnChanges {
     public tService: TranslationService,
     private readonly columnFactoryService: ColumnFactoryService,
     private readonly athleteTableOptionsService: AthleteTableOptionsService,
+    private readonly athleteRegistrationService: AthleteRegistrationService,
     private readonly sortingService: SortingService,
     private readonly dragAndDropService: DragAndDropService,
     private readonly columnResizeService: ColumnResizeService,
@@ -260,7 +264,7 @@ console.log(this.originalAthletes);
       return;
     }
 
-    const athleteId = this.form.get('athlete_id')?.value;
+    let athleteId = this.form.get('athlete_id')?.value;
 
     if (!athleteId) {
       const exists = await this.athleteInputRow.checkAthlete(fullName);
@@ -288,7 +292,33 @@ console.log(this.originalAthletes);
       weight_class: selectedWeightClass?.name ?? null,
     } as AthleteCompetitionRow;
 
-console.log(formValue.athlete_id ?? null);
+    const changes: AthleteChange[] = [];
+
+    let createAthlete: boolean;
+
+    if (!athlete.athlete_id) {
+      athlete.athlete_id = crypto.randomUUID();
+      createAthlete = true;
+    } else {
+      createAthlete = false;
+    }
+
+    const competitionSex = this.competition.age_groups[0].sex;
+    const sex = competitionSex === 'MEN' ? 'MAN' : 'WOMAN';
+
+    const now = new Date().toISOString();
+
+    changes.push({
+      data: athlete as AthleteCompetitionRow,
+      sex: sex,
+      federation_id: this.competition.federation_id,
+      language: localStorage.getItem('lang')?.toUpperCase() ?? 'EN',
+      updated_at: now,
+      competition_id: this.competition.id,
+      createAthlete: createAthlete,
+    });
+
+    await this.athleteRegistrationService.create(changes[0]);
 
     this.athletes = [athlete, ...this.athletes];
 

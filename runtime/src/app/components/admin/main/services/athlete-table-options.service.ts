@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PGlite } from '@electric-sql/pglite';
 
 import { PgliteService } from '../../../../database/services/pglite.service';
-import { AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
+import type { AthleteCompetitionRow } from '#shared-sql';
 import { UserService } from '../../../../shared/services/user.service';
 
 @Injectable({
@@ -52,12 +52,12 @@ export class AthleteTableOptionsService {
         SELECT
           ar.id,
           ar.athlete_id,
-          
+
           a.full_name,
           a.birth_day,
           a.birth_month,
           a.birth_year,
-          a.sport_titles AS titles,
+          at.sport_titles AS titles,
 
           cag.federation_category_id AS federation_category_id,
           ag.name AS age_group,
@@ -115,6 +115,9 @@ export class AthleteTableOptionsService {
         JOIN age_groups ag
           ON ag.id = fc.age_group_id
 
+        JOIN competitions comp
+          ON comp.id = cag.competition_id
+
         LEFT JOIN weight_classes wc
           ON wc.id = ar.weight_class_id
 
@@ -151,6 +154,11 @@ export class AthleteTableOptionsService {
         LEFT JOIN sport_officials t4
           ON t4.id = ar.trainer_4_id
 
+        LEFT JOIN athlete_titles at
+          ON at.athlete_id = ar.athlete_id
+          AND at.created_by_user_id = comp.created_by_user_id
+          AND at.is_deleted = false
+
         WHERE cag.competition_id = $1
           AND cag.is_deleted = false
           AND ar.is_deleted = false
@@ -167,187 +175,4 @@ export class AthleteTableOptionsService {
     return result.rows;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  async createAthleteRegistration(
-    competitionId: string,
-    athlete: Partial<AthleteCompetitionRow>,
-    federationCategoryId: string,
-    federationId: string,
-    sex: 'MAN' | 'WOMAN',
-    scope: string,
-    language: string,
-  ): Promise<void> {
-
-    const userId = await this.userService.getUserId();
-
-    const athleteId = crypto.randomUUID();
-
-    
-    const registrationId = crypto.randomUUID();
-
-    await this.pg.transaction(async (tx) => {
-
-      // 1. Find the competition age group.
-      const ageGroupResult = await tx.query<{
-        id: string;
-      }>(
-        `
-          SELECT cag.id
-          FROM competition_age_groups cag
-          JOIN federation_categories fc
-            ON fc.id = cag.federation_category_id
-          WHERE cag.competition_id = $1
-            AND fc.id = $2
-        `,
-        [competitionId, federationCategoryId],
-      );
-
-      const competitionAgeGroupId = ageGroupResult.rows[0]?.id;
-
-      if (!competitionAgeGroupId) {
-        throw new Error('Competition age group not found.');
-      }
-
-      // 2. Find existing athlete.
-      const existingAthlete = await tx.query<{
-        id: string;
-      }>(
-        `
-          SELECT id
-          FROM athletes
-          WHERE full_name = $1
-            AND birth_day IS NOT DISTINCT FROM $2
-            AND birth_month IS NOT DISTINCT FROM $3
-            AND birth_year IS NOT DISTINCT FROM $4
-            AND sex = $5
-            AND federation_id = $6
-            AND is_deleted = false
-          LIMIT 1
-        `,
-        [
-          athlete.full_name?.trim(),
-          athlete.birth_day || null,
-          athlete.birth_month || null,
-          athlete.birth_year || null,
-          sex,
-          federationId,
-        ],
-      );
-
-let athleteId: string;
-
-if (existingAthlete.rows.length > 0) {
-  athleteId = existingAthlete.rows[0].id;
-} else {
-  athleteId = crypto.randomUUID();
-
-      // 3. Create athlete.
-      await tx.query(
-        `
-          INSERT INTO athletes (
-            id,
-            full_name,
-            birth_day,
-            birth_month,
-            birth_year,
-            sex,
-            federation_id,
-            created_by_user_id,
-            scope,
-            language,
-            created_at,
-            updated_at,
-            is_deleted
-          )
-          VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-            NOW(), NOW(), false
-          )
-        `,
-        [
-          athleteId,
-          athlete.full_name?.trim(),
-          athlete.birth_day || null,
-          athlete.birth_month || null,
-          athlete.birth_year || null,
-          sex,
-          federationId,
-          userId,
-          scope,
-          language,
-        ],
-      );
-
-    }
-
-      // 4. Create competition registration.
-      await tx.query(
-        `
-          INSERT INTO athlete_registrations (
-            id,
-            athlete_id,
-            competition_age_group_id,
-            weight_class_id,
-            group_order,
-            lot,
-            country_id,
-            region_id,
-            city_id,
-            sport_rank_class,
-            sport_titles,
-            squat_nominated,
-            bench_press_nominated,
-            deadlift_nominated,
-            total_nominated,
-            status,
-            qualification,
-            created_at,
-            updated_at,
-            is_deleted
-          )
-          VALUES (
-            $1, $2, $3, $4, $5,
-            $6, $7, $8,
-            $9, $10, $11, $12,
-            $13, $14, $15, $16,
-            $17, $18,
-            NOW(), NOW(), false
-          )
-        `,
-        [
-          registrationId,
-          athleteId,
-          competitionAgeGroupId,
-          athlete.weight_class || null,
-          athlete.group_order ?? 1,
-          athlete.lot ?? null,
-  //        athlete.country_id || null,
-  //  athlete.region_id || null,
-  //  athlete.city_id || null,
-          athlete.sport_rank_class || null,
-          athlete.titles || null,
-          athlete.squat_nominated ?? null,
-          athlete.bench_press_nominated ?? null,
-          athlete.deadlift_nominated ?? null,
-          athlete.total_nominated ?? null,
-          athlete.status ?? 'TEAM',
-          athlete.qualification ?? 'QUALIFIED',
-        ],
-      );
-    });
-  }
 }

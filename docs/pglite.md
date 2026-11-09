@@ -38,6 +38,7 @@ The following tables are available in the browser database:
     - [cities](database/reference.md#cities)
     - [organizations](database/reference.md#organizations)
     - [athletes](database/reference.md#athletes)
+    - [athlete_titles](database/reference.md#athlete_titles)
     - [sport_officials](database/reference.md#sport_officials)
 
 - **Configuration Tables**

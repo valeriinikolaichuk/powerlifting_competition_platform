@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { AthleteCompetitionRow } from '../models/athlete-competition-row.interface';
+import type { AthleteCompetitionRow } from '#shared-sql';
 import type { SortType, SortDirection } from '../types/sorting.types';
 
 @Injectable({

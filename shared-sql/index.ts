@@ -4,6 +4,7 @@ import {
     ADMIN_REFERENCE_TABLES, 
     USER_REFERENCE_TABLES, 
     USER_REFERENCE_FEDERATIONS,
+    ATHLETE_TITLES,
     COMPETITIONS_TABLE, 
     CREATED_BY_USER_TABLES,
     COMPETITION_TABLES,
@@ -29,6 +30,7 @@ import { UPDATE_ATHLETE_REGISTRATION_SQL } from './queries/athlete_registration/
 
 import { CompetitionData, UpdateCompetitionData, ArchiveCompetitionData } from './dto/competition-data.js';
 import { DeviceRole } from './dto/device-role.js';
+import { AthleteCellValue, AthleteCompetitionRow, AthleteChange } from './dto/athlete-registration.js';
 
 export { 
     TABLE_USERS, 
@@ -36,6 +38,7 @@ export {
     ADMIN_REFERENCE_TABLES,  
     USER_REFERENCE_TABLES, 
     USER_REFERENCE_FEDERATIONS,
+    ATHLETE_TITLES,
     COMPETITIONS_TABLE,
     CREATED_BY_USER_TABLES, 
     COMPETITION_TABLES,
@@ -66,4 +69,5 @@ export const SYNC_OPERATIONS = {
 export type { 
     CompetitionData, UpdateCompetitionData, ArchiveCompetitionData, 
     DeviceRole, 
+    AthleteCellValue, AthleteCompetitionRow, AthleteChange,
 };

@@ -13,7 +13,7 @@ import { AthleteNameMatch } from '../../../../../shared/services/dto/athlete-nam
 import { organizationTypes } from '../../types/organization-types';
 
 import { AthleteTableColumn } from '../../models/athlete-table-column.interface';
-import { AthleteCompetitionRow } from '../../models/athlete-competition-row.interface';
+import type { AthleteCompetitionRow } from '#shared-sql';
 
 @Component({
   selector: 'tr[app-athlete-input-row]',

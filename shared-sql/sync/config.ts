@@ -31,6 +31,10 @@ export const USER_REFERENCE_FEDERATIONS = [
     'sport_officials',
 ];
 
+export const ATHLETE_TITLES = [
+    'athlete_titles',
+];
+
 export const COMPETITIONS_TABLE = [
     'competitions',
 ];

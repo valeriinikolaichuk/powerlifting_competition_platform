@@ -1,4 +1,4 @@
-import type { AthleteCellValue } from "../types/athlete-cell.type";
+export type AthleteCellValue = string | number | boolean | null | undefined;
 
 export interface AthleteCompetitionRow {
     [key: string]: AthleteCellValue;
@@ -53,32 +53,15 @@ export interface AthleteCompetitionRow {
     total_nominated?: number | null;
     status: string | null;
     qualification: string | null;
+}
 
-    
+export interface AthleteChange {
 
-
-/*
-  bodyweight?: number | null;
-  iPF_GL_Cf?: number | null;
-  squat_1?: number | null;
-  bench_press_1?: number | null;
-  deadlift_1?: number | null;
-  total_1_att?: number | null;
-  bench_press_fcst?: number | null;
-  squat_res?: number | null;
-  bench_press_res?: number | null;
-  deadlift_res?: number | null;
-  total_fcst?: number | null;
-  total?: number | null;
-  iPF_GL_fcst?: number | null;
-  iPF_GL?: number | null;
-  wilks_fcst_bench_press?: number | null;
-  wilks_bench_press?: number | null;
-  rnk_fcst?: number | null;
-  ranking?: number | null;
-  points?: number | null;
-  bench_press_rnk_fcst?: number | null;
-  bench_press_rnk?: number | null;
-  points_bp?: number | null;
-  */
+    data: AthleteCompetitionRow;
+    sex: string;
+    federation_id: string;
+    language: string;
+    updated_at: string;
+    competition_id: string;
+    createAthlete: boolean;
 }

@@ -93,6 +93,26 @@ export interface DeviceRole {
 }
 ```
 
+### AthleteCellValue
+```ts
+export type AthleteCellValue = string | number | boolean | null | undefined;
+```
+
+### [AthleteCompetitionRow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/dto/athlete-registration.ts)
+Defines the data structure of an athlete's competition registration, including personal details, competition information, nominations, and status.
+
+### AthleteChange
+```ts
+export interface AthleteChange {
+    data: AthleteCompetitionRow;
+    sex: string;
+    federation_id: string;
+    language: string;
+    updated_at: string;
+    competition_id: string;
+}
+```
+
 ---
 
 ### Synchronization Table Configuration
@@ -147,6 +167,9 @@ Access rules:
 Relationship:  
 `GLOBAL → federation_id → user_federations → user_id`  
 `USER → created_by_user_id` 
+
+- #### ATHLETE_TITLES
+Contains `USER`-related athlete title records.
 
 - #### COMPETITIONS_TABLE
 Contains registration data belonging to a user's competitions.

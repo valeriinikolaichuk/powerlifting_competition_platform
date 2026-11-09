@@ -16,6 +16,7 @@ import { StaticReferenceStep } from './snapshot-pipeline/static-reference-step';
 import { AdminReferenceStep } from './snapshot-pipeline/admin-reference-step';
 import { UserReferenceStep } from './snapshot-pipeline/user-reference-step';
 import { UserReferenceFederationsStep } from './snapshot-pipeline/user-reference-federations-step';
+import { AthleteTitlesStep } from './snapshot-pipeline/athlete-titles-step';
 import { CompetitionStep } from './snapshot-pipeline/competition-step';
 import { AthleteStep } from './snapshot-pipeline/athlete-step';
 import { CompetitionSessionStep } from './snapshot-pipeline/competition-session-step';
@@ -37,6 +38,7 @@ import { UserService } from './user.service';
 import { CreateCompetitionOperation } from './sync-operations/create-competition-operation';
 import { UpdateCompetitionOperation } from './sync-operations/update-competition-operation';
 import { ArchiveCompetitionOperation } from './sync-operations/archive-competition-operation';
+import { AthleteRegistrationOperation } from './sync-operations/athlete-registration-operation';
 
 import { DeviceRoleOperation } from './sync-operations/device-role-operation';
 import { DeviceRoleService } from './device-role.service.service';
@@ -54,6 +56,7 @@ import { DeviceRoleService } from './device-role.service.service';
     AdminReferenceStep, 
     UserReferenceStep, 
     UserReferenceFederationsStep, 
+    AthleteTitlesStep, 
     CompetitionStep,
     AthleteStep, 
     CompetitionSessionStep, 
@@ -73,6 +76,7 @@ import { DeviceRoleService } from './device-role.service.service';
         adminReference: AdminReferenceStep, 
         userReference: UserReferenceStep, 
         userReferenceFederations: UserReferenceFederationsStep, 
+        athleteTitles: AthleteTitlesStep,
         competition: CompetitionStep, 
         athlete: AthleteStep,
         competitionSession: CompetitionSessionStep, 
@@ -88,6 +92,7 @@ import { DeviceRoleService } from './device-role.service.service';
         adminReference, 
         userReference, 
         userReferenceFederations, 
+        athleteTitles, 
         competition, 
         athlete, 
         competitionSession, 
@@ -104,6 +109,7 @@ import { DeviceRoleService } from './device-role.service.service';
         AdminReferenceStep, 
         UserReferenceStep, 
         UserReferenceFederationsStep, 
+        AthleteTitlesStep, 
         CompetitionStep, 
         AthleteStep, 
         CompetitionSessionStep, 
@@ -123,6 +129,7 @@ import { DeviceRoleService } from './device-role.service.service';
     CreateCompetitionOperation,
     UpdateCompetitionOperation,
     ArchiveCompetitionOperation,
+    AthleteRegistrationOperation,
 
     DeviceRoleOperation,
 
@@ -133,17 +140,20 @@ import { DeviceRoleService } from './device-role.service.service';
         createCompetition: CreateCompetitionOperation,
         updateCompetition: UpdateCompetitionOperation,
         archiveCompetition: ArchiveCompetitionOperation,
+        athleteRegistration: AthleteRegistrationOperation,
         deviceRole: DeviceRoleOperation,
       ) => [
         createCompetition,
         updateCompetition,
         archiveCompetition,
+        athleteRegistration,
         deviceRole,
       ],
       inject: [
         CreateCompetitionOperation,
         UpdateCompetitionOperation,
         ArchiveCompetitionOperation,
+        AthleteRegistrationOperation,
         DeviceRoleOperation,
       ],
     },

@@ -25,6 +25,7 @@ Database migrations are managed by `Prisma` Migrate.
   - cities
   - organizations
   - athletes
+  - athlete_titles
   - sport_officials
 
 ➡ [Configuration Tables](database/configuration.md)  

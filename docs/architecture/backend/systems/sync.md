@@ -76,6 +76,7 @@ SnapshotPipelineService
        ├── AdminReferenceStep, 
        ├── UserReferenceStep, 
        ├── UserReferenceFederationsStep, 
+       ├── AthleteTitlesStep,
        ├── CompetitionStep,
        ├── AthleteStep 
        ├── CompetitionSessionStep, 

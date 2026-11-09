@@ -422,8 +422,6 @@ model Athletes {
   scope              DataScope
   language           Language
 
-  sport_titles           String?
-
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
 
@@ -435,10 +433,30 @@ model Athletes {
 
   athleteRegistrations AthleteRegistrations[]
   athleteNominations   AthleteNominations[]
+  athlete_titles       AthleteTitles[]
 
   @@index([federation_id, full_name])
 
   @@map("athletes")
+}
+
+model AthleteTitles {
+  id                  String    @id @default(uuid()) @db.Uuid
+
+  athlete_id          String    @db.Uuid
+  sport_titles        String?
+  created_by_user_id  String    @db.Uuid
+
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @updatedAt
+  is_deleted          Boolean   @default(false)
+
+  athlete             Athletes  @relation(fields: [athlete_id], references: [id])
+
+  @@index([created_by_user_id])
+  @@unique([athlete_id, created_by_user_id])
+
+  @@map("athlete_titles")
 }
 
 model SportOfficials {
