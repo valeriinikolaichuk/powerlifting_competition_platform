@@ -144,7 +144,8 @@ export class SuggestionService {
           full_name,
           birth_day,
           birth_month,
-          birth_year
+          birth_year,
+          scope
         FROM athletes
         WHERE full_name ILIKE $1
           AND federation_id = $2
@@ -152,8 +153,8 @@ export class SuggestionService {
           AND sex = $4
           AND is_deleted = false
         ORDER BY birth_year NULLS LAST,
-                birth_month NULLS LAST,
-                birth_day NULLS LAST
+          birth_month NULLS LAST,
+          birth_day NULLS LAST
       `,
       [fullName, federationId, language, sex],
     );

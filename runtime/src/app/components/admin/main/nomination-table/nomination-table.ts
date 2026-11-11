@@ -292,16 +292,43 @@ console.log(this.originalAthletes);
       weight_class: selectedWeightClass?.name ?? null,
     } as AthleteCompetitionRow;
 
+    let updateBirthDate = false;
+
+    const selectedAthlete = this.athleteInputRow.selectedAthlete;
+
+    if (selectedAthlete && this.athleteInputRow.hasBirthDateChanged()) {
+
+      if (selectedAthlete.scope === 'USER') {
+
+        const confirmed = confirm(
+          this.tService.t('tables/athlete-table', 'update_date_of_birth')
+        );
+
+        if (!updateBirthDate) {
+          this.form.patchValue({
+            birth_day: selectedAthlete.birth_day,
+            birth_month: selectedAthlete.birth_month,
+            birth_year: selectedAthlete.birth_year,
+          });
+        }
+
+      } else {
+        this.form.patchValue({
+          birth_day: selectedAthlete.birth_day,
+          birth_month: selectedAthlete.birth_month,
+          birth_year: selectedAthlete.birth_year,
+        });
+      }
+    }
+
     const changes: AthleteChange[] = [];
 
-    let createAthlete: boolean;
+    let createAthlete: boolean = false;
 
     if (!athlete.athlete_id) {
       athlete.athlete_id = crypto.randomUUID();
       createAthlete = true;
-    } else {
-      createAthlete = false;
-    }
+    } 
 
     const competitionSex = this.competition.age_groups[0].sex;
     const sex = competitionSex === 'MEN' ? 'MAN' : 'WOMAN';
@@ -316,6 +343,7 @@ console.log(this.originalAthletes);
       updated_at: now,
       competition_id: this.competition.id,
       createAthlete: createAthlete,
+      updateBirthDate: updateBirthDate,
     });
 
     await this.athleteRegistrationService.create(changes[0]);

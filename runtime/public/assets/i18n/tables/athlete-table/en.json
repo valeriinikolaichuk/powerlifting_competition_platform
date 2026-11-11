@@ -67,5 +67,6 @@
     "WITHDRAWN": "WITHDRAWN",
     "DISQUALIFIED": "DISQUALIFIED",
 
-    "create_new": "create new"
+    "create_new": "create new",
+    "update_date_of_birth": "Changing the date of birth will update all related records. Continue?"
 }

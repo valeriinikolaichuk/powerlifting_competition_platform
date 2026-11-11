@@ -110,8 +110,12 @@ export interface AthleteChange {
     language: string;
     updated_at: string;
     competition_id: string;
+    createAthlete: boolean;
+    updateBirthDate: boolean;
 }
 ```
+- `createAthlete` – Indicates whether a new athlete record should be created in the `nomination` table.
+- `updateBirthDate` – Indicates whether the birth date of an existing `USER-scope` athlete should be updated.
 
 ---
 

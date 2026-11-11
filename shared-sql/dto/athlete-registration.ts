@@ -64,4 +64,5 @@ export interface AthleteChange {
     updated_at: string;
     competition_id: string;
     createAthlete: boolean;
+    updateBirthDate: boolean;
 }

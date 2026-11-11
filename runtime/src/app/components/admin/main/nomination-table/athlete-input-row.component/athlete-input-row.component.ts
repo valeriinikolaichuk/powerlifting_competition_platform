@@ -49,8 +49,8 @@ export class AthleteInputRowComponent {
   regionSuggestion = '';
   citySuggestion = '';
   athleteSuggestion = '';
-
   athleteMatches: AthleteNameMatch[] = [];
+  selectedAthlete: AthleteNameMatch | null = null;
   showAthleteMatches = false;
   pendingAthleteName = '';
 
@@ -232,7 +232,7 @@ export class AthleteInputRowComponent {
     athlete: AthleteNameMatch
   ): void {
 
-console.log('Selected athlete:', athlete);
+    this.selectedAthlete = athlete;
 
     this.form.patchValue({
       athlete_id: athlete.id,
@@ -242,10 +242,21 @@ console.log('Selected athlete:', athlete);
       birth_year: athlete.birth_year,
     });
 
-console.log('Form athlete_id:', this.form.get('athlete_id')?.value);
-
     this.athleteMatches = [];
     this.showAthleteMatches = false;
+  }
+
+  hasBirthDateChanged(): boolean {
+
+    if (!this.selectedAthlete) return false;
+
+    const current = this.form.getRawValue();
+
+    return (
+      Number(current.birth_day) !== this.selectedAthlete.birth_day ||
+      Number(current.birth_month) !== this.selectedAthlete.birth_month ||
+      Number(current.birth_year) !== this.selectedAthlete.birth_year
+    );
   }
 
   createNewAthleteFromSuggestion(): void {
