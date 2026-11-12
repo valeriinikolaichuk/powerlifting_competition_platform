@@ -11,12 +11,12 @@ It provides a single source of truth for database-related constants and `SQL` lo
 
 - [index](#indexts)
 - [Synchronization Operations](#synchronization-operations)
+- [Synchronization Table Configuration](#synchronization-table-configuration)
 - [Shared DTOs](#shared-dtos)
   - [CompetitionData](#competitiondata)
   - [UpdateCompetitionData](#updatecompetitiondata)
   - [ArchiveCompetitionData](#archivecompetitiondata)
   - [DeviceRole](#devicerole)
-- [Synchronization Table Configuration](#synchronization-table-configuration)
 
 </details>
 
@@ -43,79 +43,6 @@ export const SYNC_OPERATIONS = {
 } as const;
 ```
 These `SQL queries` are defined in [/queries](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/queries) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/services/sync-service.md#synchronization-operations)  and corresponding individual operations on the frontend.
-
----
-
-### Shared DTOs
-Shared data transfer types define the data structures used by synchronization operations on both the frontend and backend. They provide a common contract for data exchanged between the two sides and prevent duplicate DTO definitions.
-
-These `Shared DTOs` are defined in [/dto](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/dto) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/services/sync-service.md#synchronization-operations)  and corresponding individual operations on the frontend.
-
-### CompetitionData
-Represents the data required to create a competition.
-
-- id
-- name
-- country
-- city
-- language
-- startDate
-- endDate
-- level
-- type
-- division
-- federationCategoryIds
-- updated_at
-
-### UpdateCompetitionData
-Represents the data required to edit competition data.
-
-- id
-- name
-- country
-- city
-- startDate
-- endDate
-- language
-- updated_at
-
-### ArchiveCompetitionData
-
-- updated_at
-
-### DeviceRole
-```ts
-export interface DeviceRole {
-
-    id: string;
-    clientRole: string | null;
-    updated_at: string;
-}
-```
-
-### AthleteCellValue
-```ts
-export type AthleteCellValue = string | number | boolean | null | undefined;
-```
-
-### [AthleteCompetitionRow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/dto/athlete-registration.ts)
-Defines the data structure of an athlete's competition registration, including personal details, competition information, nominations, and status.
-
-### AthleteChange
-```ts
-export interface AthleteChange {
-    data: AthleteCompetitionRow;
-    sex: string;
-    federation_id: string;
-    language: string;
-    updated_at: string;
-    competition_id: string;
-    createAthlete: boolean;
-    updateBirthDate: boolean;
-}
-```
-- `createAthlete` – Indicates whether a new athlete record should be created in the `nomination` table.
-- `updateBirthDate` – Indicates whether the birth date of an existing `USER-scope` athlete should be updated.
 
 ---
 
@@ -238,3 +165,78 @@ Contains calculated team results.
 
 Records are selected through `competition_organizations` and therefore belong to the user's competitions.  
 Relationship: `organization_result → competition_organization → competition → created_by_user_id`
+
+---
+
+### Shared DTOs
+Shared data transfer types define the data structures used by synchronization operations on both the frontend and backend. They provide a common contract for data exchanged between the two sides and prevent duplicate DTO definitions.
+
+These `Shared DTOs` are defined in [/dto](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/dto) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/services/sync-service.md#synchronization-operations)  and corresponding individual operations on the frontend.
+
+### CompetitionData
+Represents the data required to create a competition.
+
+- id
+- name
+- country
+- city
+- language
+- startDate
+- endDate
+- level
+- type
+- division
+- federationCategoryIds
+- updated_at
+
+### UpdateCompetitionData
+Represents the data required to edit competition data.
+
+- id
+- name
+- country
+- city
+- startDate
+- endDate
+- language
+- updated_at
+
+### ArchiveCompetitionData
+
+- updated_at
+
+### DeviceRole
+```ts
+export interface DeviceRole {
+
+    id: string;
+    clientRole: string | null;
+    updated_at: string;
+}
+```
+
+### AthleteCellValue
+```ts
+export type AthleteCellValue = string | number | boolean | null | undefined;
+```
+
+### [AthleteCompetitionRow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/dto/athlete-registration.ts)
+Defines the data structure of an athlete's competition registration, including personal details, competition information, nominations, and status.
+
+### AthleteChange
+```ts
+export interface AthleteChange {
+    data: AthleteCompetitionRow;
+    sex: string;
+    federation_id: string;
+    language: string;
+    updated_at: string;
+    competition_id: string;
+    createAthlete: boolean;
+    updateBirthDate: boolean;
+}
+```
+- `createAthlete` – Indicates whether a new athlete record should be created in the `nomination` table.
+- `updateBirthDate` – Indicates whether the birth date of an existing `USER-scope` athlete should be updated.
+
+---
