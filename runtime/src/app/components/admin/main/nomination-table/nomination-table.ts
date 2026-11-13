@@ -193,6 +193,10 @@ console.log(this.originalAthletes);
 
     if (value === null || value === undefined) return '';
 
+    if (['birth_day', 'birth_month'].includes(column.field)) {
+      return String(value).padStart(2, '0');
+    }
+
     return value;
   }
 
@@ -300,7 +304,7 @@ console.log(this.originalAthletes);
 
       if (selectedAthlete.scope === 'USER') {
 
-        const confirmed = confirm(
+        updateBirthDate = confirm(
           this.tService.t('tables/athlete-table', 'update_date_of_birth')
         );
 
@@ -346,8 +350,13 @@ console.log(this.originalAthletes);
       updateBirthDate: updateBirthDate,
     });
 
-    await this.athleteRegistrationService.create(changes[0]);
-
+    try {
+      await this.athleteRegistrationService.create(changes[0]);
+    } catch (error: any) {
+      alert(error.message);
+      return;
+    }
+// зробити переклад alert
     this.athletes = [athlete, ...this.athletes];
 
 console.log('athletes: ');

@@ -14,6 +14,7 @@ import { organizationTypes } from '../../types/organization-types';
 
 import { AthleteTableColumn } from '../../models/athlete-table-column.interface';
 import type { AthleteCompetitionRow } from '#shared-sql';
+import { calculateTotal } from '#shared-sql';
 
 @Component({
   selector: 'tr[app-athlete-input-row]',
@@ -63,14 +64,35 @@ export class AthleteInputRowComponent {
   trackColumn(_: number, column: AthleteTableColumn): number { return column.index; }
 
   async ngOnInit(): Promise<void> {
-    const federationCategoryId =
-      this.form.get('federation_category_id')?.value;
+
+    const federationCategoryId = this.form.get('federation_category_id')?.value;
 
     if (federationCategoryId) {
       this.weightClasses =
         await this.athleteTableOptionsService.getWeightClasses(
           federationCategoryId
         );
+    }
+
+    if (this.competition.type === 'POWERLIFT') {
+
+      const squatValue = this.form.get('squat_nominated');
+      const benchPressValue = this.form.get('bench_press_nominated');
+      const deadLiftValue = this.form.get('deadlift_nominated');
+
+      [squatValue, benchPressValue, deadLiftValue].forEach(control => {
+        control?.valueChanges.subscribe(() => {
+          this.form.patchValue({
+            total_nominated: calculateTotal(
+              squatValue?.value,
+              benchPressValue?.value,
+              deadLiftValue?.value
+            )
+          }, { emitEvent: false });
+        });
+      });
+
+      this.updateTotalNomination();
     }
   }
 
@@ -389,5 +411,17 @@ export class AthleteInputRowComponent {
     this.showAthleteMatches = true;
 
     return true;
+  }
+
+  // TOTAL
+
+  updateTotalNomination(): void {
+    this.form.patchValue({
+      total_nominated: calculateTotal(
+        this.form.get('squat_nominated')?.value,
+        this.form.get('bench_press_nominated')?.value,
+        this.form.get('lift_nominated')?.value
+      )
+    }, { emitEvent: false });
   }
 }

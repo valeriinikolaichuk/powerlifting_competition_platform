@@ -116,7 +116,6 @@
         @if (editable) {
           <tr app-athlete-input-row
             class="input-line sticky" 
-                data-type="input"
                 #athleteInputRow
                 [form]="form"
                 [columns]="columns"
@@ -133,7 +132,6 @@
             @if (isEditing(athlete)) {
                 <tr app-athlete-input-row
                     class="input-line sticky" 
-                        data-type="input"
                         [form]="getEditForm(athlete.id)"
                         [columns]="columns"
                         [competition]="competition"
@@ -143,7 +141,7 @@
 
             } @else {
 
-                <tr data-type="html"
+                <tr
                     (click)="startEditing(athlete)"
                     [class.editing-row]="isEditing(athlete)">
 

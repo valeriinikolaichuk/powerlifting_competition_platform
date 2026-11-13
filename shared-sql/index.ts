@@ -32,6 +32,8 @@ import { CompetitionData, UpdateCompetitionData, ArchiveCompetitionData } from '
 import { DeviceRole } from './dto/device-role.js';
 import { AthleteCellValue, AthleteCompetitionRow, AthleteChange } from './dto/athlete-registration.js';
 
+import { calculateTotal } from './utils/calculate-total.util.js'
+
 export { 
     TABLE_USERS, 
     STATIC_REFERENCE_TABLES,
@@ -70,4 +72,8 @@ export type {
     CompetitionData, UpdateCompetitionData, ArchiveCompetitionData, 
     DeviceRole, 
     AthleteCellValue, AthleteCompetitionRow, AthleteChange,
+};
+
+export {
+    calculateTotal
 };

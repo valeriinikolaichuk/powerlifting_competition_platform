@@ -17,6 +17,8 @@ It provides a single source of truth for database-related constants and `SQL` lo
   - [ArchiveCompetitionData](#archivecompetitiondata)
   - [DeviceRole](#devicerole)
 - [Synchronization Table Configuration](#synchronization-table-configuration)
+- [units](#units)
+  - [calculateTotal()](#calculatetotal).
 
 </details>
 
@@ -238,3 +240,12 @@ Contains calculated team results.
 
 Records are selected through `competition_organizations` and therefore belong to the user's competitions.  
 Relationship: `organization_result → competition_organization → competition → created_by_user_id`
+
+---
+
+### units
+
+#### calculateTotal()  
+Calculates the total nominated weight by adding the squat, bench press, and deadlift nominations.
+
+---

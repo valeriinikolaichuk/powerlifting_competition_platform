@@ -224,7 +224,7 @@ A reusable Angular component responsible for rendering and managing the athlete 
 - **`getTextWidth()`** — Calculates the rendered text width for autocomplete positioning.
 - **`getNewAthleteValue()`** — Returns a new athlete form field value as a string.
 - ####`checkAthlete()` – Checks whether an athlete with the specified full name already exists in the database using federation, language, and sex criteria. If matches are found, displays the athlete selection dropdown and returns `true`; otherwise, returns `false`.
-
+- **`updateTotalNomination()`** – Updates the `total_nominated` form control using the sum of the three lift nominations using shared [calculateTotal()](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/docs/architecture/shared-sql.md#calculatetotal).
 
 ---
 

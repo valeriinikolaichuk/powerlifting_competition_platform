@@ -40,7 +40,7 @@
                     [
                         'squat_nominated',
                         'bench_press_nominated',
-                        'deadlift_nom'
+                        'deadlift_nominated'
                     ].includes(column.field || '')
                         ? 0.5
                         : 1
@@ -51,8 +51,13 @@
         }
 
         @case ('text') {
-            @if (isAutocompleteField(column.field)) {
-                <div class="autocomplete">
+
+            @if (mode === 'edit' && column.field === 'full_name') {
+                <span>{{ form.get(column.field!)?.value }}</span>
+            } @else {
+
+                @if (isAutocompleteField(column.field)) {
+                    <div class="autocomplete">
 
                     @if (getSuggestion(column.field)) {
                         <div
@@ -108,16 +113,17 @@
                         </div>
                     }
 
-                </div>
+                    </div>
 
-            } @else {
-                <input
-                    class="cell-input"
-                    type="text"
-                    [name]="'new-' + (column.field || column.index)"
-                    [formControl]="$any(form.get(column.field!))"
-                    [disabled]="!editable"
-                />
+                } @else {
+                    <input
+                        class="cell-input"
+                        type="text"
+                        [name]="'new-' + (column.field || column.index)"
+                        [formControl]="$any(form.get(column.field!))"
+                        [disabled]="!editable"
+                    />
+                }
             }
         }
 
@@ -255,7 +261,7 @@
         }
 
         @case ('display') {
-            <span></span>
+            <span> {{ form.get('total_nominated')?.value }} </span>
         }
 
         @default {

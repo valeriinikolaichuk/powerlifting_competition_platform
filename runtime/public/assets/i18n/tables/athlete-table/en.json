@@ -68,5 +68,6 @@
     "DISQUALIFIED": "DISQUALIFIED",
 
     "create_new": "create new",
-    "update_date_of_birth": "Changing the date of birth will update all related records. Continue?"
+    "update_date_of_birth": "Changing the date of birth will update all related records. Continue?",
+    "already_registered": "This athlete is already registered in this age group."
 }

@@ -68,5 +68,6 @@
     "DISQUALIFIED": "ZDYSKWALIFIKOWANO",
 
     "create_new": "utwórz nowego",
-    "update_date_of_birth": "Zmiana daty urodzenia zaktualizuje wszystkie powiązane rekordy. Kontynuować?"
+    "update_date_of_birth": "Zmiana daty urodzenia zaktualizuje wszystkie powiązane rekordy. Kontynuować?",
+    "already_registered": "Ta osoba jest już zarejestrowana w tej kategorii wiekowej."
 }
