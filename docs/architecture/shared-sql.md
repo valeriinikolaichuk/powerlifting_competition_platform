@@ -17,12 +17,8 @@ It provides a single source of truth for database-related constants and `SQL` lo
   - [UpdateCompetitionData](#updatecompetitiondata)
   - [ArchiveCompetitionData](#archivecompetitiondata)
   - [DeviceRole](#devicerole)
-<<<<<<< HEAD
-- [Synchronization Table Configuration](#synchronization-table-configuration)
 - [units](#units)
   - [calculateTotal()](#calculatetotal).
-=======
->>>>>>> afb19c0bddc64ba84fd8096236042fe281aa4302
 
 </details>
 
@@ -174,20 +170,12 @@ Relationship: `organization_result → competition_organization → competition 
 
 ---
 
-<<<<<<< HEAD
-### units
-
-#### calculateTotal()  
-Calculates the total nominated weight by adding the squat, bench press, and deadlift nominations.
-
----
-=======
 ### Shared DTOs
 Shared data transfer types define the data structures used by synchronization operations on both the frontend and backend. They provide a common contract for data exchanged between the two sides and prevent duplicate DTO definitions.
 
 These `Shared DTOs` are defined in [/dto](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/tree/main/shared-sql/dto) and are used for the [synchronization backend-operations](backend/systems/sync.md#synchronization-operations), the [synchronization frontend-operations](runtime/services/sync-service.md#synchronization-operations)  and corresponding individual operations on the frontend.
 
-### CompetitionData
+#### CompetitionData
 Represents the data required to create a competition.
 
 - id
@@ -203,7 +191,7 @@ Represents the data required to create a competition.
 - federationCategoryIds
 - updated_at
 
-### UpdateCompetitionData
+#### UpdateCompetitionData
 Represents the data required to edit competition data.
 
 - id
@@ -215,11 +203,11 @@ Represents the data required to edit competition data.
 - language
 - updated_at
 
-### ArchiveCompetitionData
+#### ArchiveCompetitionData
 
 - updated_at
 
-### DeviceRole
+#### DeviceRole
 ```ts
 export interface DeviceRole {
 
@@ -229,15 +217,15 @@ export interface DeviceRole {
 }
 ```
 
-### AthleteCellValue
+#### AthleteCellValue
 ```ts
 export type AthleteCellValue = string | number | boolean | null | undefined;
 ```
 
-### [AthleteCompetitionRow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/dto/athlete-registration.ts)
+#### [AthleteCompetitionRow](https://github.com/valeriinikolaichuk/powerlifting_competition_platform/blob/main/shared-sql/dto/athlete-registration.ts)
 Defines the data structure of an athlete's competition registration, including personal details, competition information, nominations, and status.
 
-### AthleteChange
+#### AthleteChange
 ```ts
 export interface AthleteChange {
     data: AthleteCompetitionRow;
@@ -254,4 +242,11 @@ export interface AthleteChange {
 - `updateBirthDate` – Indicates whether the birth date of an existing `USER-scope` athlete should be updated.
 
 ---
->>>>>>> afb19c0bddc64ba84fd8096236042fe281aa4302
+
+### units
+
+#### calculateTotal()  
+Calculates the total nominated weight by adding the squat, bench press, and deadlift nominations.
+
+---
+
